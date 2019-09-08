@@ -1,0 +1,24 @@
+<div class="{{ prefix }}-field">
+
+    <h3>{{ heading }}</h3>
+
+    <table class="form-table">
+
+        {% for field in fields %}
+            <tr>
+                <th>
+                    <label for="{{ prefix }}-{{ field.id }}">{{ field.name }}</label>
+                </th>
+                <td>
+                    <input type="{{ field.type }}" name="{{ prefix }}[{{ field.id }}]" id="{{ prefix }}-{{ field.id }}" value="{{ field.value }}" class="regular-text">
+
+                    {% if field.desc %}
+                        <span class="description">{{ field.desc }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+</div>

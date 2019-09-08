@@ -1,0 +1,28 @@
+<div class="field {{ classes }}" {{ dependencies }}>
+
+    <div class="label">
+        <label for="field-{{ id }}">{{ name }}</label>
+    </div>
+
+    <div class="input">
+
+        <input type="hidden" name="{{ prefix }}[{{ id }}]" value="">
+
+        <select
+                id="field-{{ id }}"
+                class="adwpfw-select2"
+                {% if multiple %} multiple {% endif %}
+                {% if ajax_action %} data-ajax-action="{{ ajax_action }}" {% endif %}
+                name="{{ prefix }}[{{ id }}]{% if multiple %}[]{% endif %}">
+            {% for item in items %}
+                <option value="{{ item.value }}" {{ item.selected }}>{{ item.label }}</option>
+            {% endfor %}
+        </select>
+
+        {% if desc %}
+            <div class="description">{{ desc }}</div>
+        {% endif %}
+
+    </div>
+
+</div>

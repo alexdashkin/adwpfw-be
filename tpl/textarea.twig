@@ -1,0 +1,11 @@
+<div class="field {{ classes }}" {{ dependencies }}>
+    <div class="label">
+        <label for="field-{{ id }}">{{ name }}</label>
+    </div>
+    <div class="input">
+        <textarea id="field-{{ id }}" class="regular-text widefat" name="{{ prefix }}[{{ id }}]">{{ value }}</textarea>
+        {% if desc %}
+            <div class="description">{{ desc }}</div>
+        {% endif %}
+    </div>
+</div>

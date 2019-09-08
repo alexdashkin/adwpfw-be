@@ -1,0 +1,11 @@
+<div class="field {{ classes }}" {{ dependencies }}>
+    <div class="label">
+        <label for="field-{{ id }}">{{ name }}</label>
+    </div>
+    <div class="input">
+        <input id="field-{{ id }}" class="form-control-file" type="file" name="{{ prefix }}[{{ id }}]">
+        {% if desc %}
+            <div class="description">{{ desc }}</div>
+        {% endif %}
+    </div>
+</div>

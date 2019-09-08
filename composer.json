@@ -1,0 +1,21 @@
+{
+  "name": "alexdashkin/adwpfw",
+  "type": "library",
+  "description": "Simple WordPress Framework",
+  "homepage": "https://alexdashkin.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alex Dashkin",
+      "email": "alex@alexdashkin.com"
+    }
+  ],
+  "require": {
+    "php": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "AlexDashkin\\Adwpfw\\": "src/"
+    }
+  }
+}

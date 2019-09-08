@@ -1,0 +1,8 @@
+<div class="field {{ classes }}" {{ dependencies }}>
+    <div class="input">
+        <button id="field-{{ id }}" class="button {% if primary %} button-primary {% endif %}">{{ caption }}</button>
+        {% if desc %}
+            <div class="description">{{ desc }}</div>
+        {% endif %}
+    </div>
+</div>

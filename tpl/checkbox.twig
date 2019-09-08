@@ -1,0 +1,15 @@
+<div class="field {{ classes }}" {{ dependencies }}>
+    <div class="label">
+        <label for="field-{{ id }}">{{ name }}</label>
+    </div>
+    <div class="input">
+        <label>
+            <input type="hidden" name="{{ prefix }}[{{ id }}]" value="">
+            <input id="field-{{ id }}" type="checkbox" name="{{ prefix }}[{{ id }}]" {{ checked }}>
+            {{ label }}
+        </label>
+        {% if desc %}
+            <div class="description">{{ desc }}</div>
+        {% endif %}
+    </div>
+</div>
