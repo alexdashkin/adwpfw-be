@@ -302,7 +302,7 @@ class Utils extends Base
         $paths = [
             $this->config['baseDir'] . '/tpl/adwpfw',
             $this->config['baseDir'] . '/tpl',
-            __DIR__ . '/../../../tpl',
+            __DIR__ . '/../../tpl',
         ];
 
         foreach ($paths as $index => $path) {
