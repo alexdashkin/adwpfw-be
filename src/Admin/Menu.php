@@ -347,7 +347,7 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
 
         $args = [
             'id' => $menu['id'],
-            'header' => $menu['header'],
+            'title' => $menu['title'],
             'tabs' => $menu['tabs'],
         ];
 
