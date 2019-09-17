@@ -139,11 +139,13 @@ class Utils extends Base
      */
     public function apiRequest(array $args)
     {
+        $timeout = !empty($this->config['api_timeout']) ? $this->config['api_timeout'] : 180;
+
         $args = array_merge([
             'method' => 'get',
             'headers' => [],
             'data' => [],
-            'timeout' => $this->config['apiTimeout'],
+            'timeout' => $timeout,
         ], $args);
 
         $url = $args['url'];
@@ -300,8 +302,8 @@ class Utils extends Base
         }
 
         $paths = [
-            $this->config['baseDir'] . '/tpl/adwpfw',
-            $this->config['baseDir'] . '/tpl',
+            $this->config['baseDir'] . 'tpl/adwpfw',
+            $this->config['baseDir'] . 'tpl',
             __DIR__ . '/../../tpl',
         ];
 

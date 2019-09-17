@@ -47,12 +47,10 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
      * @type string $prefix
      * @type string $name Text to be displayed on the Bar
      * @type string $title Text to be displayed on top as heading
-     * @type string $form Whether contains a form to submit
      * @type string $icon The dash icon name for the bar
      * @type int $position Position of the menu
      * @type array $values Data to fill out the form and to be modified (normally passed by reference)
      * @type string $option WP Option name to store the data (if $values isn't passed by reference)
-     * @type string $header Settings Page header HTML
      * @type array $tabs Settings Page tabs [name, form, options, buttons]
      * @type string $capability
      * @type string $callback Render function
@@ -65,12 +63,10 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
             'prefix' => $this->config['prefix'],
             'name' => 'Settings',
             'title' => 'Settings',
-            'form' => false,
             'icon' => '',
             'position' => 100,
             'values' => [],
             'option' => '',
-            'header' => '',
             'tabs' => [],
             'capability' => 'administrator',
             'callback' => null,
@@ -113,12 +109,10 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
      * @type string $prefix
      * @type string $name Text to be displayed on the Bar
      * @type string $title Text to be displayed on top as heading
-     * @type string $form Whether contains a form to submit
      * @type string $icon The dash icon name for the bar
      * @type int $position Position of the menu
      * @type array $values Data to fill out the form and to be modified (normally passed by reference)
      * @type string $option WP Option name to store the data (if $values isn't passed by reference)
-     * @type string $header Settings Page header HTML
      * @type array $args Settings Page tabs [name, form, options, buttons]
      * @type string $capability
      * @type string $callback Render function
@@ -132,10 +126,8 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
             'prefix' => $this->config['prefix'],
             'name' => 'Settings',
             'title' => 'Settings',
-            'form' => false,
             'values' => [],
             'option' => '',
-            'header' => '',
             'tabs' => [],
             'capability' => 'administrator',
             'callback' => null,
@@ -235,14 +227,8 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
 
                 $option['value'] = $value;
 
-                // Deps
-                $option['dependencies'] = '';
                 if (empty($option['classes'])) {
                     $option['classes'] = '';
-                }
-                if (!empty($option['deps'])) {
-                    $option['dependencies'] = " data-dependencies='" . json_encode($option['deps']) . "'";
-                    $option['classes'] .= ' conditional ';
                 }
 
                 switch ($option['type']) {
