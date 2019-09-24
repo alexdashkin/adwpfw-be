@@ -199,6 +199,7 @@ class Assets extends Base
             $prefix = $this->config['prefix'];
 
             $item['localize']['nonce'] = wp_create_nonce($prefix);
+            $item['localize']['restNonce'] = wp_create_nonce('wp_rest');
 
             wp_localize_script($item['id'], $prefix, $item['localize']);
         }
