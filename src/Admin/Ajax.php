@@ -140,7 +140,7 @@ class Ajax extends \AlexDashkin\Adwpfw\Common\Base
             return;
         }
 
-        if (!check_ajax_referer($prefix)) {
+        if (!check_ajax_referer($prefix, false, false)) {
             $this->error('Wrong nonce!', true);
         }
 
