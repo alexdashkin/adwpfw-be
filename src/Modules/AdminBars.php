@@ -1,20 +1,29 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
+
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Entities\AdminBar;
 
 /**
- * Top Admin Bar
+ * WP Admin Top Bar Entry
  */
-class AdminBar extends \AlexDashkin\Adwpfw\Common\Base
+class AdminBars extends Module
 {
-    private $bars = [];
-
-    public function __construct($app)
+    /**
+     * Constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
 
-    public function run()
+    /**
+     * Add hooks
+     */
+    protected function run()
     {
         add_action('admin_bar_menu', [$this, 'registerBar'], 999);
     }
@@ -22,7 +31,7 @@ class AdminBar extends \AlexDashkin\Adwpfw\Common\Base
     /**
      * Add an item to the Top Admin Bar
      *
-     * @param array $bar {
+     * @param array $data {
      * @type string $id
      * @type string $title
      * @type string $capability Who can see the Bar
@@ -30,19 +39,9 @@ class AdminBar extends \AlexDashkin\Adwpfw\Common\Base
      * @type array $meta
      * }
      */
-    public function addBar(array $bar)
+    public function addBar(array $data)
     {
-        $bar = array_merge([
-            'id' => '',
-            'title' => 'Bar',
-            'capability' => 'manage_options',
-            'href' => '',
-            'meta' => [],
-        ], $bar);
-
-        $bar['id'] = $bar['id'] ?: sanitize_title($bar['title']);
-
-        $this->bars[] = $bar;
+        $this->items[] = new AdminBar($data);
     }
 
     /**
@@ -50,7 +49,7 @@ class AdminBar extends \AlexDashkin\Adwpfw\Common\Base
      *
      * @param array $bars
      *
-     * @see AdminBar::addBar()
+     * @see AdminBars::addBar()
      */
     public function addBars(array $bars)
     {
@@ -64,7 +63,7 @@ class AdminBar extends \AlexDashkin\Adwpfw\Common\Base
      */
     public function registerBar($wpAdminBar)
     {
-        foreach ($this->bars as $bar) {
+        foreach ($this->items as $bar) {
             if (!current_user_can($bar['capability'])) {
                 continue;
             }

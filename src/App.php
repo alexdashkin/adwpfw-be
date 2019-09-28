@@ -3,42 +3,65 @@
 namespace AlexDashkin\Adwpfw;
 
 use AlexDashkin\Adwpfw\Common\Helpers;
+use AlexDashkin\Adwpfw\Exceptions\ModuleNotFoundException;
 
+/**
+ * Main App Class
+ */
 class App
 {
+    /**
+     * @var array Config
+     */
     public $config = [];
+
+    /**
+     * @var Common\Base[] Modules
+     */
     private $modules = [];
 
-    public function __construct($config)
+    /**
+     * Constructor
+     *
+     * @param array $config Config
+     */
+    public function __construct(array $config)
     {
         $this->config = $config;
     }
 
-    public function m($module)
+    /**
+     * Get Module
+     *
+     * If not exists, tries to create
+     * If class not found - throws Exception
+     *
+     * @param string $moduleName
+     * @return Common\Base
+     * @throws ModuleNotFoundException
+     */
+    public function m($moduleName)
     {
-        if (!array_key_exists($module, $this->modules)) {
-            $class = '\\' . __NAMESPACE__ . '\\' . $module;
-
-            if (!class_exists($class)) {
-                return false;
-//                throw new \Exception('Module ' . $class . ' not found');
-            }
-
-            $this->modules[$module] = new $class($this);
-
-            if (method_exists($this->modules[$module], 'run')) {
-                $this->modules[$module]->run();
-            }
+        if (array_key_exists($moduleName, $this->modules)) {
+            return $this->modules[$moduleName];
         }
 
-        return $this->modules[$module];
+        $class = '\\' . __NAMESPACE__ . '\\' . $moduleName;
+
+        if (!class_exists($class)) {
+            throw new ModuleNotFoundException('Module ' . $class . ' not found');
+        }
+
+        $this->modules[$moduleName] = new $class($this);
+
+        return $this->modules[$moduleName];
     }
 
     /**
      * Add an AJAX action (admin-ajax.php)
      *
      * @param array $action {
-     * @type string $id Action ID without prefix (will be added automatically)
+     * @type string $id Action ID without prefix (that will be added automatically)
      * @type array $fields Accepted params [type, required]
      * @type callable $callback Handler
      * }
@@ -64,10 +87,10 @@ class App
      * Add an REST API Endpoint (/wp-json/)
      *
      * @param array $endpoint {
-     * @type string $namespace Namespace (i.e. prefix/v1/)
-     * @type string $route Route (i.e. users)
-     * @type string $method get/post
-     * @type bool $admin Whether available for admins only
+     * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/)
+     * @type string $route Route without slashes (i.e. users)
+     * @type string $method get/post. Default "post".
+     * @type bool $admin Whether available for admins only. Default false.
      * @type array $fields Accepted params [type, required]
      * @type callable $callback Handler
      * }
@@ -93,10 +116,10 @@ class App
      * Add a Cron Job
      *
      * @param array $job {
-     * @type string $id Job ID without prefix (will be added automatically)
+     * @type string $id Job ID without prefix (that will be added automatically)
      * @type callable $callback Handler
-     * @type int $interval Interval in seconds
-     * @type bool $parallel Allow parallel execution
+     * @type int $interval Interval in seconds. Default 0.
+     * @type bool $parallel Allow parallel execution. Default false.
      * @type array $args Args to be passed to the handler
      * }
      */
@@ -126,21 +149,26 @@ class App
     }
 
     /**
-     * Add a Settings Page to the WP Admin Left Bar
+     * Add a Settings Page to the left WP Admin Menu
      *
      * @param array $menu {
-     * @type string $id Menu slug
-     * @type string $prefix
-     * @type string $name Text to be displayed on the Bar
-     * @type string $title Text to be displayed on top as heading
-     * @type string $form Whether contains a form to submit
+     * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
+     * @type string $id Menu slug. Defaults to sanitized Title.
+     * @type string $prefix Prefix for slugs. Default config prefix.
+     * @type string $name Text for the left Menu. Default "Settings".
+     * @type string $title Text for the <title> tag. Defaults to $name.
+     * @type string $header Page header. Defaults to $name.
      * @type string $icon The dash icon name for the bar
-     * @type int $position Position of the menu
-     * @type array $values Data to fill out the form and to be modified (normally passed by reference)
+     * @type int $position Position in the Menu. Default 100.
      * @type string $option WP Option name to store the data (if $values isn't passed by reference)
-     * @type string $header Settings Page header HTML
-     * @type array $tabs Settings Page tabs [name, form, options, buttons]
-     * @type string $capability
+     * @type array $values Data to fill out the form and to be modified (normally passed by reference)
+     * @type string $capability Capability level to see the Page. Default "administrator"
+     * @type array $tabs Tabs: {
+     * @type string $name Tab Name
+     * @type bool $form Whether to wrap content with the <form> tag
+     * @type array $options Tab fields
+     * @type array $buttins Buttons at the bottom of the Tab
+     * }
      * @type string $callback Render function
      * }
      */
@@ -159,43 +187,6 @@ class App
     public function addMenus(array $menus)
     {
         $this->m('Admin\Menu')->addMenus($menus);
-    }
-
-    /**
-     * Add a Settings Sub Page to the WP Admin Left Bar
-     *
-     * @param array $menu {
-     * @type string $parent Parent Menu slug
-     * @type string $id Menu slug
-     * @type string $prefix
-     * @type string $name Text to be displayed on the Bar
-     * @type string $title Text to be displayed on top as heading
-     * @type string $form Whether contains a form to submit
-     * @type string $icon The dash icon name for the bar
-     * @type int $position Position of the menu
-     * @type array $values Data to fill out the form and to be modified (normally passed by reference)
-     * @type string $option WP Option name to store the data (if $values isn't passed by reference)
-     * @type string $header Settings Page header HTML
-     * @type array $args Settings Page tabs [name, form, options, buttons]
-     * @type string $capability
-     * @type string $callback Render function
-     * }
-     */
-    public function addSubMenu(array $menu)
-    {
-        $this->m('Admin\Menu')->addSubMenu($menu);
-    }
-
-    /**
-     * Add multiple Settings Sub pages
-     *
-     * @param array $menus
-     *
-     * @see Menu::addMenu()
-     */
-    public function addSubMenus(array $menus)
-    {
-        $this->m('Admin\Menu')->addSubMenus($menus);
     }
 
     /**
@@ -219,7 +210,7 @@ class App
      *
      * @param array $bars
      *
-     * @see AdminBar::addBar()
+     * @see AdminBars::addBar()
      */
     public function addAdminBars(array $bars)
     {

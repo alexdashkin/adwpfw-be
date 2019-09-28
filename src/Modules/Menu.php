@@ -2,6 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Admin;
 
+use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Common\Helpers;
 
 /**
@@ -10,14 +11,18 @@ use AlexDashkin\Adwpfw\Common\Helpers;
 class Menu extends \AlexDashkin\Adwpfw\Common\Base
 {
     private $menus = [];
-    private $submenus = [];
 
     /**
      * @var \AlexDashkin\Adwpfw\Common\Utils
      */
     private $utils;
 
-    public function __construct($app)
+    /**
+     * Constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
     {
         parent::__construct($app);
         $this->utils = $this->m('Common\Utils');
@@ -40,35 +45,44 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
     }
 
     /**
-     * Add a Settings Page to the WP Admin Left Bar
+     * Add a Settings Page to the left WP Admin Menu
      *
      * @param array $menu {
-     * @type string $id Menu slug
-     * @type string $prefix
-     * @type string $name Text to be displayed on the Bar
-     * @type string $title Text to be displayed on top as heading
+     * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
+     * @type string $id Menu slug. Defaults to sanitized Title.
+     * @type string $prefix Prefix for slugs. Default config prefix.
+     * @type string $name Text for the left Menu. Default "Settings".
+     * @type string $title Text for the <title> tag. Defaults to $name.
+     * @type string $header Page header. Defaults to $name.
      * @type string $icon The dash icon name for the bar
-     * @type int $position Position of the menu
-     * @type array $values Data to fill out the form and to be modified (normally passed by reference)
+     * @type int $position Position in the Menu. Default 100.
      * @type string $option WP Option name to store the data (if $values isn't passed by reference)
-     * @type array $tabs Settings Page tabs [name, form, options, buttons]
-     * @type string $capability
+     * @type array $values Data to fill out the form and to be modified (normally passed by reference)
+     * @type string $capability Capability level to see the Page. Default "administrator"
+     * @type array $tabs Tabs: {
+     * @type string $name Tab Name
+     * @type bool $form Whether to wrap content with the <form> tag
+     * @type array $options Tab fields
+     * @type array $buttins Buttons at the bottom of the Tab
+     * }
      * @type string $callback Render function
      * }
      */
     public function addMenu(array $menu)
     {
         $menu = array_merge([
+            'parent' => null,
             'id' => '',
             'prefix' => $this->config['prefix'],
             'name' => 'Settings',
-            'title' => 'Settings',
+            'title' => '',
+            'header' => '',
             'icon' => '',
             'position' => 100,
-            'values' => [],
             'option' => '',
-            'tabs' => [],
+            'values' => [],
             'capability' => 'administrator',
+            'tabs' => [],
             'callback' => null,
         ], $menu);
 
@@ -81,6 +95,8 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
             ], $tab);
         }
 
+        $menu['title'] = $menu['title'] ?: $menu['name'];
+        $menu['header'] = $menu['header'] ?: $menu['name'];
         $menu['id'] = $menu['id'] ?: sanitize_title($menu['title']);
 
         $this->menus[] = $menu;
