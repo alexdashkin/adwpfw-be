@@ -5,10 +5,8 @@ namespace AlexDashkin\Adwpfw\Entities;
 /**
  * Top Admin Bar
  */
-class AdminBar
+class AdminBar extends Entity
 {
-    private $data;
-
     /**
      * Add an item to the Top Admin Bar
      *
@@ -22,17 +20,15 @@ class AdminBar
      */
     public function __construct(array $data)
     {
-        $data = array_merge([
+        $this->defaults = [
             'id' => '',
             'title' => 'Bar',
             'capability' => 'manage_options',
             'href' => '',
             'meta' => [],
-        ], $data);
+        ];
 
-        $data['id'] = $data['id'] ?: sanitize_title($data['title']);
-
-        $this->data = $data;
+        parent::__construct($data);
     }
 
 

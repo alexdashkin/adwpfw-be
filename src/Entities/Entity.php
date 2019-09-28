@@ -3,32 +3,28 @@
 namespace AlexDashkin\Adwpfw\Entities;
 
 /**
- * Top Admin Bar
+ * Module Item Basic Class
  */
 abstract class Entity
 {
-    private $data;
+    /**
+     * @var array Entity Data
+     */
+    protected $data = [];
 
     /**
-     * Add an item to the Top Admin Bar
+     * @var array Entity Defaults
+     */
+    protected $defaults = [];
+
+    /**
+     * Constructor
      *
-     * @param array $data {
-     * @type string $id
-     * @type string $title
-     * @type string $capability Who can see the Bar
-     * @type string $href URL of the link
-     * @type array $meta
-     * }
+     * @param array $data
      */
     public function __construct(array $data)
     {
-        $data = array_merge([
-            'id' => '',
-            'title' => 'Bar',
-            'capability' => 'manage_options',
-            'href' => '',
-            'meta' => [],
-        ], $data);
+        $data = array_merge($this->defaults, $data);
 
         $data['id'] = $data['id'] ?: sanitize_title($data['title']);
 
