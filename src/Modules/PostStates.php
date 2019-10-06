@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Add States to the posts/pages

@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Front;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Widget sidebars

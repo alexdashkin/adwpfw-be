@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Common;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Logging
  */
-class Log extends Base
+class Logger extends Base
 {
     private $start;
     private $contents;
@@ -20,7 +20,7 @@ class Log extends Base
     {
         $this->start = date('d.m.y H:i:s');
 
-        $basePath = $this->m('Common\Utils')->getUploadsDir('logs');
+        $basePath = $this->m('Utils')->getUploadsDir('logs');
         $prefix = $this->config['prefix'];
         $suffix = md5($prefix);
 
@@ -33,7 +33,7 @@ class Log extends Base
      * @param mixed $message Text or any other type including \WP_Error
      * @param int $type 1 = Error, 2 = Warning, 4 = Notice
      */
-    public function log($message, $type = 4)
+    public function log($message, $type = 4) // todo sprintf()
     {
         if (is_wp_error($message)) {
             $message = implode(' | ', $message->get_error_messages());
@@ -54,7 +54,7 @@ class Log extends Base
 
         $log = "Started: " . $this->start . "\n" . $this->contents . "\n";
 
-        $basePath = $this->m('Common\Utils')->getUploadsDir('logs');
+        $basePath = $this->m('Utils')->getUploadsDir('logs');
         $prefix = $this->config['prefix'];
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $filename = '/' . $prefix . '-' . date('Y-m-d') . '-' . $suffix . '.log';

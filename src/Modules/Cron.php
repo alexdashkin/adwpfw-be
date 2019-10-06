@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Cron Jobs
@@ -23,7 +23,7 @@ class Cron extends \AlexDashkin\Adwpfw\Common\Base
         $prefix = $this->config['prefix'];
         $this->jobName = $prefix . '_heartbeat';
         $this->option = get_option($prefix . '_cron') ?: [];
-        $this->path = $this->m('Common\Utils')->getUploadsDir('cron') . '/';
+        $this->path = $this->m('Utils')->getUploadsDir('cron') . '/';
 
         add_filter('cron_schedules', function ($schedules) {
             $prefix = $this->config['prefix'];

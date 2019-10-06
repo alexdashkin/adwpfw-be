@@ -1,14 +1,14 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Entities;
+namespace AlexDashkin\Adwpfw\Items;
 
 /**
- * Top Admin Bar
+ * Top Admin Bar Entry
  */
-class AdminBar extends Entity
+class AdminBar extends Item
 {
     /**
-     * Add an item to the Top Admin Bar
+     * Constructor
      *
      * @param array $data {
      * @type string $id

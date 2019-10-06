@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Plugins/Themes self-update feature

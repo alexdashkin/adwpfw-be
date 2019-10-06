@@ -1,23 +1,27 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Common;
+namespace AlexDashkin\Adwpfw\Modules;
+
+use AlexDashkin\Adwpfw\App;
 
 /**
- * CSS/JS enqueuing
+ * Enqueue CSS/JS
  */
 class Assets extends Base
 {
-    private $adminCss = [];
-    private $adminJs = [];
-    private $frontCss = [];
-    private $frontJs = [];
-    private $remove = [];
-
-    public function __construct($app)
+    /**
+     * Constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
 
+    /**
+     * Add hooks
+     */
     public function run()
     {
         add_action('admin_enqueue_scripts', [$this, 'enqueueAdmin'], 20);

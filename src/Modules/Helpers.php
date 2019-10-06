@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Common;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Static Helpers

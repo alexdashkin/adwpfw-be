@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Common\Helpers;
 
@@ -271,6 +271,6 @@ class Metabox extends \AlexDashkin\Adwpfw\Common\Base
 
     private function twig($name, $args = [])
     {
-        return $this->m('Common\Utils')->renderTwig($name, $args);
+        return $this->m('Utils')->renderTwig($name, $args);
     }
 }

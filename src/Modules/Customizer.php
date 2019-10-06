@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Customizer;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Manage settings in WP Customizer

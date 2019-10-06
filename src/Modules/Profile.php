@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * User Profile page
@@ -128,6 +128,6 @@ class Profile extends \AlexDashkin\Adwpfw\Common\Base
 
     private function twig($name, $args = [])
     {
-        return $this->m('Common\Utils')->renderTwig($name, $args);
+        return $this->m('Utils')->renderTwig($name, $args);
     }
 }

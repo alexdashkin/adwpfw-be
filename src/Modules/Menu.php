@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Common\Helpers;
@@ -25,7 +25,7 @@ class Menu extends \AlexDashkin\Adwpfw\Common\Base
     public function __construct(App $app)
     {
         parent::__construct($app);
-        $this->utils = $this->m('Common\Utils');
+        $this->utils = $this->m('Utils');
     }
 
     public function run()

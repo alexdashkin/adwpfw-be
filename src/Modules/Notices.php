@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Admin;
+namespace AlexDashkin\Adwpfw\Modules;
 
 /**
  * Admin notices
@@ -141,7 +141,7 @@ class Notices extends \AlexDashkin\Adwpfw\Common\Base
         } elseif ($notice['tpl']) {
             $notice['args']['id'] = $id;
             $notice['args']['classes'] = $classes;
-            return $this->m('Common\Utils')->renderTwig('notices/' . $notice['tpl'], $notice['args']);
+            return $this->m('Utils')->renderTwig('notices/' . $notice['tpl'], $notice['args']);
         }
 
         return '';

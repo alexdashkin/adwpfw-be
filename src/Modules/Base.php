@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Common;
+namespace AlexDashkin\Adwpfw\Modules;
 
 abstract class Base
 {
@@ -20,6 +20,6 @@ abstract class Base
 
     protected function log($message)
     {
-        return $this->m('Common\Log')->log($message);
+        return $this->m('Logger')->log($message);
     }
 }

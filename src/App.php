@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw;
 
 use AlexDashkin\Adwpfw\Common\Helpers;
-use AlexDashkin\Adwpfw\Exceptions\ModuleNotFoundException;
+use AlexDashkin\Adwpfw\Exceptions\ModuleException;
 
 /**
  * Main App Class
@@ -38,7 +38,6 @@ class App
      *
      * @param string $moduleName
      * @return Common\Base
-     * @throws ModuleNotFoundException
      */
     public function m($moduleName)
     {
@@ -46,11 +45,7 @@ class App
             return $this->modules[$moduleName];
         }
 
-        $class = '\\' . __NAMESPACE__ . '\\' . $moduleName;
-
-        if (!class_exists($class)) {
-            throw new ModuleNotFoundException('Module ' . $class . ' not found');
-        }
+        $class = '\\' . __NAMESPACE__ . '\\Nodules\\' . $moduleName;
 
         $this->modules[$moduleName] = new $class($this);
 
@@ -68,7 +63,7 @@ class App
      */
     public function addAjaxAction(array $action)
     {
-        $this->m('Admin\Ajax')->addAction($action);
+        $this->m('Ajax')->addAction($action);
     }
 
     /**
@@ -80,7 +75,7 @@ class App
      */
     public function addAjaxActions(array $actions)
     {
-        $this->m('Admin\Ajax')->addActions($actions);
+        $this->m('Ajax')->addActions($actions);
     }
 
     /**
@@ -97,7 +92,7 @@ class App
      */
     public function addApiEndpoint(array $endpoint)
     {
-        $this->m('Admin\Ajax')->addEndpoint($endpoint);
+        $this->m('Ajax')->addEndpoint($endpoint);
     }
 
     /**
@@ -109,7 +104,7 @@ class App
      */
     public function addApiEndpoints(array $endpoints)
     {
-        $this->m('Admin\Ajax')->addEndpoints($endpoints);
+        $this->m('Ajax')->addEndpoints($endpoints);
     }
 
     /**
@@ -125,7 +120,7 @@ class App
      */
     public function addCronJob(array $job)
     {
-        $this->m('Admin\Cron')->addJob($job);
+        $this->m('Cron')->addJob($job);
     }
 
     /**
@@ -137,7 +132,7 @@ class App
      */
     public function addCronJobs(array $jobs)
     {
-        $this->m('Admin\Cron')->addJobs($jobs);
+        $this->m('Cron')->addJobs($jobs);
     }
 
     /**
@@ -145,7 +140,7 @@ class App
      */
     public function deactivateCron()
     {
-        $this->m('Admin\Cron')->deactivate();
+        $this->m('Cron')->deactivate();
     }
 
     /**
@@ -174,7 +169,7 @@ class App
      */
     public function addMenu(array $menu)
     {
-        $this->m('Admin\Menu')->addMenu($menu);
+        $this->m('Menu')->addMenu($menu);
     }
 
     /**
@@ -186,7 +181,7 @@ class App
      */
     public function addMenus(array $menus)
     {
-        $this->m('Admin\Menu')->addMenus($menus);
+        $this->m('Menu')->addMenus($menus);
     }
 
     /**
@@ -202,7 +197,7 @@ class App
      */
     public function addAdminBar(array $bar)
     {
-        $this->m('Admin\AdminBar')->addBar($bar);
+        $this->m('AdminBar')->addBar($bar);
     }
 
     /**
@@ -214,7 +209,7 @@ class App
      */
     public function addAdminBars(array $bars)
     {
-        $this->m('Admin\AdminBar')->addBars($bars);
+        $this->m('AdminBar')->addBars($bars);
     }
 
     /**
@@ -229,7 +224,7 @@ class App
      */
     public function addAdminPage(array $page)
     {
-        $this->m('Admin\AdminPage')->addPage($page);
+        $this->m('AdminPage')->addPage($page);
     }
 
     /**
@@ -237,11 +232,11 @@ class App
      *
      * @param array $pages
      *
-     * @see AdminPage::addPage()
+     * @see AdminPages::addPage()
      */
     public function addAdminPages(array $pages)
     {
-        $this->m('Admin\AdminPage')->addPages($pages);
+        $this->m('AdminPage')->addPages($pages);
     }
 
     /**
@@ -259,7 +254,7 @@ class App
      */
     public function addMetabox(array $metabox)
     {
-        $this->m('Admin\Metabox')->addMetabox($metabox);
+        $this->m('Metabox')->addMetabox($metabox);
     }
 
     /**
@@ -271,7 +266,7 @@ class App
      */
     public function addMetaboxes(array $metaboxes)
     {
-        $this->m('Admin\Metabox')->addMetaboxes($metaboxes);
+        $this->m('Metabox')->addMetaboxes($metaboxes);
     }
 
     /**
@@ -283,7 +278,7 @@ class App
      */
     public function metaboxGet($id, $post = null)
     {
-        return $this->m('Admin\Metabox')->get($id, $post);
+        return $this->m('Metabox')->get($id, $post);
     }
 
     /**
@@ -296,7 +291,7 @@ class App
      */
     public function metaboxSet($id, $value, $post = null)
     {
-        return $this->m('Admin\Metabox')->set($id, $value, $post);
+        return $this->m('Metabox')->set($id, $value, $post);
     }
 
     /**
@@ -315,7 +310,7 @@ class App
      */
     public function addNotice(array $notice)
     {
-        $this->m('Admin\Notices')->addNotice($notice);
+        $this->m('Notices')->addNotice($notice);
     }
 
     /**
@@ -327,7 +322,7 @@ class App
      */
     public function addNotices(array $notices)
     {
-        $this->m('Admin\Notices')->addNotices($notices);
+        $this->m('Notices')->addNotices($notices);
     }
 
     /**
@@ -337,7 +332,7 @@ class App
      */
     public function showNotice($id)
     {
-        $this->m('Admin\Notices')->show($id);
+        $this->m('Notices')->show($id);
     }
 
     /**
@@ -347,7 +342,7 @@ class App
      */
     public function stopNotice($id)
     {
-        $this->m('Admin\Notices')->stop($id);
+        $this->m('Notices')->stop($id);
     }
 
     /**
@@ -357,7 +352,7 @@ class App
      */
     public function dismissNotice($id)
     {
-        $this->m('Admin\Notices')->dismiss($id);
+        $this->m('Notices')->dismiss($id);
     }
 
     /**
@@ -369,7 +364,7 @@ class App
      */
     public function addPostType(array $postType)
     {
-        $this->m('Admin\PostTypes')->addPostType($postType);
+        $this->m('PostTypes')->addPostType($postType);
     }
 
     /**
@@ -381,7 +376,7 @@ class App
      */
     public function addPostTypes(array $postTypes)
     {
-        $this->m('Admin\PostTypes')->addPostTypes($postTypes);
+        $this->m('PostTypes')->addPostTypes($postTypes);
     }
 
     /**
@@ -391,7 +386,7 @@ class App
      */
     public function setProfileHeading($heading)
     {
-        $this->m('Admin\Profile')->setHeading($heading);
+        $this->m('Profile')->setHeading($heading);
     }
 
     /**
@@ -406,7 +401,7 @@ class App
      */
     public function addProfileField(array $field)
     {
-        $this->m('Admin\Profile')->addField($field);
+        $this->m('Profile')->addField($field);
     }
 
     /**
@@ -418,7 +413,7 @@ class App
      */
     public function addProfileFields(array $fields)
     {
-        $this->m('Admin\Profile')->addFields($fields);
+        $this->m('Profile')->addFields($fields);
     }
 
     /**
@@ -430,7 +425,7 @@ class App
      */
     public function profileGet($id, $userId = null)
     {
-        return $this->m('Admin\Profile')->get($id, $userId);
+        return $this->m('Profile')->get($id, $userId);
     }
 
     /**
@@ -441,7 +436,7 @@ class App
      */
     public function addPostState($postId, $state)
     {
-        $this->m('Admin\PostStates')->addState($postId, $state);
+        $this->m('PostStates')->addState($postId, $state);
     }
 
     /**
@@ -456,7 +451,7 @@ class App
      */
     public function addWidget(array $widget)
     {
-        $this->m('Admin\Widget')->addWidget($widget);
+        $this->m('Widget')->addWidget($widget);
     }
 
     /**
@@ -468,7 +463,7 @@ class App
      */
     public function addWidgets(array $widgets)
     {
-        $this->m('Admin\Widget')->addWidgets($widgets);
+        $this->m('Widget')->addWidgets($widgets);
     }
 
     /**
@@ -481,7 +476,7 @@ class App
      */
     public function pluginUpdater(array $plugin)
     {
-        $this->m('Admin\Updater')->addPlugin($plugin);
+        $this->m('Updater')->addPlugin($plugin);
     }
 
     /**
@@ -494,7 +489,7 @@ class App
      */
     public function themeUpdater(array $theme)
     {
-        $this->m('Admin\Updater')->addTheme($theme);
+        $this->m('Updater')->addTheme($theme);
     }
 
     /**
@@ -509,7 +504,7 @@ class App
      */
     public function adminCss(array $args)
     {
-        $this->m('Common\Assets')->adminCss($args);
+        $this->m('Assets')->adminCss($args);
     }
 
     /**
@@ -526,7 +521,7 @@ class App
      */
     public function adminJs(array $args)
     {
-        $this->m('Common\Assets')->adminJs($args);
+        $this->m('Assets')->adminJs($args);
     }
 
     /**
@@ -541,7 +536,7 @@ class App
      */
     public function frontCss(array $args)
     {
-        $this->m('Common\Assets')->frontCss($args);
+        $this->m('Assets')->frontCss($args);
     }
 
     /**
@@ -558,7 +553,7 @@ class App
      */
     public function frontJs(array $args)
     {
-        $this->m('Common\Assets')->frontJs($args);
+        $this->m('Assets')->frontJs($args);
     }
 
     /**
@@ -568,7 +563,7 @@ class App
      */
     public function removeAssets(array $ids)
     {
-        $this->m('Common\Assets')->remove($ids);
+        $this->m('Assets')->remove($ids);
     }
 
     /**
@@ -578,7 +573,7 @@ class App
      */
     public function customizerAdd(array $sections)
     {
-        $this->m('Customizer\Customizer')->add($sections);
+        $this->m('Customizer')->add($sections);
     }
 
     /**
@@ -589,7 +584,7 @@ class App
      */
     public function customizerGet($id)
     {
-        return $this->m('Customizer\Customizer')->get($id);
+        return $this->m('Customizer')->get($id);
     }
 
     /**
@@ -603,7 +598,7 @@ class App
      */
     public function addShortcode(array $shortcode)
     {
-        $this->m('Front\Shortcodes')->addShortcode($shortcode);
+        $this->m('Shortcodes')->addShortcode($shortcode);
     }
 
     /**
@@ -615,7 +610,7 @@ class App
      */
     public function addShortcodes(array $shortcodes)
     {
-        $this->m('Front\Shortcodes')->addShortcodes($shortcodes);
+        $this->m('Shortcodes')->addShortcodes($shortcodes);
     }
 
     /**
@@ -627,7 +622,7 @@ class App
      */
     public function addSidebar(array $sidebar)
     {
-        $this->m('Front\Sidebar')->addSidebar($sidebar);
+        $this->m('Sidebar')->addSidebar($sidebar);
     }
 
     /**
@@ -639,7 +634,7 @@ class App
      */
     public function dbQuery($query, array $values = [])
     {
-        return $this->m('Common\Db')->query($query, $values);
+        return $this->m('Db')->query($query, $values);
     }
 
     /**
@@ -652,7 +647,7 @@ class App
      */
     public function dbInsert($table, array $data, $own = true)
     {
-        return $this->m('Common\Db')->insert($table, $data, $own);
+        return $this->m('Db')->insert($table, $data, $own);
     }
 
     /**
@@ -666,7 +661,7 @@ class App
      */
     public function dbUpdate($table, array $data, array $where, $own = true)
     {
-        return $this->m('Common\Db')->update($table, $data, $where, $own);
+        return $this->m('Db')->update($table, $data, $where, $own);
     }
 
     /**
@@ -680,7 +675,7 @@ class App
      */
     public function dbInsertOrUpdate($table, array $data, array $where, $own = true)
     {
-        return $this->m('Common\Db')->insertOrUpdate($table, $data, $where, $own);
+        return $this->m('Db')->insertOrUpdate($table, $data, $where, $own);
     }
 
     /**
@@ -693,7 +688,7 @@ class App
      */
     public function dbDelete($table, array $where, $own = true)
     {
-        return $this->m('Common\Db')->delete($table, $where, $own);
+        return $this->m('Db')->delete($table, $where, $own);
     }
 
     /**
@@ -707,7 +702,7 @@ class App
      */
     public function dbGetVar($table, $var, array $where, $own = true)
     {
-        return $this->m('Common\Db')->getVar($table, $var, $where, $own);
+        return $this->m('Db')->getVar($table, $var, $where, $own);
     }
 
     /**
@@ -722,7 +717,7 @@ class App
      */
     public function dbGetResults($table, array $fields = [], array $where = [], $single = false, $own = true)
     {
-        return $this->m('Common\Db')->getResults($table, $fields, $where, $single, $own);
+        return $this->m('Db')->getResults($table, $fields, $where, $single, $own);
     }
 
     /**
@@ -734,7 +729,7 @@ class App
      */
     public function dbGetResultsQuery($query, array $values = [])
     {
-        return $this->m('Common\Db')->getResultsQuery($query, $values);
+        return $this->m('Db')->getResultsQuery($query, $values);
     }
 
     /**
@@ -747,7 +742,7 @@ class App
      */
     public function dbGetCount($table, array $where = [], $own = true)
     {
-        return $this->m('Common\Db')->getCount($table, $where, $own);
+        return $this->m('Db')->getCount($table, $where, $own);
     }
 
     /**
@@ -757,7 +752,7 @@ class App
      */
     public function dbInsertId()
     {
-        return $this->m('Common\Db')->insertId();
+        return $this->m('Db')->insertId();
     }
 
     /**
@@ -770,7 +765,7 @@ class App
      */
     public function dbInsertRows($table, array $data, $own = true)
     {
-        return $this->m('Common\Db')->insertRows($table, $data, $own);
+        return $this->m('Db')->insertRows($table, $data, $own);
     }
 
     /**
@@ -782,7 +777,7 @@ class App
      */
     public function dbTruncateTable($table, $own = true)
     {
-        return $this->m('Common\Db')->truncateTable($table, $own);
+        return $this->m('Db')->truncateTable($table, $own);
     }
 
     /**
@@ -793,7 +788,7 @@ class App
      */
     public function dbCheckTables(array $tables)
     {
-        return $this->m('Common\Db')->checkTables($tables);
+        return $this->m('Db')->checkTables($tables);
     }
 
     /**
@@ -805,7 +800,7 @@ class App
      */
     public function dbGetTable($name, $own = true)
     {
-        return $this->m('Common\Db')->getTable($name, $own);
+        return $this->m('Db')->getTable($name, $own);
     }
 
     /**
@@ -817,7 +812,7 @@ class App
      */
     public function renderTpl($tpl, array $args = [])
     {
-        return $this->m('Common\Utils')->renderTpl($tpl, $args);
+        return $this->m('Utils')->renderTpl($tpl, $args);
     }
 
     /**
@@ -829,7 +824,7 @@ class App
      */
     public function renderTwig($name, array $args = [])
     {
-        return $this->m('Common\Utils')->renderTwig($name, $args);
+        return $this->m('Utils')->renderTwig($name, $args);
     }
 
     /**
@@ -841,7 +836,7 @@ class App
      */
     public function getUploadsDir($path = '', $getUrl = false)
     {
-        return $this->m('Common\Utils')->getUploadsDir($path, $getUrl);
+        return $this->m('Utils')->getUploadsDir($path, $getUrl);
     }
 
     /**
@@ -859,7 +854,7 @@ class App
      */
     public function apiRequest(array $args)
     {
-        return $this->m('Common\Utils')->apiRequest($args);
+        return $this->m('Utils')->apiRequest($args);
     }
 
     /**
@@ -872,7 +867,7 @@ class App
      */
     public function success($message = 'Done', array $data = [], $echo = false)
     {
-        return $this->m('Common\Utils')->returnSuccess($message, $data, $echo);
+        return $this->m('Utils')->returnSuccess($message, $data, $echo);
     }
 
     /**
@@ -884,7 +879,7 @@ class App
      */
     public function error($message = 'Unknown Error', $echo = false)
     {
-        return $this->m('Common\Utils')->returnError($message, $echo);
+        return $this->m('Utils')->returnError($message, $echo);
     }
 
     /**
@@ -895,7 +890,7 @@ class App
      */
     public function log($message, $type = 4)
     {
-        $this->m('Common\Log')->log($message, $type);
+        $this->m('Logger')->log($message, $type);
     }
 
     /**
@@ -907,7 +902,7 @@ class App
      */
     public function pr($result, $errorMessage = '')
     {
-        return $this->m('Common\Utils')->pr($result, $errorMessage);
+        return $this->m('Utils')->pr($result, $errorMessage);
     }
 
     /**
@@ -919,7 +914,7 @@ class App
      */
     public function cache($callable, $args = [])
     {
-        return $this->m('Common\Utils')->cache($callable, $args);
+        return $this->m('Utils')->cache($callable, $args);
     }
 
     /**
@@ -1036,7 +1031,7 @@ class App
      */
     public function checkDeps($pluginName, array $deps)
     {
-        return $this->m('Common\Utils')->checkDeps($pluginName, $deps);
+        return $this->m('Utils')->checkDeps($pluginName, $deps);
     }
 
     /**

@@ -3,13 +3,14 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Entities\AdminBar;
 
 /**
- * WP Admin Top Bar Entry
+ * Top Admin Bar Items
  */
 class AdminBars extends Module
 {
+
+
     /**
      * Constructor
      *
@@ -25,59 +26,35 @@ class AdminBars extends Module
      */
     protected function run()
     {
-        add_action('admin_bar_menu', [$this, 'registerBar'], 999);
+        add_action('admin_bar_menu', [$this, 'register'], 999);
     }
 
     /**
-     * Add an item to the Top Admin Bar
+     * Register Admin Bars in WP
+     * Hooked to "admin_bar_menu" action
      *
-     * @param array $data {
-     * @type string $id
-     * @type string $title
-     * @type string $capability Who can see the Bar
-     * @type string $href URL of the link
-     * @type array $meta
-     * }
-     */
-    public function addBar(array $data)
-    {
-        $this->items[] = new AdminBar($data);
-    }
-
-    /**
-     * Add multiple items to the Top Admin Bar
-     *
-     * @param array $bars
-     *
-     * @see AdminBars::addBar()
-     */
-    public function addBars(array $bars)
-    {
-        foreach ($bars as $bar) {
-            $this->addBar($bar);
-        }
-    }
-
-    /**
      * @param \WP_Admin_Bar $wpAdminBar
      */
-    public function registerBar($wpAdminBar)
+    public function register(\WP_Admin_Bar $wpAdminBar)
     {
-        foreach ($this->items as $bar) {
-            if (!current_user_can($bar['capability'])) {
+        foreach ($this->items as $item) {
+            $data = $item->data;
+            
+            if (!current_user_can($data['capability'])) {
                 continue;
             }
 
-            foreach ($bar as $key => &$arg) {
+            foreach ($data as $key => &$arg) {
                 if ('meta' === $key) {
                     continue;
                 }
+
                 if (is_array($arg)) {
-                    $arg = $this->m('Common\Utils')->renderTwig($arg[0], $arg[1]);
+                    $arg = $this->m('Utils')->renderTwig($arg[0], $arg[1]);
                 }
             }
 
-            $wpAdminBar->add_node($bar);
+            $wpAdminBar->add_node($data);
         }
     }
 }
