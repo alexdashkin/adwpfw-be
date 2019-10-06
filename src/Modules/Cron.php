@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Cron Jobs
  */
-class Cron extends \AlexDashkin\Adwpfw\Common\Base
+class Cron extends Module
 {
     private $jobs = [];
     private $option = [];

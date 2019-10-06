@@ -3,14 +3,13 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Items\AdminBar;
 
 /**
  * Top Admin Bar Items
  */
-class AdminBars extends Module
+class AdminBars extends ItemsModule
 {
-
-
     /**
      * Constructor
      *
@@ -22,39 +21,13 @@ class AdminBars extends Module
     }
 
     /**
-     * Add hooks
-     */
-    protected function run()
-    {
-        add_action('admin_bar_menu', [$this, 'register'], 999);
-    }
-
-    /**
-     * Register Admin Bars in WP
-     * Hooked to "admin_bar_menu" action
+     * Add Admin Bar
      *
-     * @param \WP_Admin_Bar $wpAdminBar
+     * @param array $data
+     * @param App $app
      */
-    public function register(\WP_Admin_Bar $wpAdminBar)
+    public function add(array $data, App $app)
     {
-        foreach ($this->items as $item) {
-            $data = $item->data;
-            
-            if (!current_user_can($data['capability'])) {
-                continue;
-            }
-
-            foreach ($data as $key => &$arg) {
-                if ('meta' === $key) {
-                    continue;
-                }
-
-                if (is_array($arg)) {
-                    $arg = $this->m('Utils')->renderTwig($arg[0], $arg[1]);
-                }
-            }
-
-            $wpAdminBar->add_node($data);
-        }
+        $this->items[] = new AdminBar($data, $app);
     }
 }

@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Manage Shortcodes
  */
-class Shortcodes extends \AlexDashkin\Adwpfw\Common\Base
+class Shortcodes extends Module
 {
     private $shortcodes = [];
 

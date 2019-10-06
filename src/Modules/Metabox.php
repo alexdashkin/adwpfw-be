@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Common\Helpers;
 /**
  * Posts Metaboxes
  */
-class Metabox extends \AlexDashkin\Adwpfw\Common\Base
+class Metabox extends Module
 {
     private $metaboxes = [];
     private $remove = [];

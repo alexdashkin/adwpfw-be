@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Admin notices
  */
-class Notices extends \AlexDashkin\Adwpfw\Common\Base
+class Notices extends Module
 {
     private $notices = [];
     private $option;

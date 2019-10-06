@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Manage settings in WP Customizer
  */
-class Customizer extends \AlexDashkin\Adwpfw\Common\Base
+class Customizer extends Module
 {
     private $panels = [];
 

@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Admin Dashboard widgets
  */
-class Widget extends \AlexDashkin\Adwpfw\Common\Base
+class Widget extends Module
 {
     private $widgets = [];
 

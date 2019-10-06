@@ -6,7 +6,7 @@ namespace AlexDashkin\Adwpfw\Modules;
  * Add States to the posts/pages
  * (a comment displayed on the right in the posts list)
  */
-class PostStates extends \AlexDashkin\Adwpfw\Common\Base
+class PostStates extends Module
 {
     private $states = [];
 

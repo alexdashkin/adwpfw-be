@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Items;
 
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Modules\Helpers;
+
 /**
  * Module Item Basic Class
  */
@@ -18,40 +21,53 @@ abstract class Item
     protected $defaults = [];
 
     /**
+     * @var App
+     */
+    protected $app;
+
+    /**
+     * @var array Config
+     */
+    protected $config;
+
+    /**
      * Constructor
      *
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data, App $app)
     {
-        $data = $this->arrayMerge($this->defaults, $data);
+        $this->app = $app;
+        $this->config = $app->config;
 
-        $data['id'] = $data['id'] ?: sanitize_title($data['title']);
+        $this->data = Helpers::arrayMerge($this->defaults, $data);
 
-        $this->data = $data;
+        $this->hooks();
     }
 
     /**
-     * Helper for deep array merge
+     * Get Module
      *
-     * @param array $arr1
-     * @param array $arr2
-     * @return array
+     * @param string $moduleName Module Name
+     * @return \AlexDashkin\Adwpfw\Modules\Module
      */
-    protected function arrayMerge(array $arr1, array $arr2)
+    protected function m($moduleName)
     {
-        foreach ($arr1 as $key => &$value) {
-            if (!array_key_exists($key, $arr2)) {
-                continue;
-            }
-
-            if (is_array($value) && is_array($arr2[$key])) {
-                $value = $this->arrayMerge($value, $arr2[$key]);
-            } else {
-                $value = $arr2[$key];
-            }
-        }
-
-        return $arr1;
+        return $this->app->m($moduleName);
     }
+
+    /**
+     * Add log entry
+     *
+     * @param mixed $message
+     */
+    protected function log($message)
+    {
+        $this->app->log($message);
+    }
+
+    /**
+     * Hooks to register Item in WP
+     */
+    abstract protected function hooks();
 }

@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Logging
  */
-class Logger extends Base
+class Logger extends Module
 {
     private $start;
     private $contents;

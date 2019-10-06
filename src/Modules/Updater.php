@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Plugins/Themes self-update feature
  */
-class Updater extends \AlexDashkin\Adwpfw\Common\Base
+class Updater extends Module
 {
     private $plugins = [];
     private $themes = [];

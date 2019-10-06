@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Database Helper
  */
-class Db extends Base
+class Db extends Module
 {
     /**
      * @var \wpdb

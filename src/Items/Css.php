@@ -2,10 +2,12 @@
 
 namespace AlexDashkin\Adwpfw\Items;
 
+use AlexDashkin\Adwpfw\App;
+
 /**
  * CSS file
  */
-class Css extends Item
+class Css extends Asset
 {
     /**
      * Constructor
@@ -19,7 +21,7 @@ class Css extends Item
      * @type array $deps List of Dependencies (slugs)
      * }
      */
-    public function __construct(array $data)
+    public function __construct(array $data, App $app)
     {
         $this->defaults = [
             'type' => '',
@@ -30,6 +32,15 @@ class Css extends Item
             'deps' => [],
         ];
 
-        parent::__construct($data);
+        parent::__construct($data, $app);
+    }
+
+    public function enqueue()
+    {
+        if (!empty($item['callback']) && !$item['callback']()) {
+            return;
+        }
+
+        wp_enqueue_style($item['id'], $item['url'], $item['deps'], $item['ver']);
     }
 }

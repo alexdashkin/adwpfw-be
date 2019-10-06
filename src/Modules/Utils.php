@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Dynamic Helpers
  */
-class Utils extends Base
+class Utils extends Module
 {
     private $twig;
     private $cache;

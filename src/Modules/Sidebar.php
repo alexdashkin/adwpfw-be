@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Widget sidebars
  */
-class Sidebar extends \AlexDashkin\Adwpfw\Common\Base
+class Sidebar extends Module
 {
     private $sidebars = [];
 

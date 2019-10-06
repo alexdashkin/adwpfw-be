@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * User Profile page
  */
-class Profile extends \AlexDashkin\Adwpfw\Common\Base
+class Profile extends Module
 {
     private $heading = 'Custom fields';
     private $fields = [];

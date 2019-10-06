@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Custom Post Types
  */
-class PostTypes extends \AlexDashkin\Adwpfw\Common\Base
+class PostTypes extends Module
 {
     private $postTypes = [];
 

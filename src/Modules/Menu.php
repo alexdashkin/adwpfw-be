@@ -8,7 +8,7 @@ use AlexDashkin\Adwpfw\Common\Helpers;
 /**
  * Admin Settings pages
  */
-class Menu extends \AlexDashkin\Adwpfw\Common\Base
+class Menu extends Module
 {
     private $menus = [];
 
