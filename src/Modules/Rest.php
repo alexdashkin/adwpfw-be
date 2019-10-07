@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Common\Helpers;
 /**
  * Ajax actions and REST API Endpoints
  */
-class Ajax extends Module
+class Rest extends Module
 {
     private $actions = [];
     private $endpoints = [];

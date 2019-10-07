@@ -13,8 +13,8 @@ abstract class Asset extends Item
      * Constructor
      *
      * @param array $data {
-     * @type string $type admin/front
-     * @type string $id Used as a reference when registering in WP. Defaults to $prefix + $type + uniqid(). Must be unique.
+     * @type string $type admin/front. Required.
+     * @type string $slug Used as a reference when registering in WP. Defaults to $prefix + $type + uniqid(). Must be unique.
      * @type string $file Path relative to Plugin Root
      * @type string $url Ignored if $file is specified
      * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
@@ -33,7 +33,6 @@ abstract class Asset extends Item
         }
 
         $data = array_merge([
-            'id' => $data['type'] . '-' . uniqid(),
             'url' => $url,
             'ver' => $version,
         ], $data);

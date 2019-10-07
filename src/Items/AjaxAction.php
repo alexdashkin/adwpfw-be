@@ -13,17 +13,28 @@ class AjaxAction extends Item
      * Constructor
      *
      * @param array $data {
-     * @type string $id Action ID without prefix (will be added automatically)
+     * @type string $action Action Slug without prefix (will be added automatically). Required.
+     * @type callable $callback Handler. Required.
      * @type array $fields Accepted params [type, required]
-     * @type callable $callback Handler
      * }
      */
     public function __construct(array $data, App $app)
     {
-        $this->defaults = [
-            'id' => '',
-            'fields' => [],
-            'callback' => '',
+        $this->props = [
+            'action' => [
+                'required' => true,
+            ],
+            'callback' => [
+                'type' => 'callback',
+                'required' => true,
+            ],
+            'fields' => [
+                'type' => 'array',
+                'def' => [
+                    'type' => 'string',
+                    'required' => false,
+                ],
+            ],
         ];
 
         parent::__construct($data, $app);
@@ -42,6 +53,10 @@ class AjaxAction extends Item
      */
     public function handle()
     {
+        if (!wp_doing_ajax()) {
+            return;
+        }
+
         $prefix = $this->app->config['prefix'];
         $request = $_REQUEST;
 
@@ -51,7 +66,7 @@ class AjaxAction extends Item
 
         $actionId = str_replace($prefix . '_', '', $request['action']);
 
-        if ($actionId !== $this->data['id']) {
+        if ($actionId !== $this->data['action']) {
             return;
         }
 
@@ -62,7 +77,7 @@ class AjaxAction extends Item
         $this->log('Ajax request received, action: ' . $actionId);
 
         if ($data = !empty($request['data']) ? $request['data'] : []) {
-            $validated = $this->validate($data);
+            $validated = $this->validateRequest($data);
 
             if (!$validated['success']) {
                 $this->error('Validation error: ' . $validated['message'], true);
@@ -89,12 +104,12 @@ class AjaxAction extends Item
     }
 
     /**
-     * Validate params
+     * Validate Request
      *
      * @param $request $_REQUEST params
      * @return array
      */
-    private function validate($request)
+    private function validateRequest($request)
     {
         $actionData = $this->data;
 

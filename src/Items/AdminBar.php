@@ -13,29 +13,44 @@ class AdminBar extends Item
      * Constructor
      *
      * @param array $data {
-     * @type string $id
-     * @type string $title
-     * @type int $parent
+     * @type string $title Bar Title. Required.
+     * @type string $slug Defaults to sanitized Title
+     * @type int $parent Parent node ID
      * @type string $capability Who can see the Bar
      * @type string $href URL of the link
      * @type bool $group
      * @type array $meta
-     * @see \WP_Admin_Bar::add_node()
      * }
+     * @see \WP_Admin_Bar::add_node()
      */
     public function __construct(array $data, App $app)
     {
-        $this->defaults = [
-            'id' => '',
-            'title' => 'Bar',
-            'parent' => 0,
-            'capability' => 'manage_options',
-            'href' => '',
-            'group' => false,
-            'meta' => [],
+        $this->props = [
+            'title' => [
+                'required' => true,
+            ],
+            'slug' => [
+                'default' => null,
+            ],
+            'parent' => [
+                'type' => 'int',
+                'default' => 0,
+            ],
+            'capability' => [
+                'default' => 'manage_options'
+            ],
+            'href' => [
+                'default' => null,
+            ],
+            'group' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'meta' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
-
-        $data['id'] = $data['id'] ?: sanitize_title($data['title']) . uniqid();
 
         parent::__construct($data, $app);
     }

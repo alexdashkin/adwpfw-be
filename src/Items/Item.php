@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Modules\Helpers;
+use AlexDashkin\Adwpfw\Exceptions\InvalidItemDataException;
 
 /**
  * Module Item Basic Class
@@ -18,7 +18,7 @@ abstract class Item
     /**
      * @var array Entity Defaults
      */
-    protected $defaults = [];
+    protected $props = [];
 
     /**
      * @var App
@@ -40,9 +40,68 @@ abstract class Item
         $this->app = $app;
         $this->config = $app->config;
 
-        $this->data = Helpers::arrayMerge($this->defaults, $data);
+        $this->data = $this->validate($data);
 
         $this->hooks();
+    }
+
+    protected function validate($data)
+    {
+        foreach ($this->props as $name => $def) {
+            $field = array_merge([
+                'type' => 'string',
+                'required' => false,
+                'default' => null,
+            ], $def);
+
+            if (!isset($data[$name])) {
+                if ($field['required']) {
+                    throw new InvalidItemDataException("Field $name is required"); // todo
+                } else {
+                    $data[$name] = $field['default'];
+                }
+            }
+
+            $item =& $data[$name];
+
+            if ('callable' === $field['type'] && !is_callable($item)) {
+                throw new InvalidItemDataException("Field $name is not callable"); // todo
+            }
+
+            switch ($field['type']) {
+                case 'string':
+                    $item = trim($item);
+                    break;
+
+                case 'int':
+                    $item = (int)$item;
+                    break;
+
+                case 'bool':
+                    $item = (bool)$item;
+                    break;
+
+                case 'array':
+                    $item = (array)$item;
+
+                    if (!empty($field['def'])) {
+                        foreach ($item as &$subItem) {
+                            $subItem = array_merge($field['def'], $subItem);
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        return $data;
+    }
+
+    protected function getDefaultSlug($field, $data)
+    {
+        $title = !empty($data[$field]) ? sanitize_title($data[$field]) : 'item';
+
+        return $this->config['prefix'] . '-' . $title . '-' . uniqid();
     }
 
     /**
