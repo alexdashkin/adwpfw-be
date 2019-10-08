@@ -32,7 +32,7 @@ class Js extends Asset
                 'required' => true,
             ],
             'slug' => [
-                'default' => $this->getDefaultSlug('type', $data),
+                'default' => $this->getDefaultSlug($data['type']),
             ],
             'file' => [
                 'default' => null,

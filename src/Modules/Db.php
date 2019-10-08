@@ -120,7 +120,7 @@ class Db extends Module
         }
 
         $condition = implode(' AND ', $whereArr);
-        $query = "SELECT `$var` FROM $t WHERE $condition";
+        $query = sprintf('SELECT `%s` FROM `%s` WHERE %s', $var, $t, $condition);
 
         return $this->result($this->wpdb->get_var($query));
     }
@@ -147,7 +147,7 @@ class Db extends Module
         }
 
         $condition = implode(' AND ', $whereArr);
-        $query = "SELECT $select FROM $t";
+        $query = sprintf('SELECT %s FROM %s', $select, $t);
 
         if ($where) {
             $query .= " WHERE $condition";
@@ -190,7 +190,7 @@ class Db extends Module
         }
 
         $condition = implode(' AND ', $whereArr);
-        $query = "SELECT COUNT(*) FROM $t";
+        $query = sprintf('SELECT COUNT(*) FROM `%s`', $t);
 
         if ($where) {
             $query .= " WHERE $condition";
@@ -248,7 +248,7 @@ class Db extends Module
         $this->log("$counter items to insert");
         $columns = '(' . trim($columns, ', ') . ')';
         $placeholders = '(' . trim($placeholders, ', ') . '), ';
-        $query = "INSERT INTO $t $columns VALUES " . trim(str_repeat($placeholders, $counter), ', ');
+        $query = sprintf('INSERT INTO %s %s VALUES ', $t, $columns) . trim(str_repeat($placeholders, $counter), ', ');
 
         return $this->result($this->query($query, $values));
     }
@@ -276,8 +276,8 @@ class Db extends Module
     public function checkTables(array $tables)
     {
         foreach ($tables as $table) {
-            $from = $this->getTable($table);
-            $query = 'SHOW TABLES LIKE "' . $from . '"';
+            $t = $this->getTable($table);
+            $query = sprintf('SHOW TABLES LIKE "%s"', $t);
             if (empty($this->query($query))) {
                 return false;
             }
@@ -300,7 +300,7 @@ class Db extends Module
         }
 
         if (empty($this->config['tables'][$name])) {
-            $this->log("Table $name not found in config", 1);
+            $this->log("Table $name not found in config");
             return '';
         }
 
@@ -343,5 +343,4 @@ class Db extends Module
 
         return $result;
     }
-
 }

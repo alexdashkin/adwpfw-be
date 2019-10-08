@@ -279,6 +279,7 @@ class Helpers
         remove_filter('the_content_feed', 'wp_staticize_emoji');
         remove_filter('comment_text_rss', 'wp_staticize_emoji');
         add_filter('emoji_svg_url', '__return_false');
+
         if (function_exists('disable_emojicons_tinymce')) {
             add_filter('tiny_mce_plugins', 'disable_emojicons_tinymce');
         }

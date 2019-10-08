@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * Manage settings in WP Customizer
  */
-class Customizer extends Module
+class Customizer extends Module // todo convert to objects hierarchy
 {
     private $panels = [];
 

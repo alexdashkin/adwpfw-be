@@ -47,49 +47,81 @@ class CronJob extends Item
         parent::__construct($data, $app);
     }
 
+    /**
+     * Run the Job
+     */
     public function run()
     {
         $prefix = $this->config['prefix'];
 
+        $jobName = $this->data['name'];
+
         $optionName = $prefix . '_cron';
 
-        $option = get_option($optionName) ?: [];
+        $optionValue = get_option($optionName) ?: [];
+
+        $running = !empty($optionValue[$jobName]['running']) ? $optionValue[$jobName]['running'] : [];
+
+        $lastRun = !empty($optionValue[$jobName]['last']) ? (int)$optionValue[$jobName]['last'] : 0;
 
         $data = $this->data;
 
-        $jobName = $this->data['name'];
-
-        $lastRun = !empty($option[$jobName]['started']) ? (int)$option[$jobName]['started'] : 0;
-
-        if (!$lastRun || (time() - $this->data['interval']) > $lastRun) {
+        if (!$lastRun || (time() - $data['interval']) > $lastRun) {
             $this->log("Launching cron job $jobName");
 
-            $running = !empty($option[$jobName]['started']) && empty($option[$jobName]['finished']);
-
-            if (!$data['parallel'] && $running) {
+            if ($running && !$data['parallel']) {
                 $this->log('Another instance is running, aborting');
                 return;
             }
 
-            $option[$jobName] = [
-                'started' => time(),
-                'finished' => 0,
+            $started = time();
+
+            $running[] = $started;
+
+            $opt = [
+                'last' => $lastRun,
+                'running' => $running
             ];
 
-            update_option($optionName, $option);
+            $this->updateOption($jobName, $opt);
 
             try {
                 call_user_func($data['callback'], $data['args']);
+
             } catch (\Exception $e) {
                 $msg = 'Exception: ' . $e->getMessage() . '. Execution aborted.';
                 $this->log($msg);
-            } finally {
-                file_put_contents($path, 0);
-            }
 
-            $this->option[$jobName] = time();
+            } finally {
+                $optionValue = get_option($optionName) ?: [];
+                $running = !empty($optionValue[$jobName]['running']) ? $optionValue[$jobName]['running'] : [];
+
+                foreach ($running as $index => $time) {
+                    if ($time === $started) {
+                        unset($running[$index]);
+                    }
+                }
+
+                $opt = [
+                    'last' => time(),
+                    'running' => $running
+                ];
+
+                $this->updateOption($jobName, $opt);
+            }
 
             $this->log('Done');
         }
+    }
+
+    private function updateOption($name, $value)
+    {
+        $optionName = $this->config['prefix'] . '_cron';
+
+        $optionValue = get_option($optionName) ?: [];
+
+        $optionValue[$name] = $value;
+
+        update_option($optionName, $optionValue);
     }
 }

@@ -95,11 +95,9 @@ abstract class Item
         return $data;
     }
 
-    protected function getDefaultSlug($field, $data)
+    protected function getDefaultSlug($base = 'item')
     {
-        $title = !empty($data[$field]) ? sanitize_title($data[$field]) : 'item';
-
-        return $this->config['prefix'] . '-' . $title . '-' . uniqid();
+        return $this->config['prefix'] . '-' . sanitize_title($base) . '-' . uniqid();
     }
 
     /**

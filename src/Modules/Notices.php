@@ -2,153 +2,47 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Items\Notice;
+
 /**
  * Admin notices
  */
-class Notices extends Module
+class Notices extends ItemsModule
 {
-    private $notices = [];
-    private $option;
-
-    public function __construct($app)
+    /**
+     * Constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
 
-    public function run()
+    /**
+     * Add Admin Bar
+     *
+     * @param array $data
+     * @param App $app
+     */
+    public function add(array $data, App $app)
     {
-        $this->option = get_option($this->config['prefix'] . '_notices') ?: [];
-        add_action('admin_notices', [$this, 'render']);
-        add_action('shutdown', [$this, 'updateOption']);
+        $this->items[] = new Notice($data, $app);
     }
 
     /**
-     * Add Admin Notice
-     *
-     * @param array $notice {
-     * @type string $id
-     * @type string $message Message to display (tpl will be ignored)
-     * @type string $tpl Name of the notice TWIG template
-     * @type string $type Notice type (success, error)
-     * @type bool $dismissible Whether can be dismissed
-     * @type bool $once Don't show after dismissed
-     * @type string $classes Container classes
-     * @type array $args Additional TWIG Args
-     * }
+     * Hooks to register Items in WP
      */
-    public function addNotice(array $notice)
+    protected function hooks()
     {
-        $notice = array_merge([
-            'id' => '',
-            'message' => '',
-            'tpl' => '',
-            'type' => 'success',
-            'dismissible' => true,
-            'once' => false,
-            'classes' => '',
-            'args' => [],
-        ], $notice);
-
-        $notice['tpl'] = $notice['tpl'] ?: $notice['id'];
-
-        $this->notices[] = $notice;
+        add_action('admin_notices', [$this, 'process']);
     }
 
-    /**
-     * Add multiple Notices
-     *
-     * @param array $notices
-     *
-     * @see Notices::addNotice()
-     */
-    public function addNotices($notices)
+    public function process()
     {
-        foreach ($notices as $notice) {
-            $this->addNotice($notice);
+        foreach ($this->items as $item) {
+            $item->process();
         }
-    }
-
-    /**
-     * Show a notice
-     *
-     * @param string $id Notice ID
-     */
-    public function show($id)
-    {
-        unset($this->option[$id]);
-    }
-
-    /**
-     * Stop showing a notice
-     *
-     * @param string $id Notice ID
-     */
-    public function stop($id)
-    {
-        $this->option[$id] = 0;
-    }
-
-    /**
-     * Dismiss a notice
-     *
-     * @param string $id Notice ID
-     */
-    public function dismiss($id)
-    {
-        $this->option[$id] = time();
-    }
-
-    public function render()
-    {
-        foreach ($this->notices as $notice) {
-            if (!empty($notice['callback']) && !$notice['callback']()) {
-                continue;
-            }
-
-            if (!$notice['dismissible'] || ($notice['dismissible'] && !isset($this->option[$notice['id']]))) {
-                echo $this->renderNotice($notice);
-                continue;
-            }
-
-            if (!$time = (int)$this->option[$notice['id']]) {
-                continue;
-            }
-
-            if ($notice['once']) {
-                $this->option[$notice['id']] = 0;
-            } elseif (!empty($notice['days'])) {
-                if ($time < time() - $notice['days'] * DAY_IN_SECONDS) {
-                    echo $this->renderNotice($notice);
-                }
-            }
-        }
-    }
-
-    private function renderNotice($notice)
-    {
-        $classes = $notice['classes'];
-        $classes .= ' notice notice-' . $notice['type'];
-
-        if ($notice['dismissible']) {
-            $classes .= ' is-dismissible';
-        }
-
-        $id = $notice['id'];
-        $classes .= ' ' . $this->config['prefix'] . '-notice';
-
-        if ($notice['message']) {
-            return "<div class='$classes' data-id='$id'><p>{$notice['message']}</p></div>";
-        } elseif ($notice['tpl']) {
-            $notice['args']['id'] = $id;
-            $notice['args']['classes'] = $classes;
-            return $this->m('Utils')->renderTwig('notices/' . $notice['tpl'], $notice['args']);
-        }
-
-        return '';
-    }
-
-    public function updateOption()
-    {
-        update_option($this->config['prefix'] . '_notices', $this->option);
     }
 }
