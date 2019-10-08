@@ -30,4 +30,71 @@ class Ajax extends ItemsModule
     {
         $this->items[] = new AjaxAction($data, $app);
     }
+
+    /**
+     * Hooks to register Items in WP
+     */
+    protected function hooks()
+    {
+        add_action('wp_loaded', [$this, 'handle']);
+    }
+
+    public function handle()
+    {
+        if (!wp_doing_ajax()) {
+            return;
+        }
+
+        $prefix = $this->config['prefix'];
+
+        $request = $_REQUEST;
+
+        if (empty($request['action']) || false === strpos($request['action'], $prefix)) {
+            return;
+        }
+
+        $actionName = str_ireplace($prefix . '_', '', $request['action']);
+
+        if (!$action = $this->searchItems(['name' => $actionName])) {
+            return;
+        }
+
+        if (!check_ajax_referer($prefix, false, false)) {
+            $this->error('Wrong nonce!', true);
+        }
+
+        $this->log('Ajax request received, action: ' . $actionName);
+
+        try {
+            wp_send_json($action->run($request));
+
+        } catch (\Exception $e) {
+            $this->error($e->getMessage(), true);
+        }
+    }
+
+    /**
+     * Return Success array
+     *
+     * @param string $message
+     * @param array $data Data to return as JSON
+     * @param bool $echo Whether to echo Response right away without returning
+     * @return array
+     */
+    private function success($message = '', $data = [], $echo = false)
+    {
+        return $this->m('Utils')->returnSuccess($message, $data, $echo);
+    }
+
+    /**
+     * Return Error array
+     *
+     * @param string $message
+     * @param bool $echo Whether to echo Response right away without returning
+     * @return array
+     */
+    private function error($message = '', $echo = false)
+    {
+        return $this->m('Utils')->returnError($message, $echo);
+    }
 }

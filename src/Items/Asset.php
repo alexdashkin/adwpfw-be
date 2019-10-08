@@ -40,14 +40,5 @@ abstract class Asset extends Item
         parent::__construct($data, $app);
     }
 
-    /**
-     * Hooks to register Item in WP
-     */
-    protected function hooks()
-    {
-        $hook = 'admin' === $this->data['type'] ? 'admin_enqueue_scripts' : 'wp_enqueue_scripts';
-        add_action($hook, [$this, 'enqueue'], 20);
-    }
-
     abstract public function enqueue();
 }

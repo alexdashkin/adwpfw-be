@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Exceptions\InvalidRequestParamException;
 
 /**
  * Admin Ajax Action
@@ -41,73 +42,27 @@ class AjaxAction extends Item
     }
 
     /**
-     * Hooks to register Item in WP
+     * Run the Action
      */
-    protected function hooks()
+    public function run($request)
     {
-        add_action('wp_loaded', [$this, 'handle']);
-    }
+        $data = !empty($request['data']) ? $this->validateRequest($request['data']) : [];
 
-    /**
-     * Handle the Request
-     */
-    public function handle()
-    {
-        if (!wp_doing_ajax()) {
-            return;
-        }
-
-        $prefix = $this->app->config['prefix'];
-        $request = $_REQUEST;
-
-        if (empty($request['action']) || false === strpos($request['action'], $prefix)) {
-            return;
-        }
-
-        $actionId = str_replace($prefix . '_', '', $request['action']);
-
-        if ($actionId !== $this->data['action']) {
-            return;
-        }
-
-        if (!check_ajax_referer($prefix, false, false)) {
-            $this->error('Wrong nonce!', true);
-        }
-
-        $this->log('Ajax request received, action: ' . $actionId);
-
-        if ($data = !empty($request['data']) ? $request['data'] : []) {
-            $validated = $this->validateRequest($data);
-
-            if (!$validated['success']) {
-                $this->error('Validation error: ' . $validated['message'], true);
-            }
-
-            $data = !empty($validated['data']) ? $validated['data'] : [];
-        }
-
-        try {
-            $result = call_user_func($this->data['callback'], $data);
-
-        } catch (\Exception $e) {
-            $msg = 'Exception: ' . $e->getMessage();
-            $this->log($msg);
-            $return['message'] = $msg;
-            wp_send_json($return);
-        }
+        $result = call_user_func($this->data['callback'], $data);
 
         if (is_array($result)) {
             $return = array_merge(['success' => false, 'message' => '', 'data' => ''], $result);
         }
 
-        wp_send_json($return);
+        return $return;
     }
 
     /**
-     * Validate Request
+     * Validate and Sanitize values
      *
      * @param $request $_REQUEST params
      * @return array
+     * @throws InvalidRequestParamException
      */
     private function validateRequest($request)
     {
@@ -120,7 +75,7 @@ class AjaxAction extends Item
             foreach ($actionData['fields'] as $name => $settings) {
 
                 if (!isset($request[$name]) && $settings['required']) {
-                    return $this->error('Missing required field: ' . $name);
+                    throw new InvalidRequestParamException('Missing required field: ' . $name);
                 }
 
                 if (isset($request[$name])) {
@@ -161,31 +116,6 @@ class AjaxAction extends Item
             }
         }
 
-        return $this->success('', $fields);
-    }
-
-    /**
-     * Return Success array
-     *
-     * @param string $message
-     * @param array $data Data to return as JSON
-     * @param bool $echo Whether to echo Response right away without returning
-     * @return array
-     */
-    private function success($message = '', $data = [], $echo = false)
-    {
-        return $this->m('Utils')->returnSuccess($message, $data, $echo);
-    }
-
-    /**
-     * Return Error array
-     *
-     * @param string $message
-     * @param bool $echo Whether to echo Response right away without returning
-     * @return array
-     */
-    private function error($message = '', $echo = false)
-    {
-        return $this->m('Utils')->returnError($message, $echo);
+        return $fields;
     }
 }

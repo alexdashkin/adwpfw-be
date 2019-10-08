@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Items\Item;
 
 /**
  * Basic Module with Items Class
@@ -36,6 +37,13 @@ abstract class ItemsModule extends Module
         }
     }
 
+    /**
+     * Search Items by conditions
+     *
+     * @param array $conditions
+     * @param bool $single
+     * @return Item[]
+     */
     protected function searchItems($conditions, $single = false)
     {
         $found = [];
@@ -66,4 +74,9 @@ abstract class ItemsModule extends Module
      * @param array $data
      */
     abstract public function add(array $data, App $app);
+
+    /**
+     * Hooks to register Items in WP
+     */
+    abstract protected function hooks();
 }

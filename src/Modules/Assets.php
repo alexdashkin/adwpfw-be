@@ -22,9 +22,15 @@ class Assets extends ItemsModule
     public function __construct(App $app)
     {
         parent::__construct($app);
+    }
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueue'], 20);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue'], 20);
+    /**
+     * Hooks to register Items in WP
+     */
+    protected function hooks()
+    {
+        add_action('admin_enqueue_scripts', [$this, 'enqueueAdmin'], 20);
+        add_action('wp_enqueue_scripts', [$this, 'enqueueFront'], 20);
     }
 
     /**
@@ -67,9 +73,33 @@ class Assets extends ItemsModule
     }
 
     /**
-     * Hooked on "admin_enqueue_scripts" and "wp_enqueue_scripts"
+     * Hooked on "admin_enqueue_scripts"
      */
-    public function enqueue()
+    public function enqueueAdmin()
+    {
+        foreach ($this->searchItems(['type' => 'admin']) as $item) {
+            $item->enqueue();
+        }
+
+        $this->enqueue();
+    }
+
+    /**
+     * Hooked on "wp_enqueue_scripts"
+     */
+    public function enqueueFront()
+    {
+        foreach ($this->searchItems(['type' => 'front']) as $item) {
+            $item->enqueue();
+        }
+
+        $this->enqueue();
+    }
+
+    /**
+     * Remove unnecessary and Enqueue registered
+     */
+    private function enqueue()
     {
         foreach ($this->remove as $item) {
             if (wp_script_is($item, 'registered')) {

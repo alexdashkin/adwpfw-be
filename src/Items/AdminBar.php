@@ -56,14 +56,6 @@ class AdminBar extends Item
     }
 
     /**
-     * Add hooks
-     */
-    protected function hooks()
-    {
-        add_action('admin_bar_menu', [$this, 'register'], 999);
-    }
-
-    /**
      * Register Admin Bars in WP
      * Hooked to "admin_bar_menu" action
      *

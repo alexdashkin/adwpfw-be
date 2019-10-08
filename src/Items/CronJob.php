@@ -47,14 +47,49 @@ class CronJob extends Item
         parent::__construct($data, $app);
     }
 
-    /**
-     * Add hooks
-     */
-    protected function hooks()
+    public function run()
     {
-    }
+        $prefix = $this->config['prefix'];
 
-    public function register()
-    {
+        $optionName = $prefix . '_cron';
+
+        $option = get_option($optionName) ?: [];
+
+        $data = $this->data;
+
+        $jobName = $this->data['name'];
+
+        $lastRun = !empty($option[$jobName]['started']) ? (int)$option[$jobName]['started'] : 0;
+
+        if (!$lastRun || (time() - $this->data['interval']) > $lastRun) {
+            $this->log("Launching cron job $jobName");
+
+            $running = !empty($option[$jobName]['started']) && empty($option[$jobName]['finished']);
+
+            if (!$data['parallel'] && $running) {
+                $this->log('Another instance is running, aborting');
+                return;
+            }
+
+            $option[$jobName] = [
+                'started' => time(),
+                'finished' => 0,
+            ];
+
+            update_option($optionName, $option);
+
+            try {
+                call_user_func($data['callback'], $data['args']);
+            } catch (\Exception $e) {
+                $msg = 'Exception: ' . $e->getMessage() . '. Execution aborted.';
+                $this->log($msg);
+            } finally {
+                file_put_contents($path, 0);
+            }
+
+            $this->option[$jobName] = time();
+
+            $this->log('Done');
+        }
     }
 }

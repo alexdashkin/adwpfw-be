@@ -30,4 +30,27 @@ class AdminBars extends ItemsModule
     {
         $this->items[] = new AdminBar($data, $app);
     }
+
+    /**
+     * Hooks to register Items in WP
+     */
+    protected function hooks()
+    {
+        add_action('admin_bar_menu', [$this, 'register'], 999);
+    }
+
+    /**
+     * Register Items in WP
+     *
+     * @param \WP_Admin_Bar $adminBar
+     */
+    public function register(\WP_Admin_Bar $adminBar)
+    {
+        /**
+         * @var AdminBar $item
+         */
+        foreach ($this->items as $item) {
+            $item->register($adminBar);
+        }
+    }
 }

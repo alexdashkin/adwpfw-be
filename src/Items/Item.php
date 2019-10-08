@@ -41,8 +41,6 @@ abstract class Item
         $this->config = $app->config;
 
         $this->data = $this->validate($data);
-
-        $this->hooks();
     }
 
     protected function validate($data)
@@ -124,9 +122,4 @@ abstract class Item
     {
         $this->app->log($message);
     }
-
-    /**
-     * Hooks to register Item in WP
-     */
-    abstract protected function hooks();
 }
