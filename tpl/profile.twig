@@ -7,10 +7,10 @@
         {% for field in fields %}
             <tr>
                 <th>
-                    <label for="{{ prefix }}-{{ field.id }}">{{ field.name }}</label>
+                    <label for="{{ prefix }}-{{ field.slug }}">{{ field.name }}</label>
                 </th>
                 <td>
-                    <input type="{{ field.type }}" name="{{ prefix }}[{{ field.id }}]" id="{{ prefix }}-{{ field.id }}" value="{{ field.value }}" class="regular-text">
+                    <input type="{{ field.type }}" name="{{ prefix }}[{{ field.slug }}]" id="{{ prefix }}-{{ field.slug }}" value="{{ field.value }}" class="regular-text">
 
                     {% if field.desc %}
                         <span class="description">{{ field.desc }}</span>

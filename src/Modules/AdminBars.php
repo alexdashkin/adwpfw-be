@@ -21,7 +21,7 @@ class AdminBars extends ItemsModule
     }
 
     /**
-     * Add Admin Bar
+     * Add an Item
      *
      * @param array $data
      * @param App $app

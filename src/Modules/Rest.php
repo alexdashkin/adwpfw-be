@@ -2,180 +2,50 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Common\Helpers;
+use AlexDashkin\Adwpfw\App;
 
 /**
- * Ajax actions and REST API Endpoints
+ * REST API Endpoints
  */
-class Rest extends Module
+class Rest extends ItemsModule
 {
-    private $actions = [];
-    private $endpoints = [];
-
     /**
-     * @var \AlexDashkin\Adwpfw\Common\Utils
+     * Constructor
+     *
+     * @param App $app
      */
-    private $utils;
-
-    public function __construct($app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
-        $this->utils = $this->m('Utils');
+    }
+
+    /**
+     * Add an Item
+     *
+     * @param array $data
+     * @param App $app
+     */
+    public function add(array $data, App $app)
+    {
+        $this->items[] = new PostState($data, $app);
+    }
+
+    /**
+     * Hooks to register Items in WP
+     */
+    protected function hooks()
+    {
+        add_filter('rest_api_init', [$this, 'register'], 10, 2);
     }
 
     public function run()
     {
-        if (wp_doing_ajax()) {
-            add_action('wp_loaded', [$this, 'runAjax']);
-        }
-
-        add_action('rest_api_init', function () {
             foreach ($this->endpoints as $data) {
                 register_rest_route($data['namespace'], $data['route'], [
                     'methods' => $data['method'],
                     'callback' => [$this, 'runEndpoint'],
                 ]);
             }
-        });
-    }
-
-    /**
-     * Add an AJAX action (admin-ajax.php)
-     *
-     * @param array $action {
-     * @type string $id Action ID without prefix (will be added automatically)
-     * @type array $fields Accepted params [type, required]
-     * @type callable $callback Handler
-     * }
-     */
-    public function addAction(array $action)
-    {
-        $action = array_merge([
-            'fields' => [],
-        ], $action);
-
-        foreach ($action['fields'] as &$field) {
-            $field = array_merge([
-                'type' => 'text',
-                'required' => false,
-            ], $field);
-        }
-
-        $this->actions[] = $action;
-    }
-
-    /**
-     * Add multiple AJAX actions (admin-ajax.php)
-     *
-     * @param array $actions
-     *
-     * @see Ajax::addAction()
-     */
-    public function addActions(array $actions)
-    {
-        foreach ($actions as $action) {
-            $this->addAction($action);
-        }
-    }
-
-    /**
-     * Add an REST API Endpoint (/wp-json/)
-     *
-     * @param array $endpoint {
-     * @type string $namespace Namespace (i.e. prefix/v1/)
-     * @type string $route Route (i.e. users)
-     * @type string $method get/post
-     * @type bool $admin Whether available for admins only
-     * @type array $fields Accepted params [type, required]
-     * @type callable $callback Handler
-     * }
-     */
-    public function addEndpoint(array $endpoint)
-    {
-        $endpoint = array_merge([
-            'namespace' => $this->config['prefix'] . '/v1/',
-            'route' => '',
-            'method' => 'post',
-            'admin' => false,
-            'fields' => [],
-        ], $endpoint);
-
-        foreach ($endpoint['fields'] as &$field) {
-            $field = array_merge([
-                'type' => 'text',
-                'required' => false,
-            ], $field);
-        }
-
-        $this->endpoints[] = $endpoint;
-    }
-
-    /**
-     * Add multiple REST API Endpoints (/wp-json/)
-     *
-     * @param array $endpoints
-     *
-     * @see Ajax::addEndpoint()
-     */
-    public function addEndpoints($endpoints)
-    {
-        foreach ($endpoints as $endpoint) {
-            $this->addEndpoint($endpoint);
-        }
-    }
-
-    public function runAjax()
-    {
-        $prefix = $this->config['prefix'];
-        $request = $_REQUEST;
-
-        if (empty($request['action']) || false === strpos($request['action'], $prefix)) {
-            return;
-        }
-
-        $actionId = str_replace($prefix . '_', '', $request['action']);
-        $action = Helpers::arraySearch($this->actions, ['id' => $actionId], true);
-
-        if (!isset($request['action']) || !$action) {
-            return;
-        }
-
-        if (!check_ajax_referer($prefix, false, false)) {
-            $this->error('Wrong nonce!', true);
-        }
-
-        $return = [
-            'success' => false,
-            'message' => '',
-            'data' => '',
-        ];
-
-        $this->log('Ajax request received, action: ' . $request['action']);
-
-        $data = isset($request['data']) ? $request['data'] : [];
-
-        $validated = $this->sanitize($action, $data);
-
-        if (!$validated['success']) {
-            $this->error('Validation error: ' . $validated['message'], true);
-        }
-
-        $data = !empty($validated['data']) ? $validated['data'] : [];
-
-        try {
-            $result = call_user_func($action['callback'], $data);
-        } catch (\Exception $e) {
-            $msg = 'Exception: ' . $e->getMessage() . '. Execution aborted.';
-            $this->log($msg);
-            $return['message'] = $msg;
-            wp_send_json($return);
-        }
-
-        if (is_array($result)) {
-            $return = array_merge($return, $result);
-        }
-
-        wp_send_json($return);
     }
 
     /**

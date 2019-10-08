@@ -2,39 +2,47 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-/**
- * Add States to the posts/pages
- * (a comment displayed on the right in the posts list)
- */
-class PostStates extends Module
-{
-    private $states = [];
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Items\PostState;
 
-    public function __construct($app)
+/**
+ * Add States to the posts/pages (comments displayed on the right in the posts list)
+ */
+class PostStates extends ItemsModule
+{
+    /**
+     * Constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
 
-    public function run()
+    /**
+     * Add an Item
+     *
+     * @param array $data
+     * @param App $app
+     */
+    public function add(array $data, App $app)
     {
-        add_filter('display_post_states', [$this, 'displayStates'], 10, 2);
+        $this->items[] = new PostState($data, $app);
     }
 
     /**
-     * Add a post state
-     *
-     * @param int $postId
-     * @param string $state State text
+     * Hooks to register Items in WP
      */
-    public function addState($postId, $state)
+    protected function hooks()
     {
-        $this->states[$postId][] = $state;
+        add_filter('display_post_states', [$this, 'register'], 10, 2);
     }
 
-    public function displayStates($states, $post)
+    public function register($states, $post)
     {
-        if (array_key_exists($post->ID, $this->states)) {
-            $states = array_merge($states, $this->states[$post->ID]);
+        foreach ($this->items as $item) {
+            $states = $item->register($states, $post);
         }
 
         return $states;

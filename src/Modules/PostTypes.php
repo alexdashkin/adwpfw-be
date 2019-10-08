@@ -2,83 +2,47 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Items\PostType;
+
 /**
  * Custom Post Types
  */
-class PostTypes extends Module
+class PostTypes extends ItemsModule
 {
-    private $postTypes = [];
-
-    public function __construct($app)
+    /**
+     * Constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
 
-    public function run()
+    /**
+     * Add an Item
+     *
+     * @param array $data
+     * @param App $app
+     */
+    public function add(array $data, App $app)
     {
-        add_action('init', [$this, 'register'], 20, 0);
+        $this->items[] = new PostType($data, $app);
     }
 
     /**
-     * Add a Custom Post Type
-     *
-     * @param array $postType
-     *
-     * @see register_post_type()
+     * Hooks to register Items in WP
      */
-    public function addPostType(array $postType)
+    protected function hooks()
     {
-        $postType = array_merge([
-            'labels' => [],
-            'description' => 'My New Post Type',
-            'public' => true,
-        ], $postType);
-
-        $postType['labels'] = $this->getLabels($postType['labels']);
-
-        $this->postTypes[] = $postType;
-    }
-
-    /**
-     * Add multiple Post Types
-     *
-     * @param array $postTypes
-     *
-     * @see PostTypes::addPostType()
-     */
-    public function addPostTypes(array $postTypes)
-    {
-        foreach ($postTypes as $postType) {
-            $this->addPostType($postType);
-        }
-    }
-
-    public function getLabels($labels)
-    {
-        $singular = !empty($labels['singular']) ? $labels['singular'] : 'Item';
-        $plural = !empty($labels['plural']) ? $labels['plural'] : 'Items';
-
-        $defaults = [
-            'name' => $plural,
-            'singular_name' => $singular,
-            'add_new' => 'Add New',
-            'add_new_item' => 'Add New ' . $singular,
-            'edit_item' => 'Edit ' . $singular,
-            'new_item' => 'New ' . $singular,
-            'all_items' => 'All ' . $plural,
-            'view_item' => 'View ' . $singular,
-            'search_items' => 'Search ' . $plural,
-            'not_found' => "No $plural Found",
-            'not_found_in_trash' => "No $plural Found in Trash",
-        ];
-
-        return array_merge($defaults, $labels);
+        add_action('init', [$this, 'register'], 20);
     }
 
     public function register()
     {
-        foreach ($this->postTypes as $postType) {
-            register_post_type($this->config['prefix'] . '_' . $postType['name'], $postType);
+        foreach ($this->items as $item) {
+            $item->register();
         }
     }
 }
