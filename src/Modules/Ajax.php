@@ -36,10 +36,13 @@ class Ajax extends ItemsModule
      */
     protected function hooks()
     {
-        add_action('wp_loaded', [$this, 'handle']);
+        add_action('wp_loaded', [$this, 'run']);
     }
 
-    public function handle()
+    /**
+     * Handle the Request
+     */
+    public function run()
     {
         if (!wp_doing_ajax()) {
             return;

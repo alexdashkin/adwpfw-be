@@ -3,12 +3,11 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\InvalidRequestParamException;
 
 /**
  * Admin Ajax Action
  */
-class AjaxAction extends Item
+class AjaxAction extends Ajax
 {
     /**
      * Constructor
@@ -42,7 +41,7 @@ class AjaxAction extends Item
     }
 
     /**
-     * Run the Action
+     * Handle the Request
      */
     public function run($request)
     {
@@ -55,67 +54,5 @@ class AjaxAction extends Item
         }
 
         return $return;
-    }
-
-    /**
-     * Validate and Sanitize values
-     *
-     * @param $request $_REQUEST params
-     * @return array
-     * @throws InvalidRequestParamException
-     */
-    private function validateRequest($request)
-    {
-        $actionData = $this->data;
-
-        $fields = $request;
-
-        if (!empty($actionData['fields'])) {
-
-            foreach ($actionData['fields'] as $name => $settings) {
-
-                if (!isset($request[$name]) && $settings['required']) {
-                    throw new InvalidRequestParamException('Missing required field: ' . $name);
-                }
-
-                if (isset($request[$name])) {
-                    $sanitized = $request[$name];
-
-                    switch ($settings['type']) {
-                        case 'text':
-                            $sanitized = sanitize_text_field($sanitized);
-                            break;
-
-                        case 'textarea':
-                            $sanitized = sanitize_textarea_field($sanitized);
-                            break;
-
-                        case 'email':
-                            $sanitized = sanitize_email($sanitized);
-                            break;
-
-                        case 'number':
-                            $sanitized = (int)$sanitized;
-                            break;
-
-                        case 'url':
-                            $sanitized = esc_url_raw($sanitized);
-                            break;
-
-                        case 'array':
-                            $sanitized = is_array($sanitized) ? $sanitized : [];
-                            break;
-
-                        case 'form':
-                            parse_str($request['form'], $sanitized);
-                            break;
-                    }
-
-                    $fields[$name] = $sanitized;
-                }
-            }
-        }
-
-        return $fields;
     }
 }

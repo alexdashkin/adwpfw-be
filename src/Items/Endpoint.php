@@ -8,7 +8,7 @@ use AlexDashkin\Adwpfw\Exceptions\InvalidRequestParamException;
 /**
  * REST API Endpoint
  */
-class Endpoint extends Item
+class Endpoint extends Ajax
 {
     /**
      * Constructor
@@ -54,81 +54,42 @@ class Endpoint extends Item
         parent::__construct($data, $app);
     }
 
-    /**
-     * Run the Action
-     */
-    public function run($request)
+    public function register()
     {
-        $data = !empty($request['data']) ? $this->validateRequest($request['data']) : [];
+        $data = $this->data;
 
-        $result = call_user_func($this->data['callback'], $data);
+        register_rest_route($data['namespace'], $data['route'], [
+            'methods' => $data['method'],
+            'callback' => [$this, 'run'],
+        ]);
+    }
+
+    /**
+     * Handle the Request
+     *
+     * @param \WP_REST_Request $request
+     * @throws InvalidRequestParamException
+     */
+    public function run(\WP_REST_Request $request)
+    {
+        try {
+            if ($this->data['admin'] && !current_user_can('administrator')) {
+                throw new InvalidRequestParamException('Endpoint is for Admins only');
+            }
+
+            $params = array_merge($request->get_query_params(), $request->get_body_params());
+
+            $data = $params ? $this->validateRequest($params) : [];
+            $result = call_user_func($this->data['callback'], $data);
+
+        } catch (\Exception $e) {
+            $this->error('Exception: ' . $e->getMessage() . '. Execution aborted.', true);
+        }
 
         if (is_array($result)) {
             $return = array_merge(['success' => false, 'message' => '', 'data' => ''], $result);
         }
 
-        return $return;
-    }
-
-    /**
-     * Validate and Sanitize values
-     *
-     * @param $request $_REQUEST params
-     * @return array
-     * @throws InvalidRequestParamException
-     */
-    private function validateRequest($request)
-    {
-        $actionData = $this->data;
-
-        $fields = $request;
-
-        if (!empty($actionData['fields'])) {
-
-            foreach ($actionData['fields'] as $name => $settings) {
-
-                if (!isset($request[$name]) && $settings['required']) {
-                    throw new InvalidRequestParamException('Missing required field: ' . $name);
-                }
-
-                if (isset($request[$name])) {
-                    $sanitized = $request[$name];
-
-                    switch ($settings['type']) {
-                        case 'text':
-                            $sanitized = sanitize_text_field($sanitized);
-                            break;
-
-                        case 'textarea':
-                            $sanitized = sanitize_textarea_field($sanitized);
-                            break;
-
-                        case 'email':
-                            $sanitized = sanitize_email($sanitized);
-                            break;
-
-                        case 'number':
-                            $sanitized = (int)$sanitized;
-                            break;
-
-                        case 'url':
-                            $sanitized = esc_url_raw($sanitized);
-                            break;
-
-                        case 'array':
-                            $sanitized = is_array($sanitized) ? $sanitized : [];
-                            break;
-
-                        case 'form':
-                            parse_str($request['form'], $sanitized);
-                            break;
-                    }
-
-                    $fields[$name] = $sanitized;
-                }
-            }
-        }
-
-        return $fields;
+        wp_send_json($return);
     }
 }
