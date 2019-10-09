@@ -1,8 +1,6 @@
-{% extends field.twig %}
+{% extends 'field.twig' %}
 
 {% block control %}
-
-    <textarea id="field-{{ id }}" class="regular-text widefat" name="{{ prefix }}[{{ id }}]">{{ value }}</textarea>
 
     <textarea class="form-control" id="{{ prefix }}-field-{{ field.id }}" name="{{ prefix }}[{{ field.id }}]">
 

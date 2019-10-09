@@ -8,21 +8,21 @@ use AlexDashkin\Adwpfw\Items\FormField;
 /**
  * Form Field
  */
-class Heading extends FormField
+class Html extends FormField
 {
     /**
      * Constructor
      *
      * @param array $data {
-     * @type string $text Heading. Required.
+     * @type string $content Required.
      * }
      */
     public function __construct(array $data, App $app)
     {
-        $this->tpl = 'heading';
+        $this->tpl = 'html';
 
         $this->props = [
-            'text' => [
+            'content' => [
                 'required' => true,
             ],
         ];
@@ -34,7 +34,7 @@ class Heading extends FormField
     {
         return [
             'tpl' => $this->tpl,
-            'text' => $this->data['text'],
+            'content' => $this->data['content'],
         ];
     }
 }

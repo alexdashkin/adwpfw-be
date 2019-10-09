@@ -3,7 +3,6 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Fields\Text;
 
 /**
  * Menu Page Tab
@@ -26,7 +25,8 @@ class AdminPageTab extends Item
      * @param array $data {
      * @type string $title
      * @type bool $form Whether to wrap content with the <form> tag
-     * @type array $options Tab fields
+     * @type string $option WP Option name where the values are stored. Required if $form is true.
+     * @type array $fields Tab fields
      * @type array $buttons Buttons at the bottom of the Tab
      * }
      */
@@ -39,6 +39,9 @@ class AdminPageTab extends Item
             'form' => [
                 'type' => 'bool',
                 'default' => false,
+            ],
+            'option' => [
+                'default' => null,
             ],
             'fields' => [
                 'type' => 'array',
@@ -53,13 +56,7 @@ class AdminPageTab extends Item
         parent::__construct($data, $app);
 
         foreach ($this->data['fields'] as $field) {
-
-            switch ($field['type']) {
-                case 'text':
-                    $this->fields[] = new Text($field, $app);
-                    break;
-            }
-
+            $this->fields[] = FormField::getField($field, $app);
         }
     }
 

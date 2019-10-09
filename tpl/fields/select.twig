@@ -1,10 +1,10 @@
-{% extends field.twig %}
+{% extends 'field.twig' %}
 
 {% block control %}
 
     <select class="form-control"
             id="{{ prefix }}-field-{{ field.id }}"
-            name="{{ prefix }}[{{ field.id }}]{% if multiple %}[]{% endif %}"
+            name="{{ prefix }}[{{ field.id }}]{% if field.multiple %}[]{% endif %}"
             {% if field.multiple %} multiple {% endif %}>
 
         {% for option in field.options %}

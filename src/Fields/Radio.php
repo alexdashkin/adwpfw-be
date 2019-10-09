@@ -8,7 +8,7 @@ use AlexDashkin\Adwpfw\Items\FormField;
 /**
  * Form Field
  */
-class Text extends FormField
+class Radio extends FormField
 {
     /**
      * Constructor
@@ -21,7 +21,7 @@ class Text extends FormField
      */
     public function __construct(array $data, App $app)
     {
-        $this->tpl = 'text';
+        $this->tpl = 'radio';
 
         $this->props = [
             'id' => [
@@ -29,6 +29,14 @@ class Text extends FormField
             ],
             'label' => [
                 'required' => true,
+            ],
+            'options' => [
+                'type' => 'array',
+                'required' => true,
+                'def' => [
+                    'value' => '',
+                    'label' => 'Option',
+                ],
             ],
             'desc' => [
                 'default' => null,
@@ -45,6 +53,7 @@ class Text extends FormField
             'id' => $this->data['id'],
             'label' => $this->data['label'],
             'desc' => $this->data['desc'],
+            'options' => $this->data['options'],
             'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
         ];
     }

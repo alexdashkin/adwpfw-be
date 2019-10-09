@@ -1,4 +1,4 @@
-{% extends field.twig %}
+{% extends 'field.twig' %}
 
 {% block control %}
 
@@ -6,8 +6,8 @@
 
     <select class="adwpfw-select2"
             id="{{ prefix }}-field-{{ field.id }}"
-            name="{{ prefix }}[{{ field.id }}]{% if multiple %}[]{% endif %}"
-            {% if ajax_action %} data-ajax-action="{{ ajax_action }}" {% endif %}
+            name="{{ prefix }}[{{ field.id }}]{% if field.multiple %}[]{% endif %}"
+            {% if field.ajax_action %} data-ajax-action="{{ field.ajax_action }}" {% endif %}
             {% if field.multiple %} multiple {% endif %}>
 
         {% for option in field.options %}

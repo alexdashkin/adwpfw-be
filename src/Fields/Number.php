@@ -8,7 +8,7 @@ use AlexDashkin\Adwpfw\Items\FormField;
 /**
  * Form Field
  */
-class Text extends FormField
+class Number extends FormField
 {
     /**
      * Constructor
@@ -17,11 +17,14 @@ class Text extends FormField
      * @type string $id Required.
      * @type string $label Field Label. Required.
      * @type string $desc Field Description
+     * @type int $min Min attr
+     * @type int $max Max attr
+     * @type int $step Step attr
      * }
      */
     public function __construct(array $data, App $app)
     {
-        $this->tpl = 'text';
+        $this->tpl = 'number';
 
         $this->props = [
             'id' => [
@@ -32,6 +35,18 @@ class Text extends FormField
             ],
             'desc' => [
                 'default' => null,
+            ],
+            'min' => [
+                'type' => 'int',
+                'default' => 0,
+            ],
+            'max' => [
+                'type' => 'int',
+                'default' => 0,
+            ],
+            'step' => [
+                'type' => 'int',
+                'default' => 0,
             ],
         ];
 
@@ -45,6 +60,9 @@ class Text extends FormField
             'id' => $this->data['id'],
             'label' => $this->data['label'],
             'desc' => $this->data['desc'],
+            'min' => $this->data['min'],
+            'max' => $this->data['max'],
+            'step' => $this->data['step'],
             'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
         ];
     }

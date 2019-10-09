@@ -8,26 +8,26 @@ use AlexDashkin\Adwpfw\Items\FormField;
 /**
  * Form Field
  */
-class Text extends FormField
+class Button extends FormField
 {
     /**
      * Constructor
      *
      * @param array $data {
      * @type string $id Required.
-     * @type string $label Field Label. Required.
-     * @type string $desc Field Description
+     * @type string $caption Button Caption. Required.
+     * @type string $desc Button Description
      * }
      */
     public function __construct(array $data, App $app)
     {
-        $this->tpl = 'text';
+        $this->tpl = 'button';
 
         $this->props = [
             'id' => [
                 'required' => true,
             ],
-            'label' => [
+            'caption' => [
                 'required' => true,
             ],
             'desc' => [
@@ -43,7 +43,7 @@ class Text extends FormField
         return [
             'tpl' => $this->tpl,
             'id' => $this->data['id'],
-            'label' => $this->data['label'],
+            'caption' => $this->data['cation'],
             'desc' => $this->data['desc'],
             'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
         ];

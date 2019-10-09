@@ -50,13 +50,6 @@ class AdminPages extends ItemsModule
         ]);
     }
 
-    public function register()
-    {
-        foreach ($this->items as $item) {
-            $item->register();
-        }
-    }
-
     public function save($data)
     {
         if (empty($data['form'][$this->config['prefix']])) {

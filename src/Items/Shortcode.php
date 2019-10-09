@@ -50,7 +50,7 @@ class Shortcode extends Item
      *
      * @param array $atts
      * @param string $content
-     * @param static $tag
+     * @param string $tag
      * @return string
      */
     public function render(array $atts, $content, $tag)

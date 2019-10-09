@@ -5,10 +5,12 @@
     <table class="form-table">
 
         {% for field in fields %}
+
             <tr>
                 <th>
                     <label for="{{ prefix }}-{{ field.slug }}">{{ field.name }}</label>
                 </th>
+
                 <td>
                     <input type="{{ field.type }}" name="{{ prefix }}[{{ field.slug }}]" id="{{ prefix }}-{{ field.slug }}" value="{{ field.value }}" class="regular-text">
 
@@ -17,6 +19,7 @@
                     {% endif %}
                 </td>
             </tr>
+
         {% endfor %}
 
     </table>

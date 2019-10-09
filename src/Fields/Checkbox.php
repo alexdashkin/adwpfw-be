@@ -8,20 +8,20 @@ use AlexDashkin\Adwpfw\Items\FormField;
 /**
  * Form Field
  */
-class Text extends FormField
+class Checkbox extends FormField
 {
     /**
      * Constructor
      *
      * @param array $data {
      * @type string $id Required.
-     * @type string $label Field Label. Required.
-     * @type string $desc Field Description
+     * @type string $label Required.
+     * @type string $desc Description
      * }
      */
     public function __construct(array $data, App $app)
     {
-        $this->tpl = 'text';
+        $this->tpl = 'checkbox';
 
         $this->props = [
             'id' => [

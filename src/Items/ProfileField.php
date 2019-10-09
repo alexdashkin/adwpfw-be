@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\App;
 /**
  * User Profile Custom Field
  */
-class ProfileField extends Item
+class ProfileField extends Item // todo use Fields
 {
     private $metaKey;
 
