@@ -25,7 +25,7 @@ class Select extends FormField
     {
         $this->tpl = 'select';
 
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
@@ -52,7 +52,7 @@ class Select extends FormField
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

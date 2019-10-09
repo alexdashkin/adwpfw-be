@@ -21,13 +21,13 @@ class Hidden extends FormField
     {
         $this->tpl = 'hidden';
 
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

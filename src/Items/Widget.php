@@ -23,7 +23,7 @@ class Widget extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'title' => [
                 'required' => true,
             ],
@@ -39,7 +39,7 @@ class Widget extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

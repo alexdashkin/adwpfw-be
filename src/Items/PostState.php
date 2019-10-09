@@ -19,7 +19,7 @@ class PostState extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'post_id' => [
                 'required' => true,
             ],
@@ -28,7 +28,7 @@ class PostState extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

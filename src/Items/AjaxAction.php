@@ -20,24 +20,13 @@ class AjaxAction extends Ajax
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'action' => [
                 'required' => true,
             ],
-            'callback' => [
-                'type' => 'callback',
-                'required' => true,
-            ],
-            'fields' => [
-                'type' => 'array',
-                'def' => [
-                    'type' => 'string',
-                    'required' => false,
-                ],
-            ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

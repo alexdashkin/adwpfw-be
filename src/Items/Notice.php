@@ -26,7 +26,7 @@ class Notice extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'slug' => [
                 'default' => $this->getDefaultSlug('notice'),
             ],
@@ -61,7 +61,7 @@ class Notice extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

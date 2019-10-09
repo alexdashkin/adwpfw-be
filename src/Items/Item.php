@@ -34,11 +34,13 @@ abstract class Item
      * Constructor
      *
      * @param array $data
+     * @throws AdwpfwException
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, App $app, array $props = [])
     {
         $this->app = $app;
         $this->config = $app->config;
+        $this->props = $props;
 
         $this->data = $this->validate($data);
     }
@@ -118,6 +120,6 @@ abstract class Item
      */
     protected function log($message, $values = [], $type = 4)
     {
-        $this->m('Logger')->log($message, $values, $type);
+        $this->app->log($message, $values, $type);
     }
 }

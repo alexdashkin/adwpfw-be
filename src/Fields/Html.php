@@ -21,13 +21,13 @@ class Html extends FormField
     {
         $this->tpl = 'html';
 
-        $this->props = [
+        $props = [
             'content' => [
                 'required' => true,
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

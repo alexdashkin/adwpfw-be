@@ -19,7 +19,7 @@ class Assets extends ItemsModule
      *
      * @param App $app
      */
-    public function __construct(App $app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
     }

@@ -2,6 +2,8 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\App;
+
 /**
  * Logger
  */
@@ -12,7 +14,7 @@ class Logger extends Module
     private $paths = [];
     private $immediatePath;
 
-    public function __construct($app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
 

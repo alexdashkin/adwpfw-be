@@ -2,6 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -18,7 +19,7 @@ class Twig extends Module
     private $twigFs;
     private $twigArray;
 
-    public function __construct($app)
+    protected function __construct(App $app)
     {
         if (!class_exists('\Twig\Environment')) {
             throw new AdwpfwException('Twig not found');

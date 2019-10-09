@@ -26,7 +26,7 @@ class Number extends FormField
     {
         $this->tpl = 'number';
 
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
@@ -50,7 +50,7 @@ class Number extends FormField
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

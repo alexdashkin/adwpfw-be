@@ -34,7 +34,7 @@ class AdminPage extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'name' => [
                 'required' => true,
             ],
@@ -75,7 +75,7 @@ class AdminPage extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
 
         foreach ($this->data['tabs'] as $tab) {
             $this->tabs[] = new AdminPageTab($tab, $app);

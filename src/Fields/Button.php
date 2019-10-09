@@ -23,7 +23,7 @@ class Button extends FormField
     {
         $this->tpl = 'button';
 
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
@@ -35,7 +35,7 @@ class Button extends FormField
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

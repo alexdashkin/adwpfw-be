@@ -24,7 +24,7 @@ class Endpoint extends Ajax
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'namespace' => [
                 'required' => true,
             ],
@@ -38,20 +38,9 @@ class Endpoint extends Ajax
                 'type' => 'bool',
                 'default' => false,
             ],
-            'callback' => [
-                'type' => 'callback',
-                'required' => true,
-            ],
-            'fields' => [
-                'type' => 'array',
-                'def' => [
-                    'type' => 'string',
-                    'required' => false,
-                ],
-            ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function register()

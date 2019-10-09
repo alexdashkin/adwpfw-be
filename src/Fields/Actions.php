@@ -22,7 +22,7 @@ class Actions extends FormField
     {
         $this->tpl = 'actions';
 
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
@@ -39,7 +39,7 @@ class Actions extends FormField
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

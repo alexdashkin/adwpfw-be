@@ -21,8 +21,30 @@ abstract class Asset extends Item
      * @type array $deps List of Dependencies (slugs)
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, App $app, array $props = [])
     {
+        $own = [
+            'type' => [
+                'required' => true,
+            ],
+            'url' => [
+                'required' => true,
+            ],
+            'slug' => [
+                'default' => $this->getDefaultSlug($data['type']),
+            ],
+            'file' => [
+                'default' => null,
+            ],
+            'ver' => [
+                'default' => null,
+            ],
+            'deps' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+        ];
+
         $url = $version = null;
 
         if (!empty($data['file'])) {
@@ -37,7 +59,7 @@ abstract class Asset extends Item
             'ver' => $version,
         ], $data);
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, array_merge($own, $props));
     }
 
     abstract public function enqueue();

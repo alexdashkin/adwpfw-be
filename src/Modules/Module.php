@@ -9,6 +9,8 @@ use AlexDashkin\Adwpfw\App;
  */
 abstract class Module
 {
+    protected static $instances = [];
+
     /**
      * @var App
      */
@@ -20,11 +22,28 @@ abstract class Module
     protected $config;
 
     /**
+     * Get Single Instance
+     *
+     * @param App $app
+     * @return Module
+     */
+    public static function the(App $app)
+    {
+        $class = strtolower(get_called_class());
+
+        if (!isset(static::$instances[$class])) {
+            static::$instances[$class] = new static($app);
+        }
+
+        return static::$instances[$class];
+    }
+
+    /**
      * Constructor
      *
      * @param App $app
      */
-    public function __construct(App $app)
+    protected function __construct(App $app)
     {
         $this->app = $app;
         $this->config = $app->config;
@@ -34,6 +53,7 @@ abstract class Module
      * Get Module
      *
      * @param string $moduleName
+     * @return Module
      */
     protected function m($moduleName)
     {
@@ -45,8 +65,8 @@ abstract class Module
      *
      * @param mixed $message
      */
-    protected function log($message, $values = [], $type = 4)
+    public function log($message, $values = [], $type = 4) // todo make protected
     {
-        $this->m('Logger')->log($message, $values, $type);
+        $this->m('Logger')->log($message, $values, $type); // todo maybe make logger independent (not Module)
     }
 }

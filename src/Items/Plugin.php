@@ -19,7 +19,7 @@ class Plugin extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'path' => [
                 'required' => true,
             ],
@@ -28,7 +28,7 @@ class Plugin extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
 
         require_once ABSPATH . 'wp-includes/plugin.php';
         require_once ABSPATH . 'wp-admin/includes/plugin.php';

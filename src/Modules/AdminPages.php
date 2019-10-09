@@ -15,7 +15,7 @@ class AdminPages extends ItemsModule
      *
      * @param App $app
      */
-    public function __construct(App $app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
     }
@@ -75,6 +75,6 @@ class AdminPages extends ItemsModule
             }
         }
 
-        return $this->m('Utils')->returnError('Admin page not found');
+        return $this->m('Utils')->returnError('Admin page tab not found');
     }
 }

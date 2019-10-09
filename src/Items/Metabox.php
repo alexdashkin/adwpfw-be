@@ -31,7 +31,7 @@ class Metabox extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'title' => [
                 'required' => true,
             ],
@@ -58,7 +58,7 @@ class Metabox extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
 
         foreach ($this->data['fields'] as $field) {
             $this->fields[] = FormField::getField($field, $app);

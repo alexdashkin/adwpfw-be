@@ -23,7 +23,7 @@ class Text extends FormField
     {
         $this->tpl = 'text';
 
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
@@ -35,7 +35,7 @@ class Text extends FormField
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

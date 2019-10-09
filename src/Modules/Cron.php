@@ -13,7 +13,7 @@ class Cron extends ItemsModule
     private $jobName;
     private $interval;
 
-    public function __construct($app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
 

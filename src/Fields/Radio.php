@@ -23,7 +23,7 @@ class Radio extends FormField
     {
         $this->tpl = 'radio';
 
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
@@ -43,7 +43,7 @@ class Radio extends FormField
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

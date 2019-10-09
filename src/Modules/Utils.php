@@ -2,6 +2,8 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\App;
+
 /**
  * Dynamic Helpers
  */
@@ -9,7 +11,7 @@ class Utils extends Module
 {
     private $cache;
 
-    public function __construct($app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
     }

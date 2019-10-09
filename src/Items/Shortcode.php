@@ -20,7 +20,7 @@ class Shortcode extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'tag' => [
                 'required' => true,
             ],
@@ -34,7 +34,7 @@ class Shortcode extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

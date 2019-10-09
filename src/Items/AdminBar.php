@@ -22,10 +22,11 @@ class AdminBar extends Item
      * @type array $meta
      * }
      * @see \WP_Admin_Bar::add_node()
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'title' => [
                 'required' => true,
             ],
@@ -52,7 +53,7 @@ class AdminBar extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

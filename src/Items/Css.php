@@ -23,28 +23,6 @@ class Css extends Asset
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
-            'type' => [
-                'required' => true,
-            ],
-            'url' => [
-                'required' => true,
-            ],
-            'slug' => [
-                'default' => $this->getDefaultSlug($data['type']),
-            ],
-            'file' => [
-                'default' => null,
-            ],
-            'ver' => [
-                'default' => null,
-            ],
-            'deps' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
-
         parent::__construct($data, $app);
     }
 

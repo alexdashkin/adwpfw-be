@@ -13,9 +13,23 @@ abstract class Ajax extends Item
     /**
      * Constructor
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, App $app, array $props = [])
     {
-        parent::__construct($data, $app);
+        $own = [
+            'callback' => [
+                'type' => 'callback',
+                'required' => true,
+            ],
+            'fields' => [
+                'type' => 'array',
+                'def' => [
+                    'type' => 'string',
+                    'required' => false,
+                ],
+            ],
+        ];
+
+        parent::__construct($data, $app, array_merge($own, $props));
     }
 
     /**

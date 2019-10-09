@@ -30,7 +30,7 @@ class ProfileField extends Item // todo use Fields
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'id' => [
                 'required' => true,
             ],
@@ -45,7 +45,7 @@ class ProfileField extends Item // todo use Fields
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
 
         $this->field = FormField::getField($this->data, $app);
 

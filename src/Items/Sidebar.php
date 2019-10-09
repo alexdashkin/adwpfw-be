@@ -23,7 +23,7 @@ class Sidebar extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'name' => [
                 'required' => true,
             ],
@@ -38,7 +38,7 @@ class Sidebar extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

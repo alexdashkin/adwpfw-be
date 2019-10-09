@@ -21,13 +21,13 @@ class Heading extends FormField
     {
         $this->tpl = 'heading';
 
-        $this->props = [
+        $props = [
             'text' => [
                 'required' => true,
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     public function getArgs(array $values)

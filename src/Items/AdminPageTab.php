@@ -36,7 +36,7 @@ class AdminPageTab extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'title' => [
                 'default' => 'Tab',
             ],
@@ -60,7 +60,7 @@ class AdminPageTab extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
 
         foreach ($this->data['fields'] as $field) {
             $this->fields[] = FormField::getField($field, $app);

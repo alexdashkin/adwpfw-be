@@ -33,9 +33,10 @@ class App
     /**
      * Get Module
      *
-     * If not exists, tries to create
+     * If not exists, try to create
      *
      * @param string $moduleName
+     * @return Module
      */
     public function m($moduleName)
     {
@@ -43,9 +44,9 @@ class App
             return $this->modules[$moduleName];
         }
 
-        $class = '\\' . __NAMESPACE__ . '\\Nodules\\' . $moduleName;
+        $class = '\\' . __NAMESPACE__ . '\\Modules\\' . $moduleName;
 
-        $this->modules[$moduleName] = new $class($this);
+        $this->modules[$moduleName] = $class::the($this);
 
         return $this->modules[$moduleName];
     }
@@ -61,7 +62,7 @@ class App
      */
     public function addAjaxAction(array $action)
     {
-        $this->m('Ajax')->addAction($action);
+        $this->m('Ajax')->add($action);
     }
 
     /**
@@ -73,7 +74,7 @@ class App
      */
     public function addAjaxActions(array $actions)
     {
-        $this->m('Ajax')->addActions($actions);
+        $this->m('Ajax')->addMany($actions);
     }
 
     /**
@@ -90,7 +91,7 @@ class App
      */
     public function addApiEndpoint(array $endpoint)
     {
-        $this->m('Ajax')->addEndpoint($endpoint);
+        $this->m('Rest')->add($endpoint);
     }
 
     /**
@@ -102,7 +103,7 @@ class App
      */
     public function addApiEndpoints(array $endpoints)
     {
-        $this->m('Ajax')->addEndpoints($endpoints);
+        $this->m('Rest')->addMany($endpoints);
     }
 
     /**
@@ -118,7 +119,7 @@ class App
      */
     public function addCronJob(array $job)
     {
-        $this->m('Cron')->addJob($job);
+        $this->m('Cron')->add($job);
     }
 
     /**
@@ -130,7 +131,7 @@ class App
      */
     public function addCronJobs(array $jobs)
     {
-        $this->m('Cron')->addJobs($jobs);
+        $this->m('Cron')->addMany($jobs);
     }
 
     /**
@@ -165,9 +166,9 @@ class App
      * @type string $callback Render function
      * }
      */
-    public function addMenu(array $menu)
+    public function addAdminPage(array $menu)
     {
-        $this->m('Menu')->addMenu($menu);
+        $this->m('AdminPages')->add($menu);
     }
 
     /**
@@ -177,9 +178,9 @@ class App
      *
      * @see AdminPages::addMenu()
      */
-    public function addMenus(array $menus)
+    public function addAdminPages(array $menus)
     {
-        $this->m('Menu')->addMenus($menus);
+        $this->m('AdminPages')->addMany($menus);
     }
 
     /**
@@ -195,7 +196,7 @@ class App
      */
     public function addAdminBar(array $bar)
     {
-        $this->m('AdminBar')->addBar($bar);
+        $this->m('AdminBar')->add($bar);
     }
 
     /**
@@ -207,34 +208,7 @@ class App
      */
     public function addAdminBars(array $bars)
     {
-        $this->m('AdminBar')->addBars($bars);
-    }
-
-    /**
-     * Add a special admin page
-     *
-     * @param array $page {
-     * @type string $id
-     * @type string $title
-     * @type string $name
-     * @type callable $callback Renders the page
-     * }
-     */
-    public function addAdminPage(array $page)
-    {
-        $this->m('AdminPage')->addPage($page);
-    }
-
-    /**
-     * Add multiple special admin pages
-     *
-     * @param array $pages
-     *
-     * @see AdminPages::addPage()
-     */
-    public function addAdminPages(array $pages)
-    {
-        $this->m('AdminPage')->addPages($pages);
+        $this->m('AdminBar')->addMany($bars);
     }
 
     /**
@@ -252,7 +226,7 @@ class App
      */
     public function addMetabox(array $metabox)
     {
-        $this->m('Metabox')->addMetabox($metabox);
+        $this->m('Metaboxes')->add($metabox);
     }
 
     /**
@@ -264,7 +238,7 @@ class App
      */
     public function addMetaboxes(array $metaboxes)
     {
-        $this->m('Metabox')->addMetaboxes($metaboxes);
+        $this->m('Metaboxes')->addMany($metaboxes);
     }
 
     /**
@@ -276,7 +250,7 @@ class App
      */
     public function metaboxGet($id, $post = null)
     {
-        return $this->m('Metabox')->get($id, $post);
+        return $this->m('Metaboxes')->get($id, $post); // todo implement
     }
 
     /**
@@ -289,7 +263,7 @@ class App
      */
     public function metaboxSet($id, $value, $post = null)
     {
-        return $this->m('Metabox')->set($id, $value, $post);
+        return $this->m('Metaboxes')->set($id, $value, $post); // todo implement
     }
 
     /**
@@ -308,7 +282,7 @@ class App
      */
     public function addNotice(array $notice)
     {
-        $this->m('Notices')->addNotice($notice);
+        $this->m('Notices')->add($notice);
     }
 
     /**
@@ -320,7 +294,7 @@ class App
      */
     public function addNotices(array $notices)
     {
-        $this->m('Notices')->addNotices($notices);
+        $this->m('Notices')->addMany($notices);
     }
 
     /**
@@ -330,7 +304,7 @@ class App
      */
     public function showNotice($id)
     {
-        $this->m('Notices')->show($id);
+        $this->m('Notices')->show($id); // todo implement
     }
 
     /**
@@ -340,7 +314,7 @@ class App
      */
     public function stopNotice($id)
     {
-        $this->m('Notices')->stop($id);
+        $this->m('Notices')->stop($id); // todo implement
     }
 
     /**
@@ -350,7 +324,7 @@ class App
      */
     public function dismissNotice($id)
     {
-        $this->m('Notices')->dismiss($id);
+        $this->m('Notices')->dismiss($id); // todo implement
     }
 
     /**
@@ -362,7 +336,7 @@ class App
      */
     public function addPostType(array $postType)
     {
-        $this->m('PostTypes')->addPostType($postType);
+        $this->m('PostTypes')->add($postType);
     }
 
     /**
@@ -374,7 +348,7 @@ class App
      */
     public function addPostTypes(array $postTypes)
     {
-        $this->m('PostTypes')->addPostTypes($postTypes);
+        $this->m('PostTypes')->addMany($postTypes);
     }
 
     /**
@@ -399,7 +373,7 @@ class App
      */
     public function addProfileField(array $field)
     {
-        $this->m('Profile')->addField($field);
+        $this->m('Profile')->add($field);
     }
 
     /**
@@ -411,7 +385,7 @@ class App
      */
     public function addProfileFields(array $fields)
     {
-        $this->m('Profile')->addFields($fields);
+        $this->m('Profile')->addMany($fields);
     }
 
     /**
@@ -423,7 +397,7 @@ class App
      */
     public function profileGet($id, $userId = null)
     {
-        return $this->m('Profile')->get($id, $userId);
+        return $this->m('Profile')->get($id, $userId); // todo implement
     }
 
     /**
@@ -434,7 +408,7 @@ class App
      */
     public function addPostState($postId, $state)
     {
-        $this->m('PostStates')->addState($postId, $state);
+        $this->m('PostStates')->add($postId, $state);
     }
 
     /**
@@ -449,7 +423,7 @@ class App
      */
     public function addWidget(array $widget)
     {
-        $this->m('Widget')->addWidget($widget);
+        $this->m('Widget')->add($widget);
     }
 
     /**
@@ -461,7 +435,7 @@ class App
      */
     public function addWidgets(array $widgets)
     {
-        $this->m('Widget')->addWidgets($widgets);
+        $this->m('Widget')->addMany($widgets);
     }
 
     /**
@@ -472,22 +446,9 @@ class App
      * @type string $package URL of the package
      * }
      */
-    public function pluginUpdater(array $plugin)
+    public function updater(array $plugin)
     {
-        $this->m('Updater')->addPlugin($plugin);
-    }
-
-    /**
-     * Add Self-Update feature for a theme
-     *
-     * @param array $theme {
-     * @type string $path Path to the theme's main file
-     * @type string $package URL of the package
-     * }
-     */
-    public function themeUpdater(array $theme)
-    {
-        $this->m('Updater')->addTheme($theme);
+        $this->m('Updater')->add($plugin);
     }
 
     /**
@@ -500,58 +461,9 @@ class App
      * @type array $deps Dependencies slugs
      * }
      */
-    public function adminCss(array $args)
+    public function addAsset(array $args)
     {
-        $this->m('Assets')->adminCss($args);
-    }
-
-    /**
-     * Add Admin JS items
-     *
-     * @param array $args {
-     * @type bool $own Whether it's the own asset stored in the assets folder
-     * @type string $url
-     * @type string $ver Version
-     * @type array $deps Dependencies slugs
-     * @type bool $async
-     * @type array $localize Vars to be passed to the script
-     * }
-     */
-    public function adminJs(array $args)
-    {
-        $this->m('Assets')->adminJs($args);
-    }
-
-    /**
-     * Add Front CSS items
-     *
-     * @param array $args {
-     * @type bool $own Whether it's the own asset stored in the assets folder
-     * @type string $url
-     * @type string $ver Version
-     * @type array $deps Dependencies slugs
-     * }
-     */
-    public function frontCss(array $args)
-    {
-        $this->m('Assets')->frontCss($args);
-    }
-
-    /**
-     * Add Front JS items
-     *
-     * @param array $args {
-     * @type bool $own Whether it's the own asset stored in the assets folder
-     * @type string $url
-     * @type string $ver Version
-     * @type array $deps Dependencies slugs
-     * @type bool $async
-     * @type array $localize Vars to be passed to the script
-     * }
-     */
-    public function frontJs(array $args)
-    {
-        $this->m('Assets')->frontJs($args);
+        $this->m('Assets')->add($args);
     }
 
     /**
@@ -596,7 +508,7 @@ class App
      */
     public function addShortcode(array $shortcode)
     {
-        $this->m('Shortcodes')->addShortcode($shortcode);
+        $this->m('Shortcodes')->add($shortcode);
     }
 
     /**
@@ -608,7 +520,7 @@ class App
      */
     public function addShortcodes(array $shortcodes)
     {
-        $this->m('Shortcodes')->addShortcodes($shortcodes);
+        $this->m('Shortcodes')->addMany($shortcodes);
     }
 
     /**
@@ -620,7 +532,7 @@ class App
      */
     public function addSidebar(array $sidebar)
     {
-        $this->m('Sidebar')->addSidebar($sidebar);
+        $this->m('Sidebar')->add($sidebar);
     }
 
     /**
@@ -802,18 +714,6 @@ class App
     }
 
     /**
-     * Render simple templates i.e. {{var}}
-     *
-     * @param string $tpl Template
-     * @param array $args
-     * @return string
-     */
-    public function renderTpl($tpl, array $args = [])
-    {
-        return $this->m('Utils')->renderTpl($tpl, $args);
-    }
-
-    /**
      * Render TWIG templates
      *
      * @param string $name Template file name
@@ -822,7 +722,7 @@ class App
      */
     public function renderTwig($name, array $args = [])
     {
-        return $this->m('Utils')->renderTwig($name, $args);
+        return $this->m('Twig')->renderFile($name, $args);
     }
 
     /**

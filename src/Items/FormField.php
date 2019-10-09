@@ -32,9 +32,9 @@ abstract class FormField extends Item
     /**
      * Constructor
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, App $app, array $props = [])
     {
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     abstract public function getArgs(array $values);

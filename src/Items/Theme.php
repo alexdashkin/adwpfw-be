@@ -19,7 +19,7 @@ class Theme extends Item
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'slug' => [
                 'required' => true,
             ],
@@ -28,7 +28,7 @@ class Theme extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
 
         $newVer = '100.0.0';
 

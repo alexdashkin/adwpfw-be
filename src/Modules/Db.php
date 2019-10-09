@@ -2,6 +2,8 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\App;
+
 /**
  * Database Helper
  */
@@ -14,7 +16,7 @@ class Db extends Module
 
     public $prefix;
 
-    public function __construct($app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
 
