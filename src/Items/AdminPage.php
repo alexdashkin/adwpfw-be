@@ -19,7 +19,6 @@ class AdminPage extends Item
      *
      * @param array $data {
      * @type string $name Text for the left Menu. Required.
-     * @type string $slug Defaults to sanitized Title.
      * @type string $title Text for the <title> tag. Defaults to $name.
      * @type string $header Page header without markup. Defaults to $name.
      * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
@@ -39,9 +38,6 @@ class AdminPage extends Item
             'name' => [
                 'required' => true,
             ],
-            'slug' => [
-                'default' => $this->getDefaultSlug($data['name']),
-            ],
             'title' => [
                 'default' => $data['name'],
             ],
@@ -49,8 +45,7 @@ class AdminPage extends Item
                 'default' => $data['name'],
             ],
             'parent' => [
-                'type' => 'int',
-                'default' => 0,
+                'default' => null,
             ],
             'position' => [
                 'type' => 'int',
@@ -98,7 +93,7 @@ class AdminPage extends Item
                 $data['name'],
                 $data['capability'],
                 $data['id'],
-                [$this, 'render'],
+                [$this, 'render']
             );
 
         } else {
@@ -137,14 +132,25 @@ class AdminPage extends Item
         }
     }
 
+    public function findTab($slug)
+    {
+        foreach ($this->tabs as $tab) {
+            if ($tab->data['slug'] === $slug) {
+                return $tab;
+            }
+        }
+
+        return null;
+    }
+
     public function save($data)
     {
         if (empty($data['slug'])) {
-            return $this->error('Page slug is empty');
+            return $this->error('Tab slug is empty');
         }
 
         if (!$adminPage = $this->searchItems(['slug' => $data['slug']])) {
-            return $this->error(sprintf('Page "%s" not found', $data['slug']));
+            return $this->error(sprintf('Tab "%s" not found', $data['slug']));
         }
 
         $values =& $adminPage['values']; // todo bwc

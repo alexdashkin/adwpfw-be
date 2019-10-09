@@ -25,16 +25,22 @@ class AdminPageTab extends Item
      * @param array $data {
      * @type string $title
      * @type bool $form Whether to wrap content with the <form> tag
+     * @type string $slug Defaults to prefixed sanitized Title. Used if $form is true.
      * @type string $option WP Option name where the values are stored. Required if $form is true.
      * @type array $fields Tab fields
      * @type array $buttons Buttons at the bottom of the Tab
      * }
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $this->props = [
             'title' => [
                 'default' => 'Tab',
+            ],
+            'slug' => [
+                'default' => $this->getDefaultSlug($data['title']),
             ],
             'form' => [
                 'type' => 'bool',
@@ -74,6 +80,7 @@ class AdminPageTab extends Item
 
         $args = [
             'form' => $this->data['form'],
+            'slug' => $this->data['slug'],
             'fields' => $fields,
             'buttons' => $buttons,
         ];

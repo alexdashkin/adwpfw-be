@@ -63,9 +63,15 @@ class AdminPages extends ItemsModule
             return $this->m('Utils')->returnError('Form data is empty');
         }
 
+        $form = $data['form'][$this->config['prefix']];
+
+        if (empty($form['slug'])) {
+            return $this->m('Utils')->returnError('Tab slug is empty');
+        }
+
         foreach ($this->items as $item) {
-            if ($return = $item->save($data)) {
-                return $return;
+            if ($tab = $item->findTab($form['slug'])) {
+                return $tab->save($form);
             }
         }
 
