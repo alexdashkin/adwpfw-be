@@ -1,0 +1,24 @@
+{% extends field.twig %}
+
+{% block control %}
+
+    <div class="{{ prefix }}-radio">
+
+        {% for item in items %}
+
+            <label>
+
+                <input type="radio"
+                       id="{{ prefix }}-field-{{ field.id }}-{{ item.id }}"
+                       name="{{ prefix }}[{{ field.id }}]"
+                        {% if field.value == item.value %} checked {% endif %}>
+
+            </label>
+
+            <br>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

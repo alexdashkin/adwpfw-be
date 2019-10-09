@@ -1,0 +1,19 @@
+<div class="{{ prefix }}-container">
+
+    <header><h1>{{ title }}</h1></header>
+
+    <nav class="{{ prefix }}tabs-header nav-tab-wrapper">
+
+        {% for tab in tabs %}
+            <span class="nav-tab">{{ tab.title }}</span>
+        {% endfor %}
+
+    </nav>
+
+    {% for tab in tabs %}
+
+        {% include 'admin-page-tab.twig' with {tab} %}
+
+    {% endfor %}
+
+</div>

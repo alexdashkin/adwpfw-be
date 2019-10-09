@@ -1,0 +1,53 @@
+<div class="{{ prefix }}-tab">
+
+    {% if tab.form %}
+
+        <form class="{{ prefix }}-settings">
+
+            <div class="{{ prefix }}-fields">
+
+                {% for field in tab.fields %}
+
+                    {% include 'fields/' ~ field.tpl ~ '.twig' with {field} %}
+
+                {% endfor %}
+
+            </div>
+
+            <div class="{{ prefix }}-actions-bar">
+
+                <button id="{{ prefix }}-button-save" type="submit" class="button button-primary">Save changes</button>
+
+                {% for button in tab.buttons %}
+                    <button id="{{ prefix }}-button-{{ button.id }}" class="button {% if button.primary %} button-primary {% endif %} {{ button.classes }}">{{ button.caption }}</button>
+                {% endfor %}
+
+            </div>
+
+            <input type="hidden" name="{{ prefix }}[slug]" value="{{ slug }}">
+
+        </form>
+
+    {% else %}
+
+        <div class="{{ prefix }}-fields">
+
+            {% for field in tab.fields %}
+
+                {% include 'fields/' ~ field.tpl ~ '.twig' with {field} %}
+
+            {% endfor %}
+
+        </div>
+
+        <div class="{{ prefix }}-actions-bar">
+
+            {% for button in tab.buttons %}
+                <button id="{{ prefix }}-button-{{ button.id }}" class="button {% if button.primary %} button-primary {% endif %} {{ button.classes }}" title="{{ button.title }}">{{ button.caption }}</button>
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</div>

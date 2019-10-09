@@ -1,0 +1,17 @@
+{% extends field.twig %}
+
+{% block control %}
+
+    <label>
+
+        <input type="hidden" name="{{ prefix }}[{{ field.id }}]" value="">
+
+        <input type="checkbox"
+               id="{{ prefix }}-field-{{ field.id }}"
+               name="{{ prefix }}[{{ field.id }}]"
+                {% if field.value %} checked {% endif %}>
+        {{ field.label }}
+
+    </label>
+
+{% endblock %}

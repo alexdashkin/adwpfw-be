@@ -176,7 +176,7 @@ class App
      *
      * @param array $menus
      *
-     * @see MenuPages::addMenu()
+     * @see AdminPages::addMenu()
      */
     public function addMenus(array $menus)
     {

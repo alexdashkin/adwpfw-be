@@ -1,9 +1,0 @@
-<div class="actions-selector" {{ dependencies }}>
-    <select id="field-{{ id }}" class="form-control">
-        {% for item in items %}
-            <option value="{{ item.value }}" {{ item.selected }}>{{ item.label }}</option>
-        {% endfor %}
-    </select>
-
-    <button class="button">Do</button>
-</div>

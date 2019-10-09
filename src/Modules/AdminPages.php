@@ -4,12 +4,12 @@ namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Common\Helpers;
-use AlexDashkin\Adwpfw\Items\MenuPage;
+use AlexDashkin\Adwpfw\Items\AdminPage;
 
 /**
  * Admin Settings pages
  */
-class MenuPages extends ItemsModule
+class AdminPages extends ItemsModule
 {
     /**
      * Constructor
@@ -29,7 +29,7 @@ class MenuPages extends ItemsModule
      */
     public function add(array $data, App $app)
     {
-        $this->items[] = new MenuPage($data, $app);
+        $this->items[] = new AdminPage($data, $app);
     }
 
     /**
@@ -114,7 +114,7 @@ class MenuPages extends ItemsModule
      *
      * @param array $menus
      *
-     * @see MenuPages::addMenu()
+     * @see AdminPages::addMenu()
      */
     public function addMenus(array $menus)
     {
@@ -175,7 +175,7 @@ class MenuPages extends ItemsModule
      *
      * @param array $menus
      *
-     * @see MenuPages::addMenu()
+     * @see AdminPages::addMenu()
      */
     public function addSubMenus(array $menus)
     {

@@ -1,0 +1,15 @@
+<div class="{{ prefix }}-actions-selector">
+
+    <select id="{{ prefix }}-field-{{ field.id }}" class="form-control">
+
+        {% for option in field.options %}
+            <option value="{{ option.value }}" {% if option.value == field.value %} selected {% endif %}>
+                {{ option.label }}
+            </option>
+        {% endfor %}
+
+    </select>
+
+    <button class="button">Do</button>
+
+</div>

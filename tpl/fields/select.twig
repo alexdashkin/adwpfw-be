@@ -1,0 +1,18 @@
+{% extends field.twig %}
+
+{% block control %}
+
+    <select class="form-control"
+            id="{{ prefix }}-field-{{ field.id }}"
+            name="{{ prefix }}[{{ field.id }}]{% if multiple %}[]{% endif %}"
+            {% if field.multiple %} multiple {% endif %}>
+
+        {% for option in field.options %}
+            <option value="{{ option.value }}" {% if option.value == field.value %} selected {% endif %}>
+                {{ option.label }}
+            </option>
+        {% endfor %}
+
+    </select>
+
+{% endblock %}
