@@ -7,7 +7,6 @@ namespace AlexDashkin\Adwpfw\Modules;
  */
 class Utils extends Module
 {
-    private $twig;
     private $cache;
 
     public function __construct($app)
@@ -49,48 +48,6 @@ class Utils extends Module
         ]);
 
         return false;
-    }
-
-    /**
-     * Render simple templates i.e. {{var}}
-     *
-     * @param string $tpl Template
-     * @param array $args
-     * @return string
-     */
-    public function renderTpl($tpl, array $args = [])
-    {
-        $from = $to = [];
-
-        foreach ($args as $key => $value) {
-            if (is_scalar($key) && is_scalar($value)) {
-                $from[] = '{{' . $key . '}}';
-                $to[] = $value;
-            }
-        }
-
-        return str_replace($from, $to, $tpl);
-    }
-
-    /**
-     * Render TWIG templates
-     *
-     * @param string $name Template file name
-     * @param array $args
-     * @return string
-     */
-    public function renderTwig($name, $args = [])
-    {
-        $twig = $this->getTwig();
-
-        $args = array_merge([
-            'prefix' => $this->config['prefix'],
-            'id' => '',
-            'classes' => '',
-            'desc' => '',
-        ], $args);
-
-        return $twig->render($name . '.twig', $args);
     }
 
     /**
@@ -294,31 +251,4 @@ class Utils extends Module
 
         return $result;
     }
-
-    private function getTwig()
-    {
-        if ($this->twig) {
-            return $this->twig;
-        }
-
-        $paths = [
-            $this->config['baseDir'] . 'tpl/adwpfw',
-            $this->config['baseDir'] . 'tpl',
-            __DIR__ . '/../../tpl',
-        ];
-
-        foreach ($paths as $index => $path) {
-            if (!file_exists($path)) {
-                unset($paths[$index]);
-            }
-        }
-
-        if (class_exists('\Twig\Environment')) {
-            $this->twig = new \Twig\Environment(new \Twig\Loader\FilesystemLoader($paths), ['autoescape' => false]);
-            return $this->twig;
-        }
-
-        return false;
-    }
-
 }

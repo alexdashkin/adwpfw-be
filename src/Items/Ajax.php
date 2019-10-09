@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\InvalidRequestParamException;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
  * Ajax endpoints
@@ -23,7 +23,7 @@ abstract class Ajax extends Item
      *
      * @param $request $_REQUEST params
      * @return array
-     * @throws InvalidRequestParamException
+     * @throws AdwpfwException
      */
     protected function validateRequest($request)
     {
@@ -36,7 +36,7 @@ abstract class Ajax extends Item
             foreach ($actionData['fields'] as $name => $settings) {
 
                 if (!isset($request[$name]) && $settings['required']) {
-                    throw new InvalidRequestParamException('Missing required field: ' . $name);
+                    throw new AdwpfwException('Missing required field: ' . $name);
                 }
 
                 if (isset($request[$name])) {

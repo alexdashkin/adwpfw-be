@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\InvalidRequestParamException;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
  * REST API Endpoint
@@ -68,13 +68,13 @@ class Endpoint extends Ajax
      * Handle the Request
      *
      * @param \WP_REST_Request $request
-     * @throws InvalidRequestParamException
+     * @throws AdwpfwException
      */
     public function run(\WP_REST_Request $request)
     {
         try {
             if ($this->data['admin'] && !current_user_can('administrator')) {
-                throw new InvalidRequestParamException('Endpoint is for Admins only');
+                throw new AdwpfwException('Endpoint is for Admins only');
             }
 
             $params = array_merge($request->get_query_params(), $request->get_body_params());

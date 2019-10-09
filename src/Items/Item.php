@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\InvalidItemDataException;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
  * Module Item Basic Class
@@ -54,7 +54,7 @@ abstract class Item
 
             if (!isset($data[$name])) {
                 if ($field['required']) {
-                    throw new InvalidItemDataException("Field $name is required"); // todo
+                    throw new AdwpfwException("Field $name is required"); // todo
                 } else {
                     $data[$name] = $field['default'];
                 }
@@ -63,7 +63,7 @@ abstract class Item
             $item =& $data[$name];
 
             if ('callable' === $field['type'] && !is_callable($item)) {
-                throw new InvalidItemDataException("Field $name is not callable"); // todo
+                throw new AdwpfwException("Field $name is not callable"); // todo
             }
 
             switch ($field['type']) {

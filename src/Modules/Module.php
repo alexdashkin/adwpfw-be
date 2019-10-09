@@ -46,8 +46,8 @@ abstract class Module
      *
      * @param mixed $message
      */
-    protected function log($message)
+    protected function log($message, $values = [], $type = 4)
     {
-        $this->m('Logger')->log($message);
+        $this->m('Logger')->log($message, $values, $type);
     }
 }

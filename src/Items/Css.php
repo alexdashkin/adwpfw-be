@@ -50,10 +50,12 @@ class Css extends Asset
 
     public function enqueue()
     {
-        if (!empty($item['callback']) && !$item['callback']()) {
+        $data = $this->data;
+
+        if (!empty($data['callback']) && !$data['callback']()) {
             return;
         }
 
-        wp_enqueue_style($item['id'], $item['url'], $item['deps'], $item['ver']);
+        wp_enqueue_style($data['slug'], $data['url'], $data['deps'], $data['ver']);
     }
 }

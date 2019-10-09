@@ -34,7 +34,6 @@ class App
      * Get Module
      *
      * If not exists, tries to create
-     * If class not found - throws Exception
      *
      * @param string $moduleName
      * @return Common\Base
@@ -459,7 +458,7 @@ class App
      *
      * @param array $widgets
      *
-     * @see Widget::addWidget()
+     * @see Widgets::addWidget()
      */
     public function addWidgets(array $widgets)
     {
