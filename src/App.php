@@ -2,8 +2,8 @@
 
 namespace AlexDashkin\Adwpfw;
 
-use AlexDashkin\Adwpfw\Common\Helpers;
-use AlexDashkin\Adwpfw\Exceptions\ModuleException;
+use AlexDashkin\Adwpfw\Modules\Helpers;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
  * Main App Class
@@ -16,7 +16,7 @@ class App
     public $config = [];
 
     /**
-     * @var Common\Base[] Modules
+     * @var Module[] Modules
      */
     private $modules = [];
 
@@ -36,7 +36,6 @@ class App
      * If not exists, tries to create
      *
      * @param string $moduleName
-     * @return Common\Base
      */
     public function m($moduleName)
     {
@@ -887,9 +886,9 @@ class App
      * @param mixed $message Text or any other type including \WP_Error
      * @param int $type 1 = Error, 2 = Warning, 4 = Notice @deprecated
      */
-    public function log($message, $type = 4)
+    public function log($message, $values = [], $type = 4)
     {
-        $this->m('Logger')->log($message, $type);
+        $this->m('Logger')->log($message, $values, $type);
     }
 
     /**

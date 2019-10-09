@@ -59,7 +59,7 @@ class Cron extends ItemsModule
             try {
                 $item->run();
             } catch (\Exception $e) {
-                $this->app->log($e->getMessage());
+                $this->log($e->getMessage());
             }
         }
     }

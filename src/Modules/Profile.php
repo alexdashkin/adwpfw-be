@@ -27,6 +27,7 @@ class Profile extends ItemsModule
      *
      * @param array $data
      * @param App $app
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function add(array $data, App $app)
     {
@@ -74,15 +75,18 @@ class Profile extends ItemsModule
 
     public function render($user)
     {
+        $fields = [];
+
+        foreach ($this->items as $item) {
+            $fields[] = $item->getArgs($user->ID);
+        }
+
         $args = [
             'prefix' => $this->config['prefix'],
             'heading' => $this->heading,
+            'fields' => $fields,
         ];
 
-        foreach ($this->items as $item) {
-            $args['fields'][] = $item->getTwigArgs($user->ID);
-        }
-
-        echo $this->m('Utils')->renderTwig('profile', $args);
+        echo $this->m('Utils')->renderTwig('profile', $args); // todo use fields tpls
     }
 }

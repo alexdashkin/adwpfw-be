@@ -9,25 +9,32 @@ use AlexDashkin\Adwpfw\App;
  */
 class ProfileField extends Item // todo use Fields
 {
+    /**
+     * @var FormField
+     */
+    private $field;
+
     private $metaKey;
 
     /**
      * Constructor
      *
      * @param array $data {
-     * @type string $slug Field Slug. Used to get the saved value. Required.
-     * @type string $name Field Label. Required.
+     * @type string $id Required.
+     * @type string $label Field Label. Required.
      * @type string $type Field Type. Default 'text'.
      * @type string $desc Field Description to be shown below the Field
      * }
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $this->props = [
-            'slug' => [
+            'id' => [
                 'required' => true,
             ],
-            'name' => [
+            'label' => [
                 'required' => true,
             ],
             'type' => [
@@ -39,6 +46,8 @@ class ProfileField extends Item // todo use Fields
         ];
 
         parent::__construct($data, $app);
+
+        $this->field = FormField::getField($this->data, $app);
 
         $this->metaKey = $this->config['prefix'] . '_' . $this->data['name'];
     }
@@ -60,13 +69,9 @@ class ProfileField extends Item // todo use Fields
         return get_user_meta($userId, $this->metaKey, true);
     }
 
-    public function getTwigArgs($userId)
+    public function getArgs($userId)
     {
-        $args = $this->data;
-
-        $args['value'] = $this->get($userId);
-
-        return $args;
+        return $this->field->getArgs([$this->data['id'] => $this->get($userId)]);
     }
 
     public function save($userId, $post)

@@ -4,6 +4,7 @@ namespace AlexDashkin\Adwpfw\Fields;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Items\FormField;
+use AlexDashkin\Adwpfw\Modules\Helpers;
 
 /**
  * Form Field
@@ -61,15 +62,47 @@ class Select2 extends FormField
 
     public function getArgs(array $values)
     {
+        $data = $this->data;
+
+        $value = isset($values[$data['id']]) ? $values[$data['id']] : null;
+
+        $options = [
+            [
+                'label' => $data['placeholder'],
+                'value' => '',
+                'selected' => '',
+            ],
+        ];
+
+        foreach ($data['options'] as $val => $label) {
+            $selected = $data['multiple'] ? in_array($val, (array)$value) : $val == $value;
+
+            $options[] = [
+                'label' => $label,
+                'value' => $val,
+                'selected' => $selected ? 'selected' : '',
+            ];
+        }
+
+        $valueArr = $data['multiple'] ? (array)$value : [$value];
+
+        foreach ($valueArr as $item) {
+            if (!Helpers::arraySearch($options, ['value' => $item])) {
+                $options[] = [
+                    'label' => !empty($option['label_cb']) ? $option['label_cb']($item) : $item,
+                    'value' => $item,
+                    'selected' => 'selected',
+                ];
+            }
+        }
+
         return [
             'tpl' => $this->tpl,
-            'id' => $this->data['id'],
-            'label' => $this->data['label'],
-            'desc' => $this->data['desc'],
-            'multiple' => $this->data['multiple'],
-            'ajax_action' => $this->data['ajax_action'],
-            'options' => $this->data['options'],
-            'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
+            'id' => $data['id'],
+            'label' => $data['label'],
+            'desc' => $data['desc'],
+            'multiple' => $data['multiple'],
+            'options' => $options,
         ];
     }
 }

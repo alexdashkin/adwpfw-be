@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Modules\Helpers;
 
 /**
  * Menu Page Tab
@@ -66,8 +67,10 @@ class AdminPageTab extends Item
         }
     }
 
-    public function getArgs(array $values)
+    public function getArgs()
     {
+        $values = get_option($this->config['prefix'] . '_' . $this->data['option']) ?: [];
+
         $fields = $buttons = [];
 
         foreach ($this->fields as $field) {
@@ -86,5 +89,31 @@ class AdminPageTab extends Item
         ];
 
         return $args;
+    }
+
+    public function save($data)
+    {
+        $optionName = $this->config['prefix'] . '_' . $this->data['option'];
+
+        $values = get_option($this->config['prefix'] . '_' . $this->data['option']) ?: [];
+
+        foreach ($this->fields as $field) {
+
+            if (empty($field->data['id']) || !array_key_exists($field->data['id'], $data)) {
+                continue;
+            }
+
+            $fieldId = $field->data['id'];
+
+            $value = Helpers::trim($data[$fieldId]); // todo validation
+
+            $values[$fieldId] = $value;
+        }
+
+        update_option($optionName, $values);
+
+        do_action('adwpfw_settings_saved', $this, $values);
+
+        return $this->m('Utils')->returnSuccess();
     }
 }

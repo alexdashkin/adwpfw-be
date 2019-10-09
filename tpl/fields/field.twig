@@ -14,7 +14,7 @@
 
             <input type="text" class="form-control"
                    id="{{ prefix }}-field-{{ field.id }}"
-                   name="{{ prefix }}[{{ field.id }}]"
+                   name="{{ prefix }}[{{ field.id }}]" {# todo use extra dimension in prefix instead of hidden slug #}
                    value="{{ field.value }}">
 
         {% endblock %}

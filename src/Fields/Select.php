@@ -43,6 +43,9 @@ class Select extends FormField
             'desc' => [
                 'default' => null,
             ],
+            'placeholder' => [
+                'default' => '--- Select ---',
+            ],
             'multiple' => [
                 'type' => 'bool',
                 'default' => false,
@@ -54,14 +57,35 @@ class Select extends FormField
 
     public function getArgs(array $values)
     {
+        $data = $this->data;
+
+        $value = isset($values[$data['id']]) ? $values[$data['id']] : null;
+
+        $options = [
+            [
+                'label' => $data['placeholder'],
+                'value' => '',
+                'selected' => '',
+            ],
+        ];
+
+        foreach ($data['options'] as $val => $label) {
+            $selected = $data['multiple'] ? in_array($val, (array)$value) : $val == $value;
+
+            $options[] = [
+                'label' => $label,
+                'value' => $val,
+                'selected' => $selected ? 'selected' : '',
+            ];
+        }
+
         return [
             'tpl' => $this->tpl,
-            'id' => $this->data['id'],
-            'label' => $this->data['label'],
-            'desc' => $this->data['desc'],
-            'multiple' => $this->data['multiple'],
-            'options' => $this->data['options'],
-            'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
+            'id' => $data['id'],
+            'label' => $data['label'],
+            'desc' => $data['desc'],
+            'multiple' => $data['multiple'],
+            'options' => $options,
         ];
     }
 }

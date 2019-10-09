@@ -1,3 +1,13 @@
 <div class="{{ prefix }}-metabox">
-    {{ content }}
+
+    <div class="{{ prefix }}-fields">
+
+        {% for field in fields %}
+
+            {% include 'fields/' ~ field.tpl ~ '.twig' with {field} %}
+
+        {% endfor %}
+
+    </div>
+
 </div>

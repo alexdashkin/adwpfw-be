@@ -97,7 +97,7 @@ abstract class Item
 
     protected function getDefaultSlug($base = 'item')
     {
-        return $this->config['prefix'] . '-' . sanitize_title($base) . '-' . uniqid();
+        return $this->config['prefix'] . '-' . sanitize_title($base);
     }
 
     /**
@@ -116,8 +116,8 @@ abstract class Item
      *
      * @param mixed $message
      */
-    protected function log($message)
+    protected function log($message, $values = [], $type = 4)
     {
-        $this->app->log($message);
+        $this->m('Logger')->log($message, $values, $type);
     }
 }

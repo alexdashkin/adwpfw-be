@@ -34,7 +34,6 @@ abstract class Module
      * Get Module
      *
      * @param string $moduleName
-     * @return Module
      */
     protected function m($moduleName)
     {

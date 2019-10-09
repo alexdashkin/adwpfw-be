@@ -111,10 +111,8 @@ class AdminPage extends Item
 
     public function render()
     {
-        $values = get_option($this->config['prefix'] . '_' . $this->data['option']) ?: [];
-
         foreach ($this->tabs as $tab) {
-            $tabs[] = $tab->getArgs($values);
+            $tabs[] = $tab->getArgs();
         }
 
         $args = [
@@ -141,51 +139,6 @@ class AdminPage extends Item
         }
 
         return null;
-    }
-
-    public function save($data)
-    {
-        if (empty($data['slug'])) {
-            return $this->error('Tab slug is empty');
-        }
-
-        if (!$adminPage = $this->searchItems(['slug' => $data['slug']])) {
-            return $this->error(sprintf('Tab "%s" not found', $data['slug']));
-        }
-
-        $values =& $adminPage['values']; // todo bwc
-        $changed = false;
-
-        foreach ($adminPage['tabs'] as $tab) {
-            if (empty($tab['form'])) {
-                continue;
-            }
-
-            foreach ($tab['options'] as $option) {
-                if (empty($option['id']) || (isset($option['store']) && !$option['store']) || !isset($data[$option['id']])) {
-                    continue;
-                }
-
-                $value = Helpers::trim($data[$option['id']]);
-
-                $isset = isset($values[$option['id']]);
-                if (!$isset || ($isset && $values[$option['id']] != $value)) {
-                    $changed = true;
-                }
-                $values[$option['id']] = $value;
-            }
-
-            $message = !$changed ? 'Nothing changed' : 'Saved!';
-        }
-
-        if ($changed && $adminPage['option']) {
-            update_option($adminPage['option'], $values);
-        }
-
-        do_action('adwpfw_settings_saved', $adminPage, $values);
-
-        return $this->utils->returnSuccess($message);
-
     }
 
     /**

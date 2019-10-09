@@ -39,7 +39,7 @@ class CatOrderControl extends \WP_Customize_Control
             'values' => $values,
         ];
 
-        echo $this->app->m('Common\Utils')->renderTwig('adwpfw/controls/cat-order', $args);
+        echo $this->app->m('Utils')->renderTwig('adwpfw/controls/cat-order', $args);
     }
 
 //	public function content_template() {}
