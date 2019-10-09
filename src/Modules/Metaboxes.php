@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Common\Helpers;
 /**
  * Posts Metaboxes
  */
-class Metabox extends Module
+class Metaboxes extends ItemsModule
 {
     private $metaboxes = [];
     private $remove = [];
@@ -61,7 +61,7 @@ class Metabox extends Module
      *
      * @param array $metaboxes
      *
-     * @see Metabox::addMetabox()
+     * @see Metaboxes::addMetabox()
      */
     public function addMetaboxes(array $metaboxes)
     {

@@ -4,19 +4,13 @@ namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Common\Helpers;
+use AlexDashkin\Adwpfw\Items\MenuPage;
 
 /**
  * Admin Settings pages
  */
-class Menu extends Module
+class MenuPages extends ItemsModule
 {
-    private $menus = [];
-
-    /**
-     * @var \AlexDashkin\Adwpfw\Common\Utils
-     */
-    private $utils;
-
     /**
      * Constructor
      *
@@ -25,15 +19,28 @@ class Menu extends Module
     public function __construct(App $app)
     {
         parent::__construct($app);
-        $this->utils = $this->m('Utils');
     }
 
-    public function run()
+    /**
+     * Add an Item
+     *
+     * @param array $data
+     * @param App $app
+     */
+    public function add(array $data, App $app)
     {
-        add_action('admin_menu', [$this, 'registerMenu']);
+        $this->items[] = new MenuPage($data, $app);
+    }
 
-        $this->m('Admin\Ajax')->addAction([
-            'id' => 'save',
+    /**
+     * Hooks to register Items in WP
+     */
+    protected function hooks()
+    {
+        add_action('admin_menu', [$this, 'register']);
+
+        $this->m('Ajax')->add([
+            'slug' => 'save',
             'fields' => [
                 'form' => [
                     'type' => 'form',
@@ -107,7 +114,7 @@ class Menu extends Module
      *
      * @param array $menus
      *
-     * @see Menu::addMenu()
+     * @see MenuPages::addMenu()
      */
     public function addMenus(array $menus)
     {
@@ -168,7 +175,7 @@ class Menu extends Module
      *
      * @param array $menus
      *
-     * @see Menu::addMenu()
+     * @see MenuPages::addMenu()
      */
     public function addSubMenus(array $menus)
     {

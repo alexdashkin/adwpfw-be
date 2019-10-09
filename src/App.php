@@ -176,7 +176,7 @@ class App
      *
      * @param array $menus
      *
-     * @see Menu::addMenu()
+     * @see MenuPages::addMenu()
      */
     public function addMenus(array $menus)
     {
@@ -261,7 +261,7 @@ class App
      *
      * @param array $metaboxes
      *
-     * @see Metabox::addMetabox()
+     * @see Metaboxes::addMetabox()
      */
     public function addMetaboxes(array $metaboxes)
     {
