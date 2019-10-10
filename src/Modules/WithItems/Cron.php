@@ -3,16 +3,28 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\CronJob;
+use AlexDashkin\Adwpfw\Items\Basic\CronJob;
 
 /**
- * Cron Jobs
+ * Cron Jobs.
  */
 class Cron extends ModuleWithItems
 {
+    /**
+     * @var string Name of the main Cron job (Heartbeat).
+     */
     private $jobName;
+
+    /**
+     * @var int Interval of the main Cron job (Heartbeat).
+     */
     private $interval;
 
+    /**
+     * Cron constructor.
+     *
+     * @param App $app
+     */
     public function __construct(App $app)
     {
         parent::__construct($app);
@@ -21,16 +33,24 @@ class Cron extends ModuleWithItems
     }
 
     /**
-     * Add an item
+     * Add Cron Job.
      *
      * @param array $data
+     * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see CronJob::__construct()
      */
     public function add(array $data, App $app)
     {
         $this->items[] = new CronJob($data, $app);
     }
 
-    private function init()
+    /**
+     * Init the Module.
+     */
+    protected function init()
     {
         $prefix = $this->config['prefix'];
         $this->jobName = $prefix . '_heartbeat';
@@ -46,13 +66,8 @@ class Cron extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Run Jobs
      */
-    protected function init()
-    {
-        add_action($this->jobName, [$this, 'run']);
-    }
-
     public function run()
     {
         foreach ($this->items as $item) {
@@ -65,10 +80,10 @@ class Cron extends ModuleWithItems
     }
 
     /**
-     * Add new WP Cron Schedule (Interval)
+     * Add new WP Cron Schedule (Interval).
      *
      * @param array $intervals
-     * @return array mixed
+     * @return array Modified Intervals.
      */
     public function addInterval($intervals)
     {
@@ -81,7 +96,7 @@ class Cron extends ModuleWithItems
     }
 
     /**
-     * Remove main cron job from WP (to be used on plugin deactivation)
+     * Remove main cron job from WP (to be used on plugin deactivation).
      */
     public function deactivate()
     {

@@ -9,11 +9,30 @@ use AlexDashkin\Adwpfw\App;
  */
 class Logger extends Module
 {
+    /**
+     * @var int Start Timestamp
+     */
     private $start;
+
+    /**
+     * @var string Log contents
+     */
     private $contents;
+
+    /**
+     * @var array Paths tp log files
+     */
     private $paths = [];
+
+    /**
+     * @var string Path to the file where logs are written immediately
+     */
     private $immediatePath;
 
+    /**
+     * Logger constructor.
+     * @param App $app
+     */
     public function __construct(App $app)
     {
         parent::__construct($app);
@@ -21,6 +40,9 @@ class Logger extends Module
         $this->init();
     }
 
+    /**
+     * Init Logger.
+     */
     public function init()
     {
         $this->start = date('d.m.y H:i:s');
@@ -44,10 +66,11 @@ class Logger extends Module
     }
 
     /**
-     * Add a log entry
+     * Add a log entry.
      *
-     * @param mixed $message Text or any other type including \WP_Error
-     * @param int $type 1 = Error, 2 = Warning, 4 = Notice
+     * @param mixed $message Text or any other type including WP_Error.
+     * @param array $values If passed, vsprintf() func is applied.
+     * @param int $type 1 = Error, 2 = Warning, 4 = Notice.
      */
     public function log($message, $values = [], $type = 4)
     {
@@ -66,6 +89,9 @@ class Logger extends Module
         }
     }
 
+    /**
+     * Flush log content to the files.
+     */
     public function __destruct()
     {
         if (!$this->contents || empty($this->config['log'])) {

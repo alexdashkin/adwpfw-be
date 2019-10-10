@@ -5,25 +5,33 @@ namespace AlexDashkin\Adwpfw\Modules\Basic;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Dynamic Helpers
+ * Simple cache.
  */
-class Utils extends Module
+class Cache extends Module
 {
+    /**
+     * @var mixed Variable to store the Cache
+     */
     private $cache;
 
+    /**
+     * Cache constructor.
+     *
+     * @param App $app
+     */
     public function __construct(App $app)
     {
         parent::__construct($app);
     }
 
     /**
-     * Simple cache
+     * Get cached value if any.
      *
-     * @param callable $callable
-     * @param array $args
-     * @return mixed
+     * @param callable $callable Function to be cached.
+     * @param array $args Args to be passed to the Function.
+     * @return mixed Either cached result if any or the Function result.
      */
-    public function cache($callable, $args = [])
+    public function get($callable, $args = [])
     {
         $cacheArgs = $args;
 

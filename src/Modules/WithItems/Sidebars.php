@@ -3,15 +3,15 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Sidebar;
+use AlexDashkin\Adwpfw\Items\Basic\Sidebar;
 
 /**
- * Sidebars
+ * Sidebars.
  */
 class Sidebars extends ModuleWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -21,10 +21,14 @@ class Sidebars extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Sidebar
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Sidebar::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -32,13 +36,16 @@ class Sidebars extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Hooks to register Items in WP.
      */
     protected function init()
     {
         add_action('widgets_init', [$this, 'register']);
     }
 
+    /**
+     * Register Sidebars.
+     */
     public function register()
     {
         foreach ($this->items as $item) {

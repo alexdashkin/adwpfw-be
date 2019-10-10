@@ -14,7 +14,7 @@ abstract class ModuleWithItems extends ModuleWithLogger
     use ItemWithItemsTrait;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -24,7 +24,7 @@ abstract class ModuleWithItems extends ModuleWithLogger
     }
 
     /**
-     * Init Module
+     * Init Module.
      */
     abstract protected function init();
 }

@@ -13,11 +13,11 @@ class Helpers
     public static $logger;
 
     /**
-     * Search in an array
+     * Search in an array.
      *
-     * @param array $array
-     * @param array $conditions
-     * @param bool $single
+     * @param array $array Array to parse.
+     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param bool $single Whether to return a single item.
      * @return mixed
      */
     public static function arraySearch(array $array, array $conditions, $single = false)
@@ -45,12 +45,12 @@ class Helpers
     }
 
     /**
-     * Filter an array
+     * Filter an array.
      *
-     * @param array $array
-     * @param array $conditions
-     * @param bool $single
-     * @return array
+     * @param array $array Array to parse.
+     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param bool $single Whether to return a single item.
+     * @return mixed
      */
     public static function arrayFilter(array $array, array $conditions, $single = false)
     {
@@ -70,11 +70,11 @@ class Helpers
     }
 
     /**
-     * Remove duplicates by key
+     * Remove duplicates by key.
      *
-     * @param array $array
-     * @param string $key
-     * @return array
+     * @param array $array Array to parse.
+     * @param string $key Key to search duplicates by.
+     * @return array Filtered array.
      */
     public static function arrayUniqueByKey(array $array, $key)
     {
@@ -92,12 +92,12 @@ class Helpers
     }
 
     /**
-     * Transform an array
+     * Transform an array.
      *
-     * @param array $array
-     * @param array $keys Keys to keep
-     * @param null $index Key to be used as index
-     * @param bool $sort
+     * @param array $array Array to parse.
+     * @param array $keys Keys to keep.
+     * @param null $index Key to be used as index.
+     * @param bool $sort Key to sort by.
      * @return array
      */
     public static function arrayParse(array $array, array $keys, $index = null, $sort = false)
@@ -144,12 +144,12 @@ class Helpers
     }
 
     /**
-     * Sort an array by key
+     * Sort an array by key.
      *
-     * @param array $array
-     * @param $key
-     * @param bool $keepKeys Keep key=>value links when sorting
-     * @return array
+     * @param array $array Array to parse.
+     * @param string $key Key to sort by.
+     * @param bool $keepKeys Keep key=>value assigment when sorting
+     * @return array Resulting array.
      */
     public static function arraySortByKey(array $array, $key, $keepKeys = false)
     {
@@ -162,7 +162,7 @@ class Helpers
     }
 
     /**
-     * Arrays deep merge
+     * Arrays deep merge.
      *
      * @param array $arr1
      * @param array $arr2
@@ -187,10 +187,10 @@ class Helpers
     }
 
     /**
-     * Add an element to an array if not exists
+     * Add an element to an array if not exists.
      *
-     * @param array $where
-     * @param array $what
+     * @param array $where Array to add to.
+     * @param array $what Array to be added.
      * @return array
      */
     public static function arrayAddNonExistent(array $where, array $what)
@@ -207,7 +207,7 @@ class Helpers
     }
 
     /**
-     * Recursive implode
+     * Recursive implode.
      *
      * @param array $array
      * @param string $glue
@@ -225,14 +225,15 @@ class Helpers
     }
 
     /**
-     * Check plugin/theme existence
+     * Check functions/classes existence.
+     * Used to check if a plugin/theme is active before proceed.
      *
      * @param array $items {
-     * @type string $name Plugin or Theme name
-     * @type string $type Type of the dep (class/function)
-     * @type string $dep Class or function name
+     * @type string $name Plugin or Theme name.
+     * @type string $type Type of the dep (class/function).
+     * @type string $dep Class or function name.
      * }
-     * @return array Not found items
+     * @return array Not found items.
      */
     public static function checkDeps(array $items)
     {
@@ -249,10 +250,10 @@ class Helpers
     }
 
     /**
-     * Get path to the WP Uploads dir
+     * Get path to the WP Uploads dir.
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists
-     * @param string $path Path inside the uploads dir (will be created if not exists)
+     * @param string $dirName Dir name to be created in Uploads dir if not exists.
+     * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
     public static function getUploadsDir($dirName, $path = '')
@@ -261,10 +262,10 @@ class Helpers
     }
 
     /**
-     * Get URL to the WP Uploads dir
+     * Get URL to the WP Uploads URL
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists
-     * @param string $path Path inside the uploads dir (will be created if not exists)
+     * @param string $dirName Dir name to be created in Uploads dir if not exists.
+     * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
     public static function getUploadsUrl($dirName, $path = '')
@@ -273,11 +274,11 @@ class Helpers
     }
 
     /**
-     * Get path/url to the WP Uploads dir
+     * Get path/url to the WP Uploads dir.
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists
-     * @param string $path Path inside the uploads dir (will be created if not exists)
-     * @param bool $getUrl Whether to get URL
+     * @param string $dirName Dir name to be created in Uploads dir if not exists.
+     * @param string $path Path inside the uploads dir (will be created if not exists).
+     * @param bool $getUrl Whether to get URL.
      * @return string
      */
     private static function getUploads($dirName, $path = '', $getUrl = false)
@@ -295,7 +296,7 @@ class Helpers
     }
 
     /**
-     * External API request helper
+     * External API request helper.
      *
      * @param array $args {
      * @type string $url
@@ -358,11 +359,11 @@ class Helpers
     }
 
     /**
-     * Return success response
+     * Return Success array.
      *
-     * @param string $message
-     * @param array $data
-     * @param bool $echo
+     * @param string $message Message.
+     * @param array $data Data to return as JSON.
+     * @param bool $echo Whether to echo Response right away without returning.
      * @return array
      */
     public static function returnSuccess($message = 'Done', array $data = [], $echo = false)
@@ -385,10 +386,10 @@ class Helpers
     }
 
     /**
-     * Return error response
+     * Return Error array.
      *
-     * @param string $message
-     * @param bool $echo
+     * @param string $message Error message.
+     * @param bool $echo Whether to echo Response right away without returning.
      * @return array
      */
     public static function returnError($message = 'Unknown Error', $echo = false)
@@ -410,11 +411,11 @@ class Helpers
     }
 
     /**
-     * Handle false and \WP_Error returns
+     * Wrapper for false and \WP_Error returns.
      *
-     * @param mixed $result
-     * @param string $errorMessage
-     * @return bool
+     * @param mixed $result Result of a function call.
+     * @param string $errorMessage Message to log on error.
+     * @return bool Whether the call succeeded.
      */
     public static function pr($result, $errorMessage = '')
     {
@@ -433,7 +434,7 @@ class Helpers
     }
 
     /**
-     * Trim vars and arrays
+     * Trim vars and arrays.
      *
      * @param array|string $var
      * @return array|string
@@ -454,10 +455,11 @@ class Helpers
     }
 
     /**
-     * Get output of a function
+     * Get output of a function.
+     * Used to put output in a variable instead of echo.
      *
-     * @param string|array $func Callable
-     * @param array $args Function args
+     * @param string|array $func Callable.
+     * @param array $args Function args.
      * @return string Output
      */
     public static function getOutput($func, $args = [])
@@ -468,7 +470,7 @@ class Helpers
     }
 
     /**
-     * Convert HEX color to RGB
+     * Convert HEX color to RGB.
      *
      * @param string $hex
      * @return string
@@ -480,7 +482,7 @@ class Helpers
     }
 
     /**
-     * Disable WP emojis
+     * Disable WP emojis.
      */
     public static function disableEmojis()
     {

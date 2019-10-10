@@ -14,11 +14,33 @@ use Twig\Loader\FilesystemLoader;
  */
 class Twig extends Module
 {
+    /**
+     * @var FilesystemLoader
+     */
     private $fsLoader;
+
+    /**
+     * @var ArrayLoader
+     */
     private $arrayLoader;
+
+    /**
+     * @var Environment File System Environment
+     */
     private $twigFs;
+
+    /**
+     * @var Environment Array Environment
+     */
     private $twigArray;
 
+    /**
+     * Twig constructor.
+     *
+     * @param App $app
+     *
+     * @throws AdwpfwException
+     */
     public function __construct(App $app)
     {
         if (!class_exists('\Twig\Environment')) {
@@ -54,6 +76,13 @@ class Twig extends Module
         $this->twigArray = new Environment($this->arrayLoader, $config);
     }
 
+    /**
+     * Add file paths to search templates in.
+     *
+     * @param array $paths
+     *
+     * @throws AdwpfwException
+     */
     public function addPaths(array $paths)
     {
         foreach ($paths as $path) {
@@ -70,6 +99,11 @@ class Twig extends Module
         }
     }
 
+    /**
+     * Add string templates as key-value pairs.
+     *
+     * @param array $templates
+     */
     public function addTemplates(array $templates)
     {
         foreach ($templates as $name => $template) {
@@ -77,23 +111,42 @@ class Twig extends Module
         }
     }
 
+    /**
+     * Render File Template.
+     *
+     * @param string $name Template file name without .twig.
+     * @param array $args Args to be passed to the Template.
+     * @return string Rendered Template.
+     *
+     * @throws AdwpfwException
+     */
     public function renderFile($name, $args = [])
     {
         return $this->render($this->twigFs, $name . '.twig', $args);
     }
 
+    /**
+     * Render Array Template.
+     *
+     * @param string $name Template name.
+     * @param array $args Args to be passed to the Template.
+     * @return string Rendered Template.
+     *
+     * @throws AdwpfwException
+     */
     public function renderTpl($name, $args = [])
     {
         return $this->render($this->twigArray, $name, $args);
     }
 
     /**
-     * Render
+     * Render a Template.
      *
-     * @param Environment $twig
-     * @param string $name Template file name
-     * @param array $args
-     * @return string
+     * @param Environment $twig Array or FileSystem Environment
+     * @param string $name Template name.
+     * @param array $args Args to be passed to the Template.
+     * @return string Rendered Template.
+     *
      * @throws AdwpfwException
      */
     public function render($twig, $name, $args = [])

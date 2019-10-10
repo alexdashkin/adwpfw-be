@@ -2,6 +2,8 @@
 
 namespace AlexDashkin\Adwpfw\Traits;
 
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+
 trait ItemTrait
 {
     /**
@@ -14,6 +16,14 @@ trait ItemTrait
      */
     protected $props = [];
 
+    /**
+     * Validate data
+     *
+     * @param array $data Passed data
+     * @return array Validated and Sanitized data
+     *
+     * @throws AdwpfwException
+     */
     protected function validate($data)
     {
         foreach ($this->props as $name => $def) {

@@ -3,15 +3,15 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Widget;
+use AlexDashkin\Adwpfw\Items\Basic\Widget;
 
 /**
- * Admin Dashboard widgets
+ * Admin Dashboard widgets.
  */
 class Widgets extends ModuleWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -21,10 +21,14 @@ class Widgets extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Widget.
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Widget::__construct()
      */
     public function add(array $data, App $app)
     {
@@ -32,13 +36,16 @@ class Widgets extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Hooks to register Items in WP.
      */
     protected function init()
     {
         add_action('wp_dashboard_setup', [$this, 'register']);
     }
 
+    /**
+     * Register Widgets.
+     */
     public function register()
     {
         foreach ($this->items as $item) {

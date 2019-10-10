@@ -3,15 +3,15 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Notice;
+use AlexDashkin\Adwpfw\Items\Basic\Notice;
 
 /**
- * Admin notices
+ * Admin notices.
  */
 class Notices extends ModuleWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -21,10 +21,14 @@ class Notices extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Notice.
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Notice::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -39,6 +43,9 @@ class Notices extends ModuleWithItems
         add_action('admin_notices', [$this, 'process']);
     }
 
+    /**
+     * Process Notices.
+     */
     public function process()
     {
         foreach ($this->items as $item) {

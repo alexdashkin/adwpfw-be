@@ -6,12 +6,12 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
- * Module with Items
+ * Ajax Base Module.
  */
 abstract class ModuleAjax extends ModuleWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */

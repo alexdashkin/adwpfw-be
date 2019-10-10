@@ -3,17 +3,17 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\ProfileField;
+use AlexDashkin\Adwpfw\Items\Basic\ProfileField;
 
 /**
- * User Profile Custom fields
+ * User Profile Custom fields.
  */
 class Profile extends ModuleWithItems
 {
     private $heading = 'Custom fields';
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -23,11 +23,14 @@ class Profile extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Profile Field.
      *
      * @param array $data
      * @param App $app
+     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see ProfileField::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -35,7 +38,7 @@ class Profile extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Add hooks
      */
     protected function init()
     {
@@ -47,7 +50,7 @@ class Profile extends ModuleWithItems
     }
 
     /**
-     * Set Fields Group Heading
+     * Set Fields Group Heading.
      *
      * @param string $heading Heading Text
      */
@@ -56,6 +59,11 @@ class Profile extends ModuleWithItems
         $this->heading = $heading;
     }
 
+    /**
+     * Save posted data.
+     *
+     * @param int $userId User ID.
+     */
     public function save($userId)
     {
         if (!current_user_can('edit_user')) {
@@ -73,6 +81,11 @@ class Profile extends ModuleWithItems
         }
     }
 
+    /**
+     * Render the Fields.
+     *
+     * @param \WP_User $user
+     */
     public function render($user)
     {
         $fields = [];

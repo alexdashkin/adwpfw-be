@@ -3,10 +3,10 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\PostState;
+use AlexDashkin\Adwpfw\Items\Basic\PostState;
 
 /**
- * Add States to the posts/pages (comments displayed on the right in the posts list)
+ * Add States to the posts/pages (comments displayed on the right in the posts list).
  */
 class PostStates extends ModuleWithItems
 {
@@ -21,10 +21,14 @@ class PostStates extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Post State.
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see PostState::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -39,6 +43,13 @@ class PostStates extends ModuleWithItems
         add_filter('display_post_states', [$this, 'register'], 10, 2);
     }
 
+    /**
+     * Filter states and add ours.
+     *
+     * @param array $states States list.
+     * @param \WP_Post $post Post.
+     * @return array Modified States.
+     */
     public function register($states, $post)
     {
         foreach ($this->items as $item) {

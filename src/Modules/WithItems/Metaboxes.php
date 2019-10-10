@@ -3,18 +3,20 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Metabox;
-use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
+use AlexDashkin\Adwpfw\Items\WithItems\Metabox;
 
 /**
  * Posts Metaboxes
  */
 class Metaboxes extends ModuleWithItems
 {
+    /**
+     * @var array Registered Metaboxes to remove.
+     */
     private $remove = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -24,11 +26,14 @@ class Metaboxes extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Metabox.
      *
      * @param array $data
      * @param App $app
+     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Metabox::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -45,7 +50,7 @@ class Metaboxes extends ModuleWithItems
     }
 
     /**
-     * Remove Metaboxes
+     * Mark registered Metaboxes to be removed
      *
      * @param array $metaboxes {
      * @type string $id
@@ -64,6 +69,9 @@ class Metaboxes extends ModuleWithItems
         $this->remove = array_merge($this->remove, $metaboxes);
     }
 
+    /**
+     * Register and Remove Metaboxes
+     */
     public function register()
     {
         foreach ($this->items as $item) {
@@ -77,20 +85,23 @@ class Metaboxes extends ModuleWithItems
         }
     }
 
+    /**
+     * Save posted data.
+     *
+     * @param int $postId
+     */
     public function save($postId) // todo add hooks
     {
         if (empty($_POST[$this->config['prefix']])) { // todo will not work with multiple MB on one page
-            return Helpers::returnError('Form data is empty');
+            return;
         }
 
         $form = $_POST[$this->config['prefix']];
 
         foreach ($this->items as $item) {
             if ($item->data['slug'] === $form['slug']) {
-                return $item->save($form, $postId);
+                $item->save($form, $postId);
             }
         }
-
-        return Helpers::returnError('Metabox not found');
     }
 }

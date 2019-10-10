@@ -3,10 +3,10 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Endpoint;
+use AlexDashkin\Adwpfw\Items\Basic\Endpoint;
 
 /**
- * REST API Endpoints
+ * REST API Endpoints.
  */
 class Rest extends ModuleAjax
 {
@@ -21,10 +21,14 @@ class Rest extends ModuleAjax
     }
 
     /**
-     * Add an Item
+     * Add Endpoint.
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Endpoint::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -32,13 +36,16 @@ class Rest extends ModuleAjax
     }
 
     /**
-     * Hooks to register Items in WP
+     * Hooks to register Items in WP.
      */
     protected function init()
     {
         add_filter('rest_api_init', [$this, 'register']);
     }
 
+    /**
+     * Register Endpoints.
+     */
     public function register()
     {
         foreach ($this->items as $item) {

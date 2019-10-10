@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules\Basic;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Module with Logger shortcut
+ * Module with Logger
  */
 abstract class ModuleWithLogger extends Module
 {
@@ -20,9 +20,11 @@ abstract class ModuleWithLogger extends Module
     }
 
     /**
-     * Add log entry
+     * Add a log entry.
      *
-     * @param mixed $message
+     * @param mixed $message Text or any other type including WP_Error.
+     * @param array $values If passed, vsprintf() func is applied.
+     * @param int $type 1 = Error, 2 = Warning, 4 = Notice.
      */
     protected function log($message, $values = [], $type = 4)
     {

@@ -3,15 +3,15 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Shortcode;
+use AlexDashkin\Adwpfw\Items\Basic\Shortcode;
 
 /**
- * Manage Shortcodes
+ * Shortcodes.
  */
 class Shortcodes extends ModuleWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -21,10 +21,14 @@ class Shortcodes extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Shortcode.
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Shortcode::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -32,13 +36,16 @@ class Shortcodes extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Hooks to register Items in WP.
      */
     protected function init()
     {
         add_action('init', [$this, 'register'], 999);
     }
 
+    /**
+     * Register Shortcodes.
+     */
     public function register()
     {
         foreach ($this->items as $item) {

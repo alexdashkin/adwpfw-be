@@ -3,15 +3,15 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\PostType;
+use AlexDashkin\Adwpfw\Items\Basic\PostType;
 
 /**
- * Custom Post Types
+ * Custom Post Types.
  */
 class PostTypes extends ModuleWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -21,10 +21,14 @@ class PostTypes extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Post Type.
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see PostType::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -39,6 +43,9 @@ class PostTypes extends ModuleWithItems
         add_action('init', [$this, 'register'], 20);
     }
 
+    /**
+     * Register Post Types in WP
+     */
     public function register()
     {
         foreach ($this->items as $item) {

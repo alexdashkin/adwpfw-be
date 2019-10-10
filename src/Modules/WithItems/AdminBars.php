@@ -3,15 +3,15 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\AdminBar;
+use AlexDashkin\Adwpfw\Items\Basic\AdminBar;
 
 /**
- * Top Admin Bar Items
+ * Top Admin Bar Items.
  */
 class AdminBars extends ModuleWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -21,10 +21,14 @@ class AdminBars extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Admin Bar
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see AdminBar::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -32,7 +36,7 @@ class AdminBars extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Init the Module
      */
     protected function init()
     {
@@ -40,7 +44,7 @@ class AdminBars extends ModuleWithItems
     }
 
     /**
-     * Register Items in WP
+     * Register Admin Bars in WP
      *
      * @param \WP_Admin_Bar $adminBar
      */

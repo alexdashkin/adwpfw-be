@@ -3,19 +3,26 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Css;
-use AlexDashkin\Adwpfw\Items\Js;
+use AlexDashkin\Adwpfw\Items\Basic\Css;
+use AlexDashkin\Adwpfw\Items\Basic\Js;
 
 /**
- * Enqueue CSS/JS
+ * Enqueue CSS/JS.
  */
 class Assets extends ModuleWithItems
 {
+    /**
+     * @var array Registered assets ids to enqueue
+     */
     private $enqueue = [];
+
+    /**
+     * @var array Registered assets ids to remove
+     */
     private $remove = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -34,10 +41,14 @@ class Assets extends ModuleWithItems
     }
 
     /**
-     * Add an item
+     * Add Asset
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Css::__construct(), Js::__construct()
      */
     public function add(array $data, App $app)
     {
@@ -53,9 +64,9 @@ class Assets extends ModuleWithItems
     }
 
     /**
-     * Enqueue registered assets
+     * Enqueue registered assets.
      *
-     * @param array $ids Registered assets IDs to add
+     * @param array $ids Registered assets IDs to add.
      */
     public function addRegistered(array $ids)
     {
@@ -63,9 +74,9 @@ class Assets extends ModuleWithItems
     }
 
     /**
-     * Remove assets
+     * Remove registered assets.
      *
-     * @param array $ids Registered assets IDs to be removed
+     * @param array $ids Registered assets IDs to remove.
      */
     public function remove(array $ids)
     {
@@ -73,6 +84,8 @@ class Assets extends ModuleWithItems
     }
 
     /**
+     * Enqueue admin assets
+     *
      * Hooked on "admin_enqueue_scripts"
      */
     public function enqueueAdmin()
@@ -85,6 +98,8 @@ class Assets extends ModuleWithItems
     }
 
     /**
+     * Enqueue front assets
+     *
      * Hooked on "wp_enqueue_scripts"
      */
     public function enqueueFront()

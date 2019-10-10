@@ -25,10 +25,10 @@ trait ItemWithItemsTrait {
     }
 
     /**
-     * Search Items by conditions
+     * Search Items by conditions.
      *
      * @param array $conditions
-     * @param bool $single
+     * @param bool $single Whether to return one single item.
      * @return Item[]
      */
     protected function searchItems($conditions, $single = false)

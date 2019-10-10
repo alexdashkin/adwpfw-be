@@ -3,11 +3,11 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\Plugin;
-use AlexDashkin\Adwpfw\Items\Theme;
+use AlexDashkin\Adwpfw\Items\Basic\Plugin;
+use AlexDashkin\Adwpfw\Items\Basic\Theme;
 
 /**
- * Plugins/Themes self-update feature
+ * Plugins/Themes self-update feature.
  */
 class Updater extends ModuleWithItems
 {
@@ -22,12 +22,14 @@ class Updater extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Item.
      *
-     * @param array $data {
-     * @type string $type plugin/theme. Required.
-     * }
+     * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see Plugin::__construct(), Theme::__construct()
      */
     public function add(array $data, App $app)
     {
@@ -43,7 +45,7 @@ class Updater extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Hooks to register Items in WP.
      */
     protected function init()
     {
@@ -51,6 +53,12 @@ class Updater extends ModuleWithItems
         add_filter('pre_set_site_transient_update_themes', [$this, 'themeUpdateCheck']);
     }
 
+    /**
+     * Filter Update transient.
+     *
+     * @param object $transient Transient passed to the filter.
+     * @return object Modified Transient.
+     */
     public function pluginUpdateCheck($transient)
     {
         foreach ($this->items as $item) {
@@ -62,6 +70,12 @@ class Updater extends ModuleWithItems
         return $transient;
     }
 
+    /**
+     * Filter Update transient.
+     *
+     * @param object $transient Transient passed to the filter.
+     * @return object Modified Transient.
+     */
     public function themeUpdateCheck($transient)
     {
         foreach ($this->items as $item) {

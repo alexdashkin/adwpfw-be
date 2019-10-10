@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\AdminPage;
+use AlexDashkin\Adwpfw\Items\WithItems\AdminPage;
 use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
@@ -22,10 +22,14 @@ class AdminPages extends ModuleWithItems
     }
 
     /**
-     * Add an Item
+     * Add Admin Page
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see AdminPage::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -33,7 +37,7 @@ class AdminPages extends ModuleWithItems
     }
 
     /**
-     * Hooks to register Items in WP
+     * Init the Module
      */
     protected function init()
     {
@@ -51,6 +55,9 @@ class AdminPages extends ModuleWithItems
         ]);
     }
 
+    /**
+     * Register Admin Pages
+     */
     public function register()
     {
         foreach ($this->items as $item) {
@@ -58,6 +65,12 @@ class AdminPages extends ModuleWithItems
         }
     }
 
+    /**
+     * Save Admin Page posted data.
+     *
+     * @param array $data Posted data.
+     * @return array Success or Error array to pass as Ajax response.
+     */
     public function save($data)
     {
         if (empty($data['form'][$this->config['prefix']])) {

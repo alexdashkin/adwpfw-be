@@ -3,15 +3,15 @@
 namespace AlexDashkin\Adwpfw\Modules\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\AjaxAction;
+use AlexDashkin\Adwpfw\Items\Basic\AjaxAction;
 
 /**
- * Admin Ajax Actions
+ * Admin Ajax Actions.
  */
 class Ajax extends ModuleAjax
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -21,10 +21,14 @@ class Ajax extends ModuleAjax
     }
 
     /**
-     * Add an item
+     * Add Ajax Action
      *
      * @param array $data
      * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     *
+     * @see AjaxAction::__construct();
      */
     public function add(array $data, App $app)
     {
@@ -32,7 +36,7 @@ class Ajax extends ModuleAjax
     }
 
     /**
-     * Hooks to register Items in WP
+     * Init the Module
      */
     protected function init()
     {

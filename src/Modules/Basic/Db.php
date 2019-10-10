@@ -14,8 +14,16 @@ class Db extends ModuleWithLogger
      */
     private $wpdb;
 
+    /**
+     * @var string WP DB prefix
+     */
     public $prefix;
 
+    /**
+     * Db constructor.
+     *
+     * @param App $app
+     */
     public function __construct(App $app)
     {
         parent::__construct($app);
@@ -25,10 +33,10 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Perform a DB Query
+     * Perform a DB Query.
      *
-     * @param string $query SQL Query
-     * @param array $values If passed, $wpdb->prepare() will be executed first
+     * @param string $query SQL Query.
+     * @param array $values If passed, $wpdb->prepare() will be called first.
      * @return mixed
      */
     public function query($query, array $values = [])
@@ -39,12 +47,12 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Insert Data into a table
+     * Insert Data into a table.
      *
-     * @param string $table Table Name
-     * @param array $data Data to insert
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
      * @param bool $own Is own table?
-     * @return int|bool Insert ID or false if failed
+     * @return int|bool Insert ID or false if failed.
      */
     public function insert($table, array $data, $own = true)
     {
@@ -55,13 +63,13 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Update Data in a table
+     * Update Data in a table.
      *
-     * @param string $table Table Name
-     * @param array $data Data to insert
-     * @param array $where Conditions
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
+     * @param array $where Conditions.
      * @param bool $own Is own table?
-     * @return int|bool Insert ID or false if failed
+     * @return int|bool Insert ID or false if failed.
      */
     public function update($table, array $data, array $where, $own = true)
     {
@@ -71,13 +79,13 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Insert or Update Data if exists
+     * Insert or Update Data if exists.
      *
-     * @param string $table Table Name
-     * @param array $data Data to insert
-     * @param array $where Conditions
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
+     * @param array $where Conditions.
      * @param bool $own Is own table?
-     * @return int|bool Insert ID or false if failed
+     * @return int|bool Insert ID or false if failed.
      */
     public function insertOrUpdate($table, array $data, array $where, $own = true)
     {
@@ -89,10 +97,10 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Delete rows from a table
+     * Delete rows from a table.
      *
-     * @param string $table Table Name
-     * @param array $where Conditions
+     * @param string $table Table Name.
+     * @param array $where Conditions.
      * @param bool $own Is own table?
      * @return bool Succeed?
      */
@@ -104,11 +112,11 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Get Var
+     * Get Var.
      *
-     * @param string $table Table Name
-     * @param string $var Field name
-     * @param array $where Conditions
+     * @param string $table Table Name.
+     * @param string $var Field name.
+     * @param array $where Conditions.
      * @param bool $own Is own table?
      * @return mixed
      */
@@ -128,11 +136,11 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Get Results
+     * Get Results.
      *
-     * @param string $table Table Name
-     * @param array $fields List of Fields
-     * @param array $where Conditions
+     * @param string $table Table Name.
+     * @param array $fields List of Fields.
+     * @param array $where Conditions.
      * @param bool $single Get single row?
      * @param bool $own Is own table?
      * @return mixed
@@ -161,10 +169,10 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Get Results with an arbitrary Query
+     * Get Results with an arbitrary Query.
      *
-     * @param string $query SQL query
-     * @param array $values If passed, $wpdb->prepare() will be executed first
+     * @param string $query SQL query.
+     * @param array $values If passed, $wpdb->prepare() will be executed first.
      * @return mixed
      */
     public function getResultsQuery($query, array $values = [])
@@ -175,10 +183,10 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Get Results Count
+     * Get Results Count.
      *
-     * @param string $table Table Name
-     * @param array $where Conditions
+     * @param string $table Table Name.
+     * @param array $where Conditions.
      * @param bool $own Is own table?
      * @return int
      */
@@ -202,20 +210,20 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Get Last Insert ID
+     * Get Last Insert ID.
      *
      * @return int
      */
     public function insertId()
     {
-        return $this->wpdb->insert_id;
+        return (int)$this->wpdb->insert_id;
     }
 
     /**
-     * Insert Multiple Rows with one query
+     * Insert Multiple Rows with one query.
      *
-     * @param string $table Table Name
-     * @param array $data Data to insert
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
      * @param bool $own Is own table?
      * @return bool
      */
@@ -250,16 +258,16 @@ class Db extends ModuleWithLogger
         $this->log("$counter items to insert");
         $columns = '(' . trim($columns, ', ') . ')';
         $placeholders = '(' . trim($placeholders, ', ') . '), ';
-        $query = sprintf('INSERT INTO %s %s VALUES ', $t, $columns) . trim(str_repeat($placeholders, $counter), ', ');
+        $query = sprintf('INSERT INTO `%s` %s VALUES ', $t, $columns) . trim(str_repeat($placeholders, $counter), ', ');
 
         return $this->result($this->query($query, $values));
     }
 
     /**
-     * Truncate a table
+     * Truncate a table.
      *
-     * @param $table
-     * @param bool $own
+     * @param string $table Table Name.
+     * @param bool $own Is own table?
      * @return bool
      */
     public function truncateTable($table, $own = true)
@@ -270,9 +278,9 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Check own tables existence
+     * Check own tables existence.
      *
-     * @param array $tables List of own tables
+     * @param array $tables List of own tables.
      * @return bool
      */
     public function checkTables(array $tables)
@@ -289,13 +297,13 @@ class Db extends ModuleWithLogger
     }
 
     /**
-     * Get table name with all prefixes
+     * Get table name with all prefixes.
      *
-     * @param string $name
-     * @param bool $own
+     * @param string $name Table Name.
+     * @param bool $own Is own table?
      * @return string
      */
-    public function getTable($name, $own = true) // todo if not own - add wp_ automatically
+    public function getTable($name, $own = true)
     {
         if (!$own) {
             return $this->prefix . $name;
@@ -309,7 +317,13 @@ class Db extends ModuleWithLogger
         return $this->prefix . $this->config['prefix'] . '_' . $this->config['tables'][$name];
     }
 
-    private function stripArray($array)
+    /**
+     * Remove not allowed chars from array.
+     *
+     * @param array $array
+     * @return array
+     */
+    private function stripArray(array $array)
     {
         foreach ($array as &$item) {
             if (is_string($item)) {
@@ -320,6 +334,12 @@ class Db extends ModuleWithLogger
         return $array;
     }
 
+    /**
+     * Remove not allowed chars from string.
+     *
+     * @param string $value
+     * @return string
+     */
     private function stripValue($value)
     {
         $regex = '/((?:     [\x00-\x7F]
@@ -336,6 +356,12 @@ class Db extends ModuleWithLogger
         return preg_replace($regex, '$1', $value);
     }
 
+    /**
+     * WP DB functions wrapper
+     *
+     * @param mixed $result
+     * @return mixed
+     */
     private function result($result)
     {
         if (false === $result) {
