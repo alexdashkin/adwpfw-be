@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
  * Form Field
  */
-class Heading extends FormField
+class Heading extends Field
 {
     /**
      * Constructor
@@ -17,24 +14,17 @@ class Heading extends FormField
      * @type string $text Heading. Required.
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'heading';
-
-        $props = [
+        $defaults = [
+            'tpl' => [
+                'default' => 'heading',
+            ],
             'text' => [
                 'required' => true,
             ],
         ];
 
-        parent::__construct($data, $app, $props);
-    }
-
-    public function getArgs(array $values)
-    {
-        return [
-            'tpl' => $this->tpl,
-            'text' => $this->data['text'],
-        ];
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }

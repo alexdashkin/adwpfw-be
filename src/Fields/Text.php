@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
- * Form Field
+ * Text Field
  */
-class Text extends FormField
+class Text extends Field
 {
     /**
      * Constructor
@@ -20,32 +17,17 @@ class Text extends FormField
      * @type string $desc Field Description
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $props = [
-            'id' => [
-                'required' => true,
+        $defaults = [
+            'tpl' => [
+                'default' => 'text',
             ],
             'label' => [
                 'required' => true,
             ],
-            'desc' => [
-                'default' => null,
-            ],
         ];
 
-        parent::__construct($data, $app, $props);
-    }
-
-    public function getArgs(array $values)
-    {
-        return [
-            'tpl' => 'text',
-            'id' => $this->data['id'],
-            'layout' => $this->data['layout'],
-            'label' => $this->data['label'],
-            'desc' => $this->data['desc'],
-            'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
-        ];
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }

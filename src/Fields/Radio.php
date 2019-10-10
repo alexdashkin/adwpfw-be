@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
  * Form Field
  */
-class Radio extends FormField
+class Radio extends Field
 {
     /**
      * Constructor
@@ -19,13 +16,11 @@ class Radio extends FormField
      * @type string $desc Field Description
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'radio';
-
-        $props = [
-            'id' => [
-                'required' => true,
+        $defaults = [
+            'tpl' => [
+                'default' => 'radio',
             ],
             'label' => [
                 'required' => true,
@@ -38,23 +33,8 @@ class Radio extends FormField
                     'label' => 'Option',
                 ],
             ],
-            'desc' => [
-                'default' => null,
-            ],
         ];
 
-        parent::__construct($data, $app, $props);
-    }
-
-    public function getArgs(array $values)
-    {
-        return [
-            'tpl' => $this->tpl,
-            'id' => $this->data['id'],
-            'label' => $this->data['label'],
-            'desc' => $this->data['desc'],
-            'options' => $this->data['options'],
-            'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
-        ];
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }

@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
  * Form Field
  */
-class Actions extends FormField
+class Actions extends Field
 {
     /**
      * Constructor
@@ -18,13 +15,11 @@ class Actions extends FormField
      * @type array $options Actions list ['label', 'value']. Required.
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'actions';
-
-        $props = [
-            'id' => [
-                'required' => true,
+        $defaults = [
+            'tpl' => [
+                'default' => 'actions',
             ],
             'options' => [
                 'type' => 'array',
@@ -34,20 +29,8 @@ class Actions extends FormField
                     'label' => 'Option',
                 ],
             ],
-            'desc' => [
-                'default' => null,
-            ],
         ];
 
-        parent::__construct($data, $app, $props);
-    }
-
-    public function getArgs(array $values)
-    {
-        return [
-            'tpl' => $this->tpl,
-            'id' => $this->data['id'],
-            'options' => $this->data['options'],
-        ];
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }

@@ -2,8 +2,8 @@
 
 namespace AlexDashkin\Adwpfw;
 
-use AlexDashkin\Adwpfw\Modules\Helpers;
-use AlexDashkin\Adwpfw\Modules\Module;
+use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
+use AlexDashkin\Adwpfw\Modules\Basic\Module;
 
 /**
  * Main App Class
@@ -28,6 +28,8 @@ class App
     public function __construct(array $config)
     {
         $this->config = $config;
+
+        Helpers::$logger = $this->m('Logger');
     }
 
     /**

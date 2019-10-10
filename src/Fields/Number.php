@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
  * Form Field
  */
-class Number extends FormField
+class Number extends Field
 {
     /**
      * Constructor
@@ -22,19 +19,14 @@ class Number extends FormField
      * @type int $step Step attr
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'number';
-
-        $props = [
-            'id' => [
-                'required' => true,
+        $defaults = [
+            'tpl' => [
+                'default' => 'number',
             ],
             'label' => [
                 'required' => true,
-            ],
-            'desc' => [
-                'default' => null,
             ],
             'min' => [
                 'type' => 'int',
@@ -50,20 +42,6 @@ class Number extends FormField
             ],
         ];
 
-        parent::__construct($data, $app, $props);
-    }
-
-    public function getArgs(array $values)
-    {
-        return [
-            'tpl' => $this->tpl,
-            'id' => $this->data['id'],
-            'label' => $this->data['label'],
-            'desc' => $this->data['desc'],
-            'min' => $this->data['min'],
-            'max' => $this->data['max'],
-            'step' => $this->data['step'],
-            'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
-        ];
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }

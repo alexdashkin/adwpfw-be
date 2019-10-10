@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
  * Form Field
  */
-class Hidden extends FormField
+class Hidden extends Text
 {
     /**
      * Constructor
@@ -17,25 +14,14 @@ class Hidden extends FormField
      * @type string $id Required.
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'hidden';
-
-        $props = [
-            'id' => [
-                'required' => true,
+        $defaults = [
+            'tpl' => [
+                'default' => 'hidden',
             ],
         ];
 
-        parent::__construct($data, $app, $props);
-    }
-
-    public function getArgs(array $values)
-    {
-        return [
-            'tpl' => $this->tpl,
-            'id' => $this->data['id'],
-            'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
-        ];
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }

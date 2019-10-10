@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
  * Form Field
  */
-class Checkbox extends FormField
+class Checkbox extends Field
 {
     /**
      * Constructor
@@ -19,33 +16,17 @@ class Checkbox extends FormField
      * @type string $desc Description
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'checkbox';
-
-        $props = [
-            'id' => [
-                'required' => true,
+        $defaults = [
+            'tpl' => [
+                'default' => 'checkbox',
             ],
             'label' => [
                 'required' => true,
             ],
-            'desc' => [
-                'default' => null,
-            ],
         ];
 
-        parent::__construct($data, $app, $props);
-    }
-
-    public function getArgs(array $values)
-    {
-        return [
-            'tpl' => $this->tpl,
-            'id' => $this->data['id'],
-            'label' => $this->data['label'],
-            'desc' => $this->data['desc'],
-            'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,
-        ];
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }

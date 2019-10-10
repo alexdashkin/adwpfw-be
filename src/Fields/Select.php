@@ -2,13 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-
 /**
  * Form Field
  */
-class Select extends FormField
+class Select extends Field
 {
     /**
      * Constructor
@@ -21,13 +18,11 @@ class Select extends FormField
      * @type bool $multiple Default false
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'select';
-
-        $props = [
-            'id' => [
-                'required' => true,
+        $defaults = [
+            'tpl' => [
+                'default' => 'select',
             ],
             'label' => [
                 'required' => true,
@@ -40,9 +35,6 @@ class Select extends FormField
                     'label' => 'Option',
                 ],
             ],
-            'desc' => [
-                'default' => null,
-            ],
             'placeholder' => [
                 'default' => '--- Select ---',
             ],
@@ -52,7 +44,7 @@ class Select extends FormField
             ],
         ];
 
-        parent::__construct($data, $app, $props);
+        parent::__construct($data, array_merge($props, $defaults));
     }
 
     public function getArgs(array $values)
@@ -79,13 +71,8 @@ class Select extends FormField
             ];
         }
 
-        return [
-            'tpl' => $this->tpl,
-            'id' => $data['id'],
-            'label' => $data['label'],
-            'desc' => $data['desc'],
-            'multiple' => $data['multiple'],
-            'options' => $options,
-        ];
+        $data['options'] = $options;
+
+        return $data;
     }
 }

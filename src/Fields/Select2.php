@@ -2,14 +2,12 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
-use AlexDashkin\Adwpfw\Modules\Helpers;
+use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
  * Form Field
  */
-class Select2 extends FormField
+class Select2 extends Select
 {
     /**
      * Constructor
@@ -22,31 +20,11 @@ class Select2 extends FormField
      * @type bool $multiple Default false
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'select2';
-
-        $props = [
-            'id' => [
-                'required' => true,
-            ],
-            'label' => [
-                'required' => true,
-            ],
-            'options' => [
-                'type' => 'array',
-                'required' => true,
-                'def' => [
-                    'value' => '',
-                    'label' => 'Option',
-                ],
-            ],
-            'desc' => [
-                'default' => null,
-            ],
-            'multiple' => [
-                'type' => 'bool',
-                'default' => false,
+        $defaults = [
+            'tpl' => [
+                'default' => 'select2',
             ],
             'ajax_action' => [
                 'required' => true,
@@ -57,52 +35,29 @@ class Select2 extends FormField
             ],
         ];
 
-        parent::__construct($data, $app, $props);
+        parent::__construct($data, array_merge($props, $defaults));
     }
 
     public function getArgs(array $values)
     {
         $data = $this->data;
 
+        $args = parent::getArgs($values);
+
         $value = isset($values[$data['id']]) ? $values[$data['id']] : null;
-
-        $options = [
-            [
-                'label' => $data['placeholder'],
-                'value' => '',
-                'selected' => '',
-            ],
-        ];
-
-        foreach ($data['options'] as $val => $label) {
-            $selected = $data['multiple'] ? in_array($val, (array)$value) : $val == $value;
-
-            $options[] = [
-                'label' => $label,
-                'value' => $val,
-                'selected' => $selected ? 'selected' : '',
-            ];
-        }
 
         $valueArr = $data['multiple'] ? (array)$value : [$value];
 
         foreach ($valueArr as $item) {
-            if (!Helpers::arraySearch($options, ['value' => $item])) {
-                $options[] = [
-                    'label' => !empty($option['label_cb']) ? $option['label_cb']($item) : $item,
+            if (!Helpers::arraySearch($args['options'], ['value' => $item])) {
+                $args['options'][] = [
+                    'label' => !empty($data['label_cb']) ? $data['label_cb']($item) : $item,
                     'value' => $item,
                     'selected' => 'selected',
                 ];
             }
         }
 
-        return [
-            'tpl' => $this->tpl,
-            'id' => $data['id'],
-            'label' => $data['label'],
-            'desc' => $data['desc'],
-            'multiple' => $data['multiple'],
-            'options' => $options,
-        ];
+        return $args;
     }
 }

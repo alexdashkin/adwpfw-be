@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-
 /**
  * Form Field
  */
@@ -18,10 +16,14 @@ class Password extends Text
      * @type string $desc Field Description
      * }
      */
-    public function __construct(array $data, App $app)
+    public function __construct(array $data, array $props = [])
     {
-        $this->tpl = 'password';
+        $defaults = [
+            'tpl' => [
+                'default' => 'password',
+            ],
+        ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, array_merge($props, $defaults));
     }
 }
