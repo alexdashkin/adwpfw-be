@@ -8,14 +8,14 @@ use AlexDashkin\Adwpfw\Items\AdminPage;
 /**
  * Admin Settings pages
  */
-class AdminPages extends ItemsModule
+class AdminPages extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
@@ -60,13 +60,13 @@ class AdminPages extends ItemsModule
     public function save($data)
     {
         if (empty($data['form'][$this->config['prefix']])) {
-            return $this->m('Utils')->returnError('Form data is empty');
+            return Helpers::returnError('Form data is empty');
         }
 
         $form = $data['form'][$this->config['prefix']];
 
         if (empty($form['slug'])) {
-            return $this->m('Utils')->returnError('Tab slug is empty');
+            return Helpers::returnError('Tab slug is empty');
         }
 
         foreach ($this->items as $item) {
@@ -75,6 +75,6 @@ class AdminPages extends ItemsModule
             }
         }
 
-        return $this->m('Utils')->returnError('Admin page tab not found');
+        return Helpers::returnError('Admin page tab not found');
     }
 }

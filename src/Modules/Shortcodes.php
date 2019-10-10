@@ -8,14 +8,14 @@ use AlexDashkin\Adwpfw\Items\Shortcode;
 /**
  * Manage Shortcodes
  */
-class Shortcodes extends ItemsModule
+class Shortcodes extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

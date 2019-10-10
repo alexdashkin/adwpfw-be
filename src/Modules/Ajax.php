@@ -8,14 +8,14 @@ use AlexDashkin\Adwpfw\Items\AjaxAction;
 /**
  * Admin Ajax Actions
  */
-class Ajax extends ItemsModule
+class Ajax extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
@@ -86,7 +86,7 @@ class Ajax extends ItemsModule
      */
     private function success($message = '', $data = [], $echo = false)
     {
-        return $this->m('Utils')->returnSuccess($message, $data, $echo);
+        return Helpers::returnSuccess($message, $data, $echo);
     }
 
     /**
@@ -98,6 +98,6 @@ class Ajax extends ItemsModule
      */
     private function error($message = '', $echo = false)
     {
-        return $this->m('Utils')->returnError($message, $echo);
+        return Helpers::returnError($message, $echo);
     }
 }

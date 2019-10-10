@@ -8,14 +8,14 @@ use AlexDashkin\Adwpfw\Items\Widget;
 /**
  * Admin Dashboard widgets
  */
-class Widgets extends ItemsModule
+class Widgets extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

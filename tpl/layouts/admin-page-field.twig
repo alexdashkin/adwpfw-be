@@ -1,0 +1,32 @@
+<div class="{{ prefix }}-field">
+
+    {% block label %}
+
+        <div class="{{ prefix }}-label">
+            <label for="field-{{ field.id }}">{{ field.label }}</label>
+        </div>
+
+    {% endblock %}
+
+    <div class="{{ prefix }}-control">
+
+        {% block control %}
+
+            <input type="text" class="{{ field.class }}"
+                   id="{{ prefix }}-field-{{ field.id }}"
+                   name="{{ prefix }}[{{ field.id }}]" {# todo use extra dimension in prefix instead of hidden slug #}
+                   value="{{ field.value }}">
+
+        {% endblock %}
+
+        {% block desc %}
+
+            {% if field.desc %}
+                <div class="description">{{ field.desc }}</div>
+            {% endif %}
+
+        {% endblock %}
+
+    </div>
+
+</div>

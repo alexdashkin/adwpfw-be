@@ -8,7 +8,7 @@ use AlexDashkin\Adwpfw\Items\ProfileField;
 /**
  * User Profile Custom fields
  */
-class Profile extends ItemsModule
+class Profile extends ModuleWithItems
 {
     private $heading = 'Custom fields';
 
@@ -17,7 +17,7 @@ class Profile extends ItemsModule
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
@@ -87,6 +87,6 @@ class Profile extends ItemsModule
             'fields' => $fields,
         ];
 
-        echo $this->m('Utils')->renderTwig('profile', $args); // todo use fields tpls
+        echo $this->m('Twig')->renderFile('profile', $args);
     }
 }

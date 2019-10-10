@@ -14,6 +14,7 @@ class Text extends FormField
      * Constructor
      *
      * @param array $data {
+     * @type string $layout Parent template to extend. Required.
      * @type string $id Required.
      * @type string $label Field Label. Required.
      * @type string $desc Field Description
@@ -21,8 +22,6 @@ class Text extends FormField
      */
     public function __construct(array $data, App $app)
     {
-        $this->tpl = 'text';
-
         $props = [
             'id' => [
                 'required' => true,
@@ -41,8 +40,9 @@ class Text extends FormField
     public function getArgs(array $values)
     {
         return [
-            'tpl' => $this->tpl,
+            'tpl' => 'text',
             'id' => $this->data['id'],
+            'layout' => $this->data['layout'],
             'label' => $this->data['label'],
             'desc' => $this->data['desc'],
             'value' => isset($values[$this->data['id']]) ? $values[$this->data['id']] : null,

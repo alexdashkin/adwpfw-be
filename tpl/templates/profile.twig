@@ -1,0 +1,15 @@
+<div class="{{ prefix }}-field">
+
+    <h3>{{ heading }}</h3>
+
+    <table class="form-table">
+
+        {% for field in fields %}
+
+            {% include './../fields/' ~ field.tpl ~ '.twig' with {field} %}
+
+        {% endfor %}
+
+    </table>
+
+</div>

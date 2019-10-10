@@ -19,7 +19,7 @@ class Twig extends Module
     private $twigFs;
     private $twigArray;
 
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         if (!class_exists('\Twig\Environment')) {
             throw new AdwpfwException('Twig not found');
@@ -41,7 +41,7 @@ class Twig extends Module
 
         $config = [
             'debug' => (bool)$this->config['dev'],
-            'cache' => $this->m('Utils')->getUploadsDir('twig'),
+            'cache' => Helpers::getUploadsDir($this->config['prefix'], 'twig'),
             'autoescape' => false,
         ];
 

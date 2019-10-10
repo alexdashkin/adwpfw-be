@@ -8,7 +8,7 @@ use AlexDashkin\Adwpfw\Items\Metabox;
 /**
  * Posts Metaboxes
  */
-class Metaboxes extends ItemsModule
+class Metaboxes extends ModuleWithItems
 {
     private $remove = [];
 
@@ -17,7 +17,7 @@ class Metaboxes extends ItemsModule
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }
@@ -79,7 +79,7 @@ class Metaboxes extends ItemsModule
     public function save($postId) // todo add hooks
     {
         if (empty($_POST[$this->config['prefix']])) { // todo will not work with multiple MB on one page
-            return $this->m('Utils')->returnError('Form data is empty');
+            return Helpers::returnError('Form data is empty');
         }
 
         $form = $_POST[$this->config['prefix']];
@@ -90,6 +90,6 @@ class Metaboxes extends ItemsModule
             }
         }
 
-        return $this->m('Utils')->returnError('Metabox not found');
+        return Helpers::returnError('Metabox not found');
     }
 }

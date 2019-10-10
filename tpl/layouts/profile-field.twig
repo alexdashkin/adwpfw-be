@@ -1,0 +1,32 @@
+<tr>
+    <th>
+
+        {% block label %}
+
+            <label for="{{ prefix }}-field-{{ field.id }}">{{ field.label }}</label>
+
+        {% endblock %}
+
+    </th>
+
+    <td>
+
+        {% block control %}
+
+            <input type="text" class="{{ field.class }}"
+                   id="{{ prefix }}-field-{{ field.id }}"
+                   name="{{ prefix }}[{{ field.id }}]"
+                   value="{{ field.value }}">
+
+        {% endblock %}
+
+        {% block desc %}
+
+            {% if field.desc %}
+                <span class="description">{{ field.desc }}</span>
+            {% endif %}
+
+        {% endblock %}
+
+    </td>
+</tr>

@@ -8,6 +8,11 @@ namespace AlexDashkin\Adwpfw\Modules;
 class Helpers
 {
     /**
+     * @var Logger
+     */
+    public static $logger;
+
+    /**
      * Search in an array
      *
      * @param array $array
@@ -217,6 +222,214 @@ class Helpers
         }
 
         return $imploded;
+    }
+
+    /**
+     * Check plugin/theme existence
+     *
+     * @param array $items {
+     * @type string $name Plugin or Theme name
+     * @type string $type Type of the dep (class/function)
+     * @type string $dep Class or function name
+     * }
+     * @return array Not found items
+     */
+    public static function checkDeps(array $items)
+    {
+        $notFound = [];
+
+        foreach ($items as $name => $item) {
+            if (('class' === $item['type'] && !class_exists($item['dep']))
+                || ('function' === $item['type'] && !function_exists($item['dep']))) {
+                $notFound[$name] = $item['name'];
+            }
+        }
+
+        return $notFound;
+    }
+
+    /**
+     * Get path to the WP Uploads dir
+     *
+     * @param string $dirName Dir name to be created in Uploads dir if not exists
+     * @param string $path Path inside the uploads dir (will be created if not exists)
+     * @return string
+     */
+    public static function getUploadsDir($dirName, $path = '')
+    {
+        return self::getUploads($dirName, $path);
+    }
+
+    /**
+     * Get URL to the WP Uploads dir
+     *
+     * @param string $dirName Dir name to be created in Uploads dir if not exists
+     * @param string $path Path inside the uploads dir (will be created if not exists)
+     * @return string
+     */
+    public static function getUploadsUrl($dirName, $path = '')
+    {
+        return self::getUploads($dirName, $path, true);
+    }
+
+    /**
+     * Get path/url to the WP Uploads dir
+     *
+     * @param string $dirName Dir name to be created in Uploads dir if not exists
+     * @param string $path Path inside the uploads dir (will be created if not exists)
+     * @param bool $getUrl Whether to get URL
+     * @return string
+     */
+    private static function getUploads($dirName, $path = '', $getUrl = false)
+    {
+        $uploadDir = wp_upload_dir();
+        $basePath = $uploadDir['basedir'] . '/' . $dirName . '/';
+        $fullPath = $basePath . $path;
+
+        if (!file_exists($fullPath)) {
+            $message = wp_mkdir_p($fullPath) ? "Dir $fullPath created successfully" : 'Error while creating dir ' . $fullPath;
+            self::$logger->log($message);
+        }
+
+        return $getUrl ? $uploadDir['baseurl'] . '/' . $dirName . '/' . $path : $fullPath;
+    }
+
+    /**
+     * External API request helper
+     *
+     * @param array $args {
+     * @type string $url
+     * @type string $method Get/Post
+     * @type array $headers
+     * @type array $data Data to send
+     * @type int $timeout
+     * }
+     *
+     * @return mixed Response body or false on failure
+     */
+    public static function apiRequest(array $args)
+    {
+        $args = array_merge([
+            'method' => 'get',
+            'headers' => [],
+            'data' => [],
+            'timeout' => 0,
+        ], $args);
+
+        $url = $args['url'];
+        $method = strtoupper($args['method']);
+        $data = $args['data'];
+
+        $requestArgs = [
+            'method' => $method,
+            'headers' => $args['headers'],
+            'timeout' => $args['timeout'],
+        ];
+
+        if (!empty($data)) {
+            if ('GET' === $method) {
+                $url .= '?' . http_build_query($data);
+            } else {
+                $requestArgs['body'] = $data;
+            }
+        }
+
+        self::$logger->log('Performing api request...');
+        $remoteResponse = wp_remote_request($url, $requestArgs);
+        self::$logger->log('Response received');
+
+        if (is_wp_error($remoteResponse)) {
+            self::$logger->log(implode(' | ', $remoteResponse->get_error_messages()));
+            return false;
+        }
+
+        if (200 !== ($code = wp_remote_retrieve_response_code($remoteResponse))) {
+            self::$logger->log("Response code: $code");
+            return false;
+
+        }
+
+        if (empty($remoteResponse['body'])) {
+            self::$logger->log('Wrong response format');
+            return false;
+        }
+
+        return $remoteResponse['body'];
+    }
+
+    /**
+     * Return success response
+     *
+     * @param string $message
+     * @param array $data
+     * @param bool $echo
+     * @return array
+     */
+    public static function returnSuccess($message = 'Done', array $data = [], $echo = false)
+    {
+        $message = $message ?: 'Done';
+
+        self::$logger->log($message);
+
+        $return = [
+            'success' => true,
+            'message' => $message,
+            'data' => $data,
+        ];
+
+        if ($echo) {
+            wp_send_json($return);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Return error response
+     *
+     * @param string $message
+     * @param bool $echo
+     * @return array
+     */
+    public static function returnError($message = 'Unknown Error', $echo = false)
+    {
+        $message = $message ?: 'Unknown Error';
+
+        self::$logger->log($message, 1);
+
+        $return = [
+            'success' => false,
+            'message' => $message,
+        ];
+
+        if ($echo) {
+            wp_send_json($return);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Handle false and \WP_Error returns
+     *
+     * @param mixed $result
+     * @param string $errorMessage
+     * @return bool
+     */
+    public static function pr($result, $errorMessage = '')
+    {
+        if (!$result || is_wp_error($result)) {
+            $message = $errorMessage ? 'Error: ' . $errorMessage : 'Error!';
+            self::$logger->log($message, 1);
+
+            if ($result) {
+                self::$logger->log($result);
+            }
+
+            return false;
+        }
+
+        return $result;
     }
 
     /**

@@ -8,14 +8,14 @@ use AlexDashkin\Adwpfw\Items\PostState;
 /**
  * Add States to the posts/pages (comments displayed on the right in the posts list)
  */
-class PostStates extends ItemsModule
+class PostStates extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

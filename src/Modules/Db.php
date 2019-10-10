@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\App;
 /**
  * Database Helper
  */
-class Db extends Module
+class Db extends ModuleWithLogger
 {
     /**
      * @var \wpdb
@@ -16,7 +16,7 @@ class Db extends Module
 
     public $prefix;
 
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
 

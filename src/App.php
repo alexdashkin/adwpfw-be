@@ -46,7 +46,7 @@ class App
 
         $class = '\\' . __NAMESPACE__ . '\\Modules\\' . $moduleName;
 
-        $this->modules[$moduleName] = $class::the($this);
+        $this->modules[$moduleName] = new $class($this);
 
         return $this->modules[$moduleName];
     }

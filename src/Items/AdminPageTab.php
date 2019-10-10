@@ -40,16 +40,20 @@ class AdminPageTab extends Item
             'title' => [
                 'default' => 'Tab',
             ],
+
             'slug' => [
                 'default' => $this->getDefaultSlug($data['title']),
             ],
+
             'form' => [
                 'type' => 'bool',
                 'default' => false,
             ],
+
             'option' => [
                 'default' => null,
             ],
+
             'fields' => [
                 'type' => 'array',
                 'def' => [
@@ -63,7 +67,11 @@ class AdminPageTab extends Item
         parent::__construct($data, $app, $props);
 
         foreach ($this->data['fields'] as $field) {
+
+            $field['layout'] = 'admin-page-field';
+
             $this->fields[] = FormField::getField($field, $app);
+
         }
     }
 

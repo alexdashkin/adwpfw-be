@@ -9,14 +9,14 @@ use AlexDashkin\Adwpfw\Items\Theme;
 /**
  * Plugins/Themes self-update feature
  */
-class Updater extends ItemsModule
+class Updater extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

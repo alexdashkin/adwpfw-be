@@ -8,12 +8,12 @@ use AlexDashkin\Adwpfw\Items\CronJob;
 /**
  * Cron Jobs
  */
-class Cron extends ItemsModule
+class Cron extends ModuleWithItems
 {
     private $jobName;
     private $interval;
 
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
 

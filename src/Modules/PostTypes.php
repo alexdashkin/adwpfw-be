@@ -8,14 +8,14 @@ use AlexDashkin\Adwpfw\Items\PostType;
 /**
  * Custom Post Types
  */
-class PostTypes extends ItemsModule
+class PostTypes extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

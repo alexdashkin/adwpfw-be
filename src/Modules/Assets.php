@@ -9,7 +9,7 @@ use AlexDashkin\Adwpfw\Items\Js;
 /**
  * Enqueue CSS/JS
  */
-class Assets extends ItemsModule
+class Assets extends ModuleWithItems
 {
     private $enqueue = [];
     private $remove = [];
@@ -19,7 +19,7 @@ class Assets extends ItemsModule
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

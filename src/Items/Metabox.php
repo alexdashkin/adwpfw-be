@@ -61,7 +61,11 @@ class Metabox extends Item
         parent::__construct($data, $app, $props);
 
         foreach ($this->data['fields'] as $field) {
+
+            $field['layout'] = 'metabox-field';
+
             $this->fields[] = FormField::getField($field, $app);
+
         }
     }
 

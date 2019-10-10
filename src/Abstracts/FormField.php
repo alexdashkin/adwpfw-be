@@ -10,8 +10,6 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
  */
 abstract class FormField extends Item
 {
-    protected $tpl;
-
     /**
      * @param array $data Field Data
      * @param App $app
@@ -34,7 +32,13 @@ abstract class FormField extends Item
      */
     public function __construct(array $data, App $app, array $props = [])
     {
-        parent::__construct($data, $app, $props);
+        $own = [
+            'layout' => [
+                'required' => true,
+            ],
+        ];
+
+        parent::__construct($data, $app, array_merge($props, $own));
     }
 
     abstract public function getArgs(array $values);

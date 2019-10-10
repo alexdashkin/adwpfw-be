@@ -14,7 +14,7 @@ class Logger extends Module
     private $paths = [];
     private $immediatePath;
 
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
 
@@ -28,7 +28,7 @@ class Logger extends Module
         $prefix = $this->config['prefix'];
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
 
-        $basePath = $this->m('Utils')->getUploadsDir('logs');
+        $basePath = Helpers::getUploadsDir($prefix, 'logs');
 
         $filename = '/' . $prefix . '-' . date('Y-m-d') . '-' . $suffix . '.log';
         $immediateName = '/' . time() . '-' . $suffix . '.log';

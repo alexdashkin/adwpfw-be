@@ -6,9 +6,9 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Items\Item;
 
 /**
- * Basic Module with Items Class
+ * Module with Items
  */
-abstract class ItemsModule extends Module
+abstract class ModuleWithItems extends ModuleWithLogger
 {
     /**
      * @var array Module Items
@@ -20,7 +20,7 @@ abstract class ItemsModule extends Module
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

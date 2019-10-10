@@ -8,14 +8,14 @@ use AlexDashkin\Adwpfw\Items\Notice;
 /**
  * Admin notices
  */
-class Notices extends ItemsModule
+class Notices extends ModuleWithItems
 {
     /**
      * Constructor
      *
      * @param App $app
      */
-    protected function __construct(App $app)
+    public function __construct(App $app)
     {
         parent::__construct($app);
     }

@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\App;
 /**
  * User Profile Custom Field
  */
-class ProfileField extends Item // todo use Fields
+class ProfileField extends Item
 {
     /**
      * @var FormField
@@ -46,6 +46,8 @@ class ProfileField extends Item // todo use Fields
         ];
 
         parent::__construct($data, $app, $props);
+
+        $this->data['layout'] = 'profile-field';
 
         $this->field = FormField::getField($this->data, $app);
 
