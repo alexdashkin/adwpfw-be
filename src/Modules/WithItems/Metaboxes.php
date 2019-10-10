@@ -85,6 +85,16 @@ class Metaboxes extends ModuleWithItems
         }
     }
 
+    public function get($id, $post = null)
+    {
+        // todo implement
+    }
+
+    public function set($id, $value, $post = null)
+    {
+        // todo implement
+    }
+
     /**
      * Save posted data.
      *

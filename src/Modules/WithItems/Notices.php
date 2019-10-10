@@ -43,6 +43,21 @@ class Notices extends ModuleWithItems
         add_action('admin_notices', [$this, 'process']);
     }
 
+    public function show($id)
+    {
+        // todo implement
+    }
+
+    public function stop($id)
+    {
+        // todo implement
+    }
+
+    public function dismiss($id)
+    {
+        // todo implement
+    }
+
     /**
      * Process Notices.
      */

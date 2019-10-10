@@ -262,7 +262,7 @@ class Helpers
     }
 
     /**
-     * Get URL to the WP Uploads URL
+     * Get URL of the WP Uploads dir.
      *
      * @param string $dirName Dir name to be created in Uploads dir if not exists.
      * @param string $path Path inside the uploads dir (will be created if not exists).

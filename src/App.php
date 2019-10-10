@@ -2,6 +2,7 @@
 
 namespace AlexDashkin\Adwpfw;
 
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 use AlexDashkin\Adwpfw\Modules\Basic\Module;
 
@@ -39,6 +40,8 @@ class App
      *
      * @param string $moduleName
      * @return Module
+     *
+     * @throws AdwpfwException
      */
     public function m($moduleName)
     {
@@ -46,20 +49,571 @@ class App
             return $this->modules[$moduleName];
         }
 
-        $class = '\\' . __NAMESPACE__ . '\\Modules\\' . $moduleName;
+        $classes = [
+            '\\' . __NAMESPACE__ . '\\Modules\\Basic\\' . $moduleName,
+            '\\' . __NAMESPACE__ . '\\Modules\\WithItems\\' . $moduleName,
+        ];
 
-        $this->modules[$moduleName] = new $class($this);
+        foreach ($classes as $class) {
+            if (!class_exists($class)) {
+                continue;
+            }
 
-        return $this->modules[$moduleName];
+            $this->modules[$moduleName] = new $class($this);
+
+            return $this->modules[$moduleName];
+        }
+
+        throw new AdwpfwException("Module $moduleName not found");
+    }
+
+    /**
+     * Simple cache.
+     *
+     * @param callable $callable Function to be cached.
+     * @param array $args Args to be passed to the Function.
+     * @return mixed Either cached result if any or the Function result.
+     */
+    public function cache($callable, $args = [])
+    {
+        return $this->m('Cache')->get($callable, $args);
+    }
+
+    /**
+     * Perform a DB Query.
+     *
+     * @param string $query SQL Query.
+     * @param array $values If passed, $wpdb->prepare() will be called first.
+     * @return mixed
+     */
+    public function dbQuery($query, array $values = [])
+    {
+        return $this->m('Db')->query($query, $values);
+    }
+
+    /**
+     * Insert Data into a table.
+     *
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
+     * @param bool $own Is own table?
+     * @return int|bool Insert ID or false if failed.
+     */
+    public function dbInsert($table, array $data, $own = true)
+    {
+        return $this->m('Db')->insert($table, $data, $own);
+    }
+
+    /**
+     * Update Data in a table.
+     *
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
+     * @param array $where Conditions.
+     * @param bool $own Is own table?
+     * @return int|bool Insert ID or false if failed.
+     */
+    public function dbUpdate($table, array $data, array $where, $own = true)
+    {
+        return $this->m('Db')->update($table, $data, $where, $own);
+    }
+
+    /**
+     * Insert or Update Data if exists.
+     *
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
+     * @param array $where Conditions.
+     * @param bool $own Is own table?
+     * @return int|bool Insert ID or false if failed.
+     */
+    public function dbInsertOrUpdate($table, array $data, array $where, $own = true)
+    {
+        return $this->m('Db')->insertOrUpdate($table, $data, $where, $own);
+    }
+
+    /**
+     * Delete rows from a table.
+     *
+     * @param string $table Table Name.
+     * @param array $where Conditions.
+     * @param bool $own Is own table?
+     * @return bool Succeed?
+     */
+    public function dbDelete($table, array $where, $own = true)
+    {
+        return $this->m('Db')->delete($table, $where, $own);
+    }
+
+    /**
+     * Get Var.
+     *
+     * @param string $table Table Name.
+     * @param string $var Field name.
+     * @param array $where Conditions.
+     * @param bool $own Is own table?
+     * @return mixed
+     */
+    public function dbGetVar($table, $var, array $where, $own = true)
+    {
+        return $this->m('Db')->getVar($table, $var, $where, $own);
+    }
+
+    /**
+     * Get Results.
+     *
+     * @param string $table Table Name.
+     * @param array $fields List of Fields.
+     * @param array $where Conditions.
+     * @param bool $single Get single row?
+     * @param bool $own Is own table?
+     * @return mixed
+     */
+    public function dbGetResults($table, array $fields = [], array $where = [], $single = false, $own = true)
+    {
+        return $this->m('Db')->getResults($table, $fields, $where, $single, $own);
+    }
+
+    /**
+     * Get Results with an arbitrary Query.
+     *
+     * @param string $query SQL query.
+     * @param array $values If passed, $wpdb->prepare() will be executed first.
+     * @return mixed
+     */
+    public function dbGetResultsQuery($query, array $values = [])
+    {
+        return $this->m('Db')->getResultsQuery($query, $values);
+    }
+
+    /**
+     * Get Results Count.
+     *
+     * @param string $table Table Name.
+     * @param array $where Conditions.
+     * @param bool $own Is own table?
+     * @return int
+     */
+    public function dbGetCount($table, array $where = [], $own = true)
+    {
+        return $this->m('Db')->getCount($table, $where, $own);
+    }
+
+    /**
+     * Get Last Insert ID.
+     *
+     * @return int
+     */
+    public function dbInsertId()
+    {
+        return $this->m('Db')->insertId();
+    }
+
+    /**
+     * Insert Multiple Rows with one query.
+     *
+     * @param string $table Table Name.
+     * @param array $data Data to insert.
+     * @param bool $own Is own table?
+     * @return bool
+     */
+    public function dbInsertRows($table, array $data, $own = true)
+    {
+        return $this->m('Db')->insertRows($table, $data, $own);
+    }
+
+    /**
+     * Truncate a table.
+     *
+     * @param string $table Table Name.
+     * @param bool $own Is own table?
+     * @return bool
+     */
+    public function dbTruncateTable($table, $own = true)
+    {
+        return $this->m('Db')->truncateTable($table, $own);
+    }
+
+    /**
+     * Check own tables existence.
+     *
+     * @param array $tables List of own tables.
+     * @return bool
+     */
+    public function dbCheckTables(array $tables)
+    {
+        return $this->m('Db')->checkTables($tables);
+    }
+
+    /**
+     * Get table name with all prefixes.
+     *
+     * @param string $name Table Name.
+     * @param bool $own Is own table?
+     * @return string
+     */
+    public function dbGetTable($name, $own = true)
+    {
+        return $this->m('Db')->getTable($name, $own);
+    }
+
+    /**
+     * Search in an array.
+     *
+     * @param array $array Array to parse.
+     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param bool $single Whether to return a single item.
+     * @return mixed
+     */
+    public function arraySearch(array $array, array $conditions, $single = false)
+    {
+        return Helpers::arraySearch($array, $conditions, $single);
+    }
+
+    /**
+     * Filter an array.
+     *
+     * @param array $array Array to parse.
+     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param bool $single Whether to return a single item.
+     * @return mixed
+     */
+    public function arrayFilter(array $array, array $conditions, $single = false)
+    {
+        return Helpers::arrayFilter($array, $conditions, $single);
+    }
+
+    /**
+     * Remove duplicates by key.
+     *
+     * @param array $array Array to parse.
+     * @param string $key Key to search duplicates by.
+     * @return array Filtered array.
+     */
+    public function arrayUniqueByKey(array $array, $key)
+    {
+        return Helpers::arrayUniqueByKey($array, $key);
+    }
+
+    /**
+     * Transform an array.
+     *
+     * @param array $array Array to parse.
+     * @param array $keys Keys to keep.
+     * @param null $index Key to be used as index.
+     * @param bool $sort Key to sort by.
+     * @return array
+     */
+    public function arrayParse(array $array, array $keys, $index = null, $sort = false)
+    {
+        return Helpers::arrayParse($array, $keys, $index, $sort);
+    }
+
+    /**
+     * Sort an array by key.
+     *
+     * @param array $array Array to parse.
+     * @param string $key Key to sort by.
+     * @param bool $keepKeys Keep key=>value assigment when sorting
+     * @return array Resulting array.
+     */
+    public function arraySortByKey(array $array, $key, $keepKeys = false)
+    {
+        return Helpers::arraySortByKey($array, $key, $keepKeys);
+    }
+
+    /**
+     * Arrays deep merge.
+     *
+     * @param array $arr1
+     * @param array $arr2
+     * @return array
+     */
+    public function arrayMerge(array $arr1, array $arr2)
+    {
+        return Helpers::arrayMerge($arr1, $arr2);
+    }
+
+    /**
+     * Add an element to an array if not exists.
+     *
+     * @param array $where Array to add to.
+     * @param array $what Array to be added.
+     * @return array
+     */
+    public function arrayAddNonExistent(array $where, array $what)
+    {
+        return Helpers::arrayAddNonExistent($where, $what);
+    }
+
+    /**
+     * Recursive implode.
+     *
+     * @param array $array
+     * @param string $glue
+     * @return string
+     */
+    public function deepImplode(array $array, $glue = '')
+    {
+        return Helpers::deepImplode($array, $glue);
+    }
+
+    /**
+     * Wrapper for false and \WP_Error returns.
+     *
+     * @param mixed $result Result of a function call.
+     * @param string $errorMessage Message to log on error.
+     * @return bool Whether the call succeeded.
+     */
+    public function pr($result, $errorMessage = '')
+    {
+        return Helpers::pr($result, $errorMessage);
+    }
+
+    /**
+     * Check functions/classes existence.
+     * Used to check if a plugin/theme is active before proceed.
+     *
+     * @param array $items {
+     * @type string $name Plugin or Theme name.
+     * @type string $type Type of the dep (class/function).
+     * @type string $dep Class or function name.
+     * }
+     * @return array Not found items.
+     */
+    public function checkDeps(array $deps)
+    {
+        return Helpers::checkDeps($deps);
+    }
+
+    /**
+     * Trim vars and arrays.
+     *
+     * @param array|string $var
+     * @return array|string
+     */
+    public function trim($var)
+    {
+        return Helpers::trim($var);
+    }
+
+    /**
+     * Get output of a function.
+     * Used to put output in a variable instead of echo.
+     *
+     * @param string|array $func Callable.
+     * @param array $args Function args.
+     * @return string Output
+     */
+    public function getOutput($func, $args = [])
+    {
+        return Helpers::getOutput($func, $args);
+    }
+
+    /**
+     * Convert HEX color to RGB.
+     *
+     * @param string $hex
+     * @return string
+     */
+    public function colorToRgb($hex)
+    {
+        return Helpers::colorToRgb($hex);
+    }
+
+    /**
+     * Get path to the WP Uploads dir.
+     *
+     * @param string $dirName Dir name to be created in Uploads dir if not exists.
+     * @param string $path Path inside the uploads dir (will be created if not exists).
+     * @return string
+     */
+    public function getUploadsDir($path = '')
+    {
+        return Helpers::getUploadsDir($path);
+    }
+
+    /**
+     * Get URL of the WP Uploads dir.
+     *
+     * @param string $dirName Dir name to be created in Uploads dir if not exists.
+     * @param string $path Path inside the uploads dir (will be created if not exists).
+     * @return string
+     */
+    public function getUploadsUrl($path = '')
+    {
+        return Helpers::getUploadsUrl($path);
+    }
+
+    /**
+     * External API request helper.
+     *
+     * @param array $args {
+     * @type string $url
+     * @type string $method Get/Post
+     * @type array $headers
+     * @type array $data Data to send
+     * @type int $timeout
+     * }
+     *
+     * @return mixed Response body or false on failure
+     */
+    public function apiRequest(array $args)
+    {
+        return Helpers::apiRequest($args);
+    }
+
+    /**
+     * Return Success array.
+     *
+     * @param string $message Message.
+     * @param array $data Data to return as JSON.
+     * @param bool $echo Whether to echo Response right away without returning.
+     * @return array
+     */
+    public function success($message = 'Done', array $data = [], $echo = false)
+    {
+        return Helpers::returnSuccess($message, $data, $echo);
+    }
+
+    /**
+     * Return Error array.
+     *
+     * @param string $message Error message.
+     * @param bool $echo Whether to echo Response right away without returning.
+     * @return array
+     */
+    public function error($message = 'Unknown Error', $echo = false)
+    {
+        return Helpers::returnError($message, $echo);
+    }
+
+    /**
+     * Add a log entry.
+     *
+     * @param mixed $message Text or any other type including WP_Error.
+     * @param array $values If passed, vsprintf() func is applied.
+     * @param int $type 1 = Error, 2 = Warning, 4 = Notice.
+     */
+    public function log($message, $values = [], $type = 4)
+    {
+        $this->m('Logger')->log($message, $values, $type);
+    }
+
+    /**
+     * Render File Template.
+     *
+     * @param string $name Template file name without .twig.
+     * @param array $args Args to be passed to the Template.
+     * @return string Rendered Template.
+     *
+     * @throws AdwpfwException
+     */
+    public function twigFile($name, array $args = [])
+    {
+        return $this->m('Twig')->renderFile($name, $args);
+    }
+
+    /**
+     * Render Array Template.
+     *
+     * @param string $name Template name.
+     * @param array $args Args to be passed to the Template.
+     * @return string Rendered Template.
+     *
+     * @throws AdwpfwException
+     */
+    public function twigArray($name, array $args = [])
+    {
+        return $this->m('Twig')->renderArray($name, $args);
+    }
+
+    /**
+     * Add an item to the Top Admin Bar.
+     *
+     * @param array $bar {
+     * @type string $id ID w/o prefix. Defaults to sanitized $title.
+     * @type string $title Bar Title. Required.
+     * @type string $parent Parent node ID. Default null.
+     * @type string $capability Minimum capability. Default 'manage_options'.
+     * @type string $href URL of the link.
+     * @type bool $group Whether or not the node is a group. Default false.
+     * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default empty.
+     * }
+     */
+    public function addAdminBar(array $bar)
+    {
+        $this->m('AdminBars')->add($bar);
+    }
+
+    /**
+     * Add multiple items to the Top Admin Bar
+     *
+     * @param array $bars {
+     * @type string $id ID w/o prefix. Defaults to sanitized $title.
+     * @type string $title Bar Title. Required.
+     * @type string $parent Parent node ID. Default null.
+     * @type string $capability Minimum capability. Default 'manage_options'.
+     * @type string $href URL of the link.
+     * @type bool $group Whether or not the node is a group. Default false.
+     * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default empty.
+     * }
+     */
+    public function addAdminBars(array $bars)
+    {
+        $this->m('AdminBars')->addMany($bars);
+    }
+
+    /**
+     * Add Admin Page to the left WP Admin Menu.
+     *
+     * @param array $data {
+     * @type string $name Text for the left Menu. Required.
+     * @type string $title Text for the <title> tag. Defaults to $name.
+     * @type string $header Page header without markup. Defaults to $name.
+     * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
+     * @type int $position Position in the Menu. Default 0.
+     * @type string $icon The dash icon name for the bar. Default 'dashicons-update'
+     * @type string $capability Minimum capability. Default 'manage_options'.
+     * @type array $tabs Tabs: {
+     * @type string $title Tab Title.
+     * @type array $fields Tab fields.
+     * }
+     */
+    public function addAdminPage(array $data)
+    {
+        $this->m('AdminPages')->add($data);
+    }
+
+    /**
+     * Add multiple Admin pages.
+     *
+     * @param array $data {
+     * @type string $name Text for the left Menu. Required.
+     * @type string $title Text for the <title> tag. Defaults to $name.
+     * @type string $header Page header without markup. Defaults to $name.
+     * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
+     * @type int $position Position in the Menu. Default 0.
+     * @type string $icon The dash icon name for the bar. Default 'dashicons-update'
+     * @type string $capability Minimum capability. Default 'manage_options'.
+     * @type array $tabs Tabs: {
+     * @type string $title Tab Title.
+     * @type array $fields Tab fields.
+     * }
+     */
+    public function addAdminPages(array $data)
+    {
+        $this->m('AdminPages')->addMany($data);
     }
 
     /**
      * Add an AJAX action (admin-ajax.php)
      *
      * @param array $action {
-     * @type string $id Action ID without prefix (that will be added automatically)
+     * @type string $id ID for internal use. Defaults to sanitized $name.
+     * @type string $name Action name without prefix (will be added automatically). Required.
      * @type array $fields Accepted params [type, required]
-     * @type callable $callback Handler
+     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
      */
     public function addAjaxAction(array $action)
@@ -70,9 +624,12 @@ class App
     /**
      * Add multiple AJAX actions (admin-ajax.php)
      *
-     * @param array $actions
-     *
-     * @see Ajax::addAction()
+     * @param array $actions {
+     * @type string $id ID for internal use. Defaults to sanitized $name.
+     * @type string $name Action name without prefix (will be added automatically). Required.
+     * @type array $fields Accepted params [type, required]
+     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
+     * }
      */
     public function addAjaxActions(array $actions)
     {
@@ -83,12 +640,13 @@ class App
      * Add an REST API Endpoint (/wp-json/)
      *
      * @param array $endpoint {
-     * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/)
-     * @type string $route Route without slashes (i.e. users)
-     * @type string $method get/post. Default "post".
-     * @type bool $admin Whether available for admins only. Default false.
-     * @type array $fields Accepted params [type, required]
-     * @type callable $callback Handler
+     * @type string $id ID for internal use. Defaults to sanitized 'route'.
+     * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/).
+     * @type string $route Route without slashes (i.e. users).
+     * @type string $method get/post.
+     * @type bool $admin Whether available for admins only.
+     * @type array $fields Accepted params [type, required].
+     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
      */
     public function addApiEndpoint(array $endpoint)
@@ -99,9 +657,15 @@ class App
     /**
      * Add multiple REST API Endpoints (/wp-json/)
      *
-     * @param array $endpoints
-     *
-     * @see Ajax::addEndpoint()
+     * @param array $endpoints {
+     * @type string $id ID for internal use. Defaults to sanitized 'route'.
+     * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/).
+     * @type string $route Route without slashes (i.e. users).
+     * @type string $method get/post.
+     * @type bool $admin Whether available for admins only.
+     * @type array $fields Accepted params [type, required].
+     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
+     * }
      */
     public function addApiEndpoints(array $endpoints)
     {
@@ -109,14 +673,55 @@ class App
     }
 
     /**
+     * Add Asset.
+     *
+     * @param array $asset {
+     * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
+     * @type string $type css/js. Required.
+     * @type string $af admin/front. Required.
+     * @type string $file Path relative to the Plugin root.
+     * @type string $url Asset URL. Defaults to $file URL if $file is specified.
+     * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
+     * @type array $deps List of Dependencies (slugs).
+     * @type callable $callback Must return true to enqueue the Asset.
+     * @type array $localize Key-value pairs to be passed to the script as an object with name equals to $prefix.
+     * }
+     */
+    public function addAsset(array $asset)
+    {
+        $this->m('Assets')->add($asset);
+    }
+
+    /**
+     * Add Assets.
+     *
+     * @param array $assets {
+     * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
+     * @type string $type css/js. Required.
+     * @type string $af admin/front. Required.
+     * @type string $file Path relative to the Plugin root.
+     * @type string $url Asset URL. Defaults to $file URL if $file is specified.
+     * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
+     * @type array $deps List of Dependencies (slugs).
+     * @type callable $callback Must return true to enqueue the Asset.
+     * @type array $localize Key-value pairs to be passed to the script as an object with name equals to $prefix.
+     * }
+     */
+    public function addAssets(array $assets)
+    {
+        $this->m('Assets')->addMany($assets);
+    }
+
+    /**
      * Add a Cron Job
      *
      * @param array $job {
-     * @type string $id Job ID without prefix (that will be added automatically)
-     * @type callable $callback Handler
-     * @type int $interval Interval in seconds. Default 0.
-     * @type bool $parallel Allow parallel execution. Default false.
-     * @type array $args Args to be passed to the handler
+     * @type string $id Job ID. Defaults to sanitized $name.
+     * @type string $name Job Name. Required.
+     * @type callable $callback Handler. Gets $args. Required.
+     * @type int $interval Interval in seconds.
+     * @type bool $parallel Whether to parallel execution.
+     * @type array $args Args to be passed to the handler.
      * }
      */
     public function addCronJob(array $job)
@@ -127,9 +732,14 @@ class App
     /**
      * Add multiple Cron Jobs
      *
-     * @param array $jobs
-     *
-     * @see Cron::addJob()
+     * @param array $jobs {
+     * @type string $id Job ID. Defaults to sanitized $name.
+     * @type string $name Job Name. Required.
+     * @type callable $callback Handler. Gets $args. Required.
+     * @type int $interval Interval in seconds.
+     * @type bool $parallel Whether to parallel execution.
+     * @type array $args Args to be passed to the handler.
+     * }
      */
     public function addCronJobs(array $jobs)
     {
@@ -145,85 +755,15 @@ class App
     }
 
     /**
-     * Add a Settings Page to the left WP Admin Menu
-     *
-     * @param array $menu {
-     * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
-     * @type string $id Menu slug. Defaults to sanitized Title.
-     * @type string $prefix Prefix for slugs. Default config prefix.
-     * @type string $name Text for the left Menu. Default "Settings".
-     * @type string $title Text for the <title> tag. Defaults to $name.
-     * @type string $header Page header. Defaults to $name.
-     * @type string $icon The dash icon name for the bar
-     * @type int $position Position in the Menu. Default 100.
-     * @type string $option WP Option name to store the data (if $values isn't passed by reference)
-     * @type array $values Data to fill out the form and to be modified (normally passed by reference)
-     * @type string $capability Capability level to see the Page. Default "administrator"
-     * @type array $tabs Tabs: {
-     * @type string $name Tab Name
-     * @type bool $form Whether to wrap content with the <form> tag
-     * @type array $options Tab fields
-     * @type array $buttins Buttons at the bottom of the Tab
-     * }
-     * @type string $callback Render function
-     * }
-     */
-    public function addAdminPage(array $menu)
-    {
-        $this->m('AdminPages')->add($menu);
-    }
-
-    /**
-     * Add multiple Settings pages
-     *
-     * @param array $menus
-     *
-     * @see AdminPages::addMenu()
-     */
-    public function addAdminPages(array $menus)
-    {
-        $this->m('AdminPages')->addMany($menus);
-    }
-
-    /**
-     * Add an item to the Top Admin Bar
-     *
-     * @param array $bar {
-     * @type string $id
-     * @type string $title
-     * @type string $capability Who can see the Bar
-     * @type string $href URL of the link
-     * @type array $meta
-     * }
-     */
-    public function addAdminBar(array $bar)
-    {
-        $this->m('AdminBar')->add($bar);
-    }
-
-    /**
-     * Add multiple items to the Top Admin Bar
-     *
-     * @param array $bars
-     *
-     * @see AdminBars::addBar()
-     */
-    public function addAdminBars(array $bars)
-    {
-        $this->m('AdminBar')->addMany($bars);
-    }
-
-    /**
      * Add a Metabox
      *
      * @param array $metabox {
-     * @type string $id
-     * @type string $prefix
-     * @type string $title
-     * @type array $screen For which Post Types to show
-     * @type string $context
-     * @type string $priority
-     * @type array $options Fields to be printed
+     * @type string $slug Defaults to sanitized $title.
+     * @type string $title Metabox title. Required.
+     * @type array $screen For which Post Types to show.
+     * @type string $context normal/side/advanced. Default 'normal'.
+     * @type string $priority high/low/default. Default 'default'.
+     * @type array $fields Metabox fields.
      * }
      */
     public function addMetabox(array $metabox)
@@ -234,9 +774,14 @@ class App
     /**
      * Add multiple Metaboxes
      *
-     * @param array $metaboxes
-     *
-     * @see Metaboxes::addMetabox()
+     * @param array $metaboxes {
+     * @type string $slug Defaults to sanitized $title.
+     * @type string $title Metabox title. Required.
+     * @type array $screen For which Post Types to show.
+     * @type string $context normal/side/advanced. Default 'normal'.
+     * @type string $priority high/low/default. Default 'default'.
+     * @type array $fields Metabox fields.
+     * }
      */
     public function addMetaboxes(array $metaboxes)
     {
@@ -272,14 +817,15 @@ class App
      * Add Admin Notice
      *
      * @param array $notice {
-     * @type string $id
-     * @type string $message Message to display (tpl will be ignored)
-     * @type string $tpl Name of the notice TWIG template
-     * @type string $type Notice type (success, error)
-     * @type bool $dismissible Whether can be dismissed
-     * @type bool $once Don't show after dismissed
-     * @type string $classes Container classes
-     * @type array $args Additional TWIG Args
+     * @type string $id Defaults to sanitized $tpl.
+     * @type string $message Message to display (tpl will be ignored).
+     * @type string $tpl Name of the notice Twig template.
+     * @type string $type Notice type (success, error).
+     * @type bool $dismissible Whether can be dismissed.
+     * @type int $days When to show again after dismissed.
+     * @type array $classes Container CSS classes.
+     * @type array $args Additional Twig args.
+     * @type callable $callback Must return true for the Notice to show.
      * }
      */
     public function addNotice(array $notice)
@@ -290,9 +836,17 @@ class App
     /**
      * Add multiple Admin Notices
      *
-     * @param array $notices
-     *
-     * @see Notices::addNotice()
+     * @param array $notices {
+     * @type string $id Defaults to sanitized $tpl.
+     * @type string $message Message to display (tpl will be ignored).
+     * @type string $tpl Name of the notice Twig template.
+     * @type string $type Notice type (success, error).
+     * @type bool $dismissible Whether can be dismissed.
+     * @type int $days When to show again after dismissed.
+     * @type array $classes Container CSS classes.
+     * @type array $args Additional Twig args.
+     * @type callable $callback Must return true for the Notice to show.
+     * }
      */
     public function addNotices(array $notices)
     {
@@ -327,6 +881,17 @@ class App
     public function dismissNotice($id)
     {
         $this->m('Notices')->dismiss($id); // todo implement
+    }
+
+    /**
+     * Add a post state
+     *
+     * @param int $postId
+     * @param string $state State text
+     */
+    public function addPostState($postId, $state)
+    {
+        $this->m('PostStates')->add($postId, $state);
     }
 
     /**
@@ -403,17 +968,6 @@ class App
     }
 
     /**
-     * Add a post state
-     *
-     * @param int $postId
-     * @param string $state State text
-     */
-    public function addPostState($postId, $state)
-    {
-        $this->m('PostStates')->add($postId, $state);
-    }
-
-    /**
      * Add a Widget
      *
      * @param array $widget {
@@ -451,21 +1005,6 @@ class App
     public function updater(array $plugin)
     {
         $this->m('Updater')->add($plugin);
-    }
-
-    /**
-     * Add Admin CSS items
-     *
-     * @param array $args {
-     * @type bool $own Whether it's the own asset stored in the assets folder
-     * @type string $url
-     * @type string $ver Version
-     * @type array $deps Dependencies slugs
-     * }
-     */
-    public function addAsset(array $args)
-    {
-        $this->m('Assets')->add($args);
     }
 
     /**
@@ -535,436 +1074,5 @@ class App
     public function addSidebar(array $sidebar)
     {
         $this->m('Sidebar')->add($sidebar);
-    }
-
-    /**
-     * Perform a DB Query
-     *
-     * @param string $query SQL Query
-     * @param array $values If passed, $wpdb->prepare() will be executed first
-     * @return mixed
-     */
-    public function dbQuery($query, array $values = [])
-    {
-        return $this->m('Db')->query($query, $values);
-    }
-
-    /**
-     * Insert Data into a table
-     *
-     * @param string $table Table Name
-     * @param array $data Data to insert
-     * @param bool $own Is own table?
-     * @return int|bool Insert ID or false if failed
-     */
-    public function dbInsert($table, array $data, $own = true)
-    {
-        return $this->m('Db')->insert($table, $data, $own);
-    }
-
-    /**
-     * Update Data in a table
-     *
-     * @param string $table Table Name
-     * @param array $data Data to insert
-     * @param array $where Conditions
-     * @param bool $own Is own table?
-     * @return int|bool Insert ID or false if failed
-     */
-    public function dbUpdate($table, array $data, array $where, $own = true)
-    {
-        return $this->m('Db')->update($table, $data, $where, $own);
-    }
-
-    /**
-     * Insert or Update Data if exists
-     *
-     * @param string $table Table Name
-     * @param array $data Data to insert
-     * @param array $where Conditions
-     * @param bool $own Is own table?
-     * @return int|bool Insert ID or false if failed
-     */
-    public function dbInsertOrUpdate($table, array $data, array $where, $own = true)
-    {
-        return $this->m('Db')->insertOrUpdate($table, $data, $where, $own);
-    }
-
-    /**
-     * Delete rows from a table
-     *
-     * @param string $table Table Name
-     * @param array $where Conditions
-     * @param bool $own Is own table?
-     * @return bool Succeed?
-     */
-    public function dbDelete($table, array $where, $own = true)
-    {
-        return $this->m('Db')->delete($table, $where, $own);
-    }
-
-    /**
-     * Get Var
-     *
-     * @param string $table Table Name
-     * @param string $var Field name
-     * @param array $where Conditions
-     * @param bool $own Is own table?
-     * @return mixed
-     */
-    public function dbGetVar($table, $var, array $where, $own = true)
-    {
-        return $this->m('Db')->getVar($table, $var, $where, $own);
-    }
-
-    /**
-     * Get Results
-     *
-     * @param string $table Table Name
-     * @param array $fields List of Fields
-     * @param array $where Conditions
-     * @param bool $single Get single row?
-     * @param bool $own Is own table?
-     * @return mixed
-     */
-    public function dbGetResults($table, array $fields = [], array $where = [], $single = false, $own = true)
-    {
-        return $this->m('Db')->getResults($table, $fields, $where, $single, $own);
-    }
-
-    /**
-     * Get Results with an arbitrary Query
-     *
-     * @param string $query SQL query
-     * @param array $values If passed, $wpdb->prepare() will be executed first
-     * @return mixed
-     */
-    public function dbGetResultsQuery($query, array $values = [])
-    {
-        return $this->m('Db')->getResultsQuery($query, $values);
-    }
-
-    /**
-     * Get Results Count
-     *
-     * @param string $table Table Name
-     * @param array $where Conditions
-     * @param bool $own Is own table?
-     * @return int
-     */
-    public function dbGetCount($table, array $where = [], $own = true)
-    {
-        return $this->m('Db')->getCount($table, $where, $own);
-    }
-
-    /**
-     * Get Last Insert ID
-     *
-     * @return int
-     */
-    public function dbInsertId()
-    {
-        return $this->m('Db')->insertId();
-    }
-
-    /**
-     * Insert Multiple Rows with one query
-     *
-     * @param string $table Table Name
-     * @param array $data Data to insert
-     * @param bool $own Is own table?
-     * @return bool
-     */
-    public function dbInsertRows($table, array $data, $own = true)
-    {
-        return $this->m('Db')->insertRows($table, $data, $own);
-    }
-
-    /**
-     * Truncate a table
-     *
-     * @param $table
-     * @param bool $own
-     * @return bool
-     */
-    public function dbTruncateTable($table, $own = true)
-    {
-        return $this->m('Db')->truncateTable($table, $own);
-    }
-
-    /**
-     * Check own tables existence
-     *
-     * @param array $tables List of own tables
-     * @return bool
-     */
-    public function dbCheckTables(array $tables)
-    {
-        return $this->m('Db')->checkTables($tables);
-    }
-
-    /**
-     * Get table name with all prefixes
-     *
-     * @param string $name
-     * @param bool $own
-     * @return string
-     */
-    public function dbGetTable($name, $own = true)
-    {
-        return $this->m('Db')->getTable($name, $own);
-    }
-
-    /**
-     * Render TWIG templates
-     *
-     * @param string $name Template file name
-     * @param array $args
-     * @return string
-     */
-    public function renderTwig($name, array $args = [])
-    {
-        return $this->m('Twig')->renderFile($name, $args);
-    }
-
-    /**
-     * Get path/url to the WP Uploads dir
-     *
-     * @param string $path Path inside the uploads dir (will be created if not exists)
-     * @param bool $getUrl Whether to get URL instead of the path
-     * @return string
-     */
-    public function getUploadsDir($path = '', $getUrl = false)
-    {
-        return $this->m('Utils')->getUploadsDir($path, $getUrl);
-    }
-
-    /**
-     * External API request helper
-     *
-     * @param array $args {
-     * @type string $url
-     * @type string $method Get/Post
-     * @type array $headers
-     * @type array $data Data to send
-     * @type int $timeout
-     * }
-     *
-     * @return mixed Response body or false on failure
-     */
-    public function apiRequest(array $args)
-    {
-        return $this->m('Utils')->apiRequest($args);
-    }
-
-    /**
-     * Return success response
-     *
-     * @param string $message
-     * @param array $data
-     * @param bool $echo
-     * @return array
-     */
-    public function success($message = 'Done', array $data = [], $echo = false)
-    {
-        return $this->m('Utils')->returnSuccess($message, $data, $echo);
-    }
-
-    /**
-     * Return error response
-     *
-     * @param string $message
-     * @param bool $echo
-     * @return array
-     */
-    public function error($message = 'Unknown Error', $echo = false)
-    {
-        return $this->m('Utils')->returnError($message, $echo);
-    }
-
-    /**
-     * Add a log entry
-     *
-     * @param mixed $message Text or any other type including \WP_Error
-     * @param int $type 1 = Error, 2 = Warning, 4 = Notice @deprecated
-     */
-    public function log($message, $values = [], $type = 4)
-    {
-        $this->m('Logger')->log($message, $values, $type);
-    }
-
-    /**
-     * Handle false and \WP_Error returns
-     *
-     * @param mixed $result
-     * @param string $errorMessage
-     * @return bool
-     */
-    public function pr($result, $errorMessage = '')
-    {
-        return $this->m('Utils')->pr($result, $errorMessage);
-    }
-
-    /**
-     * Simple cache
-     *
-     * @param callable $callable
-     * @param array $args
-     * @return mixed
-     */
-    public function cache($callable, $args = [])
-    {
-        return $this->m('Utils')->cache($callable, $args);
-    }
-
-    /**
-     * Search in an array
-     *
-     * @param array $array
-     * @param array $conditions
-     * @param bool $single
-     * @return mixed
-     */
-    public function arraySearch(array $array, array $conditions, $single = false)
-    {
-        return Helpers::arraySearch($array, $conditions, $single);
-    }
-
-    /**
-     * Filter an array
-     *
-     * @param array $array
-     * @param array $conditions
-     * @param bool $single
-     * @return array
-     */
-    public function arrayFilter(array $array, array $conditions, $single = false)
-    {
-        return Helpers::arrayFilter($array, $conditions, $single);
-    }
-
-    /**
-     * Remove duplicates by key
-     *
-     * @param array $array
-     * @param string $key
-     * @return array
-     */
-    public function arrayUniqueByKey(array $array, $key)
-    {
-        return Helpers::arrayUniqueByKey($array, $key);
-    }
-
-    /**
-     * Transform an array
-     *
-     * @param array $array
-     * @param array $keys Keys to keep
-     * @param null $index Key to be used as index
-     * @param bool $sort
-     * @return array
-     */
-    public function arrayParse(array $array, array $keys, $index = null, $sort = false)
-    {
-        return Helpers::arrayParse($array, $keys, $index, $sort);
-    }
-
-    /**
-     * Sort an array by key
-     *
-     * @param array $array
-     * @param $key
-     * @param bool $keepKeys Keep key=>value links when sorting
-     * @return array
-     */
-    public function arraySortByKey(array $array, $key, $keepKeys = false)
-    {
-        return Helpers::arraySortByKey($array, $key, $keepKeys);
-    }
-
-    /**
-     * Arrays deep merge
-     *
-     * @param array $arr1
-     * @param array $arr2
-     * @return array
-     */
-    public function arrayMerge(array $arr1, array $arr2)
-    {
-        return Helpers::arrayMerge($arr1, $arr2);
-    }
-
-    /**
-     * Add an element to an array if not exists
-     *
-     * @param array $where
-     * @param array $what
-     * @return array
-     */
-    public function arrayAddNonExistent(array $where, array $what)
-    {
-        return Helpers::arrayAddNonExistent($where, $what);
-    }
-
-    /**
-     * Recursive implode
-     *
-     * @param array $array
-     * @param string $glue
-     * @return string
-     */
-    public function deepImplode(array $array, $glue = '')
-    {
-        return Helpers::deepImplode($array, $glue);
-    }
-
-    /**
-     * Check plugin/theme dependencies before start
-     *
-     * @param string $pluginName Name of calling plugin to display in Notice
-     * @param array $deps {
-     * @type string $name Plugin or Theme name
-     * @type string $type Type of the dep (class/function)
-     * @type string $dep Class or function name
-     * }
-     * @return bool Passed?
-     */
-    public function checkDeps($pluginName, array $deps)
-    {
-        return $this->m('Utils')->checkDeps($pluginName, $deps);
-    }
-
-    /**
-     * Trim vars and arrays
-     *
-     * @param array|string $var
-     * @return array|string
-     */
-    public function trim($var)
-    {
-        return Helpers::trim($var);
-    }
-
-    /**
-     * Get output of a function
-     *
-     * @param string|array $func Callable
-     * @param array $args Function args
-     * @return string Output
-     */
-    public function getOutput($func, $args = [])
-    {
-        return Helpers::getOutput($func, $args);
-    }
-
-    /**
-     * Convert HEX color to RGB
-     *
-     * @param string $hex
-     * @return string
-     */
-    public function colorToRgb($hex)
-    {
-        return Helpers::colorToRgb($hex);
     }
 }

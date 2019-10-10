@@ -30,7 +30,7 @@ class PostStates extends ModuleWithItems
      *
      * @see PostState::__construct();
      */
-    public function add(array $data, App $app)
+    public function add(array $data, App $app) // todo why pass App if Module already has it?
     {
         $this->items[] = new PostState($data, $app);
     }

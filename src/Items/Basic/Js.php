@@ -14,7 +14,8 @@ class Js extends Asset
      *
      * @param array $data {
      * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
-     * @type string $type admin/front. Required.
+     * @type string $type css/js. Required.
+     * @type string $af admin/front. Required.
      * @type string $file Path relative to the Plugin root.
      * @type string $url Asset URL. Defaults to $file URL if $file is specified.
      * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.

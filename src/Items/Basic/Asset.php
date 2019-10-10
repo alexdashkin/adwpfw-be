@@ -29,7 +29,7 @@ abstract class Asset extends Item
             'id' => [
                 'default' => $this->getDefaultId($data['type']),
             ],
-            'type' => [
+            'af' => [
                 'required' => true,
             ],
             'file' => [

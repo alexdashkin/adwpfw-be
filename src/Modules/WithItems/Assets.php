@@ -90,7 +90,7 @@ class Assets extends ModuleWithItems
      */
     public function enqueueAdmin()
     {
-        foreach ($this->searchItems(['type' => 'admin']) as $item) {
+        foreach ($this->searchItems(['af' => 'admin']) as $item) {
             $item->enqueue();
         }
 
@@ -104,7 +104,7 @@ class Assets extends ModuleWithItems
      */
     public function enqueueFront()
     {
-        foreach ($this->searchItems(['type' => 'front']) as $item) {
+        foreach ($this->searchItems(['af' => 'front']) as $item) {
             $item->enqueue();
         }
 

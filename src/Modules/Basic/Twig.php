@@ -52,7 +52,7 @@ class Twig extends Module
         $paths = [
             $this->config['baseDir'] . 'tpl/adwpfw',
             $this->config['baseDir'] . 'tpl',
-            __DIR__ . '/../../Templates',
+            __DIR__ . '/../../../tpl',
         ];
 
         foreach ($paths as $index => $path) {
@@ -134,7 +134,7 @@ class Twig extends Module
      *
      * @throws AdwpfwException
      */
-    public function renderTpl($name, $args = [])
+    public function renderArray($name, $args = [])
     {
         return $this->render($this->twigArray, $name, $args);
     }
