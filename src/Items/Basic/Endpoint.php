@@ -11,20 +11,25 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 class Endpoint extends Ajax
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
-     * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/)
-     * @type string $route Route without slashes (i.e. users)
-     * @type string $method get/post
-     * @type bool $admin Whether available for admins only
-     * @type array $fields Accepted params [type, required]
-     * @type callable $callback Handler
+     * @type string $id ID for internal use. Defaults to sanitized 'route'.
+     * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/).
+     * @type string $route Route without slashes (i.e. users).
+     * @type string $method get/post.
+     * @type bool $admin Whether available for admins only.
+     * @type array $fields Accepted params [type, required].
+     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
+     * @throws AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['route']),
+            ],
             'namespace' => [
                 'required' => true,
             ],
@@ -43,42 +48,33 @@ class Endpoint extends Ajax
         parent::__construct($data, $app, $props);
     }
 
+    /**
+     * Register Endpoint.
+     * @return True on success, false on error.
+     */
     public function register()
     {
         $data = $this->data;
 
-        register_rest_route($data['namespace'], $data['route'], [
+        return register_rest_route($data['namespace'], $data['route'], [
             'methods' => $data['method'],
             'callback' => [$this, 'run'],
         ]);
     }
 
     /**
-     * Handle the Request
+     * Handle the Request.
      *
      * @param \WP_REST_Request $request
-     * @throws AdwpfwException
      */
     public function run(\WP_REST_Request $request)
     {
-        try {
-            if ($this->data['admin'] && !current_user_can('administrator')) {
-                throw new AdwpfwException('Endpoint is for Admins only');
-            }
-
-            $params = array_merge($request->get_query_params(), $request->get_body_params());
-
-            $data = $params ? $this->validateRequest($params) : [];
-            $result = call_user_func($this->data['callback'], $data);
-
-        } catch (\Exception $e) {
-            $this->error('Exception: ' . $e->getMessage() . '. Execution aborted.', true);
+        if ($this->data['admin'] && !current_user_can('administrator')) {
+            $this->error('Endpoint is for Admins only', true);
         }
 
-        if (is_array($result)) {
-            $return = array_merge(['success' => false, 'message' => '', 'data' => ''], $result);
-        }
+        $data = array_merge($request->get_query_params(), $request->get_body_params());
 
-        wp_send_json($return);
+        parent::handle($data);
     }
 }

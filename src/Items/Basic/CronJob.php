@@ -10,19 +10,24 @@ use AlexDashkin\Adwpfw\App;
 class CronJob extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
+     * @type string $id Job ID. Defaults to sanitized $name.
      * @type string $name Job Name. Required.
-     * @type callable $callback Handler. Required.
-     * @type int $id Interval in seconds
-     * @type bool $parallel Allow parallel execution
-     * @type array $args Args to be passed to the handler
+     * @type callable $callback Handler. Gets $args. Required.
+     * @type int $interval Interval in seconds.
+     * @type bool $parallel Whether to parallel execution.
+     * @type array $args Args to be passed to the handler.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $this->props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['name']),
+            ],
             'name' => [
                 'required' => true,
             ],
@@ -48,11 +53,11 @@ class CronJob extends Item
     }
 
     /**
-     * Run the Job
+     * Run the Job.
      */
     public function run()
     {
-        $prefix = $this->config['prefix'];
+        $prefix = $this->prefix;
 
         $jobName = $this->data['name'];
 
@@ -114,9 +119,15 @@ class CronJob extends Item
         }
     }
 
+    /**
+     * Update Cron option.
+     *
+     * @param string $name Param name
+     * @param mixed $value Value
+     */
     private function updateOption($name, $value)
     {
-        $optionName = $this->config['prefix'] . '_cron';
+        $optionName = $this->prefix . '_cron';
 
         $optionValue = get_option($optionName) ?: [];
 

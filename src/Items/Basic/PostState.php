@@ -10,17 +10,22 @@ use AlexDashkin\Adwpfw\App;
 class PostState extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
-     * @param int $post_id Post ID
-     * @param string $state State text
+     * @param int $post_id Post ID.
+     * @param string $state State text.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['post_id']),
+            ],
             'post_id' => [
+                'type' => 'int',
                 'required' => true,
             ],
             'state' => [
@@ -32,12 +37,16 @@ class PostState extends Item
     }
 
     /**
-     * Register Items in WP
+     * Filter Post States.
+     *
+     * @param array $states States list.
+     * @param \WP_Post $post Post.
+     * @return array Modified States.
      */
-    public function register($states, $post)
+    public function register(array $states, $post)
     {
         if ($post->ID === $this->data['post_id']) {
-            $states = array_merge($states, $this->data['state']);
+            $states[] = $this->data['state'];
         }
 
         return $states;

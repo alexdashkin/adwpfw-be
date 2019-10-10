@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items\WithItems;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
+use AlexDashkin\Adwpfw\Fields\Field;
 use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
@@ -15,12 +15,11 @@ class AdminPageTab extends ItemWithItems
      * Constructor
      *
      * @param array $data {
-     * @type string $title
-     * @type bool $form Whether to wrap content with the <form> tag
-     * @type string $slug Defaults to prefixed sanitized Title. Used if $form is true.
+     * @type string $slug Defaults to sanitized $title.
+     * @type string $title Tab title. Required.
+     * @type bool $form Whether to wrap content with the <form> tag and add 'Save changes' button. Default false.
      * @type string $option WP Option name where the values are stored. Required if $form is true.
      * @type array $fields Tab fields
-     * @type array $buttons Buttons at the bottom of the Tab
      * }
      *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
@@ -28,23 +27,19 @@ class AdminPageTab extends ItemWithItems
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['title']),
+            ],
             'title' => [
-                'default' => 'Tab',
+                'required' => true,
             ],
-
-            'slug' => [
-                'default' => $this->getDefaultSlug($data['title']),
-            ],
-
             'form' => [
                 'type' => 'bool',
                 'default' => false,
             ],
-
             'option' => [
                 'default' => null,
             ],
-
             'fields' => [
                 'type' => 'array',
                 'def' => [
@@ -64,18 +59,26 @@ class AdminPageTab extends ItemWithItems
     }
 
     /**
-     * Add an item
+     * Add Field.
      *
-     * @param array $data
+     * @param array $data Data passed to the Field Constructor.
+     * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function add(array $data, App $app)
     {
-        $this->items[] = FormField::getField($data, $app);
+        $this->items[] = Field::getField($data, $app);
     }
 
+    /**
+     * Get Twig args.
+     *
+     * @return array
+     */
     public function getArgs()
     {
-        $values = get_option($this->config['prefix'] . '_' . $this->data['option']) ?: [];
+        $values = get_option($this->prefix . '_' . $this->data['option']) ?: [];
 
         $fields = $buttons = [];
 
@@ -93,11 +96,17 @@ class AdminPageTab extends ItemWithItems
         return $args;
     }
 
+    /**
+     * Save the posted data.
+     *
+     * @param array $data Posted data
+     * @return array Success array to pass as Ajax response.
+     */
     public function save($data)
     {
-        $optionName = $this->config['prefix'] . '_' . $this->data['option'];
+        $optionName = $this->prefix . '_' . $this->data['option'];
 
-        $values = get_option($this->config['prefix'] . '_' . $this->data['option']) ?: [];
+        $values = get_option($this->prefix . '_' . $this->data['option']) ?: [];
 
         foreach ($this->items as $field) {
 

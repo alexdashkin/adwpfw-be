@@ -18,18 +18,20 @@ class AdminPage extends ItemWithItems
      * @type string $header Page header without markup. Defaults to $name.
      * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
      * @type int $position Position in the Menu. Default 0.
-     * @type string $icon The dash icon name for the bar
-     * @type string $capability Capability level to see the Page. Default "manage_options".
+     * @type string $icon The dash icon name for the bar. Default 'dashicons-update'
+     * @type string $capability Minimum capability. Default 'manage_options'.
      * @type array $tabs Tabs: {
-     * @type string $title Tab Title
-     * @type bool $form Whether to wrap content with the <form> tag
-     * @type array $fields Tab fields
-     * @type array $buttons Buttons at the bottom of the Tab
+     * @type string $title Tab Title.
+     * @type array $fields Tab fields.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['name']),
+            ],
             'name' => [
                 'required' => true,
             ],
@@ -58,7 +60,6 @@ class AdminPage extends ItemWithItems
                     'title' => 'Tab',
                     'form' => false,
                     'fields' => [],
-                    'buttons' => [],
                 ],
             ],
         ];
@@ -71,15 +72,21 @@ class AdminPage extends ItemWithItems
     }
 
     /**
-     * Add an item
+     * Add Tab.
      *
-     * @param array $data
+     * @param array $data Data passed to the Tab Constructor.
+     * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function add(array $data, App $app)
     {
         $this->items[] = new AdminPageTab($data, $app);
     }
 
+    /**
+     * Register the Page.
+     */
     public function register()
     {
         $data = $this->data;
@@ -107,6 +114,9 @@ class AdminPage extends ItemWithItems
         }
     }
 
+    /**
+     * Render the Page.
+     */
     public function render()
     {
         foreach ($this->items as $tab) {
@@ -128,10 +138,16 @@ class AdminPage extends ItemWithItems
         }
     }
 
-    public function findTab($slug)
+    /**
+     * Find tab by ID
+     *
+     * @param string $id
+     * @return AdminPageTab|null
+     */
+    public function findTab($id)
     {
         foreach ($this->items as $tab) {
-            if ($tab->data['slug'] === $slug) {
+            if ($tab->data['id'] === $id) {
                 return $tab;
             }
         }

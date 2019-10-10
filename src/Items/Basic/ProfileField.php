@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items\Basic;
 
 use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Items\FormField;
+use AlexDashkin\Adwpfw\Fields\Field;
 
 /**
  * User Profile Custom Field
@@ -11,20 +11,20 @@ use AlexDashkin\Adwpfw\Items\FormField;
 class ProfileField extends Item
 {
     /**
-     * @var FormField
+     * @var Field
      */
     private $field;
 
     private $metaKey;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
-     * @type string $id Required.
+     * @type string $id Field Name used as a key in $prefix[] array on the Form. Required.
      * @type string $label Field Label. Required.
      * @type string $type Field Type. Default 'text'.
-     * @type string $desc Field Description to be shown below the Field
+     * @type string $desc Field Description to be shown below the Field.
      * }
      *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
@@ -50,9 +50,9 @@ class ProfileField extends Item
 
         $this->data['layout'] = 'profile-field';
 
-        $this->field = FormField::getField($this->data, $app);
+        $this->field = Field::getField($this->data, $app);
 
-        $this->metaKey = $this->config['prefix'] . '_' . $this->data['name'];
+        $this->metaKey = $this->prefix . '_' . $this->data['id'];
     }
 
     /**
@@ -72,13 +72,30 @@ class ProfileField extends Item
         return get_user_meta($userId, $this->metaKey, true);
     }
 
+    /**
+     * Get Twig Args for rendering the Field
+     *
+     * @param int $userId User ID
+     * @return array Twig Args
+     */
     public function getArgs($userId)
     {
         return $this->field->getArgs([$this->data['id'] => $this->get($userId)]);
     }
 
-    public function save($userId, $post)
+    /**
+     * Save the Field
+     *
+     * @param int $userId User ID
+     * @param array $data Posted data
+     * @return bool|int
+     */
+    public function save($userId, $data)
     {
-        update_user_meta($userId, $this->metaKey, $post);
+        if (!array_key_exists($this->data['id'], $data)) {
+            return false;
+        }
+
+        return update_user_meta($userId, $this->metaKey, $data[$this->data['id']]);
     }
 }

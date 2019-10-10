@@ -5,21 +5,26 @@ namespace AlexDashkin\Adwpfw\Items\Basic;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Plugin with Self-Update feature
+ * Plugin Self-Update feature
  */
 class Plugin extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
-     * @type string $path Path to the plugin's main file
-     * @type string $package URL of the package
+     * @type string $id ID for internal use. Defaults to sanitized $path.
+     * @type string $path Path to the plugin's main file.
+     * @type string $package URL of the package.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['path']),
+            ],
             'path' => [
                 'required' => true,
             ],
@@ -43,7 +48,7 @@ class Plugin extends Item
             $newVer = substr($oldVer, 0, strlen($oldVer) - 1) . ++$last;
         }
 
-        $data = [
+        $this->data = [
             'id' => $file,
             'plugin' => $file,
             'slug' => $exploded[0],
@@ -56,12 +61,13 @@ class Plugin extends Item
             'tested' => '10.0.0',
             'compatibility' => new \stdClass(),
         ];
-
-        $this->data = $data;
     }
 
     /**
-     * Filter Update transient
+     * Filter Update transient.
+     *
+     * @param object $transient Transient passed to the filter.
+     * @return object Modified Transient.
      */
     public function register($transient)
     {

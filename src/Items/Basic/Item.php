@@ -24,6 +24,11 @@ abstract class Item
     protected $config;
 
     /**
+     * @var string Prefix
+     */
+    protected $prefix;
+
+    /**
      * Constructor
      *
      * @param array $data
@@ -33,14 +38,22 @@ abstract class Item
     {
         $this->app = $app;
         $this->config = $app->config;
-        $this->props = $props;
+        $this->prefix = $app->config['prefix'];
+
+        $defaults = [
+            'id' => [
+                'required' => true,
+            ],
+        ];
+
+        $this->props = array_merge($props, $defaults);
 
         $this->data = $this->validate($data);
     }
 
-    protected function getDefaultSlug($base = 'item')
+    protected function getDefaultId($base)
     {
-        return $this->config['prefix'] . '-' . sanitize_title($base);
+        return esc_attr(sanitize_key($base));
     }
 
     /**

@@ -5,34 +5,35 @@ namespace AlexDashkin\Adwpfw\Items\Basic;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Admin Dashboard widget
+ * Admin Dashboard Widget
  */
 class Widget extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
+     * @type string $id Defaults to sanitized $title.
      * @type string $title Widget Title. Required.
      * @type callable $callback Renders the widget. Required.
-     * @type string $slug Defaults to prefixed sanitized title.
-     * @type string $capability Who can see the Widget
+     * @type string $capability Minimum capability.
      * }
      *
      * @see wp_add_dashboard_widget()
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['title']),
+            ],
             'title' => [
                 'required' => true,
             ],
             'callback' => [
                 'type' => 'callable',
                 'required' => true,
-            ],
-            'slug' => [
-                'default' => $this->getDefaultSlug($data['title']),
             ],
             'capability' => [
                 'default' => 'read',
@@ -43,7 +44,7 @@ class Widget extends Item
     }
 
     /**
-     * Register Items in WP
+     * Register the Widget.
      */
     public function register()
     {
@@ -51,6 +52,6 @@ class Widget extends Item
             return;
         }
 
-        wp_add_dashboard_widget($this->data['slug'], $this->data['title'], $this->data['callback']);
+        wp_add_dashboard_widget($this->data['id'], $this->data['title'], $this->data['callback']);
     }
 }

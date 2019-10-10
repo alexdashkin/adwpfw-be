@@ -10,16 +10,21 @@ use AlexDashkin\Adwpfw\App;
 class Theme extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
-     * @type string $slug Theme's directory name
-     * @type string $package URL of the package
+     * @type string $id ID for internal use. Defaults to sanitized $path.
+     * @type string $slug Theme's directory name.
+     * @type string $package URL of the package.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['path']),
+            ],
             'slug' => [
                 'required' => true,
             ],
@@ -40,19 +45,20 @@ class Theme extends Item
             $newVer = substr($oldVer, 0, strlen($oldVer) - 1) . ++$last;
         }
 
-        $data = [
+        $this->data = [
             'name' => $slug,
             'theme' => $slug,
             'new_version' => $newVer,
             'package' => $this->data['package'],
             'url' => '',
         ];
-
-        $this->data = $data;
     }
 
     /**
-     * Filter Update transient
+     * Filter Update transient.
+     *
+     * @param object $transient Transient passed to the filter.
+     * @return object Modified Transient.
      */
     public function register($transient)
     {

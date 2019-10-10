@@ -15,7 +15,7 @@ abstract class ItemWithItems extends Item
     use ItemWithItemsTrait;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data
      * @throws AdwpfwException

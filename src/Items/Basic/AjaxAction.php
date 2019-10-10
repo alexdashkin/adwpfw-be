@@ -10,18 +10,23 @@ use AlexDashkin\Adwpfw\App;
 class AjaxAction extends Ajax
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
-     * @type string $action Action Slug without prefix (will be added automatically). Required.
-     * @type callable $callback Handler. Required.
+     * @type string $id ID for internal use. Defaults to sanitized $name.
+     * @type string $name Action name without prefix (will be added automatically). Required.
      * @type array $fields Accepted params [type, required]
+     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
-            'action' => [
+            'id' => [
+                'default' => $this->getDefaultId($data['name']),
+            ],
+            'name' => [
                 'required' => true,
             ],
         ];
@@ -30,18 +35,13 @@ class AjaxAction extends Ajax
     }
 
     /**
-     * Handle the Request
+     * Handle the Request.
+     * @param array $request $_REQUEST params
      */
     public function run($request)
     {
-        $data = !empty($request['data']) ? $this->validateRequest($request['data']) : [];
+        $data = !empty($request['data']) ? $request['data'] : [];
 
-        $result = call_user_func($this->data['callback'], $data);
-
-        if (is_array($result)) {
-            $return = array_merge(['success' => false, 'message' => '', 'data' => ''], $result);
-        }
-
-        return $return;
+        parent::handle($data);
     }
 }

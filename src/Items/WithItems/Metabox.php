@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items\WithItems;
 
 use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Fields\Field;
 use AlexDashkin\Adwpfw\Items\FormField;
 use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
@@ -12,15 +13,15 @@ use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 class Metabox extends ItemWithItems
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
+     * @type string $slug Defaults to sanitized $title.
      * @type string $title Metabox title. Required.
-     * @type string $slug Defaults to prefixed sanitized Title
-     * @type array $screen For which Post Types to show
+     * @type array $screen For which Post Types to show.
      * @type string $context normal/side/advanced. Default 'normal'.
      * @type string $priority high/low/default. Default 'default'.
-     * @type array $fields
+     * @type array $fields Metabox fields.
      * }
      *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
@@ -28,11 +29,11 @@ class Metabox extends ItemWithItems
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['title']),
+            ],
             'title' => [
                 'required' => true,
-            ],
-            'slug' => [
-                'default' => $this->getDefaultSlug($data['title']),
             ],
             'screen' => [
                 'type' => 'array',
@@ -63,19 +64,22 @@ class Metabox extends ItemWithItems
     }
 
     /**
-     * Add an item
+     * Add Field
      *
-     * @param array $data
+     * @param array $data Data passed to the Field Constructor.
+     * @param App $app
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function add(array $data, App $app)
     {
-        $this->items[] = FormField::getField($data, $app);
+        $this->items[] = Field::getField($data, $app);
     }
 
     /**
-     * Get a Metabox Value
+     * Get a Metabox Value.
      *
-     * @param int|null $postId Post ID (defaults to the current post)
+     * @param int|null $postId Post ID (defaults to the current post).
      * @return mixed
      */
     public function get($postId = null)
@@ -84,14 +88,14 @@ class Metabox extends ItemWithItems
             return '';
         }
 
-        return get_post_meta($postId->ID, '_' . $this->config['prefix'] . '_' . $this->data['slug'], true);
+        return get_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->data['slug'], true);
     }
 
     /**
-     * Set a Metabox Value
+     * Set a Metabox Value.
      *
-     * @param mixed $value Value to set
-     * @param int|null $postId Post ID (defaults to the current post)
+     * @param mixed $value Value to set.
+     * @param int|null $postId Post ID (defaults to the current post).
      * @return bool
      */
     public function set($value, $postId = null)
@@ -100,9 +104,12 @@ class Metabox extends ItemWithItems
             return '';
         }
 
-        return update_post_meta($postId->ID, '_' . $this->config['prefix'] . '_' . $this->data['slug'], $value);
+        return update_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->data['slug'], $value);
     }
 
+    /**
+     * Register the Metabox.
+     */
     public function register()
     {
         $data = $this->data;
@@ -117,6 +124,11 @@ class Metabox extends ItemWithItems
         );
     }
 
+    /**
+     * Render the Metabox
+     *
+     * @param \WP_Post $post
+     */
     public function render($post)
     {
         $values = $this->get($post->ID);
@@ -128,6 +140,13 @@ class Metabox extends ItemWithItems
         echo $this->m('Twig')->renderFile('metabox', ['fields' => $fields]);
     }
 
+    /**
+     * Save the posted data
+     *
+     * @param array $data Posted Data
+     * @param int $postId
+     * @return array Success array to pass as Ajax response.
+     */
     public function save($data, $postId)
     {
         $values = $this->get($postId);

@@ -10,17 +10,19 @@ use AlexDashkin\Adwpfw\App;
 class Js extends Asset
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
+     * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
      * @type string $type admin/front. Required.
-     * @type string $url Required, but can be omitted if $file is specified
-     * @type string $slug Used as a reference when registering in WP. Defaults to $prefix + sanitized $type + index. Must be unique.
-     * @type string $file Path relative to Plugin Root
+     * @type string $file Path relative to the Plugin root.
+     * @type string $url Asset URL. Defaults to $file URL if $file is specified.
      * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
-     * @type array $deps List of Dependencies (slugs)
-     * @type array $localize Key-value pairs to be passed to the script as an object with name equals to $prefix
+     * @type array $deps List of Dependencies (slugs).
+     * @type callable $callback Must return true to enqueue the Asset.
+     * @type array $localize Key-value pairs to be passed to the script as an object with name equals to $prefix.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
@@ -38,13 +40,13 @@ class Js extends Asset
     {
         $data = $this->data;
 
-        if (!empty($data['callback']) && !$data['callback']()) {
+        if ($data['callback'] && !$data['callback']()) {
             return;
         }
 
-        $prefix = $this->config['prefix'];
+        $prefix = $this->prefix;
 
-        $id = $prefix . '-' . sanitize_title($data['slug']);
+        $id = $prefix . '-' . sanitize_title($data['id']);
 
         wp_enqueue_script($id, $data['url'], $data['deps'], $data['ver'], true);
 

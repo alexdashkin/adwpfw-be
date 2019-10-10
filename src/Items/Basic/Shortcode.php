@@ -10,18 +10,19 @@ use AlexDashkin\Adwpfw\App;
 class Shortcode extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
-     * @type string $tag Tag without prefix. Required.
-     * @type callable $callable Render function. Required.
-     * @type array $atts Default atts
+     * @type string $id Tag without prefix. Required.
+     * @type callable $callable Render function. Gets $atts. Required.
+     * @type array $atts Default atts.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
-            'tag' => [
+            'id' => [
                 'required' => true,
             ],
             'callback' => [
@@ -38,15 +39,15 @@ class Shortcode extends Item
     }
 
     /**
-     * Register Items in WP
+     * Register the Shortcode.
      */
     public function register()
     {
-        add_shortcode($this->config['prefix'] . '_' . $this->data['tag'], [$this, 'render']);
+        add_shortcode($this->prefix . '_' . $this->data['id'], [$this, 'render']);
     }
 
     /**
-     * Render the Shortcode
+     * Render the Shortcode.
      *
      * @param array $atts
      * @param string $content

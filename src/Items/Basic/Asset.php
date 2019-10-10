@@ -10,41 +10,12 @@ use AlexDashkin\Adwpfw\App;
 abstract class Asset extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param array $data {
-     * @type string $type admin/front. Required.
-     * @type string $slug Used as a reference when registering in WP. Defaults to $prefix + $type + uniqid(). Must be unique.
-     * @type string $file Path relative to Plugin Root
-     * @type string $url Ignored if $file is specified
-     * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
-     * @type array $deps List of Dependencies (slugs)
-     * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app, array $props = [])
     {
-        $own = [
-            'type' => [
-                'required' => true,
-            ],
-            'url' => [
-                'required' => true,
-            ],
-            'slug' => [
-                'default' => $this->getDefaultSlug($data['type']),
-            ],
-            'file' => [
-                'default' => null,
-            ],
-            'ver' => [
-                'default' => null,
-            ],
-            'deps' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
-
         $url = $version = null;
 
         if (!empty($data['file'])) {
@@ -54,13 +25,37 @@ abstract class Asset extends Item
             $version = file_exists($path) ? filemtime($path) : null;
         }
 
-        $data = array_merge([
-            'url' => $url,
-            'ver' => $version,
-        ], $data);
+        $defaults = [
+            'id' => [
+                'default' => $this->getDefaultId($data['type']),
+            ],
+            'type' => [
+                'required' => true,
+            ],
+            'file' => [
+                'default' => null,
+            ],
+            'url' => [
+                'default' => $url,
+            ],
+            'ver' => [
+                'default' => $version,
+            ],
+            'deps' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'callback' => [
+                'type' => 'callable',
+                'default' => null,
+            ],
+        ];
 
-        parent::__construct($data, $app, array_merge($own, $props));
+        parent::__construct($data, $app, array_merge($defaults, $props));
     }
 
+    /**
+     * Enqueue Asset.
+     */
     abstract public function enqueue();
 }

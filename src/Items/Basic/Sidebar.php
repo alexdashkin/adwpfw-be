@@ -13,22 +13,22 @@ class Sidebar extends Item
      * Constructor
      *
      * @param array $data {
+     * @type string $id Defaults to sanitized $name.
      * @type string $name Sidebar Title. Required.
-     * @type string $slug Defaults to sanitized $name
      * @type string $description
-     * @type string $class CSS class for container
+     * @type string $class CSS class for container.
      * }
-     *
      * @see register_sidebar()
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
+            'id' => [
+                'default' => $this->getDefaultId($data['name']),
+            ],
             'name' => [
                 'required' => true,
-            ],
-            'slug' => [
-                'default' => $this->getDefaultSlug($data['name']),
             ],
             'description' => [
                 'default' => null,
@@ -42,7 +42,7 @@ class Sidebar extends Item
     }
 
     /**
-     * Register Items in WP
+     * Register the Sidebar.
      */
     public function register()
     {

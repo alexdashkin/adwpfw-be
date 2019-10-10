@@ -68,11 +68,6 @@ class Ajax extends ModuleAjax
 
         $this->log('Ajax request received, action: ' . $actionName);
 
-        try {
-            wp_send_json($action->run($request));
-
-        } catch (\Exception $e) {
-            $this->error($e->getMessage(), true);
-        }
+        $action->run($request);
     }
 }

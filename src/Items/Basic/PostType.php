@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Items\Basic;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Post State
+ * Post Type
  */
 class PostType extends Item
 {
@@ -13,15 +13,27 @@ class PostType extends Item
      * Constructor
      *
      * @param array $data {
-     * @param string $slug CPT Slug. Required.
+     * @param string $id ID. Defaults to sanitized $label.
+     * @param string $label Name shown in the menu. Usually plural.
+     * @param string $description A short descriptive summary of what the post type is.
+     * @param array $labels $singular and $plural are required, rest are auto-populated.
+     * @param bool $public Whether to show in Admin. Default true.
+     * @param bool $hierarchical Is CPT hierarchical? Default false.
+     * @param bool $show_in_menu Whether to show in Menu. Default true.
+     * @param array $supports Core features CPT supports. Default empty.
+     * @param array $rewrite Default empty.
      * }
      *
      * @see register_post_type()
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
         $props = [
-            'slug' => [
+            'id' => [
+                'default' => $this->getDefaultId($data['label']),
+            ],
+            'label' => [
                 'required' => true,
             ],
             'description' => [
@@ -29,7 +41,7 @@ class PostType extends Item
             ],
             'labels' => [
                 'type' => 'array',
-                'default' => [],
+                'required' => true,
             ],
             'public' => [
                 'type' => 'bool',
@@ -58,9 +70,12 @@ class PostType extends Item
         $this->setLabels();
     }
 
+    /**
+     * Generate labels from existing $singular and $plural
+     */
     private function setLabels()
     {
-        $labels =& $this->data['labels'];
+        $labels = $this->data['labels'];
 
         $singular = !empty($labels['singular']) ? $labels['singular'] : 'Item';
         $plural = !empty($labels['plural']) ? $labels['plural'] : 'Items';
@@ -79,14 +94,14 @@ class PostType extends Item
             'not_found_in_trash' => "No $plural Found in Trash",
         ];
 
-        $labels = array_merge($defaults, $labels);
+        $this->data['labels'] = array_merge($defaults, $labels);
     }
 
     /**
-     * Register Items in WP
+     * Register CPT
      */
     public function register()
     {
-        register_post_type($this->config['prefix'] . '_' . $this->data['slug'], $this->data);
+        register_post_type($this->prefix . '_' . $this->data['id'], $this->data);
     }
 }

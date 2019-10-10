@@ -4,14 +4,17 @@ namespace AlexDashkin\Adwpfw\Items\Basic;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
- * Ajax Endpoints
+ * Ajax Endpoint
  */
 abstract class Ajax extends Item
 {
     /**
-     * Constructor
+     * Constructor.
+     *
+     * @throws AdwpfwException
      */
     public function __construct(array $data, App $app, array $props = [])
     {
@@ -33,10 +36,10 @@ abstract class Ajax extends Item
     }
 
     /**
-     * Validate and Sanitize values
+     * Validate and Sanitize values.
      *
-     * @param $request $_REQUEST params
-     * @return array
+     * @param $request $_REQUEST params.
+     * @return array Sanitized key-value pairs.
      * @throws AdwpfwException
      */
     protected function validateRequest($request)
@@ -95,27 +98,48 @@ abstract class Ajax extends Item
     }
 
     /**
-     * Return Success array
+     * Handle the Request.
+     * @param array $request $_REQUEST['data'] params
+     */
+    public function handle($params)
+    {
+        try {
+            $data = $this->validateRequest($params);
+            $result = call_user_func($this->data['callback'], $data);
+
+        } catch (\Exception $e) {
+            $this->error('Exception: ' . $e->getMessage() . '. Execution aborted.', true);
+        }
+
+        if (is_array($result)) {
+            $return = array_merge(['success' => false, 'message' => '', 'data' => ''], $result);
+        }
+
+        wp_send_json($return);
+    }
+
+    /**
+     * Return Success array.
      *
-     * @param string $message
-     * @param array $data Data to return as JSON
-     * @param bool $echo Whether to echo Response right away without returning
+     * @param string $message Message.
+     * @param array $data Data to return as JSON.
+     * @param bool $echo Whether to echo Response right away without returning.
      * @return array
      */
     protected function success($message = '', $data = [], $echo = false)
     {
-        return $this->m('Utils')->returnSuccess($message, $data, $echo);
+        return Helpers::returnSuccess($message, $data, $echo);
     }
 
     /**
-     * Return Error array
+     * Return Error array.
      *
-     * @param string $message
-     * @param bool $echo Whether to echo Response right away without returning
+     * @param string $message Error message.
+     * @param bool $echo Whether to echo Response right away without returning.
      * @return array
      */
     protected function error($message = '', $echo = false)
     {
-        return $this->m('Utils')->returnError($message, $echo);
+        return Helpers::returnError($message, $echo);
     }
 }

@@ -69,7 +69,7 @@ class Profile extends ModuleWithItems
         }
 
         foreach ($this->items as $item) {
-            $item->save($userId, $_POST['prefix']);
+            $item->save($userId, $_POST[$prefix]);
         }
     }
 

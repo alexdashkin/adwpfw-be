@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw\Traits;
 
 use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Items\Basic\Item;
 
 trait ItemWithItemsTrait {
 
