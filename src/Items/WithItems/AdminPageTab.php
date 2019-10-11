@@ -66,9 +66,9 @@ class AdminPageTab extends ItemWithItems
      *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = Field::getField($data, $app);
+        $this->items[] = Field::getField($data, $this->app);
     }
 
     /**
@@ -88,7 +88,7 @@ class AdminPageTab extends ItemWithItems
 
         $args = [
             'form' => $this->data['form'],
-            'slug' => $this->data['slug'],
+            'title' => $this->data['title'],
             'fields' => $fields,
             'buttons' => $buttons,
         ];

@@ -36,7 +36,7 @@ class Select2 extends Select
             ],
         ];
 
-        parent::__construct($data, array_merge($props, $defaults));
+        parent::__construct($data, array_merge($defaults, $props));
     }
 
     public function getArgs(array $values)

@@ -50,7 +50,7 @@ class Logger extends Module
         $prefix = $this->config['prefix'];
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
 
-        $basePath = Helpers::getUploadsDir($prefix, 'logs');
+        $basePath = Helpers::getUploadsDir($prefix . '/logs');
 
         $filename = '/' . $prefix . '-' . date('Y-m-d') . '-' . $suffix . '.log';
         $immediateName = '/' . time() . '-' . $suffix . '.log';

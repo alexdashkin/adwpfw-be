@@ -21,6 +21,8 @@ abstract class ModuleWithItems extends ModuleWithLogger
     protected function __construct(App $app)
     {
         parent::__construct($app);
+
+        $this->init();
     }
 
     /**

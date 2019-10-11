@@ -23,6 +23,6 @@ class Hidden extends Text
             ],
         ];
 
-        parent::__construct($data, array_merge($props, $defaults));
+        parent::__construct($data, array_merge($defaults, $props));
     }
 }

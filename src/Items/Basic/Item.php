@@ -46,7 +46,7 @@ abstract class Item
             ],
         ];
 
-        $this->props = array_merge($props, $defaults);
+        $this->props = array_merge($defaults, $props);
 
         $this->data = $this->validateProps($data);
     }

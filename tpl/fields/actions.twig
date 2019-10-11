@@ -1,15 +1,23 @@
-<div class="{{ prefix }}-actions-selector">
+{% extends 'layouts/' ~ field.layout ~ '.twig' %}
 
-    <select id="{{ prefix }}-field-{{ field.id }}" class="form-control">
+{% block label %}{% endblock %}
 
-        {% for option in field.options %}
-            <option value="{{ option.value }}" {% if option.value == field.value %} selected {% endif %}>
-                {{ option.label }}
-            </option>
-        {% endfor %}
+{% block control %}
 
-    </select>
+    <div class="{{ prefix }}-actions-selector">
 
-    <button class="button">Do</button>
+        <select id="{{ prefix }}-field-{{ field.id }}" class="form-control">
 
-</div>
+            {% for option in field.options %}
+                <option value="{{ option.value }}" {% if option.value == field.value %} selected {% endif %}>
+                    {{ option.label }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+        <button class="button">Do</button>
+
+    </div>
+
+{% endblock %}

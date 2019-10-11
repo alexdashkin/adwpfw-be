@@ -12,7 +12,7 @@
 
     {% for tab in tabs %}
 
-        {% include 'admin-page-tab.twig' with {tab} %}
+        {% include 'templates/admin-page-tab.twig' with {tab: tab} %}
 
     {% endfor %}
 

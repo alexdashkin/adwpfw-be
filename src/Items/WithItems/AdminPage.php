@@ -56,6 +56,7 @@ class AdminPage extends ItemWithItems
             ],
             'tabs' => [
                 'type' => 'array',
+                'required' => true,
                 'def' => [
                     'title' => 'Tab',
                     'form' => false,
@@ -79,9 +80,9 @@ class AdminPage extends ItemWithItems
      *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new AdminPageTab($data, $app);
+        $this->items[] = new AdminPageTab($data, $this->app);
     }
 
     /**
@@ -129,7 +130,7 @@ class AdminPage extends ItemWithItems
         ];
 
         try {
-            echo $this->m('Twig')->renderFile('admin-page', $args);
+            echo $this->m('Twig')->renderFile('templates/admin-page', $args);
 
         } catch (\Exception $e) {
             $message = $e->getMessage();

@@ -423,9 +423,8 @@ class App
     }
 
     /**
-     * Get path to the WP Uploads dir.
+     * Get path to the WP Uploads dir with trailing slash.
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists.
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
@@ -435,9 +434,8 @@ class App
     }
 
     /**
-     * Get URL of the WP Uploads dir.
+     * Get URL of the WP Uploads dir with trailing slash.
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists.
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
@@ -499,6 +497,26 @@ class App
     public function log($message, $values = [], $type = 4)
     {
         $this->m('Logger')->log($message, $values, $type);
+    }
+
+    /**
+     * Add file paths to search Twig templates in.
+     *
+     * @param array $paths
+     */
+    public function addTwigPaths(array $paths)
+    {
+        $this->m('Twig')->addPaths($paths);
+    }
+
+    /**
+     * Add string templates as key-value pairs.
+     *
+     * @param array $templates
+     */
+    public function addTwigTemplates(array $templates)
+    {
+        $this->m('Twig')->addTemplates($templates);
     }
 
     /**
@@ -570,7 +588,7 @@ class App
      *
      * @param array $data {
      * @type string $name Text for the left Menu. Required.
-     * @type string $title Text for the <title> tag. Defaults to $name.
+     * @type string $title Text for the 'title' tag. Defaults to $name.
      * @type string $header Page header without markup. Defaults to $name.
      * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
      * @type int $position Position in the Menu. Default 0.

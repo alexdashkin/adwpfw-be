@@ -2,7 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Traits\ItemTrait;
 
@@ -15,11 +14,10 @@ abstract class Field
 
     /**
      * @param array $data Field Data
-     * @param App $app
      * @return Field
      * @throws AdwpfwException
      */
-    public static function getField($data, App $app)
+    public static function getField($data)
     {
         $class = 'AlexDashkin\\Adwpfw\\Fields\\' . ucfirst($data['type']);
 
@@ -27,7 +25,7 @@ abstract class Field
             throw new AdwpfwException(sprintf('Field "%s" not found', $data['type']));
         }
 
-        return new $class($data, $app);
+        return new $class($data);
     }
 
     /**
@@ -52,7 +50,7 @@ abstract class Field
             ],
         ];
 
-        $this->props = array_merge($props, $defaults);
+        $this->props = array_merge($defaults, $props);
 
         $this->data = $this->validateProps($data);
     }

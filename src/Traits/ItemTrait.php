@@ -43,7 +43,7 @@ trait ItemTrait
 
             $item =& $data[$name];
 
-            if ('callable' === $field['type'] && !is_callable($item)) {
+            if ($item && 'callable' === $field['type'] && !is_callable($item)) {
                 throw new AdwpfwException("Field $name is not callable"); // todo
             }
 

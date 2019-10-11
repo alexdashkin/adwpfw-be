@@ -16,7 +16,7 @@ class Helpers
      * Search in an array.
      *
      * @param array $array Array to parse.
-     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param array $conditions . Array of key-value pairs to compare with.
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
@@ -48,7 +48,7 @@ class Helpers
      * Filter an array.
      *
      * @param array $array Array to parse.
-     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param array $conditions . Array of key-value pairs to compare with.
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
@@ -250,49 +250,49 @@ class Helpers
     }
 
     /**
-     * Get path to the WP Uploads dir.
+     * Get path to the WP Uploads dir with trailing slash.
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists.
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
-    public static function getUploadsDir($dirName, $path = '')
+    public static function getUploadsDir($path = '')
     {
-        return self::getUploads($dirName, $path);
+        return self::getUploads($path);
     }
 
     /**
-     * Get URL of the WP Uploads dir.
+     * Get URL of the WP Uploads dir with trailing slash.
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists.
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
-    public static function getUploadsUrl($dirName, $path = '')
+    public static function getUploadsUrl($path = '')
     {
-        return self::getUploads($dirName, $path, true);
+        return self::getUploads($path, true);
     }
 
     /**
-     * Get path/url to the WP Uploads dir.
+     * Get path/url to the WP Uploads dir with trailing slash.
      *
-     * @param string $dirName Dir name to be created in Uploads dir if not exists.
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @param bool $getUrl Whether to get URL.
      * @return string
      */
-    private static function getUploads($dirName, $path = '', $getUrl = false)
+    private static function getUploads($path = '', $getUrl = false)
     {
         $uploadDir = wp_upload_dir();
-        $basePath = $uploadDir['basedir'] . '/' . $dirName . '/';
+
+        $basePath = $uploadDir['basedir'];
+
+        $path = $path ? '/' . trim($path, '/') . '/' : '/';
+
         $fullPath = $basePath . $path;
 
         if (!file_exists($fullPath)) {
-            $message = wp_mkdir_p($fullPath) ? "Dir $fullPath created successfully" : 'Error while creating dir ' . $fullPath;
-            self::$logger->log($message);
+            wp_mkdir_p($fullPath);
         }
 
-        return $getUrl ? $uploadDir['baseurl'] . '/' . $dirName . '/' . $path : $fullPath;
+        return $getUrl ? $uploadDir['baseurl'] . $path : $fullPath;
     }
 
     /**
@@ -335,23 +335,23 @@ class Helpers
             }
         }
 
-        self::$logger->log('Performing api request...');
+        self::log('Performing api request...');
         $remoteResponse = wp_remote_request($url, $requestArgs);
-        self::$logger->log('Response received');
+        self::log('Response received');
 
         if (is_wp_error($remoteResponse)) {
-            self::$logger->log(implode(' | ', $remoteResponse->get_error_messages()));
+            self::log(implode(' | ', $remoteResponse->get_error_messages()));
             return false;
         }
 
         if (200 !== ($code = wp_remote_retrieve_response_code($remoteResponse))) {
-            self::$logger->log("Response code: $code");
+            self::log("Response code: $code");
             return false;
 
         }
 
         if (empty($remoteResponse['body'])) {
-            self::$logger->log('Wrong response format');
+            self::log('Wrong response format');
             return false;
         }
 
@@ -370,7 +370,7 @@ class Helpers
     {
         $message = $message ?: 'Done';
 
-        self::$logger->log($message);
+        self::log($message);
 
         $return = [
             'success' => true,
@@ -396,7 +396,7 @@ class Helpers
     {
         $message = $message ?: 'Unknown Error';
 
-        self::$logger->log($message, 1);
+        self::log($message, 1);
 
         $return = [
             'success' => false,
@@ -421,10 +421,10 @@ class Helpers
     {
         if (!$result || is_wp_error($result)) {
             $message = $errorMessage ? 'Error: ' . $errorMessage : 'Error!';
-            self::$logger->log($message, 1);
+            self::log($message, 1);
 
             if ($result) {
-                self::$logger->log($result);
+                self::log($result);
             }
 
             return false;
@@ -497,6 +497,20 @@ class Helpers
 
         if (function_exists('disable_emojicons_tinymce')) {
             add_filter('tiny_mce_plugins', 'disable_emojicons_tinymce');
+        }
+    }
+
+    /**
+     * Add a log entry.
+     *
+     * @param mixed $message Text or any other type including WP_Error.
+     * @param array $values If passed, vsprintf() func is applied.
+     * @param int $type 1 = Error, 2 = Warning, 4 = Notice.
+     */
+    private static function log($message, $values = [], $type = 4)
+    {
+        if (self::$logger) {
+            self::$logger->log($message, $values, $type);
         }
     }
 }

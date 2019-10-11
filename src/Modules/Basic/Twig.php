@@ -62,8 +62,8 @@ class Twig extends Module
         }
 
         $config = [
-            'debug' => (bool)$this->config['dev'],
-            'cache' => Helpers::getUploadsDir($this->config['prefix'], 'twig'),
+            'debug' => !empty($this->config['dev']),
+            'cache' => Helpers::getUploadsDir($this->config['prefix'] . '/twig'),
             'autoescape' => false,
         ];
 

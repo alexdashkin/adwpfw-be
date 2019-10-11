@@ -43,7 +43,7 @@ class Number extends Field
             ],
         ];
 
-        parent::__construct($data, array_merge($props, $defaults));
+        parent::__construct($data, array_merge($defaults, $props));
     }
 
     public function sanitize($value)

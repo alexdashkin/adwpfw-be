@@ -43,7 +43,7 @@ class AdminPages extends ModuleWithItems
         add_action('admin_menu', [$this, 'register']);
 
         $this->m('Ajax')->add([
-            'action' => 'save',
+            'name' => 'save',
             'fields' => [
                 'form' => [
                     'type' => 'form',

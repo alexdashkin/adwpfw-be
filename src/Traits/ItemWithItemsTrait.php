@@ -33,9 +33,10 @@ trait ItemWithItemsTrait {
     protected function searchItems($conditions, $single = false)
     {
         $found = [];
-        $condition = array_pop($conditions);
-        $searchValue = end($condition);
-        $searchField = key($condition);
+        $searchValue = end($conditions);
+        $searchField = key($conditions);
+
+        array_pop($conditions);
 
         foreach ($this->items as $item) {
             if (isset($item->data[$searchField]) && $item->data[$searchField] == $searchValue) {
