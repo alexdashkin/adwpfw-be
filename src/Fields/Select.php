@@ -14,6 +14,7 @@ class Select extends Field
      * @type string $id Required.
      * @type string $label Field Label. Required.
      * @type string $desc Field Description
+     * @type string $class CSS Class(es) for the control.
      * @type array $options Options. Required.
      * @type bool $multiple Default false
      * }

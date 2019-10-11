@@ -13,7 +13,8 @@ class Checkbox extends Field
      * @param array $data {
      * @type string $id Required.
      * @type string $label Required.
-     * @type string $desc Description
+     * @type string $desc Description.
+     * @type string $class CSS Class(es) for the control.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */

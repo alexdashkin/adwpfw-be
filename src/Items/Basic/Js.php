@@ -58,6 +58,6 @@ class Js extends Asset
             'restNonce' => wp_create_nonce('wp_rest'),
         ], $data['localize']);
 
-        wp_localize_script($data['slug'], $prefix, $localize);
+        wp_localize_script($id, $prefix, $localize);
     }
 }

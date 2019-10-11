@@ -48,6 +48,9 @@ abstract class Field
             'desc' => [
                 'default' => null,
             ],
+            'class' => [
+                'default' => 'form-control',
+            ],
         ];
 
         $this->props = array_merge($defaults, $props);

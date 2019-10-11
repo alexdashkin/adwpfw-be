@@ -14,7 +14,8 @@ class Text extends Field
      * @type string $layout Parent template to extend. Required.
      * @type string $id Required.
      * @type string $label Field Label. Required.
-     * @type string $desc Field Description
+     * @type string $desc Field Description.
+     * @type string $class CSS Class(es) for the control.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */

@@ -8,12 +8,13 @@ namespace AlexDashkin\Adwpfw\Fields;
 class Number extends Field
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $id Required.
      * @type string $label Field Label. Required.
-     * @type string $desc Field Description
+     * @type string $desc Field Description.
+     * @type string $class CSS Class(es) for the control.
      * @type int $min Min attr
      * @type int $max Max attr
      * @type int $step Step attr

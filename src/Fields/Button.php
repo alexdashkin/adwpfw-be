@@ -13,7 +13,7 @@ class Button extends Field
      * @param array $data {
      * @type string $id Required.
      * @type string $caption Button Caption. Required.
-     * @type string $desc Button Description
+     * @type string $desc Button Description.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */

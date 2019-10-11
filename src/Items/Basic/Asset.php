@@ -30,7 +30,7 @@ abstract class Asset extends Item
 
         $defaults = [
             'id' => [
-                'default' => $this->getDefaultId($data['type']),
+                'default' => $this->getDefaultId($data),
             ],
             'af' => [
                 'required' => true,
@@ -55,6 +55,13 @@ abstract class Asset extends Item
         ];
 
         parent::__construct($data, $app, array_merge($defaults, $props));
+    }
+
+    protected function getDefaultId($data)
+    {
+        $id = $data['af'] . '-' . $data['type'] . '-' . uniqid();
+
+        return esc_attr(sanitize_key($id));
     }
 
     /**
