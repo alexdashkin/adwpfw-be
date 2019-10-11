@@ -4,7 +4,6 @@ namespace AlexDashkin\Adwpfw\Items\WithItems;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
  * Menu Page Tab
@@ -54,6 +53,7 @@ class AdminPageTab extends ItemWithItems
 
         foreach ($this->data['fields'] as $field) {
             $field['layout'] = 'admin-page-field';
+            $field['form'] = $this->data['id'];
             $this->add($field, $app);
         }
     }
@@ -100,29 +100,32 @@ class AdminPageTab extends ItemWithItems
      * Save the posted data.
      *
      * @param array $data Posted data
-     * @return array Success array to pass as Ajax response.
      */
     public function save($data)
     {
+        if (empty($data[$this->data['id']])) {
+            return;
+        }
+
+        $form = $data[$this->data['id']];
+
         $optionName = $this->prefix . '_' . $this->data['option'];
 
         $values = get_option($this->prefix . '_' . $this->data['option']) ?: [];
 
         foreach ($this->items as $field) {
 
-            if (empty($field->data['id']) || !array_key_exists($field->data['id'], $data)) {
+            if (empty($field->data['id']) || !array_key_exists($field->data['id'], $form)) {
                 continue;
             }
 
             $fieldId = $field->data['id'];
 
-            $values[$fieldId] = $field->sanitize($data[$fieldId]);
+            $values[$fieldId] = $field->sanitize($form[$fieldId]);
         }
 
         update_option($optionName, $values);
 
         do_action('adwpfw_settings_saved', $this, $values);
-
-        return Helpers::returnSuccess();
     }
 }

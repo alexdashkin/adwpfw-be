@@ -60,12 +60,20 @@ class Profile extends ModuleWithItems
 
     public function get($id, $userId = null)
     {
-        // todo implement
+        if ($item = $this->searchItems(['id' => $id], true)) {
+            return $item->get($userId);
+        }
+
+        return null;
     }
 
     public function set($id, $value, $userId = null)
     {
-        // todo implement
+        if ($item = $this->searchItems(['id' => $id], true)) {
+            return $item->set($value, $userId);
+        }
+
+        return null;
     }
 
     /**
@@ -81,12 +89,12 @@ class Profile extends ModuleWithItems
 
         $prefix = $this->config['prefix'];
 
-        if (empty($_POST[$prefix])) {
+        if (empty($_POST[$prefix]['profile'])) {
             return;
         }
 
         foreach ($this->items as $item) {
-            $item->save($userId, $_POST[$prefix]);
+            $item->save($userId, $_POST[$prefix]['profile']);
         }
     }
 

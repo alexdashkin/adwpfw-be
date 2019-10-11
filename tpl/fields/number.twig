@@ -3,8 +3,8 @@
 {% block control %}
 
     <input type="number" class="form-control"
-           id="{{ prefix }}-field-{{ field.id }}"
-           name="{{ prefix }}[{{ field.id }}]"
+           id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
+           name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
            value="{{ field.value }}"
            min="{{ field.min }}"
            max="{{ field.max }}"

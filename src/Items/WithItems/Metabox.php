@@ -4,7 +4,6 @@ namespace AlexDashkin\Adwpfw\Items\WithItems;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
  * Metabox
@@ -58,6 +57,7 @@ class Metabox extends ItemWithItems
 
         foreach ($this->data['fields'] as $field) {
             $field['layout'] = 'metabox-field';
+            $field['form'] = $this->data['id'];
             $this->add($field, $app);
         }
     }
@@ -144,27 +144,30 @@ class Metabox extends ItemWithItems
      *
      * @param array $data Posted Data
      * @param int $postId
-     * @return array Success array to pass as Ajax response.
      */
     public function save($data, $postId)
     {
+        if (empty($data[$this->data['id']])) {
+            return;
+        }
+
+        $form = $data[$this->data['id']];
+
         $values = $this->get($postId);
 
         foreach ($this->items as $field) {
 
-            if (empty($field->data['id']) || !array_key_exists($field->data['id'], $data)) {
+            if (empty($field->data['id']) || !array_key_exists($field->data['id'], $form)) {
                 continue;
             }
 
             $fieldId = $field->data['id'];
 
-            $values[$fieldId] = $field->sanitize($data[$fieldId]);
+            $values[$fieldId] = $field->sanitize($form[$fieldId]);
         }
 
         $this->set($values, $postId);
 
         do_action('adwpfw_metabox_saved', $this, $values); // todo add more hooks
-
-        return Helpers::returnSuccess();
     }
 }

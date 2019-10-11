@@ -44,17 +44,23 @@ class Notices extends ModuleWithItems
 
     public function show($id)
     {
-        // todo implement
+        if ($item = $this->searchItems(['id' => $id], true)) {
+            $item->show();
+        }
     }
 
     public function stop($id)
     {
-        // todo implement
+        if ($item = $this->searchItems(['id' => $id], true)) {
+            $item->stop();
+        }
     }
 
     public function dismiss($id)
     {
-        // todo implement
+        if ($item = $this->searchItems(['id' => $id], true)) {
+            $item->dismiss();
+        }
     }
 
     /**

@@ -50,6 +50,8 @@ class ProfileField extends Item
 
         $this->data['layout'] = 'profile-field';
 
+        $this->data['form'] = 'profile';
+
         $this->field = Field::getField($this->data, $app);
 
         $this->metaKey = $this->prefix . '_' . $this->data['id'];
@@ -73,10 +75,10 @@ class ProfileField extends Item
     }
 
     /**
-     * Get Twig Args for rendering the Field
+     * Get Twig Args for rendering the Field.
      *
-     * @param int $userId User ID
-     * @return array Twig Args
+     * @param int $userId User ID.
+     * @return array Twig Args.
      */
     public function getArgs($userId)
     {
@@ -84,10 +86,10 @@ class ProfileField extends Item
     }
 
     /**
-     * Save the Field
+     * Save the Field.
      *
-     * @param int $userId User ID
-     * @param array $data Posted data
+     * @param int $userId User ID.
+     * @param array $data Posted data.
      * @return bool|int
      */
     public function save($userId, $data)
@@ -96,6 +98,8 @@ class ProfileField extends Item
             return false;
         }
 
-        return update_user_meta($userId, $this->metaKey, $data[$this->data['id']]);
+        $value = $this->field->sanitize($data[$this->data['id']]);
+
+        return update_user_meta($userId, $this->metaKey, $value);
     }
 }

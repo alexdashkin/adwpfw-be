@@ -808,7 +808,7 @@ class App
      */
     public function metaboxGet($id, $post = null)
     {
-        return $this->m('Metaboxes')->get($id, $post); // todo implement
+        return $this->m('Metaboxes')->get($id, $post);
     }
 
     /**
@@ -821,7 +821,7 @@ class App
      */
     public function metaboxSet($id, $value, $post = null)
     {
-        return $this->m('Metaboxes')->set($id, $value, $post); // todo implement
+        return $this->m('Metaboxes')->set($id, $value, $post);
     }
 
     /**
@@ -871,7 +871,7 @@ class App
      */
     public function showNotice($id)
     {
-        $this->m('Notices')->show($id); // todo implement
+        $this->m('Notices')->show($id);
     }
 
     /**
@@ -881,7 +881,7 @@ class App
      */
     public function stopNotice($id)
     {
-        $this->m('Notices')->stop($id); // todo implement
+        $this->m('Notices')->stop($id);
     }
 
     /**
@@ -891,7 +891,7 @@ class App
      */
     public function dismissNotice($id)
     {
-        $this->m('Notices')->dismiss($id); // todo implement
+        $this->m('Notices')->dismiss($id);
     }
 
     /**
@@ -1011,7 +1011,7 @@ class App
      */
     public function profileGet($id, $userId = null)
     {
-        return $this->m('Profile')->get($id, $userId); // todo implement
+        return $this->m('Profile')->get($id, $userId);
     }
 
     /**
@@ -1024,7 +1024,7 @@ class App
      */
     public function profileSet($id, $value, $userId = null)
     {
-        return $this->m('Profile')->set($id, $value, $userId); // todo implement
+        return $this->m('Profile')->set($id, $value, $userId);
     }
 
     /**

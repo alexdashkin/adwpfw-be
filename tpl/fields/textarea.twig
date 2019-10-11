@@ -2,7 +2,9 @@
 
 {% block control %}
 
-    <textarea class="form-control" id="{{ prefix }}-field-{{ field.id }}" name="{{ prefix }}[{{ field.id }}]">
+    <textarea class="{{ field.class }}"
+              id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
+              name="{{ prefix }}[{{ field.form }}][{{ field.id }}]">
 
         {{ field.value }}
 

@@ -4,11 +4,11 @@
 
     <label>
 
-        <input type="hidden" name="{{ prefix }}[{{ field.id }}]" value="">
+        <input type="hidden" name="{{ prefix }}[{{ field.form }}][{{ field.id }}]" value="">
 
         <input type="checkbox"
-               id="{{ prefix }}-field-{{ field.id }}"
-               name="{{ prefix }}[{{ field.id }}]"
+               id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
+               name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
                 {% if field.value %} checked {% endif %}>
         {{ field.label }}
 

@@ -86,7 +86,7 @@ class Metaboxes extends ModuleWithItems
 
     public function get($id, $post = null)
     {
-        if ($item = $this->searchItems(['id' => $id])) {
+        if ($item = $this->searchItems(['id' => $id], true)) {
             return $item->get($post);
         }
 
@@ -95,7 +95,7 @@ class Metaboxes extends ModuleWithItems
 
     public function set($id, $value, $post = null)
     {
-        if ($item = $this->searchItems(['id' => $id])) {
+        if ($item = $this->searchItems(['id' => $id], true)) {
             return $item->set($value, $post);
         }
 
@@ -109,16 +109,14 @@ class Metaboxes extends ModuleWithItems
      */
     public function save($postId) // todo add hooks
     {
-        if (empty($_POST[$this->config['prefix']])) { // todo will not work with multiple MB on one page
+        if (empty($_POST[$this->config['prefix']])) {
             return;
         }
 
         $form = $_POST[$this->config['prefix']];
 
         foreach ($this->items as $item) {
-            if ($item->data['slug'] === $form['slug']) {
-                $item->save($form, $postId);
-            }
+            $item->save($form, $postId);
         }
     }
 }

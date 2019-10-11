@@ -92,7 +92,7 @@ class AdminPage extends ItemWithItems
         $data = $this->data;
 
         if ($data['parent']) {
-            $this->data['id'] = add_submenu_page(
+            $this->data['hook_suffix'] = add_submenu_page(
                 $data['parent'],
                 $data['title'],
                 $data['name'],
@@ -102,7 +102,7 @@ class AdminPage extends ItemWithItems
             );
 
         } else {
-            $this->data['id'] = add_menu_page(
+            $this->data['hook_suffix'] = add_menu_page(
                 $data['title'],
                 $data['name'],
                 $data['capability'],
@@ -138,20 +138,10 @@ class AdminPage extends ItemWithItems
         }
     }
 
-    /**
-     * Find tab by ID
-     *
-     * @param string $id
-     * @return AdminPageTab|null
-     */
-    public function findTab($id)
+    public function save($data)
     {
-        foreach ($this->items as $tab) {
-            if ($tab->data['id'] === $id) {
-                return $tab;
-            }
+        foreach ($this->items as $item) {
+            $item->save($data);
         }
-
-        return null;
     }
 }

@@ -1,1 +1,10 @@
-<input id="{{ prefix }}-field-{{ field.id }}" type="hidden" name="{{ prefix }}[{{ field.id }}]" value="{{ field.value }}">
+{% extends field.layout %}
+
+{% block control %}
+
+        <input type="hidden"
+               id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
+               name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
+               value="{{ field.value }}">
+
+{% endblock %}

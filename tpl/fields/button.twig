@@ -4,6 +4,9 @@
 
 {% block control %}
 
-    <button id="{{ prefix }}-field-{{ field.id }}" class="button {% if field.primary %} button-primary {% endif %}">{{ field.caption }}</button>
+    <button id="{{ prefix }}-field-{{ field.id }}"
+            class="button {% if field.primary %} button-primary {% endif %}">
+        {{ field.caption }}
+    </button>
 
 {% endblock %}

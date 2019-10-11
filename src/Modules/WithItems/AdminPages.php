@@ -78,16 +78,10 @@ class AdminPages extends ModuleWithItems
 
         $form = $data['form'][$this->config['prefix']];
 
-        if (empty($form['slug'])) {
-            return Helpers::returnError('Tab slug is empty');
-        }
-
         foreach ($this->items as $item) {
-            if ($tab = $item->findTab($form['slug'])) {
-                return $tab->save($form);
-            }
+            $item->save($form);
         }
 
-        return Helpers::returnError('Admin page tab not found');
+        return Helpers::returnSuccess();
     }
 }
