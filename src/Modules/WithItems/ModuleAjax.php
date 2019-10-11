@@ -15,7 +15,7 @@ abstract class ModuleAjax extends ModuleWithItems
      *
      * @param App $app
      */
-    public function __construct(App $app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
     }

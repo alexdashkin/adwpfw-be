@@ -26,15 +26,14 @@ class Profile extends ModuleWithItems
      * Add Profile Field.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see ProfileField::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new ProfileField($data, $app);
+        $this->items[] = new ProfileField($data, $this->app);
     }
 
     /**
@@ -57,6 +56,16 @@ class Profile extends ModuleWithItems
     public function setHeading($heading)
     {
         $this->heading = $heading;
+    }
+
+    public function get($id, $userId = null)
+    {
+        // todo implement
+    }
+
+    public function set($id, $value, $userId = null)
+    {
+        // todo implement
     }
 
     /**

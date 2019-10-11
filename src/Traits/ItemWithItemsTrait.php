@@ -2,7 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Traits;
 
-use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Items\Basic\Item;
 
 trait ItemWithItemsTrait {
@@ -17,10 +16,10 @@ trait ItemWithItemsTrait {
      *
      * @param $items[] $data
      */
-    public function addMany(array $data, App $app)
+    public function addMany(array $data)
     {
         foreach ($data as $item) {
-            $this->add($item, $app);
+            $this->add($item);
         }
     }
 
@@ -60,5 +59,5 @@ trait ItemWithItemsTrait {
      *
      * @param array $data
      */
-    abstract public function add(array $data, App $app);
+    abstract public function add(array $data);
 }

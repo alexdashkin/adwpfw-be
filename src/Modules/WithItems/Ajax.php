@@ -24,15 +24,14 @@ class Ajax extends ModuleAjax
      * Add Ajax Action
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see AjaxAction::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new AjaxAction($data, $app);
+        $this->items[] = new AjaxAction($data, $this->app);
     }
 
     /**

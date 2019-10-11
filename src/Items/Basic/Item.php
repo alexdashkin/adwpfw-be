@@ -34,7 +34,7 @@ abstract class Item
      * @param array $data
      * @throws AdwpfwException
      */
-    public function __construct(array $data, App $app, array $props = [])
+    protected function __construct(array $data, App $app, array $props = [])
     {
         $this->app = $app;
         $this->config = $app->config;
@@ -48,7 +48,7 @@ abstract class Item
 
         $this->props = array_merge($props, $defaults);
 
-        $this->data = $this->validate($data);
+        $this->data = $this->validateProps($data);
     }
 
     protected function getDefaultId($base)

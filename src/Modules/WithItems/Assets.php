@@ -44,21 +44,20 @@ class Assets extends ModuleWithItems
      * Add Asset
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see Css::__construct(), Js::__construct()
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
         switch ($data['type']) {
             case 'css':
-                $this->items[] = new Css($data, $app);
+                $this->items[] = new Css($data, $this->app);
                 break;
 
             case 'js':
-                $this->items[] = new Js($data, $app);
+                $this->items[] = new Js($data, $this->app);
                 break;
         }
     }

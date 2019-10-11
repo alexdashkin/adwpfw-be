@@ -3,17 +3,18 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Actions Selector. Used on Admin Pages only.
  */
 class Actions extends Field
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $id Required.
      * @type array $options Actions list ['label', 'value']. Required.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {

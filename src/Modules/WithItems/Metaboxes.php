@@ -29,15 +29,14 @@ class Metaboxes extends ModuleWithItems
      * Add Metabox.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see Metabox::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new Metabox($data, $app);
+        $this->items[] = new Metabox($data, $this->app);
     }
 
     /**
@@ -87,12 +86,20 @@ class Metaboxes extends ModuleWithItems
 
     public function get($id, $post = null)
     {
-        // todo implement
+        if ($item = $this->searchItems(['id' => $id])) {
+            return $item->get($post);
+        }
+
+        return null;
     }
 
     public function set($id, $value, $post = null)
     {
-        // todo implement
+        if ($item = $this->searchItems(['id' => $id])) {
+            return $item->set($value, $post);
+        }
+
+        return null;
     }
 
     /**

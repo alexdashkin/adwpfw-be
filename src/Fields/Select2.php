@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Fields;
 use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
- * Form Field
+ * Select2 Field.
  */
 class Select2 extends Select
 {
@@ -19,6 +19,7 @@ class Select2 extends Select
      * @type array $options Options. Required.
      * @type bool $multiple Default false
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {

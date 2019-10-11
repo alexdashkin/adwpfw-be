@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Hidden Field.
  */
 class Hidden extends Text
 {
@@ -13,6 +13,7 @@ class Hidden extends Text
      * @param array $data {
      * @type string $id Required.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {

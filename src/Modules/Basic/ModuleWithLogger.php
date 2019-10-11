@@ -10,11 +10,11 @@ use AlexDashkin\Adwpfw\App;
 abstract class ModuleWithLogger extends Module
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
-    public function __construct(App $app)
+    protected function __construct(App $app)
     {
         parent::__construct($app);
     }
@@ -25,6 +25,8 @@ abstract class ModuleWithLogger extends Module
      * @param mixed $message Text or any other type including WP_Error.
      * @param array $values If passed, vsprintf() func is applied.
      * @param int $type 1 = Error, 2 = Warning, 4 = Notice.
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     protected function log($message, $values = [], $type = 4)
     {

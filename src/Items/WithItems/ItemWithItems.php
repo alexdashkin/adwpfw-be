@@ -18,9 +18,11 @@ abstract class ItemWithItems extends Item
      * Constructor.
      *
      * @param array $data
+     * @param App $app
+     * @param array $props
      * @throws AdwpfwException
      */
-    public function __construct(array $data, App $app, array $props = [])
+    protected function __construct(array $data, App $app, array $props = [])
     {
         parent::__construct($data, $app, $props);
     }

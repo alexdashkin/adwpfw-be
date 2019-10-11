@@ -36,15 +36,14 @@ class Cron extends ModuleWithItems
      * Add Cron Job.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see CronJob::__construct()
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new CronJob($data, $app);
+        $this->items[] = new CronJob($data, $this->app);
     }
 
     /**

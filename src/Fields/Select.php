@@ -3,12 +3,12 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Select Field.
  */
 class Select extends Field
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $id Required.
@@ -17,6 +17,7 @@ class Select extends Field
      * @type array $options Options. Required.
      * @type bool $multiple Default false
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
@@ -74,5 +75,10 @@ class Select extends Field
         $data['options'] = $options;
 
         return $data;
+    }
+
+    public function sanitize($value)
+    {
+        return sanitize_text_field($value);
     }
 }

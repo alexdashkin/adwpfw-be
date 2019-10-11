@@ -14,8 +14,8 @@ class Plugin extends Item
      *
      * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized $path.
-     * @type string $path Path to the plugin's main file.
-     * @type string $package URL of the package.
+     * @type string $path Path to the plugin's main file. Required.
+     * @type string $package URL of the package. Required.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */

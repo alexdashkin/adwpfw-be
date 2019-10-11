@@ -3,18 +3,19 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Textarea.
  */
 class Textarea extends Text
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $id Required.
      * @type string $label Field Label. Required.
      * @type string $desc Field Description
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {

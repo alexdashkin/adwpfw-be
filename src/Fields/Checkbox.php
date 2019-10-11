@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Checkbox.
  */
 class Checkbox extends Field
 {
@@ -15,6 +15,7 @@ class Checkbox extends Field
      * @type string $label Required.
      * @type string $desc Description
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
@@ -28,5 +29,10 @@ class Checkbox extends Field
         ];
 
         parent::__construct($data, array_merge($props, $defaults));
+    }
+
+    public function sanitize($value)
+    {
+        return sanitize_text_field($value);
     }
 }

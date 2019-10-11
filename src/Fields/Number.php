@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Number (integer).
  */
 class Number extends Field
 {
@@ -18,6 +18,7 @@ class Number extends Field
      * @type int $max Max attr
      * @type int $step Step attr
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
@@ -43,5 +44,10 @@ class Number extends Field
         ];
 
         parent::__construct($data, array_merge($props, $defaults));
+    }
+
+    public function sanitize($value)
+    {
+        return (int)$value;
     }
 }

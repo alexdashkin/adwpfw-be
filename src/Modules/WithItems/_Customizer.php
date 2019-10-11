@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\App;
 /**
  * Manage settings in WP Customizer
  */
-class Customizer extends Module // todo convert to objects hierarchy
+class Customizer extends Module // todo not ready yet, convert to objects hierarchy
 {
     private $panels = [];
 

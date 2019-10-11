@@ -24,15 +24,14 @@ class Rest extends ModuleAjax
      * Add Endpoint.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see Endpoint::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new Endpoint($data, $app);
+        $this->items[] = new Endpoint($data, $this->app);
     }
 
     /**

@@ -24,15 +24,14 @@ class Sidebars extends ModuleWithItems
      * Add Sidebar
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see Sidebar::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new Sidebar($data, $app);
+        $this->items[] = new Sidebar($data, $this->app);
     }
 
     /**

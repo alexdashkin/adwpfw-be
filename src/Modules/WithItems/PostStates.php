@@ -24,15 +24,14 @@ class PostStates extends ModuleWithItems
      * Add Post State.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see PostState::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app) // todo why pass App if Module already has it?
+    public function add(array $data)
     {
-        $this->items[] = new PostState($data, $app);
+        $this->items[] = new PostState($data, $this->app);
     }
 
     /**

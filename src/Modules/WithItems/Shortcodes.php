@@ -24,15 +24,14 @@ class Shortcodes extends ModuleWithItems
      * Add Shortcode.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see Shortcode::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new Shortcode($data, $app);
+        $this->items[] = new Shortcode($data, $this->app);
     }
 
     /**

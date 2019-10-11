@@ -3,18 +3,19 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Button.
  */
 class Button extends Field
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $id Required.
      * @type string $caption Button Caption. Required.
      * @type string $desc Button Description
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {

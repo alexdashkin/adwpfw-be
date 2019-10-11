@@ -3,12 +3,12 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Text Field
+ * Text Field.
  */
 class Text extends Field
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $layout Parent template to extend. Required.
@@ -16,6 +16,7 @@ class Text extends Field
      * @type string $label Field Label. Required.
      * @type string $desc Field Description
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
@@ -29,5 +30,10 @@ class Text extends Field
         ];
 
         parent::__construct($data, array_merge($props, $defaults));
+    }
+
+    public function sanitize($value)
+    {
+        return sanitize_text_field($value);
     }
 }

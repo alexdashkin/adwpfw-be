@@ -24,7 +24,7 @@ trait ItemTrait
      *
      * @throws AdwpfwException
      */
-    protected function validate($data)
+    protected function validateProps($data)
     {
         foreach ($this->props as $name => $def) {
             $field = array_merge([

@@ -25,6 +25,7 @@ class PostType extends Item
      * }
      *
      * @see register_post_type()
+     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)

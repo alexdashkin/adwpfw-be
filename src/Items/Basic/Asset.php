@@ -12,9 +12,12 @@ abstract class Asset extends Item
     /**
      * Constructor.
      *
+     * @param array $data
+     * @param App $app
+     * @param array $props
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function __construct(array $data, App $app, array $props = [])
+    protected function __construct(array $data, App $app, array $props = [])
     {
         $url = $version = null;
 

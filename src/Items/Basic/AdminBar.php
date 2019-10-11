@@ -21,7 +21,10 @@ class AdminBar extends Item
      * @type bool $group Whether or not the node is a group. Default false.
      * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default empty.
      * }
+     * @param App $app
+     *
      * @see \WP_Admin_Bar::add_node()
+     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)

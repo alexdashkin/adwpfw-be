@@ -158,9 +158,7 @@ class Metabox extends ItemWithItems
 
             $fieldId = $field->data['id'];
 
-            $value = Helpers::trim($data[$fieldId]); // todo validation
-
-            $values[$fieldId] = $value;
+            $values[$fieldId] = $field->sanitize($data[$fieldId]);
         }
 
         $this->set($values, $postId);

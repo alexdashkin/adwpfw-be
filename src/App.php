@@ -25,6 +25,7 @@ class App
      * Constructor
      *
      * @param array $config Config
+     * @throws AdwpfwException
      */
     public function __construct(array $config)
     {
@@ -261,7 +262,7 @@ class App
      * Search in an array.
      *
      * @param array $array Array to parse.
-     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param array $conditions . Array of key-value pairs to compare with.
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
@@ -274,7 +275,7 @@ class App
      * Filter an array.
      *
      * @param array $array Array to parse.
-     * @param array $conditions. Array of key-value pairs to compare with.
+     * @param array $conditions . Array of key-value pairs to compare with.
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
@@ -531,7 +532,7 @@ class App
     /**
      * Add an item to the Top Admin Bar.
      *
-     * @param array $bar {
+     * @param array $data {
      * @type string $id ID w/o prefix. Defaults to sanitized $title.
      * @type string $title Bar Title. Required.
      * @type string $parent Parent node ID. Default null.
@@ -541,15 +542,15 @@ class App
      * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default empty.
      * }
      */
-    public function addAdminBar(array $bar)
+    public function addAdminBar(array $data)
     {
-        $this->m('AdminBars')->add($bar);
+        $this->m('AdminBars')->add($data);
     }
 
     /**
      * Add multiple items to the Top Admin Bar
      *
-     * @param array $bars {
+     * @param array $data {
      * @type string $id ID w/o prefix. Defaults to sanitized $title.
      * @type string $title Bar Title. Required.
      * @type string $parent Parent node ID. Default null.
@@ -559,9 +560,9 @@ class App
      * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default empty.
      * }
      */
-    public function addAdminBars(array $bars)
+    public function addAdminBars(array $data)
     {
-        $this->m('AdminBars')->addMany($bars);
+        $this->m('AdminBars')->addMany($data);
     }
 
     /**
@@ -609,37 +610,37 @@ class App
     /**
      * Add an AJAX action (admin-ajax.php)
      *
-     * @param array $action {
+     * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized $name.
      * @type string $name Action name without prefix (will be added automatically). Required.
      * @type array $fields Accepted params [type, required]
      * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
      */
-    public function addAjaxAction(array $action)
+    public function addAjaxAction(array $data)
     {
-        $this->m('Ajax')->add($action);
+        $this->m('Ajax')->add($data);
     }
 
     /**
      * Add multiple AJAX actions (admin-ajax.php)
      *
-     * @param array $actions {
+     * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized $name.
      * @type string $name Action name without prefix (will be added automatically). Required.
      * @type array $fields Accepted params [type, required]
      * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
      */
-    public function addAjaxActions(array $actions)
+    public function addAjaxActions(array $data)
     {
-        $this->m('Ajax')->addMany($actions);
+        $this->m('Ajax')->addMany($data);
     }
 
     /**
      * Add an REST API Endpoint (/wp-json/)
      *
-     * @param array $endpoint {
+     * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized 'route'.
      * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/).
      * @type string $route Route without slashes (i.e. users).
@@ -649,15 +650,15 @@ class App
      * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
      */
-    public function addApiEndpoint(array $endpoint)
+    public function addApiEndpoint(array $data)
     {
-        $this->m('Rest')->add($endpoint);
+        $this->m('Rest')->add($data);
     }
 
     /**
      * Add multiple REST API Endpoints (/wp-json/)
      *
-     * @param array $endpoints {
+     * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized 'route'.
      * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/).
      * @type string $route Route without slashes (i.e. users).
@@ -667,15 +668,15 @@ class App
      * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
      * }
      */
-    public function addApiEndpoints(array $endpoints)
+    public function addApiEndpoints(array $data)
     {
-        $this->m('Rest')->addMany($endpoints);
+        $this->m('Rest')->addMany($data);
     }
 
     /**
      * Add Asset.
      *
-     * @param array $asset {
+     * @param array $data {
      * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
      * @type string $type css/js. Required.
      * @type string $af admin/front. Required.
@@ -687,15 +688,15 @@ class App
      * @type array $localize Key-value pairs to be passed to the script as an object with name equals to $prefix.
      * }
      */
-    public function addAsset(array $asset)
+    public function addAsset(array $data)
     {
-        $this->m('Assets')->add($asset);
+        $this->m('Assets')->add($data);
     }
 
     /**
      * Add Assets.
      *
-     * @param array $assets {
+     * @param array $data {
      * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
      * @type string $type css/js. Required.
      * @type string $af admin/front. Required.
@@ -707,15 +708,25 @@ class App
      * @type array $localize Key-value pairs to be passed to the script as an object with name equals to $prefix.
      * }
      */
-    public function addAssets(array $assets)
+    public function addAssets(array $data)
     {
-        $this->m('Assets')->addMany($assets);
+        $this->m('Assets')->addMany($data);
     }
 
     /**
-     * Add a Cron Job
+     * Remove assets.
      *
-     * @param array $job {
+     * @param array $ids Registered assets IDs to be removed
+     */
+    public function removeAssets(array $ids)
+    {
+        $this->m('Assets')->remove($ids);
+    }
+
+    /**
+     * Add a Cron Job.
+     *
+     * @param array $data {
      * @type string $id Job ID. Defaults to sanitized $name.
      * @type string $name Job Name. Required.
      * @type callable $callback Handler. Gets $args. Required.
@@ -724,15 +735,15 @@ class App
      * @type array $args Args to be passed to the handler.
      * }
      */
-    public function addCronJob(array $job)
+    public function addCronJob(array $data)
     {
-        $this->m('Cron')->add($job);
+        $this->m('Cron')->add($data);
     }
 
     /**
-     * Add multiple Cron Jobs
+     * Add multiple Cron Jobs.
      *
-     * @param array $jobs {
+     * @param array $data {
      * @type string $id Job ID. Defaults to sanitized $name.
      * @type string $name Job Name. Required.
      * @type callable $callback Handler. Gets $args. Required.
@@ -741,9 +752,9 @@ class App
      * @type array $args Args to be passed to the handler.
      * }
      */
-    public function addCronJobs(array $jobs)
+    public function addCronJobs(array $data)
     {
-        $this->m('Cron')->addMany($jobs);
+        $this->m('Cron')->addMany($data);
     }
 
     /**
@@ -755,9 +766,9 @@ class App
     }
 
     /**
-     * Add a Metabox
+     * Add a Metabox.
      *
-     * @param array $metabox {
+     * @param array $data {
      * @type string $slug Defaults to sanitized $title.
      * @type string $title Metabox title. Required.
      * @type array $screen For which Post Types to show.
@@ -766,15 +777,15 @@ class App
      * @type array $fields Metabox fields.
      * }
      */
-    public function addMetabox(array $metabox)
+    public function addMetabox(array $data)
     {
-        $this->m('Metaboxes')->add($metabox);
+        $this->m('Metaboxes')->add($data);
     }
 
     /**
      * Add multiple Metaboxes
      *
-     * @param array $metaboxes {
+     * @param array $data {
      * @type string $slug Defaults to sanitized $title.
      * @type string $title Metabox title. Required.
      * @type array $screen For which Post Types to show.
@@ -783,9 +794,9 @@ class App
      * @type array $fields Metabox fields.
      * }
      */
-    public function addMetaboxes(array $metaboxes)
+    public function addMetaboxes(array $data)
     {
-        $this->m('Metaboxes')->addMany($metaboxes);
+        $this->m('Metaboxes')->addMany($data);
     }
 
     /**
@@ -816,7 +827,7 @@ class App
     /**
      * Add Admin Notice
      *
-     * @param array $notice {
+     * @param array $data {
      * @type string $id Defaults to sanitized $tpl.
      * @type string $message Message to display (tpl will be ignored).
      * @type string $tpl Name of the notice Twig template.
@@ -828,15 +839,15 @@ class App
      * @type callable $callback Must return true for the Notice to show.
      * }
      */
-    public function addNotice(array $notice)
+    public function addNotice(array $data)
     {
-        $this->m('Notices')->add($notice);
+        $this->m('Notices')->add($data);
     }
 
     /**
      * Add multiple Admin Notices
      *
-     * @param array $notices {
+     * @param array $data {
      * @type string $id Defaults to sanitized $tpl.
      * @type string $message Message to display (tpl will be ignored).
      * @type string $tpl Name of the notice Twig template.
@@ -848,9 +859,9 @@ class App
      * @type callable $callback Must return true for the Notice to show.
      * }
      */
-    public function addNotices(array $notices)
+    public function addNotices(array $data)
     {
-        $this->m('Notices')->addMany($notices);
+        $this->m('Notices')->addMany($data);
     }
 
     /**
@@ -886,40 +897,73 @@ class App
     /**
      * Add a post state
      *
-     * @param int $postId
-     * @param string $state State text
+     * @param array $data {
+     * @param int $post_id Post ID.
+     * @param string $state State text.
+     * }
      */
-    public function addPostState($postId, $state)
+    public function addPostState(array $data)
     {
-        $this->m('PostStates')->add($postId, $state);
+        $this->m('PostStates')->add($data);
+    }
+
+    /**
+     * Add a post state
+     *
+     * @param array $data {
+     * @param int $post_id Post ID.
+     * @param string $state State text.
+     * }
+     */
+    public function addPostStates(array $data)
+    {
+        $this->m('PostStates')->add($data);
     }
 
     /**
      * Add a Custom Post Type
      *
-     * @param array $postType
+     * @param array $data {
+     * @param string $id ID. Defaults to sanitized $label.
+     * @param string $label Name shown in the menu. Usually plural.
+     * @param string $description A short descriptive summary of what the post type is.
+     * @param array $labels $singular and $plural are required, rest are auto-populated.
+     * @param bool $public Whether to show in Admin. Default true.
+     * @param bool $hierarchical Is CPT hierarchical? Default false.
+     * @param bool $show_in_menu Whether to show in Menu. Default true.
+     * @param array $supports Core features CPT supports. Default empty.
+     * @param array $rewrite Default empty.
+     * }
      *
      * @see register_post_type()
      */
-    public function addPostType(array $postType)
+    public function addPostType(array $data)
     {
-        $this->m('PostTypes')->add($postType);
+        $this->m('PostTypes')->add($data);
     }
 
     /**
      * Add multiple Post Types
      *
-     * @param array $postTypes
-     *
-     * @see PostTypes::addPostType()
+     * @param array $data {
+     * @param string $id ID. Defaults to sanitized $label.
+     * @param string $label Name shown in the menu. Usually plural.
+     * @param string $description A short descriptive summary of what the post type is.
+     * @param array $labels $singular and $plural are required, rest are auto-populated.
+     * @param bool $public Whether to show in Admin. Default true.
+     * @param bool $hierarchical Is CPT hierarchical? Default false.
+     * @param bool $show_in_menu Whether to show in Menu. Default true.
+     * @param array $supports Core features CPT supports. Default empty.
+     * @param array $rewrite Default empty.
+     * }
      */
-    public function addPostTypes(array $postTypes)
+    public function addPostTypes(array $data)
     {
-        $this->m('PostTypes')->addMany($postTypes);
+        $this->m('PostTypes')->addMany($data);
     }
 
     /**
-     * Set User Profile Fields Group Heading
+     * Set Profile Fields Group Heading.
      *
      * @param string $heading Heading Text
      */
@@ -931,32 +975,35 @@ class App
     /**
      * Add a User Profile Field
      *
-     * @param array $field {
-     * @type string $id
-     * @type string $type
-     * @type string $name
-     * @type string $desc
+     * @param array $data {
+     * @type string $id Field Name used as a key in $prefix[] array on the Form. Required.
+     * @type string $label Field Label. Required.
+     * @type string $type Field Type. Default 'text'.
+     * @type string $desc Field Description to be shown below the Field.
      * }
      */
-    public function addProfileField(array $field)
+    public function addProfileField(array $data)
     {
-        $this->m('Profile')->add($field);
+        $this->m('Profile')->add($data);
     }
 
     /**
      * Add multiple Profile Fields
      *
-     * @param array $fields
-     *
-     * @see Profile::addField()
+     * @param array $data {
+     * @type string $id Field Name used as a key in $prefix[] array on the Form. Required.
+     * @type string $label Field Label. Required.
+     * @type string $type Field Type. Default 'text'.
+     * @type string $desc Field Description to be shown below the Field.
+     * }
      */
-    public function addProfileFields(array $fields)
+    public function addProfileFields(array $data)
     {
-        $this->m('Profile')->addMany($fields);
+        $this->m('Profile')->addMany($data);
     }
 
     /**
-     * Get a field value
+     * Get Profile Field value
      *
      * @param string $id Field ID
      * @param int|null $userId User ID (defaults to the current user)
@@ -968,111 +1015,123 @@ class App
     }
 
     /**
-     * Add a Widget
+     * Set Profile Field value
      *
-     * @param array $widget {
-     * @type string $id
-     * @type string $title
-     * @type string $capability
-     * @type callable $callback Renders the widget
-     * }
-     */
-    public function addWidget(array $widget)
-    {
-        $this->m('Widget')->add($widget);
-    }
-
-    /**
-     * Add multiple Widgets
-     *
-     * @param array $widgets
-     *
-     * @see Widgets::addWidget()
-     */
-    public function addWidgets(array $widgets)
-    {
-        $this->m('Widget')->addMany($widgets);
-    }
-
-    /**
-     * Add Self-Update feature for a plugin
-     *
-     * @param array $plugin {
-     * @type string $path Path to the plugin's main file
-     * @type string $package URL of the package
-     * }
-     */
-    public function updater(array $plugin)
-    {
-        $this->m('Updater')->add($plugin);
-    }
-
-    /**
-     * Remove assets
-     *
-     * @param array $ids Registered assets IDs to be removed
-     */
-    public function removeAssets(array $ids)
-    {
-        $this->m('Assets')->remove($ids);
-    }
-
-    /**
-     * Add sections to the Customizer
-     *
-     * @param array $sections
-     */
-    public function customizerAdd(array $sections)
-    {
-        $this->m('Customizer')->add($sections);
-    }
-
-    /**
-     * Get a Customizer setting
-     *
-     * @param string $id Setting ID
+     * @param string $id Field ID
+     * @param mixed $value Value to set
+     * @param int|null $userId User ID (defaults to the current user)
      * @return mixed
      */
-    public function customizerGet($id)
+    public function profileSet($id, $value, $userId = null)
     {
-        return $this->m('Customizer')->get($id);
+        return $this->m('Profile')->set($id, $value, $userId); // todo implement
     }
 
     /**
      * Add a Shortcode
      *
-     * @param array $shortcode {
-     * @type string $tag Tag without prefix
-     * @type array $atts Default atts
-     * @type callable $callable Render function
+     * @param array $data {
+     * @type string $id Tag without prefix. Required.
+     * @type callable $callable Render function. Gets $atts. Required.
+     * @type array $atts Default atts.
      * }
      */
-    public function addShortcode(array $shortcode)
+    public function addShortcode(array $data)
     {
-        $this->m('Shortcodes')->add($shortcode);
+        $this->m('Shortcodes')->add($data);
     }
 
     /**
      * Add multiple Shortcodes
      *
-     * @param array $shortcodes
-     *
-     * @see Shortcodes::addShortcode()
+     * @param array $data {
+     * @type string $id Tag without prefix. Required.
+     * @type callable $callable Render function. Gets $atts. Required.
+     * @type array $atts Default atts.
+     * }
      */
-    public function addShortcodes(array $shortcodes)
+    public function addShortcodes(array $data)
     {
-        $this->m('Shortcodes')->addMany($shortcodes);
+        $this->m('Shortcodes')->addMany($data);
     }
 
     /**
      * Add a sidebar
      *
-     * @param array $sidebar
+     * @param array $data {
+     * @type string $id Defaults to sanitized $name.
+     * @type string $name Sidebar Title. Required.
+     * @type string $description
+     * @type string $class CSS class for container.
+     * }
      *
      * @see register_sidebar()
      */
-    public function addSidebar(array $sidebar)
+    public function addSidebar(array $data)
     {
-        $this->m('Sidebar')->add($sidebar);
+        $this->m('Sidebar')->add($data);
+    }
+
+    /**
+     * Add multiple sidebars
+     *
+     * @param array $data {
+     * @type string $id Defaults to sanitized $name.
+     * @type string $name Sidebar Title. Required.
+     * @type string $description
+     * @type string $class CSS class for container.
+     * }
+     *
+     * @see register_sidebar()
+     */
+    public function addSidebars(array $data)
+    {
+        $this->m('Sidebar')->addMany($data);
+    }
+
+    /**
+     * Add Self-Update feature for plugin or theme
+     *
+     * @param array $data {
+     * @type string $type plugin/theme.
+     * @type string $id ID for internal use. Defaults to sanitized $path.
+     * @type string $path Path to the plugin's main file. Required for plugins.
+     * @type string $slug Theme's directory name. Required for themes.
+     * @type string $package URL of the package.
+     * }
+     */
+    public function updater(array $data)
+    {
+        $this->m('Updater')->add($data);
+    }
+
+    /**
+     * Add a Widget
+     *
+     * @param array $data {
+     * @type string $id Defaults to sanitized $title.
+     * @type string $title Widget Title. Required.
+     * @type callable $callback Renders the widget. Required.
+     * @type string $capability Minimum capability.
+     * }
+     */
+    public function addWidget(array $data)
+    {
+        $this->m('Widget')->add($data);
+    }
+
+    /**
+     * Add multiple Widgets
+     *
+     * @param array $data {
+     * @type string $id Defaults to sanitized $title.
+     * @type string $title Widget Title. Required.
+     * @type callable $callback Renders the widget. Required.
+     * @type string $capability Minimum capability.
+     * }
+     */
+    public function addWidgets(array $data)
+    {
+        $this->m('Widget')->addMany($data);
     }
 }

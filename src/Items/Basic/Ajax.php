@@ -14,9 +14,12 @@ abstract class Ajax extends Item
     /**
      * Constructor.
      *
+     * @param array $data
+     * @param App $app
+     * @param array $props
      * @throws AdwpfwException
      */
-    public function __construct(array $data, App $app, array $props = [])
+    protected function __construct(array $data, App $app, array $props = [])
     {
         $own = [
             'callback' => [

@@ -24,15 +24,14 @@ class Widgets extends ModuleWithItems
      * Add Widget.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see Widget::__construct()
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new Widget($data, $app);
+        $this->items[] = new Widget($data, $this->app);
     }
 
     /**

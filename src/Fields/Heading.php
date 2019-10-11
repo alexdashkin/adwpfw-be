@@ -3,16 +3,17 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Heading. Used on Admin Pages only.
  */
 class Heading extends Field
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $text Heading. Required.
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
@@ -26,5 +27,10 @@ class Heading extends Field
         ];
 
         parent::__construct($data, array_merge($props, $defaults));
+    }
+
+    public function sanitize($value)
+    {
+        return sanitize_text_field($value);
     }
 }

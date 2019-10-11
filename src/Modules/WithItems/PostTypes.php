@@ -24,15 +24,14 @@ class PostTypes extends ModuleWithItems
      * Add Post Type.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see PostType::__construct();
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new PostType($data, $app);
+        $this->items[] = new PostType($data, $this->app);
     }
 
     /**

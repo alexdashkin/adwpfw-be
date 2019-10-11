@@ -24,15 +24,14 @@ class AdminBars extends ModuleWithItems
      * Add Admin Bar
      *
      * @param array $data
-     * @param App $app
+     *
+     * @see AdminBar::__construct()
      *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
-     *
-     * @see AdminBar::__construct();
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = new AdminBar($data, $app);
+        $this->items[] = new AdminBar($data, $this->app);
     }
 
     /**

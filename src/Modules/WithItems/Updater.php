@@ -25,21 +25,20 @@ class Updater extends ModuleWithItems
      * Add Item.
      *
      * @param array $data
-     * @param App $app
-     *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      *
      * @see Plugin::__construct(), Theme::__construct()
+     *
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
         switch ($data['type']) {
             case 'plugin':
-                $this->items[] = new Plugin($data, $app);
+                $this->items[] = new Plugin($data, $this->app);
                 break;
 
             case 'theme':
-                $this->items[] = new Theme($data, $app);
+                $this->items[] = new Theme($data, $this->app);
                 break;
         }
     }

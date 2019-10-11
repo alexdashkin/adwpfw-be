@@ -22,22 +22,23 @@ abstract class Module
     protected $config;
 
     /**
-     * Constructor
+     * Constructor.
      * Must not be called directly, only via App::m()
      *
      * @param App $app
      */
-    public function __construct(App $app)
+    protected function __construct(App $app)
     {
         $this->app = $app;
         $this->config = $app->config;
     }
 
     /**
-     * Get Module
+     * Get Module.
      *
      * @param string $moduleName
      * @return Module
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     protected function m($moduleName)
     {

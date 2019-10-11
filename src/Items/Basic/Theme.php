@@ -14,8 +14,8 @@ class Theme extends Item
      *
      * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized $path.
-     * @type string $slug Theme's directory name.
-     * @type string $package URL of the package.
+     * @type string $slug Theme's directory name. Required.
+     * @type string $package URL of the package. Required.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */

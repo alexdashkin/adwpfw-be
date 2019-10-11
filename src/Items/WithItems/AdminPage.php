@@ -92,7 +92,7 @@ class AdminPage extends ItemWithItems
         $data = $this->data;
 
         if ($data['parent']) {
-            add_submenu_page(
+            $this->data['id'] = add_submenu_page(
                 $data['parent'],
                 $data['title'],
                 $data['name'],
@@ -102,7 +102,7 @@ class AdminPage extends ItemWithItems
             );
 
         } else {
-            add_menu_page( // todo use returned hook_suffix
+            $this->data['id'] = add_menu_page(
                 $data['title'],
                 $data['name'],
                 $data['capability'],

@@ -32,8 +32,10 @@ abstract class Field
 
     /**
      * Constructor
+     *
+     * @throws AdwpfwException
      */
-    public function __construct(array $data, array $props = [])
+    protected function __construct(array $data, array $props = [])
     {
         $defaults = [
             'id' => [
@@ -52,7 +54,7 @@ abstract class Field
 
         $this->props = array_merge($props, $defaults);
 
-        $this->data = $this->validate($data);
+        $this->data = $this->validateProps($data);
     }
 
     public function getArgs(array $values)
@@ -60,5 +62,10 @@ abstract class Field
         $this->data['value'] = isset($values[$this->data['id']]) ? $values[$this->data['id']] : null;
 
         return $this->data;
+    }
+
+    public function sanitize($value)
+    {
+        return $value;
     }
 }

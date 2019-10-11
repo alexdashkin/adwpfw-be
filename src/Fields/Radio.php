@@ -3,18 +3,19 @@
 namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * Form Field
+ * Radio Selector.
  */
 class Radio extends Field
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $data {
      * @type string $id Required.
      * @type string $label Field Label. Required.
      * @type string $desc Field Description
      * }
+     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
@@ -36,5 +37,10 @@ class Radio extends Field
         ];
 
         parent::__construct($data, array_merge($props, $defaults));
+    }
+
+    public function sanitize($value)
+    {
+        return sanitize_text_field($value);
     }
 }
