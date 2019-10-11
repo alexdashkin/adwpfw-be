@@ -39,9 +39,6 @@ abstract class Field
             'id' => [
                 'required' => true,
             ],
-            'tpl' => [
-                'required' => true,
-            ],
             'layout' => [
                 'required' => true,
             ],
@@ -50,6 +47,9 @@ abstract class Field
             ],
             'class' => [
                 'default' => 'form-control',
+            ],
+            'tpl' => [
+                'required' => true,
             ],
         ];
 

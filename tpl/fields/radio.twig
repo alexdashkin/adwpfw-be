@@ -4,14 +4,16 @@
 
     <div class="{{ prefix }}-radio">
 
-        {% for item in items %}
+        {% for option in field.options %}
 
             <label>
 
                 <input type="radio"
-                       id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
+                       id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}-{{ loop.index }}"
                        name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
-                        {% if field.value == item.value %} checked {% endif %}>
+                       value="{{ option.value }}"
+                        {% if field.value == option.value %} checked {% endif %}>
+                {{ option.label }}
 
             </label>
 

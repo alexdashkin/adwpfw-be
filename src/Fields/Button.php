@@ -20,11 +20,11 @@ class Button extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'button',
-            ],
             'caption' => [
                 'required' => true,
+            ],
+            'tpl' => [
+                'default' => 'button',
             ],
         ];
 

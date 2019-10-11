@@ -15,6 +15,7 @@ class Select extends Field
      * @type string $label Field Label. Required.
      * @type string $desc Field Description
      * @type string $class CSS Class(es) for the control.
+     * @type string $placeholder Placeholder.
      * @type array $options Options. Required.
      * @type bool $multiple Default false
      * }
@@ -23,11 +24,11 @@ class Select extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'select',
-            ],
             'label' => [
                 'required' => true,
+            ],
+            'placeholder' => [
+                'default' => '--- Select ---',
             ],
             'options' => [
                 'type' => 'array',
@@ -37,12 +38,12 @@ class Select extends Field
                     'label' => 'Option',
                 ],
             ],
-            'placeholder' => [
-                'default' => '--- Select ---',
-            ],
             'multiple' => [
                 'type' => 'bool',
                 'default' => false,
+            ],
+            'tpl' => [
+                'default' => 'select',
             ],
         ];
 
@@ -63,7 +64,10 @@ class Select extends Field
             ],
         ];
 
-        foreach ($data['options'] as $val => $label) {
+        foreach ($data['options'] as $option) {
+            $val = $option['value'];
+            $label = $option['label'];
+
             $selected = $data['multiple'] ? in_array($val, (array)$value) : $val == $value;
 
             $options[] = [

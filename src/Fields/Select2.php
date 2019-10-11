@@ -25,15 +25,15 @@ class Select2 extends Select
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'select2',
-            ],
             'ajax_action' => [
                 'required' => true,
             ],
-            'label_cd' => [
+            'label_cb' => [
                 'type' => 'callable',
-                'required' => true,
+                'default' => null,
+            ],
+            'tpl' => [
+                'default' => 'select2',
             ],
         ];
 

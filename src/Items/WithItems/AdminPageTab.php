@@ -37,7 +37,7 @@ class AdminPageTab extends ItemWithItems
                 'default' => false,
             ],
             'option' => [
-                'default' => null,
+                'default' => 'settings',
             ],
             'fields' => [
                 'type' => 'array',

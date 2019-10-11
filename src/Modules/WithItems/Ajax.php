@@ -61,7 +61,7 @@ class Ajax extends ModuleAjax
 
         $actionName = str_ireplace($prefix . '_', '', $request['action']);
 
-        if (!$action = $this->searchItems(['name' => $actionName])) {
+        if (!$action = $this->searchItems(['name' => $actionName], true)) {
             return;
         }
 

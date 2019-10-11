@@ -14,6 +14,7 @@ class Text extends Field
      * @type string $layout Parent template to extend. Required.
      * @type string $id Required.
      * @type string $label Field Label. Required.
+     * @type string $placeholder Placeholder.
      * @type string $desc Field Description.
      * @type string $class CSS Class(es) for the control.
      * }
@@ -22,11 +23,14 @@ class Text extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'text',
-            ],
             'label' => [
                 'required' => true,
+            ],
+            'placeholder' => [
+                'default' => null,
+            ],
+            'tpl' => [
+                'default' => 'text',
             ],
         ];
 

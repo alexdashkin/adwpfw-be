@@ -35,7 +35,8 @@ trait ItemTrait
 
             if (!isset($data[$name])) {
                 if ($field['required']) {
-                    throw new AdwpfwException("Field $name is required"); // todo
+                    $exploded = explode('\\', get_class($this));
+                    throw new AdwpfwException(sprintf('Prop "%s" is required for field "%s"', $name, array_pop($exploded)));
                 } else {
                     $data[$name] = $field['default'];
                 }
@@ -44,7 +45,7 @@ trait ItemTrait
             $item =& $data[$name];
 
             if ($item && 'callable' === $field['type'] && !is_callable($item)) {
-                throw new AdwpfwException("Field $name is not callable"); // todo
+                throw new AdwpfwException("Field $name is not callable");
             }
 
             switch ($field['type']) {

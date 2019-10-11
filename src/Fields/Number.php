@@ -24,9 +24,6 @@ class Number extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'number',
-            ],
             'label' => [
                 'required' => true,
             ],
@@ -41,6 +38,9 @@ class Number extends Field
             'step' => [
                 'type' => 'int',
                 'default' => 0,
+            ],
+            'tpl' => [
+                'default' => 'number',
             ],
         ];
 

@@ -4,10 +4,6 @@
 
     <textarea class="{{ field.class }}"
               id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
-              name="{{ prefix }}[{{ field.form }}][{{ field.id }}]">
-
-        {{ field.value }}
-
-    </textarea>
+              name="{{ prefix }}[{{ field.form }}][{{ field.id }}]">{{ field.value }}</textarea>
 
 {% endblock %}

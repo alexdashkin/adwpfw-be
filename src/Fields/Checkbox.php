@@ -21,11 +21,11 @@ class Checkbox extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'checkbox',
-            ],
             'label' => [
                 'required' => true,
+            ],
+            'tpl' => [
+                'default' => 'checkbox',
             ],
         ];
 

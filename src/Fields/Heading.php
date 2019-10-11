@@ -18,11 +18,11 @@ class Heading extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'heading',
-            ],
             'text' => [
                 'required' => true,
+            ],
+            'tpl' => [
+                'default' => 'heading',
             ],
         ];
 

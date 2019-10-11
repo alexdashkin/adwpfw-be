@@ -15,6 +15,7 @@
             <input type="text" class="{{ field.class }}"
                    id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
                    name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
+                   placeholder="{{ field.placeholder }}"
                    value="{{ field.value }}">
 
         {% endblock %}

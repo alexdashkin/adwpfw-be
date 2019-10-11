@@ -18,11 +18,11 @@ class Html extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'html',
-            ],
             'content' => [
                 'required' => true,
+            ],
+            'tpl' => [
+                'default' => 'html',
             ],
         ];
 

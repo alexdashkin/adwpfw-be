@@ -19,9 +19,6 @@ class Actions extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'tpl' => [
-                'default' => 'actions',
-            ],
             'options' => [
                 'type' => 'array',
                 'required' => true,
@@ -29,6 +26,9 @@ class Actions extends Field
                     'value' => '',
                     'label' => 'Option',
                 ],
+            ],
+            'tpl' => [
+                'default' => 'actions',
             ],
         ];
 
