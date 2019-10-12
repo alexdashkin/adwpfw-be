@@ -18,7 +18,7 @@ class AdminPage extends ItemWithItems
      * @type string $header Page header without markup. Defaults to $name.
      * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
      * @type int $position Position in the Menu. Default 0.
-     * @type string $icon The dash icon name for the bar. Default 'dashicons-update'
+     * @type string $icon The dash icon name for the bar. Default 'dashicons-update'.
      * @type string $capability Minimum capability. Default 'manage_options'.
      * @type array $tabs Tabs: {
      * @type string $title Tab Title.
@@ -56,7 +56,7 @@ class AdminPage extends ItemWithItems
             ],
             'tabs' => [
                 'type' => 'array',
-                'required' => true,
+                'default' => [],
                 'def' => [
                     'title' => 'Tab',
                     'form' => false,
@@ -120,6 +120,8 @@ class AdminPage extends ItemWithItems
      */
     public function render()
     {
+        $tabs = [];
+
         foreach ($this->items as $tab) {
             $tabs[] = $tab->getArgs();
         }

@@ -39,14 +39,17 @@ abstract class Field
             'id' => [
                 'required' => true,
             ],
-            'layout' => [
-                'required' => true,
-            ],
             'desc' => [
                 'default' => null,
             ],
             'class' => [
                 'default' => 'form-control',
+            ],
+            'layout' => [
+                'required' => true,
+            ],
+            'form' => [
+                'required' => true,
             ],
             'tpl' => [
                 'required' => true,

@@ -947,10 +947,6 @@ class App
      * @param string $description A short descriptive summary of what the post type is.
      * @param array $labels $singular and $plural are required, rest are auto-populated.
      * @param bool $public Whether to show in Admin. Default true.
-     * @param bool $hierarchical Is CPT hierarchical? Default false.
-     * @param bool $show_in_menu Whether to show in Menu. Default true.
-     * @param array $supports Core features CPT supports. Default empty.
-     * @param array $rewrite Default empty.
      * }
      *
      * @see register_post_type()
@@ -969,10 +965,6 @@ class App
      * @param string $description A short descriptive summary of what the post type is.
      * @param array $labels $singular and $plural are required, rest are auto-populated.
      * @param bool $public Whether to show in Admin. Default true.
-     * @param bool $hierarchical Is CPT hierarchical? Default false.
-     * @param bool $show_in_menu Whether to show in Menu. Default true.
-     * @param array $supports Core features CPT supports. Default empty.
-     * @param array $rewrite Default empty.
      * }
      */
     public function addPostTypes(array $data)

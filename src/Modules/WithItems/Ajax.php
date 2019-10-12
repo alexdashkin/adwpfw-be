@@ -69,8 +69,6 @@ class Ajax extends ModuleAjax
             $this->error('Wrong nonce!', true);
         }
 
-        $this->log('Ajax request received, action: ' . $actionName);
-
         $action->run($request);
     }
 }
