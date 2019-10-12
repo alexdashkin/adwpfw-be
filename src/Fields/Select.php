@@ -84,6 +84,14 @@ class Select extends Field
 
     public function sanitize($value)
     {
+        if (is_array($value)) {
+            foreach ($value as &$item) {
+                $item = sanitize_text_field($item);
+            }
+
+            return $value;
+        }
+
         return sanitize_text_field($value);
     }
 }

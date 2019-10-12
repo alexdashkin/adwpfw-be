@@ -113,8 +113,10 @@ class Metabox extends ItemWithItems
     {
         $data = $this->data;
 
+        $id = $this->prefix . '_' . $data['id'];
+
         add_meta_box(
-            $data['id'],
+            $id,
             $data['title'],
             [$this, 'render'],
             $data['screen'],
@@ -131,6 +133,8 @@ class Metabox extends ItemWithItems
     public function render($post)
     {
         $values = $this->get($post->ID);
+
+        $fields = [];
 
         foreach ($this->items as $field) {
             $fields[] = $field->getArgs($values);
