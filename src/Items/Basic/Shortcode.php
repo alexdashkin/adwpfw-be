@@ -49,12 +49,12 @@ class Shortcode extends Item
     /**
      * Render the Shortcode.
      *
-     * @param array $atts
+     * @param array|string $atts
      * @param string $content
      * @param string $tag
      * @return string
      */
-    public function render(array $atts, $content, $tag)
+    public function render($atts, $content, $tag)
     {
         return $this->data['callback'](shortcode_atts($this->data['atts'], $atts));
     }

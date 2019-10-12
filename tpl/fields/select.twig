@@ -8,9 +8,7 @@
             {% if field.multiple %} multiple {% endif %}>
 
         {% for option in field.options %}
-            <option value="{{ option.value }}" {{ option.selected }}>
-                {{ option.label }}
-            </option>
+            <option value="{{ option.value }}" {{ option.selected }}>{{ option.label }}</option>
         {% endfor %}
 
     </select>

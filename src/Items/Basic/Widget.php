@@ -16,7 +16,7 @@ class Widget extends Item
      * @type string $id Defaults to sanitized $title.
      * @type string $title Widget Title. Required.
      * @type callable $callback Renders the widget. Required.
-     * @type string $capability Minimum capability.
+     * @type string $capability Minimum capability. Default 'read'.
      * }
      *
      * @see wp_add_dashboard_widget()

@@ -20,7 +20,8 @@ class Endpoint extends Ajax
      * @type string $method get/post.
      * @type bool $admin Whether available for admins only.
      * @type array $fields Accepted params [type, required].
-     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
+     * @type callable $callback Handler. Gets an array with $_REQUEST params.
+     * Must return array ['success', 'message', 'data']. Required.
      * }
      * @throws AdwpfwException
      */
@@ -69,6 +70,8 @@ class Endpoint extends Ajax
      */
     public function run(\WP_REST_Request $request)
     {
+        $this->log('REST API request, endpoint "%s"', [$this->data['route']]);
+
         if ($this->data['admin'] && !current_user_can('administrator')) {
             $this->error('Endpoint is for Admins only', true);
         }

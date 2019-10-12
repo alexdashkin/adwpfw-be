@@ -16,7 +16,8 @@ class AjaxAction extends Ajax
      * @type string $id ID for internal use. Defaults to sanitized $name.
      * @type string $name Action name without prefix (will be added automatically). Required.
      * @type array $fields Accepted params [type, required]
-     * @type callable $callback Handler. Gets an array with $_REQUEST params. Required.
+     * @type callable $callback Handler. Gets an array with $_REQUEST params.
+     * Must return array ['success', 'message', 'data']. Required.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
@@ -40,6 +41,8 @@ class AjaxAction extends Ajax
      */
     public function run($request)
     {
+        $this->log('Ajax request, action "%s"', [$this->data['name']]);
+
         $data = !empty($request['data']) ? $request['data'] : [];
 
         parent::handle($data);

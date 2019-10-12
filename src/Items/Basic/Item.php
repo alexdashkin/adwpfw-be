@@ -53,7 +53,7 @@ abstract class Item
 
     protected function getDefaultId($base)
     {
-        return esc_attr(sanitize_key($base));
+        return esc_attr(sanitize_key(str_replace(' ', '-', $base)));
     }
 
     /**

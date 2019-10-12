@@ -4,7 +4,7 @@
 
         {% for field in fields %}
 
-            {% include 'fields/' ~ field.tpl ~ '.twig' with {field} %}
+            {% include 'fields/' ~ field.tpl ~ '.twig' with {field: field} %}
 
         {% endfor %}
 

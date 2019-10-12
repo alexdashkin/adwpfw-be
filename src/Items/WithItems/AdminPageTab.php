@@ -68,7 +68,7 @@ class AdminPageTab extends ItemWithItems
      */
     public function add(array $data)
     {
-        $this->items[] = Field::getField($data, $this->app);
+        $this->items[] = Field::getField($data);
     }
 
     /**

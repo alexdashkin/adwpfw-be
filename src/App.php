@@ -748,9 +748,9 @@ class App
      * @type string $id Job ID. Defaults to sanitized $name.
      * @type string $name Job Name. Required.
      * @type callable $callback Handler. Gets $args. Required.
-     * @type int $interval Interval in seconds.
-     * @type bool $parallel Whether to parallel execution.
-     * @type array $args Args to be passed to the handler.
+     * @type int $interval Interval in seconds. Default 0.
+     * @type bool $parallel Whether to parallel execution. Default false.
+     * @type array $args Args to be passed to the handler. Default empty.
      * }
      */
     public function addCronJob(array $data)
@@ -765,9 +765,9 @@ class App
      * @type string $id Job ID. Defaults to sanitized $name.
      * @type string $name Job Name. Required.
      * @type callable $callback Handler. Gets $args. Required.
-     * @type int $interval Interval in seconds.
-     * @type bool $parallel Whether to parallel execution.
-     * @type array $args Args to be passed to the handler.
+     * @type int $interval Interval in seconds. Default 0.
+     * @type bool $parallel Whether to parallel execution. Default false.
+     * @type array $args Args to be passed to the handler. Default empty.
      * }
      */
     public function addCronJobs(array $data)
@@ -787,7 +787,7 @@ class App
      * Add a Metabox.
      *
      * @param array $data {
-     * @type string $slug Defaults to sanitized $title.
+     * @type string $id Defaults to sanitized $title.
      * @type string $title Metabox title. Required.
      * @type array $screen For which Post Types to show.
      * @type string $context normal/side/advanced. Default 'normal'.
@@ -804,7 +804,7 @@ class App
      * Add multiple Metaboxes
      *
      * @param array $data {
-     * @type string $slug Defaults to sanitized $title.
+     * @type string $id Defaults to sanitized $title.
      * @type string $title Metabox title. Required.
      * @type array $screen For which Post Types to show.
      * @type string $context normal/side/advanced. Default 'normal'.
@@ -849,11 +849,11 @@ class App
      * @type string $id Defaults to sanitized $tpl.
      * @type string $message Message to display (tpl will be ignored).
      * @type string $tpl Name of the notice Twig template.
-     * @type string $type Notice type (success, error).
-     * @type bool $dismissible Whether can be dismissed.
-     * @type int $days When to show again after dismissed.
-     * @type array $classes Container CSS classes.
-     * @type array $args Additional Twig args.
+     * @type string $type Notice type (success, error). Default 'success'.
+     * @type bool $dismissible Whether can be dismissed. Default true.
+     * @type int $days When to show again after dismissed. Default 0.
+     * @type array $classes Container CSS classes. Default empty.
+     * @type array $args Additional Twig args. Default empty.
      * @type callable $callback Must return true for the Notice to show.
      * }
      */
@@ -869,11 +869,11 @@ class App
      * @type string $id Defaults to sanitized $tpl.
      * @type string $message Message to display (tpl will be ignored).
      * @type string $tpl Name of the notice Twig template.
-     * @type string $type Notice type (success, error).
-     * @type bool $dismissible Whether can be dismissed.
-     * @type int $days When to show again after dismissed.
-     * @type array $classes Container CSS classes.
-     * @type array $args Additional Twig args.
+     * @type string $type Notice type (success, error). Default 'success'.
+     * @type bool $dismissible Whether can be dismissed. Default true.
+     * @type int $days When to show again after dismissed. Default 0.
+     * @type array $classes Container CSS classes. Default empty.
+     * @type array $args Additional Twig args. Default empty.
      * @type callable $callback Must return true for the Notice to show.
      * }
      */
@@ -1087,7 +1087,7 @@ class App
      */
     public function addSidebar(array $data)
     {
-        $this->m('Sidebar')->add($data);
+        $this->m('Sidebars')->add($data);
     }
 
     /**
@@ -1104,7 +1104,7 @@ class App
      */
     public function addSidebars(array $data)
     {
-        $this->m('Sidebar')->addMany($data);
+        $this->m('Sidebars')->addMany($data);
     }
 
     /**
@@ -1124,32 +1124,32 @@ class App
     }
 
     /**
-     * Add a Widget
+     * Add Dashboard Widget
      *
      * @param array $data {
      * @type string $id Defaults to sanitized $title.
      * @type string $title Widget Title. Required.
      * @type callable $callback Renders the widget. Required.
-     * @type string $capability Minimum capability.
+     * @type string $capability Minimum capability. Default 'read'.
      * }
      */
-    public function addWidget(array $data)
+    public function addDashboardWidget(array $data)
     {
-        $this->m('Widget')->add($data);
+        $this->m('Widgets')->add($data);
     }
 
     /**
-     * Add multiple Widgets
+     * Add Dashboard Widgets
      *
      * @param array $data {
      * @type string $id Defaults to sanitized $title.
      * @type string $title Widget Title. Required.
      * @type callable $callback Renders the widget. Required.
-     * @type string $capability Minimum capability.
+     * @type string $capability Minimum capability. Default 'read'.
      * }
      */
-    public function addWidgets(array $data)
+    public function addDashboardWidgets(array $data)
     {
-        $this->m('Widget')->addMany($data);
+        $this->m('Widgets')->addMany($data);
     }
 }

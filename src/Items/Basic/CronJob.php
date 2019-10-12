@@ -16,15 +16,15 @@ class CronJob extends Item
      * @type string $id Job ID. Defaults to sanitized $name.
      * @type string $name Job Name. Required.
      * @type callable $callback Handler. Gets $args. Required.
-     * @type int $interval Interval in seconds.
-     * @type bool $parallel Whether to parallel execution.
-     * @type array $args Args to be passed to the handler.
+     * @type int $interval Interval in seconds. Default 0.
+     * @type bool $parallel Whether to parallel execution. Default false.
+     * @type array $args Args to be passed to the handler. Default empty.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, App $app)
     {
-        $this->props = [
+        $props = [
             'id' => [
                 'default' => $this->getDefaultId($data['name']),
             ],
@@ -49,7 +49,7 @@ class CronJob extends Item
             ],
         ];
 
-        parent::__construct($data, $app);
+        parent::__construct($data, $app, $props);
     }
 
     /**

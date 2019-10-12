@@ -117,6 +117,6 @@ class Profile extends ModuleWithItems
             'fields' => $fields,
         ];
 
-        echo $this->m('Twig')->renderFile('profile', $args);
+        echo $this->m('Twig')->renderFile('templates/profile', $args);
     }
 }

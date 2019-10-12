@@ -14,7 +14,7 @@ class Metabox extends ItemWithItems
      * Constructor.
      *
      * @param array $data {
-     * @type string $slug Defaults to sanitized $title.
+     * @type string $id Defaults to sanitized $title.
      * @type string $title Metabox title. Required.
      * @type array $screen For which Post Types to show.
      * @type string $context normal/side/advanced. Default 'normal'.
@@ -70,9 +70,9 @@ class Metabox extends ItemWithItems
      *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
-    public function add(array $data, App $app)
+    public function add(array $data)
     {
-        $this->items[] = Field::getField($data, $app);
+        $this->items[] = Field::getField($data);
     }
 
     /**
@@ -83,11 +83,11 @@ class Metabox extends ItemWithItems
      */
     public function get($postId = null)
     {
-        if (!$postId = get_post($postId)) {
+        if (!$post = get_post($postId)) {
             return '';
         }
 
-        return get_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->data['slug'], true);
+        return get_post_meta($post->ID, '_' . $this->prefix . '_' . $this->data['id'], true) ?: [];
     }
 
     /**
@@ -103,7 +103,7 @@ class Metabox extends ItemWithItems
             return '';
         }
 
-        return update_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->data['slug'], $value);
+        return update_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->data['id'], $value);
     }
 
     /**
@@ -114,7 +114,7 @@ class Metabox extends ItemWithItems
         $data = $this->data;
 
         add_meta_box(
-            $data['slug'],
+            $data['id'],
             $data['title'],
             [$this, 'render'],
             $data['screen'],
@@ -136,7 +136,7 @@ class Metabox extends ItemWithItems
             $fields[] = $field->getArgs($values);
         }
 
-        echo $this->m('Twig')->renderFile('metabox', ['fields' => $fields]);
+        echo $this->m('Twig')->renderFile('templates/metabox', ['fields' => $fields]);
     }
 
     /**

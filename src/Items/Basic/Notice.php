@@ -16,11 +16,11 @@ class Notice extends Item
      * @type string $id Defaults to sanitized $tpl.
      * @type string $message Message to display (tpl will be ignored).
      * @type string $tpl Name of the notice Twig template.
-     * @type string $type Notice type (success, error).
-     * @type bool $dismissible Whether can be dismissed.
-     * @type int $days When to show again after dismissed.
-     * @type array $classes Container CSS classes.
-     * @type array $args Additional Twig args.
+     * @type string $type Notice type (success, error). Default 'success'.
+     * @type bool $dismissible Whether can be dismissed. Default true.
+     * @type int $days When to show again after dismissed. Default 0.
+     * @type array $classes Container CSS classes. Default empty.
+     * @type array $args Additional Twig args. Default empty.
      * @type callable $callback Must return true for the Notice to show.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
@@ -29,7 +29,7 @@ class Notice extends Item
     {
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['tpl']),
+                'default' => $this->getDefaultId('notice'),
             ],
             'message' => [
                 'default' => null,
@@ -102,7 +102,7 @@ class Notice extends Item
 
         $optionName = $this->prefix . '_notices';
         $optionValue = get_option($optionName) ?: [];
-        $dismissed = !empty($optionValue[$data['slug']]) ? $optionValue[$data['slug']] : 0;
+        $dismissed = !empty($optionValue[$data['id']]) ? $optionValue[$data['id']] : 0;
 
         // If dismissed but days have not yet passed - do not show
         if ($dismissed > time() - $data['days'] * DAY_IN_SECONDS) {
@@ -121,7 +121,7 @@ class Notice extends Item
     {
         $data = $this->data;
 
-        $slug = $data['slug'];
+        $id = $data['id'];
 
         $classes = $this->prefix . '-notice ' . implode(' ', $data['classes']) . ' notice notice-' . $data['type'];
 
@@ -130,10 +130,10 @@ class Notice extends Item
         }
 
         if ($data['message']) {
-            return "<div class='$classes' data-id='$slug'><p>{$data['message']}</p></div>";
+            return "<div class='$classes' data-id='$id'><p>{$data['message']}</p></div>";
 
         } elseif ($data['tpl']) {
-            $data['args']['slug'] = $slug;
+            $data['args']['id'] = $id;
             $data['args']['classes'] = $classes;
 
             return $this->m('Twig')->renderFile('notices/' . $data['tpl'], $data['args']);

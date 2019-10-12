@@ -21,7 +21,7 @@ abstract class Ajax extends Item
      */
     protected function __construct(array $data, App $app, array $props = [])
     {
-        $own = [
+        $defaults = [
             'callback' => [
                 'type' => 'callback',
                 'required' => true,
@@ -35,7 +35,7 @@ abstract class Ajax extends Item
             ],
         ];
 
-        parent::__construct($data, $app, array_merge($own, $props));
+        parent::__construct($data, $app, array_merge($defaults, $props));
     }
 
     /**
@@ -111,14 +111,18 @@ abstract class Ajax extends Item
             $result = call_user_func($this->data['callback'], $data);
 
         } catch (\Exception $e) {
-            $this->error('Exception: ' . $e->getMessage() . '. Execution aborted.', true);
+            $this->error('Exception: ' . $e->getMessage(), true);
         }
 
-        if (is_array($result)) {
-            $return = array_merge(['success' => false, 'message' => '', 'data' => ''], $result);
+        if (!is_array($result)) {
+            $this->error('Result malformed');
         }
 
-        wp_send_json($return);
+        if (!empty($result['success'])) {
+            $this->success('Done', !empty($result['data']) ? $result['data'] : [], true);
+        } else {
+            $this->error(!empty($result['message']) ? $result['message'] : 'Unknown error', true);
+        }
     }
 
     /**

@@ -36,7 +36,7 @@ trait ItemTrait
             if (!isset($data[$name])) {
                 if ($field['required']) {
                     $exploded = explode('\\', get_class($this));
-                    throw new AdwpfwException(sprintf('Prop "%s" is required for field "%s"', $name, array_pop($exploded)));
+                    throw new AdwpfwException(sprintf('Prop "%s" is required for item "%s"', $name, array_pop($exploded)));
                 } else {
                     $data[$name] = $field['default'];
                 }

@@ -41,6 +41,9 @@ class ProfileField extends Item
             'type' => [
                 'default' => 'text',
             ],
+            'class' => [
+                'default' => 'regular-text',
+            ],
             'desc' => [
                 'default' => null,
             ],
@@ -49,10 +52,9 @@ class ProfileField extends Item
         parent::__construct($data, $app, $props);
 
         $this->data['layout'] = 'profile-field';
-
         $this->data['form'] = 'profile';
 
-        $this->field = Field::getField($this->data, $app);
+        $this->field = Field::getField($this->data);
 
         $this->metaKey = $this->prefix . '_' . $this->data['id'];
     }
