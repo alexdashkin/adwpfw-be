@@ -8,6 +8,18 @@
 
     {% endblock %}
 
+    {% block desc %}
+
+        <div class="{{ prefix }}-help-tip dashicons dashicons-editor-help adwpfw-tooltip"
+             title="{{ field.desc }}"
+            {% if field.desc %} style="visibility: visible" {% endif %}>
+            {% if field.desc %}
+                <span class="tooltiptext">{{ field.desc }}</span>
+            {% endif %}
+        </div>
+
+    {% endblock %}
+
     <div class="{{ prefix }}-control">
 
         {% block control %}
@@ -17,14 +29,6 @@
                    name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
                    placeholder="{{ field.placeholder }}"
                    value="{{ field.value }}">
-
-        {% endblock %}
-
-        {% block desc %}
-
-            {% if field.desc %}
-                <div class="{{ prefix }}-desc">{{ field.desc }}</div>
-            {% endif %}
 
         {% endblock %}
 
