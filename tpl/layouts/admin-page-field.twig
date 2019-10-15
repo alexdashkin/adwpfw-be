@@ -10,8 +10,7 @@
 
     {% block desc %}
 
-        <div class="{{ prefix }}-help-tip dashicons dashicons-editor-help adwpfw-tooltip"
-             title="{{ field.desc }}"
+        <div class="{{ prefix }}-help-tip {{ prefix }}-tooltip dashicons dashicons-editor-help"
             {% if field.desc %} style="visibility: visible" {% endif %}>
             {% if field.desc %}
                 <span class="tooltiptext">{{ field.desc }}</span>

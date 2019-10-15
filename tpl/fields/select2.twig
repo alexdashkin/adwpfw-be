@@ -4,7 +4,7 @@
 
     <input type="hidden" name="{{ prefix }}[{{ field.id }}]" value="">
 
-    <select class="adwpfw-select2"
+    <select class="{{ prefix }}-select2"
             id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
             name="{{ prefix }}[{{ field.form }}][{{ field.id }}]{% if field.multiple %}[]{% endif %}"
             {% if field.ajax_action %} data-ajax-action="{{ field.ajax_action }}" {% endif %}
