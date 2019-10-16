@@ -1,10 +1,10 @@
-<div class="{{ prefix }}-tab">
+<div class="adwpfw-tab">
 
     {% if tab.form %}
 
-        <form class="{{ prefix }}-form">
+        <form class="adwpfw-form">
 
-            <div class="{{ prefix }}-fields">
+            <div class="adwpfw-fields">
 
                 {% for field in tab.fields %}
 
@@ -14,7 +14,7 @@
 
             </div>
 
-            <div class="{{ prefix }}-actions-bar">
+            <div class="adwpfw-actions-bar">
 
                 <button id="{{ prefix }}-button-save" type="submit" class="button button-primary">Save changes</button>
 
@@ -24,7 +24,7 @@
 
     {% else %}
 
-        <div class="{{ prefix }}-fields">
+        <div class="adwpfw-fields">
 
             {% for field in tab.fields %}
 

@@ -1,14 +1,14 @@
-<div class="{{ prefix }}-field">
+<div class="adwpfw-field">
 
     {% block label %}
 
-        <div class="{{ prefix }}-label">
+        <div class="adwpfw-label">
             <label for="{{ prefix }}-{{ field.form }}-field-{{ field.id }}">{{ field.label }}</label>
         </div>
 
     {% endblock %}
 
-    <div class="{{ prefix }}-control">
+    <div class="adwpfw-control">
 
         {% block control %}
 
@@ -22,7 +22,7 @@
         {% block desc %}
 
             {% if field.desc %}
-                <div class="{{ prefix }}-desc">{{ field.desc }}</div>
+                <div class="adwpfw-desc">{{ field.desc }}</div>
             {% endif %}
 
         {% endblock %}

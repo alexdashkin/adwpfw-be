@@ -43,7 +43,7 @@ abstract class Field
                 'default' => null,
             ],
             'class' => [
-                'default' => 'form-control',
+                'default' => 'adwpfw-form-control',
             ],
             'layout' => [
                 'required' => true,

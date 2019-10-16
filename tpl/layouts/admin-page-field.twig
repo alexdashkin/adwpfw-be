@@ -1,8 +1,8 @@
-<div class="{{ prefix }}-field">
+<div class="adwpfw-field">
 
     {% block label %}
 
-        <div class="{{ prefix }}-label">
+        <div class="adwpfw-label">
             <label for="{{ prefix }}-{{ field.form }}-field-{{ field.id }}">{{ field.label }}</label>
         </div>
 
@@ -10,7 +10,7 @@
 
     {% block desc %}
 
-        <div class="{{ prefix }}-help-tip {{ prefix }}-tooltip dashicons dashicons-editor-help"
+        <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help"
             {% if field.desc %} style="visibility: visible" {% endif %}>
             {% if field.desc %}
                 <span class="tooltiptext">{{ field.desc }}</span>
@@ -19,7 +19,7 @@
 
     {% endblock %}
 
-    <div class="{{ prefix }}-control">
+    <div class="adwpfw-control">
 
         {% block control %}
 
