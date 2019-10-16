@@ -6,7 +6,7 @@
 
     <div class="adwpfw-actions-selector">
 
-        <select id="{{ prefix }}-field-{{ field.id }}" class="form-control">
+        <select id="{{ prefix }}-field-{{ field.id }}" class="{{ field.class }}">
 
             {% for option in field.options %}
                 <option value="{{ option.value }}" {% if option.value == field.value %} selected {% endif %}>
