@@ -18,9 +18,6 @@ class Hidden extends Text
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'label' => [
-                'default' => null,
-            ],
             'tpl' => [
                 'default' => 'hidden',
             ],

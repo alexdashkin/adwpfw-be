@@ -24,9 +24,6 @@ class Number extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'label' => [
-                'required' => true,
-            ],
             'min' => [
                 'type' => 'int',
                 'default' => 0,

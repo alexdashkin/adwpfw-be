@@ -30,7 +30,7 @@ class Select2 extends Select
                 'default' => [],
             ],
             'ajax_action' => [
-                'required' => true,
+                'default' => null,
             ],
             'label_cb' => [
                 'type' => 'callable',

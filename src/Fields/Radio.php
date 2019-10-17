@@ -21,9 +21,6 @@ class Radio extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'label' => [
-                'required' => true,
-            ],
             'options' => [
                 'type' => 'array',
                 'required' => true,

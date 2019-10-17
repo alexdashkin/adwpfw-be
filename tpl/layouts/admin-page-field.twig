@@ -2,16 +2,18 @@
 
     {% block label %}
 
-        <div class="adwpfw-label">
-            <label for="{{ prefix }}-{{ field.form }}-field-{{ field.id }}">{{ field.label }}</label>
-        </div>
+        {% if field.label %}
+            <div class="adwpfw-label">
+                <label for="{{ prefix }}-{{ field.form }}-field-{{ field.id }}">{{ field.label }}</label>
+            </div>
+        {% endif %}
 
     {% endblock %}
 
     {% block desc %}
 
         <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help"
-            {% if field.desc %} style="visibility: visible" {% endif %}>
+                {% if field.desc %} style="visibility: visible" {% endif %}>
             {% if field.desc %}
                 <span class="tooltiptext">{{ field.desc }}</span>
             {% endif %}

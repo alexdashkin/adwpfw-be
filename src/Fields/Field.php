@@ -19,7 +19,7 @@ abstract class Field
      */
     public static function getField($data)
     {
-        $class = 'AlexDashkin\\Adwpfw\\Fields\\' . ucfirst($data['type']);
+        $class = __NAMESPACE__ . '\\' . ucfirst($data['type']);
 
         if (!class_exists($class)) {
             throw new AdwpfwException(sprintf('Field "%s" not found', $data['type']));
@@ -38,6 +38,9 @@ abstract class Field
         $defaults = [
             'id' => [
                 'required' => true,
+            ],
+            'label' => [
+                'default' => null,
             ],
             'desc' => [
                 'default' => null,

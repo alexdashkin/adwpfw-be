@@ -2,9 +2,11 @@
 
     {% block label %}
 
-        <div class="adwpfw-label">
-            <label for="{{ prefix }}-{{ field.form }}-field-{{ field.id }}">{{ field.label }}</label>
-        </div>
+        {% if field.label %}
+            <div class="adwpfw-label">
+                <label for="{{ prefix }}-{{ field.form }}-field-{{ field.id }}">{{ field.label }}</label>
+            </div>
+        {% endif %}
 
     {% endblock %}
 

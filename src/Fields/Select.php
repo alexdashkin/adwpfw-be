@@ -24,9 +24,6 @@ class Select extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'label' => [
-                'required' => true,
-            ],
             'placeholder' => [
                 'default' => '--- Select ---',
             ],

@@ -14,8 +14,8 @@ class Shortcode extends Item
      *
      * @param array $data {
      * @type string $id Tag without prefix. Required.
-     * @type callable $callable Render function. Gets $atts. Required.
-     * @type array $atts Default atts.
+     * @type callable $callback Render function. Gets $atts. Required.
+     * @type array $atts Default atts (key-value pairs).
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */

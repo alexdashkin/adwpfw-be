@@ -48,7 +48,6 @@ class Metabox extends ItemWithItems
                 'def' => [
                     'id' => 'field',
                     'type' => 'text',
-                    'name' => 'Field',
                 ],
             ],
         ];
