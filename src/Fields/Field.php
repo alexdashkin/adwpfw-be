@@ -39,15 +39,6 @@ abstract class Field
             'id' => [
                 'required' => true,
             ],
-            'label' => [
-                'default' => null,
-            ],
-            'desc' => [
-                'default' => null,
-            ],
-            'class' => [
-                'default' => 'adwpfw-form-control',
-            ],
             'layout' => [
                 'required' => true,
             ],
@@ -56,6 +47,15 @@ abstract class Field
             ],
             'tpl' => [
                 'required' => true,
+            ],
+            'class' => [
+                'default' => null,
+            ],
+            'label' => [
+                'default' => null,
+            ],
+            'desc' => [
+                'default' => null,
             ],
         ];
 

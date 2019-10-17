@@ -12,18 +12,24 @@ class Select extends Field
      *
      * @param array $data {
      * @type string $id Required.
-     * @type string $label Field Label. Required.
-     * @type string $desc Field Description
-     * @type string $class CSS Class(es) for the control.
-     * @type string $placeholder Placeholder.
+     * @type string $layout Parent template to extend. Required.
+     * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
+     * @type string $tpl Template name. Default 'select'.
+     * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
+     * @type string $label Label.
+     * @type string $desc Description.
+     * @type string $placeholder Placeholder. Default '--- Select ---'.
      * @type array $options Options. Required.
-     * @type bool $multiple Default false
+     * @type bool $multiple Default false.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
+            'tpl' => [
+                'default' => 'select',
+            ],
             'placeholder' => [
                 'default' => '--- Select ---',
             ],
@@ -38,9 +44,6 @@ class Select extends Field
             'multiple' => [
                 'type' => 'bool',
                 'default' => false,
-            ],
-            'tpl' => [
-                'default' => 'select',
             ],
         ];
 

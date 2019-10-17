@@ -12,9 +12,12 @@ class Checkbox extends Field
      *
      * @param array $data {
      * @type string $id Required.
-     * @type string $label Required.
+     * @type string $layout Parent template to extend. Required.
+     * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
+     * @type string $tpl Template name. Default 'checkbox'.
+     * @type string $class CSS Class(es) for the control. Default empty.
+     * @type string $label Label.
      * @type string $desc Description.
-     * @type string $class CSS Class(es) for the control.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */

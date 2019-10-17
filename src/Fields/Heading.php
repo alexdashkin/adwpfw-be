@@ -11,18 +11,29 @@ class Heading extends Field
      * Constructor.
      *
      * @param array $data {
-     * @type string $text Heading. Required.
+     * @type string $tpl Template name. Default 'heading'.
+     * @type string $text Heading text. Required.
      * }
+     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'text' => [
-                'required' => true,
+            'id' => [
+                'default' => uniqid(),
+            ],
+            'layout' => [
+                'default' => null,
+            ],
+            'form' => [
+                'default' => null,
             ],
             'tpl' => [
                 'default' => 'heading',
+            ],
+            'text' => [
+                'required' => true,
             ],
         ];
 

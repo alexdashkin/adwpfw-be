@@ -14,17 +14,28 @@ class Select2 extends Select
      *
      * @param array $data {
      * @type string $id Required.
-     * @type string $label Field Label. Required.
-     * @type string $desc Field Description
-     * @type string $class CSS Class(es) for the control.
-     * @type array $options Options. Required.
-     * @type bool $multiple Default false
+     * @type string $layout Parent template to extend. Required.
+     * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
+     * @type string $tpl Template name. Default 'select2'.
+     * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
+     * @type string $label Label.
+     * @type string $desc Description.
+     * @type string $placeholder Placeholder. Default '--- Select ---'.
+     * @type array $options Options.
+     * @type bool $multiple Default false.
+     * @type string $ajax_action Ajax Action to populate options.
+     * @type int $min_chars Minimum query length to start search.
+     * @type callable $label_cb Callback. Callback to build labels for values.
      * }
+     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
+            'tpl' => [
+                'default' => 'select2',
+            ],
             'options' => [
                 'type' => 'array',
                 'default' => [],
@@ -32,12 +43,13 @@ class Select2 extends Select
             'ajax_action' => [
                 'default' => null,
             ],
+            'min_chars' => [
+                'type' => 'int',
+                'default' => 3,
+            ],
             'label_cb' => [
                 'type' => 'callable',
                 'default' => null,
-            ],
-            'tpl' => [
-                'default' => 'select2',
             ],
         ];
 

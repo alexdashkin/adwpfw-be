@@ -11,18 +11,29 @@ class Html extends Field
      * Constructor.
      *
      * @param array $data {
+     * @type string $tpl Template name. Default 'html'.
      * @type string $content Required.
      * }
+     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
-            'content' => [
-                'required' => true,
+            'id' => [
+                'default' => uniqid(),
+            ],
+            'layout' => [
+                'default' => null,
+            ],
+            'form' => [
+                'default' => null,
             ],
             'tpl' => [
                 'default' => 'html',
+            ],
+            'content' => [
+                'required' => true,
             ],
         ];
 

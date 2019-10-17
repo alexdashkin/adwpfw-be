@@ -12,6 +12,12 @@ class Actions extends Field
      *
      * @param array $data {
      * @type string $id Required.
+     * @type string $layout Parent template to extend. Required.
+     * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
+     * @type string $tpl Template name. Default 'actions'.
+     * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
+     * @type string $label Label.
+     * @type string $desc Description.
      * @type array $options Actions list ['label', 'value']. Required.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
@@ -19,6 +25,12 @@ class Actions extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
+            'tpl' => [
+                'default' => 'actions',
+            ],
+            'class' => [
+                'default' => 'adwpfw-form-control',
+            ],
             'options' => [
                 'type' => 'array',
                 'required' => true,
@@ -26,9 +38,6 @@ class Actions extends Field
                     'value' => '',
                     'label' => 'Option',
                 ],
-            ],
-            'tpl' => [
-                'default' => 'actions',
             ],
         ];
 

@@ -12,9 +12,12 @@ class Number extends Field
      *
      * @param array $data {
      * @type string $id Required.
-     * @type string $label Field Label. Required.
-     * @type string $desc Field Description.
-     * @type string $class CSS Class(es) for the control.
+     * @type string $layout Parent template to extend. Required.
+     * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
+     * @type string $tpl Template name. Default 'number'.
+     * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
+     * @type string $label Label.
+     * @type string $desc Description.
      * @type int $min Min attr
      * @type int $max Max attr
      * @type int $step Step attr
@@ -24,6 +27,9 @@ class Number extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
+            'tpl' => [
+                'default' => 'number',
+            ],
             'min' => [
                 'type' => 'int',
                 'default' => 0,
@@ -35,9 +41,6 @@ class Number extends Field
             'step' => [
                 'type' => 'int',
                 'default' => 0,
-            ],
-            'tpl' => [
-                'default' => 'number',
             ],
         ];
 
