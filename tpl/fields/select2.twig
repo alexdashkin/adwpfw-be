@@ -8,6 +8,7 @@
             id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
             name="{{ prefix }}[{{ field.form }}][{{ field.id }}]{% if field.multiple %}[]{% endif %}"
             {% if field.ajax_action %} data-ajax-action="{{ field.ajax_action }}" {% endif %}
+            {% if field.min_chars %} data-min-chars="{{ field.min_chars }}" {% endif %}
             {% if field.multiple %} multiple {% endif %}>
 
         {% for option in field.options %}
