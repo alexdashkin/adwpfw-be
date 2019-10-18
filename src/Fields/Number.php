@@ -30,17 +30,20 @@ class Number extends Field
             'tpl' => [
                 'default' => 'number',
             ],
+            'class' => [
+                'default' => 'adwpfw-form-control',
+            ],
             'min' => [
                 'type' => 'int',
                 'default' => 0,
             ],
             'max' => [
                 'type' => 'int',
-                'default' => 0,
+                'default' => 1000000000,
             ],
             'step' => [
                 'type' => 'int',
-                'default' => 0,
+                'default' => 1,
             ],
         ];
 

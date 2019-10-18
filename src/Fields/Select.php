@@ -30,6 +30,9 @@ class Select extends Field
             'tpl' => [
                 'default' => 'select',
             ],
+            'class' => [
+                'default' => 'adwpfw-form-control',
+            ],
             'placeholder' => [
                 'default' => '--- Select ---',
             ],

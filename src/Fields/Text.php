@@ -25,11 +25,14 @@ class Text extends Field
     public function __construct(array $data, array $props = [])
     {
         $defaults = [
+            'tpl' => [
+                'default' => 'text',
+            ],
             'placeholder' => [
                 'default' => null,
             ],
-            'tpl' => [
-                'default' => 'text',
+            'class' => [
+                'default' => 'adwpfw-form-control',
             ],
         ];
 
