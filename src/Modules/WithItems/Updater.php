@@ -50,6 +50,7 @@ class Updater extends ModuleWithItems
     {
         add_filter('pre_set_site_transient_update_plugins', [$this, 'pluginUpdateCheck']);
         add_filter('pre_set_site_transient_update_themes', [$this, 'themeUpdateCheck']);
+        add_action('upgrader_process_complete', [$this, 'onUpdate'], 10, 2);
     }
 
     /**
@@ -84,5 +85,18 @@ class Updater extends ModuleWithItems
         }
 
         return $transient;
+    }
+
+    /**
+     * Hooked into "upgrader_process_complete".
+     *
+     * @param \WP_Upgrader $upgrader
+     * @param array $data
+     */
+    public function onUpdate($upgrader, $data)
+    {
+        foreach ($this->items as $item) {
+            $item->onUpdate($data);
+        }
     }
 }

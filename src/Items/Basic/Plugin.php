@@ -16,6 +16,7 @@ class Plugin extends Item
      * @type string $id ID for internal use. Defaults to sanitized $path.
      * @type string $path Path to the plugin's main file. Required.
      * @type string $package URL of the package. Required.
+     * @type callable $update_callback Function to call on plugin update.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
@@ -30,6 +31,10 @@ class Plugin extends Item
             ],
             'package' => [
                 'required' => true,
+            ],
+            'update_callback' => [
+                'type' => 'callable',
+                'default' => null,
             ],
         ];
 
@@ -60,6 +65,7 @@ class Plugin extends Item
             'banners_rtl' => [],
             'tested' => '10.0.0',
             'compatibility' => new \stdClass(),
+            'update_callback' => $data['update_callback'],
         ];
     }
 
@@ -76,5 +82,20 @@ class Plugin extends Item
         }
 
         return $transient;
+    }
+
+    /**
+     * Hooked into "upgrader_process_complete".
+     *
+     * @param array $data
+     */
+    public function onUpdate($data)
+    {
+        if (!$this->data['update_callback'] || $data['action'] !== 'update' || $data['type'] !== 'plugin'
+            || empty($data['plugins']) || !in_array($this->data['file'], $data['plugins'])) {
+            return;
+        }
+
+        $this->data['update_callback']();
     }
 }

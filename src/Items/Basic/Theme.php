@@ -16,6 +16,7 @@ class Theme extends Item
      * @type string $id ID for internal use. Defaults to sanitized $path.
      * @type string $slug Theme's directory name. Required.
      * @type string $package URL of the package. Required.
+     * @type callable $update_callback Function to call on theme update.
      * }
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
      */
@@ -30,6 +31,10 @@ class Theme extends Item
             ],
             'package' => [
                 'required' => true,
+            ],
+            'update_callback' => [
+                'type' => 'callable',
+                'default' => null,
             ],
         ];
 
@@ -67,5 +72,20 @@ class Theme extends Item
         }
 
         return $transient;
+    }
+
+    /**
+     * Hooked into "upgrader_process_complete".
+     *
+     * @param array $data
+     */
+    public function onUpdate($data)
+    {
+        if (!$this->data['update_callback'] || $data['action'] !== 'update' || $data['type'] !== 'theme'
+            || empty($data['themes']) || !in_array($this->data['name'], $data['themes'])) {
+            return;
+        }
+
+        $this->data['update_callback']();
     }
 }

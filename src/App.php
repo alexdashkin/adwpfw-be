@@ -423,6 +423,16 @@ class App
     }
 
     /**
+     * Remove not empty directory.
+     *
+     * @param $path
+     */
+    public static function rmDir($path)
+    {
+        Helpers::rmDir($path);
+    }
+
+    /**
      * Get path to the WP Uploads dir with trailing slash.
      *
      * @param string $path Path inside the uploads dir (will be created if not exists).

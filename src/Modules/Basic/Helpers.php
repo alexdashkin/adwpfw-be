@@ -482,6 +482,30 @@ class Helpers
     }
 
     /**
+     * Remove not empty directory.
+     *
+     * @param $path
+     */
+    public static function rmDir($path)
+    {
+        if (!is_dir($path)) {
+            return;
+        }
+
+        if (substr($path, strlen($path) - 1, 1) != '/') {
+            $path .= '/';
+        }
+
+        $files = glob($path . '*', GLOB_MARK);
+
+        foreach ($files as $file) {
+            is_dir($file) ? self::rmDir($file) : unlink($file);
+        }
+
+        rmdir($path);
+    }
+
+    /**
      * Disable WP emojis.
      */
     public static function disableEmojis()
