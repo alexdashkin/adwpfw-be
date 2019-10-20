@@ -6,6 +6,7 @@
            id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
            name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
            value="{{ field.value }}"
+            {% if field.required %} required {% endif %}
            min="{{ field.min }}"
            max="{{ field.max }}"
            step="{{ field.step }}">

@@ -4,6 +4,7 @@
 
     <textarea class="{{ field.class }}"
               id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
-              name="{{ prefix }}[{{ field.form }}][{{ field.id }}]">{{ field.value }}</textarea>
+              name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
+                {% if field.required %} required {% endif %}>{{ field.value }}</textarea>
 
 {% endblock %}

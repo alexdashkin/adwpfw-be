@@ -51,6 +51,9 @@ abstract class Field
             'class' => [
                 'default' => null,
             ],
+            'required' => [
+                'default' => false,
+            ],
             'label' => [
                 'default' => null,
             ],
