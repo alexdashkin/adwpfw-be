@@ -10,6 +10,11 @@ use AlexDashkin\Adwpfw\App;
 class Plugin extends Item
 {
     /**
+     * @var array Update transient data
+     */
+    private $transient;
+
+    /**
      * Constructor.
      *
      * @param array $data {
@@ -53,7 +58,7 @@ class Plugin extends Item
             $newVer = substr($oldVer, 0, strlen($oldVer) - 1) . ++$last;
         }
 
-        $this->data = [
+        $this->transient = [
             'id' => $file,
             'plugin' => $file,
             'slug' => $exploded[0],
@@ -65,7 +70,6 @@ class Plugin extends Item
             'banners_rtl' => [],
             'tested' => '10.0.0',
             'compatibility' => new \stdClass(),
-            'update_callback' => $data['update_callback'],
         ];
     }
 
@@ -78,7 +82,7 @@ class Plugin extends Item
     public function register($transient)
     {
         if (!empty($transient->checked)) {
-            $transient->response[$this->data['id']] = (object)$this->data;
+            $transient->response[$this->transient['id']] = (object)$this->transient;
         }
 
         return $transient;
@@ -92,7 +96,7 @@ class Plugin extends Item
     public function onUpdate($data)
     {
         if (!$this->data['update_callback'] || $data['action'] !== 'update' || $data['type'] !== 'plugin'
-            || empty($data['plugins']) || !in_array($this->data['file'], $data['plugins'])) {
+            || empty($data['plugins']) || !in_array($this->transient['id'], $data['plugins'])) {
             return;
         }
 

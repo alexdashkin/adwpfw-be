@@ -10,6 +10,11 @@ use AlexDashkin\Adwpfw\App;
 class Theme extends Item
 {
     /**
+     * @var array Update transient data
+     */
+    private $transient;
+
+    /**
      * Constructor.
      *
      * @param array $data {
@@ -50,7 +55,7 @@ class Theme extends Item
             $newVer = substr($oldVer, 0, strlen($oldVer) - 1) . ++$last;
         }
 
-        $this->data = [
+        $this->transient = [
             'name' => $slug,
             'theme' => $slug,
             'new_version' => $newVer,
@@ -68,7 +73,7 @@ class Theme extends Item
     public function register($transient)
     {
         if (!empty($transient->checked)) {
-            $transient->response[$this->data['slug']] = $this->data;
+            $transient->response[$this->transient['name']] = $this->transient;
         }
 
         return $transient;
@@ -82,7 +87,7 @@ class Theme extends Item
     public function onUpdate($data)
     {
         if (!$this->data['update_callback'] || $data['action'] !== 'update' || $data['type'] !== 'theme'
-            || empty($data['themes']) || !in_array($this->data['name'], $data['themes'])) {
+            || empty($data['themes']) || !in_array($this->transient['name'], $data['themes'])) {
             return;
         }
 
