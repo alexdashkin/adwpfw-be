@@ -48,7 +48,7 @@ class Helpers
      * Filter an array.
      *
      * @param array $array Array to parse.
-     * @param array $conditions . Array of key-value pairs to compare with.
+     * @param array $conditions Array of key-value pairs to compare with.
      * @param bool $single Whether to return a single item.
      * @return mixed
      */

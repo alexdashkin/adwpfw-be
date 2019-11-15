@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\App;
 /**
  * Simple cache.
  */
-class Cache extends Module
+class Cache extends Module // todo store cache differently
 {
     /**
      * @var mixed Variable to store the Cache

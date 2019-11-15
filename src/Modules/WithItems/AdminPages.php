@@ -32,7 +32,7 @@ class AdminPages extends ModuleWithItems
      */
     public function add(array $data)
     {
-        $this->items[] = new AdminPage($data, $this->app);
+        $this->items[] = new AdminPage($data, $this->app); // todo improve access to values from outside
     }
 
     /**

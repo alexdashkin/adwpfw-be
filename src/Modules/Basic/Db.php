@@ -163,7 +163,7 @@ class Db extends ModuleWithLogger
             $query .= " WHERE $condition";
         }
 
-        $results = $this->result($this->wpdb->get_results($query, 'ARRAY_A'));
+        $results = $this->result($this->wpdb->get_results($query, 'ARRAY_A')); // todo add sorting
 
         return $results && $single ? reset($results) : $results;
     }

@@ -33,7 +33,7 @@ abstract class Field
      *
      * @throws AdwpfwException
      */
-    protected function __construct(array $data, array $props = [])
+    protected function __construct(array $data, array $props = []) // todo default value
     {
         $defaults = [
             'id' => [

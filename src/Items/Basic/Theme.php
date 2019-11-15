@@ -18,7 +18,7 @@ class Theme extends Item
      * Constructor.
      *
      * @param array $data {
-     * @type string $id ID for internal use. Defaults to sanitized $path.
+     * @type string $id ID for internal use. Defaults to sanitized $slug.
      * @type string $slug Theme's directory name. Required.
      * @type string $package URL of the package. Required.
      * @type callable $update_callback Function to call on theme update.
@@ -29,7 +29,7 @@ class Theme extends Item
     {
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['path']),
+                'default' => $this->getDefaultId($data['slug']),
             ],
             'slug' => [
                 'required' => true,

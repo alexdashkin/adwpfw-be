@@ -19,7 +19,7 @@ abstract class Ajax extends Item
      * @param array $props
      * @throws AdwpfwException
      */
-    protected function __construct(array $data, App $app, array $props = [])
+    protected function __construct(array $data, App $app, array $props = []) // todo default values for fields
     {
         $defaults = [
             'callback' => [
