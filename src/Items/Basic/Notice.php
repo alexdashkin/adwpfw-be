@@ -70,7 +70,7 @@ class Notice extends Item
      */
     public function show()
     {
-        $this->updateOption($this->data['slug'], 0);
+        $this->updateOption($this->data['id'], 0);
     }
 
     /**
@@ -78,7 +78,7 @@ class Notice extends Item
      */
     public function stop()
     {
-        $this->updateOption($this->data['slug'], 2147483647);
+        $this->updateOption($this->data['id'], 2147483647);
     }
 
     /**
@@ -86,7 +86,7 @@ class Notice extends Item
      */
     public function dismiss()
     {
-        $this->updateOption($this->data['slug'], time());
+        $this->updateOption($this->data['id'], time());
     }
 
     /**
