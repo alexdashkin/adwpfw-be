@@ -5,6 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules\WithItems;
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Items\Basic\Plugin;
 use AlexDashkin\Adwpfw\Items\Basic\Theme;
+use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
 
 /**
  * Plugins/Themes self-update feature.
@@ -26,9 +27,8 @@ class Updater extends ModuleWithItems
      *
      * @param array $data
      *
-     * @see Plugin::__construct(), Theme::__construct()
-     *
      * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     * @see Plugin::__construct(), Theme::__construct()
      */
     public function add(array $data)
     {
@@ -93,10 +93,17 @@ class Updater extends ModuleWithItems
      * @param \WP_Upgrader $upgrader
      * @param array $data
      */
-    public function onUpdate($upgrader, $data)
+    public function onUpdate($upgrader, array $data)
     {
         foreach ($this->items as $item) {
             $item->onUpdate($data);
+        }
+
+        // Clear Twig cache
+        $twigPath = Helpers::getUploadsDir($this->config['prefix'] . '/twig');
+
+        if (file_exists($twigPath)) {
+            Helpers::rmDir($twigPath);
         }
     }
 }
