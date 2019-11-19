@@ -12,7 +12,7 @@ use Twig\Loader\FilesystemLoader;
 /**
  * Twig Template Engine
  */
-class Twig extends Module
+class Twig extends ModuleWithLogger
 {
     /**
      * @var FilesystemLoader
@@ -94,7 +94,7 @@ class Twig extends Module
             try {
                 $this->fsLoader->addPath($path);
             } catch (Error $e) {
-                throw new AdwpfwException($e->getMessage(), 0, $e);
+                throw new AdwpfwException($e->getMessage(), 0, $e); // todo consider not throwing but logging instead
             }
         }
     }
@@ -149,7 +149,7 @@ class Twig extends Module
      *
      * @throws AdwpfwException
      */
-    public function render($twig, $name, $args = [])
+    private function render($twig, $name, $args = [])
     {
         $args = array_merge([
             'prefix' => $this->config['prefix'],
@@ -157,8 +157,11 @@ class Twig extends Module
 
         try {
             return $twig->render($name, $args);
+
         } catch (Error $e) {
-            throw new AdwpfwException($e->getMessage(), 0, $e);
+            $message = $e->getMessage();
+            $this->log($message);
+            return 'Unable to render Template: '.$message;
         }
     }
 }
