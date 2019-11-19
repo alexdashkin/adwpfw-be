@@ -16,8 +16,8 @@ class Js extends Asset
      * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
      * @type string $type css/js. Required.
      * @type string $af admin/front. Required.
-     * @type string $file Path relative to the Plugin root.
-     * @type string $url Asset URL. Defaults to $file URL if $file is specified.
+     * @type string $file Path relative to the Plugin root. Default null.
+     * @type string $url Asset URL. Default null.
      * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
      * @type array $deps List of Dependencies (slugs).
      * @type callable $callback Must return true to enqueue the Asset.
@@ -47,17 +47,24 @@ class Js extends Asset
 
         $prefix = $this->prefix;
 
-        $id = $prefix . '-' . sanitize_title($data['id']);
+        $id = sanitize_title($data['id']);
 
-        wp_enqueue_script($id, $data['url'], $data['deps'], $data['ver'], true);
+        if (wp_script_is($id, 'registered')) {
+            wp_enqueue_script($id);
 
-        $localize = array_merge([
-            'prefix' => $prefix,
-            'dev' => !empty($this->config['dev']),
-            'nonce' => wp_create_nonce($prefix),
-            'restNonce' => wp_create_nonce('wp_rest'),
-        ], $data['localize']);
+        } else {
+            $prefixed = $prefix . '-' . $id;
 
-        wp_localize_script($id, $prefix, $localize);
+            wp_enqueue_script($prefixed, $data['url'], $data['deps'], $data['ver'], true);
+
+            $localize = array_merge([
+                'prefix' => $prefix,
+                'dev' => !empty($this->config['dev']),
+                'nonce' => wp_create_nonce($prefix),
+                'restNonce' => wp_create_nonce('wp_rest'),
+            ], $data['localize']);
+
+            wp_localize_script($prefixed, $prefix, $localize);
+        }
     }
 }

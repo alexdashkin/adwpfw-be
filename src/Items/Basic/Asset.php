@@ -23,7 +23,6 @@ abstract class Asset extends Item
 
         if (!empty($data['file'])) {
             $file = $data['file'];
-            $url = $app->config['baseUrl'] . $file;
             $path = $app->config['baseDir'] . $file;
             $version = file_exists($path) ? filemtime($path) : null;
         }
@@ -39,7 +38,7 @@ abstract class Asset extends Item
                 'default' => null,
             ],
             'url' => [
-                'default' => $url,
+                'default' => null,
             ],
             'ver' => [
                 'default' => $version,

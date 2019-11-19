@@ -146,8 +146,6 @@ class Twig extends ModuleWithLogger
      * @param string $name Template name.
      * @param array $args Args to be passed to the Template.
      * @return string Rendered Template.
-     *
-     * @throws AdwpfwException
      */
     private function render($twig, $name, $args = [])
     {
