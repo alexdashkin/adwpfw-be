@@ -117,8 +117,6 @@ class Twig extends Module
      * @param string $name Template file name without .twig.
      * @param array $args Args to be passed to the Template.
      * @return string Rendered Template.
-     *
-     * @throws AdwpfwException
      */
     public function renderFile($name, $args = [])
     {
@@ -131,8 +129,6 @@ class Twig extends Module
      * @param string $name Template name.
      * @param array $args Args to be passed to the Template.
      * @return string Rendered Template.
-     *
-     * @throws AdwpfwException
      */
     public function renderArray($name, $args = [])
     {

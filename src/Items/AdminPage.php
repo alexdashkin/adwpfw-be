@@ -134,14 +134,7 @@ class AdminPage extends ItemWithItems
             'tabs' => $tabs,
         ];
 
-        try {
-            echo $this->m('Twig')->renderFile('templates/admin-page', $args);
-
-        } catch (\Exception $e) {
-            $message = $e->getMessage();
-            $this->log($message);
-            echo 'Page render error: ' . $message;
-        }
+        echo $this->m('Twig')->renderFile('templates/admin-page', $args);
     }
 
     public function save($data)
