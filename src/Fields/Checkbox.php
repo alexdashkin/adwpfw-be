@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+
 /**
  * Checkbox.
  */
@@ -10,6 +13,7 @@ class Checkbox extends Field
     /**
      * Constructor
      *
+     * @param App $app
      * @param array $data {
      * @type string $id Required.
      * @type string $layout Parent template to extend. Required.
@@ -19,9 +23,11 @@ class Checkbox extends Field
      * @type string $label Label.
      * @type string $desc Description.
      * }
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     * @param array $props
+     *
+     * @throws AdwpfwException
      */
-    public function __construct(array $data, array $props = [])
+    public function __construct(App $app, array $data, array $props = [])
     {
         $defaults = [
             'label' => [
@@ -32,7 +38,7 @@ class Checkbox extends Field
             ],
         ];
 
-        parent::__construct($data, array_merge($defaults, $props));
+        parent::__construct($app, $data, array_merge($defaults, $props));
     }
 
     public function sanitize($value)

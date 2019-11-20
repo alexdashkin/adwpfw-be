@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+
 /**
  * Hidden Field.
  */
@@ -10,6 +13,7 @@ class Hidden extends Text
     /**
      * Constructor
      *
+     * @param App $app
      * @param array $data {
      * @type string $id Required.
      * @type string $layout Parent template to extend. Required.
@@ -19,10 +23,11 @@ class Hidden extends Text
      * @type string $label Label.
      * @type string $desc Description.
      * }
+     * @param array $props
      *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     * @throws AdwpfwException
      */
-    public function __construct(array $data, array $props = [])
+    public function __construct(App $app, array $data, array $props = [])
     {
         $defaults = [
             'tpl' => [
@@ -30,6 +35,6 @@ class Hidden extends Text
             ],
         ];
 
-        parent::__construct($data, array_merge($defaults, $props));
+        parent::__construct($app, $data, array_merge($defaults, $props));
     }
 }

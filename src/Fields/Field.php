@@ -2,22 +2,21 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
+use AlexDashkin\Adwpfw\Abstracts\BasicItem;
+use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
-use AlexDashkin\Adwpfw\Traits\ItemTrait;
 
 /**
  * Form Field
  */
-abstract class Field
+abstract class Field extends BasicItem
 {
-    use ItemTrait;
-
     /**
      * @param array $data Field Data
      * @return Field
      * @throws AdwpfwException
      */
-    public static function getField($data)
+    public static function getField(App $app, $data)
     {
         $class = __NAMESPACE__ . '\\' . ucfirst($data['type']);
 
@@ -25,20 +24,21 @@ abstract class Field
             throw new AdwpfwException(sprintf('Field "%s" not found', $data['type']));
         }
 
-        return new $class($data);
+        return new $class($app, $data);
     }
 
     /**
      * Constructor
      *
+     * @param App $app
+     * @param array $data
+     * @param array $props
+     *
      * @throws AdwpfwException
      */
-    protected function __construct(array $data, array $props = []) // todo default value
+    protected function __construct(App $app, array $data, array $props = [])
     {
         $defaults = [
-            'id' => [
-                'required' => true,
-            ],
             'layout' => [
                 'required' => true,
             ],
@@ -60,16 +60,17 @@ abstract class Field
             'desc' => [
                 'default' => null,
             ],
+            'default' => [
+                'default' => null,
+            ],
         ];
 
-        $this->props = array_merge($defaults, $props);
-
-        $this->data = $this->validateProps($data);
+        parent::__construct($app, $data, array_merge($defaults, $props));
     }
 
     public function getArgs(array $values)
     {
-        $this->data['value'] = isset($values[$this->data['id']]) ? $values[$this->data['id']] : null;
+        $this->data['value'] = isset($values[$this->data['id']]) ? $values[$this->data['id']] : $this->data['default'];
 
         return $this->data;
     }

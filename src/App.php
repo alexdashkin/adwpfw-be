@@ -2,9 +2,9 @@
 
 namespace AlexDashkin\Adwpfw;
 
-use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
-use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
-use AlexDashkin\Adwpfw\Modules\Basic\Module;
+use AlexDashkin\Adwpfw\Modules\Helpers;
+use AlexDashkin\Adwpfw\Modules\Logger;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
  * Main App Class
@@ -25,7 +25,6 @@ class App
      * Constructor
      *
      * @param array $config Config
-     * @throws AdwpfwException
      */
     public function __construct(array $config)
     {
@@ -40,9 +39,7 @@ class App
      * If not exists, try to create
      *
      * @param string $moduleName
-     * @return Module
-     *
-     * @throws AdwpfwException
+     * @return Module|Logger
      */
     public function m($moduleName)
     {
@@ -50,34 +47,15 @@ class App
             return $this->modules[$moduleName];
         }
 
-        $classes = [
-            '\\' . __NAMESPACE__ . '\\Modules\\Basic\\' . $moduleName,
-            '\\' . __NAMESPACE__ . '\\Modules\\WithItems\\' . $moduleName,
-        ];
+        $class = '\\' . __NAMESPACE__ . '\\Modules\\' . $moduleName;
 
-        foreach ($classes as $class) {
-            if (!class_exists($class)) {
-                continue;
-            }
+/*        if (!class_exists($class)) {
+            throw new AdwpfwException("Module $moduleName not found");
+        }*/
 
-            $this->modules[$moduleName] = new $class($this);
+        $this->modules[$moduleName] = new $class($this);
 
-            return $this->modules[$moduleName];
-        }
-
-        throw new AdwpfwException("Module $moduleName not found");
-    }
-
-    /**
-     * Simple cache.
-     *
-     * @param callable $callable Function to be cached.
-     * @param array $args Args to be passed to the Function.
-     * @return mixed Either cached result if any or the Function result.
-     */
-    public function cache($callable, $args = [])
-    {
-        return $this->m('Cache')->get($callable, $args);
+        return $this->modules[$moduleName];
     }
 
     /**
@@ -375,7 +353,7 @@ class App
      * Check functions/classes existence.
      * Used to check if a plugin/theme is active before proceed.
      *
-     * @param array $items {
+     * @param array $deps {
      * @type string $name Plugin or Theme name.
      * @type string $type Type of the dep (class/function).
      * @type string $dep Class or function name.
@@ -535,8 +513,6 @@ class App
      * @param string $name Template file name without .twig.
      * @param array $args Args to be passed to the Template.
      * @return string Rendered Template.
-     *
-     * @throws AdwpfwException
      */
     public function twigFile($name, array $args = [])
     {
@@ -549,8 +525,6 @@ class App
      * @param string $name Template name.
      * @param array $args Args to be passed to the Template.
      * @return string Rendered Template.
-     *
-     * @throws AdwpfwException
      */
     public function twigArray($name, array $args = [])
     {
@@ -742,9 +716,19 @@ class App
     }
 
     /**
-     * Remove assets.
+     * Enqueue registered assets.
      *
-     * @param array $ids Registered assets IDs to be removed
+     * @param array $ids Registered assets IDs.
+     */
+    public function enqueueRegisteredAssets(array $ids)
+    {
+        $this->m('Assets')->addRegistered($ids);
+    }
+
+    /**
+     * Remove registered assets.
+     *
+     * @param array $ids Registered assets IDs.
      */
     public function removeAssets(array $ids)
     {
@@ -923,7 +907,7 @@ class App
     }
 
     /**
-     * Add a post state
+     * Add a post state.
      *
      * @param array $data {
      * @param int $post_id Post ID.
@@ -936,7 +920,7 @@ class App
     }
 
     /**
-     * Add a post state
+     * Add post states.
      *
      * @param array $data {
      * @param int $post_id Post ID.

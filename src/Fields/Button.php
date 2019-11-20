@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+
 /**
  * Button.
  */
@@ -10,6 +13,7 @@ class Button extends Field
     /**
      * Constructor.
      *
+     * @param App $app
      * @param array $data {
      * @type string $id Required.
      * @type string $layout Parent template to extend. Required.
@@ -19,9 +23,11 @@ class Button extends Field
      * @type string $desc Description.
      * @type string $caption Button Caption. Required.
      * }
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     * @param array $props
+     *
+     * @throws AdwpfwException
      */
-    public function __construct(array $data, array $props = [])
+    public function __construct(App $app, array $data, array $props = [])
     {
         $defaults = [
             'caption' => [
@@ -32,6 +38,6 @@ class Button extends Field
             ],
         ];
 
-        parent::__construct($data, array_merge($defaults, $props));
+        parent::__construct($app, $data, array_merge($defaults, $props));
     }
 }

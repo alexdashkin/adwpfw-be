@@ -2,7 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\Modules\Basic\Helpers;
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+use AlexDashkin\Adwpfw\Modules\Helpers;
 
 /**
  * Select2 Field.
@@ -12,6 +14,7 @@ class Select2 extends Select
     /**
      * Constructor
      *
+     * @param App $app
      * @param array $data {
      * @type string $id Required.
      * @type string $layout Parent template to extend. Required.
@@ -27,10 +30,11 @@ class Select2 extends Select
      * @type int $min_chars Minimum query length to start search.
      * @type callable $label_cb Callback. Callback to build labels for values.
      * }
+     * @param array $props
      *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     * @throws AdwpfwException
      */
-    public function __construct(array $data, array $props = [])
+    public function __construct(App $app, array $data, array $props = [])
     {
         $defaults = [
             'tpl' => [
@@ -53,7 +57,7 @@ class Select2 extends Select
             ],
         ];
 
-        parent::__construct($data, array_merge($defaults, $props));
+        parent::__construct($app, $data, array_merge($defaults, $props));
     }
 
     public function getArgs(array $values)

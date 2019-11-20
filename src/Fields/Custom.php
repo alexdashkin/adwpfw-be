@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
+use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+
 /**
  * Custom Field.
  */
@@ -10,6 +13,7 @@ class Custom extends Field
     /**
      * Constructor.
      *
+     * @param App $app
      * @param array $data {
      * @type string $id Required.
      * @type string $layout Parent template to extend. Required.
@@ -19,11 +23,12 @@ class Custom extends Field
      * @type string $label Label.
      * @type string $desc Description.
      * }
+     * @param array $props
      *
-     * @throws \AlexDashkin\Adwpfw\Exceptions\AdwpfwException
+     * @throws AdwpfwException
      */
-    public function __construct(array $data, array $props = [])
+    public function __construct(App $app, array $data, array $props = [])
     {
-        parent::__construct($data, $props);
+        parent::__construct($app, $data, $props);
     }
 }
