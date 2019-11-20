@@ -20,11 +20,12 @@ abstract class Asset extends Item
      */
     protected function __construct(App $app, array $data, array $props = [])
     {
-        $version = null;
+        $url = $version = null;
 
         if (!empty($data['file'])) {
             $file = $data['file'];
             $path = $app->config['baseDir'] . $file;
+            $url = $app->config['baseUrl'] . $file;
             $version = file_exists($path) ? filemtime($path) : null;
         }
 
@@ -39,7 +40,7 @@ abstract class Asset extends Item
                 'default' => null,
             ],
             'url' => [
-                'default' => null,
+                'default' => $url,
             ],
             'ver' => [
                 'default' => $version,

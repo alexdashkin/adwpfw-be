@@ -38,7 +38,9 @@ class Css extends Asset
     {
         $data = $this->data;
 
-        if ($data['callback'] && !$data['callback']()) {
+        $callback = $data['callback'];
+
+        if ($callback && is_callable($callback) && !$callback()) {
             return;
         }
 
