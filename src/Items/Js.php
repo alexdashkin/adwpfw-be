@@ -31,6 +31,10 @@ class Js extends Asset
     public function __construct(App $app, array $data)
     {
         $props = [
+            'deps' => [
+                'type' => 'array',
+                'default' => ['jquery'],
+            ],
             'localize' => [
                 'type' => 'array',
                 'default' => [],
