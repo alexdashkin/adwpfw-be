@@ -778,6 +778,19 @@ class App
     }
 
     /**
+     * Add Customizer Panel
+     *
+     * @param array $data {
+     * @type string $id Defaults to sanitized $title.
+     * @type string $title Metabox title. Required.
+     * }
+     */
+    public function addCustomizerPanel(array $data)
+    {
+        $this->m('Customizer')->add($data);
+    }
+
+    /**
      * Add a Metabox.
      *
      * @param array $data {

@@ -113,6 +113,6 @@ abstract class BasicItem extends Basic
      */
     protected function getDefaultId($base)
     {
-        return esc_attr(sanitize_key(str_replace(' ', '-', $base)));
+        return uniqid(esc_attr(sanitize_key(str_replace(' ', '-', $base))) . '-');
     }
 }

@@ -28,62 +28,31 @@ class Setting extends Item
                 'default' => $this->getDefaultId($data['label']),
             ],
             'section' => [
-                'type' => 'int',
                 'required' => true,
             ],
             'priority' => [
                 'type' => 'int',
-                'default' => 160,
+                'default' => 10,
             ],
             'label' => [
                 'required' => true,
             ],
+            'type' => [
+                'default' => 'text',
+            ],
             'description' => [
                 'default' => '',
-            ],
-            'choices' => [
-                'type' => 'array',
-                'default' => [],
             ],
             'input_attrs' => [
                 'type' => 'array',
                 'default' => [],
             ],
-            'allow_addition' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-            'capability' => [
-                'default' => 'edit_theme_options',
-            ],
-            'type' => [
-                'default' => 'text',
-            ],
-            'transport' => [
-                'default' => 'refresh',
-            ],
             'default' => [
                 'default' => '',
-            ],
-            'active_callback' => [
-                'type' => 'callable',
-                'default' => null,
-            ],
-            'validate_callback' => [
-                'type' => 'callable',
-                'default' => null,
             ],
             'sanitize_callback' => [
                 'type' => 'callable',
                 'default' => null,
-            ],
-            'sanitize_js_callback' => [
-                'type' => 'callable',
-                'default' => null,
-            ],
-            'dirty' => [
-                'type' => 'bool',
-                'default' => true,
             ],
         ];
 
@@ -95,7 +64,28 @@ class Setting extends Item
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_setting($this->data['id'], $this->data);
-        $customizer->add_control($this->data['id'], $this->data);
+        $data = $this->data;
+        $id = $this->prefix . '-' . $data['id'];
+
+        $customizer->add_setting($id, $data);
+
+        switch ($data['type']) {
+            case 'image':
+                $data['mime_type'] = 'image';
+                $customizer->add_control(new \WP_Customize_Media_Control($customizer, $id, $data));
+                break;
+
+            case 'color':
+                $customizer->add_control(new \WP_Customize_Color_Control($customizer, $id, $data));
+                break;
+
+            default:
+                $customizer->add_control($id, $data);
+        }
+    }
+
+    protected function getDefaultId($base)
+    {
+        return esc_attr(sanitize_key(str_replace(' ', '-', $base))); // todo not working with uniqid()
     }
 }

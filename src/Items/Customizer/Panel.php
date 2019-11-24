@@ -12,6 +12,11 @@ use AlexDashkin\Adwpfw\Items\ItemWithItems;
 class Panel extends ItemWithItems
 {
     /**
+     * @var Section[]
+     */
+    protected $items = [];
+
+    /**
      * Constructor
      *
      * @param App $app
@@ -30,22 +35,12 @@ class Panel extends ItemWithItems
             'title' => [
                 'required' => true,
             ],
-            'priority' => [
-                'type' => 'int',
-                'default' => 160,
-            ],
             'description' => [
                 'default' => '',
             ],
-            'capability' => [
-                'default' => 'edit_theme_options',
-            ],
-            'type' => [
-                'default' => 'default',
-            ],
-            'active_callback' => [
-                'type' => 'callable',
-                'default' => null,
+            'priority' => [
+                'type' => 'int',
+                'default' => 160,
             ],
             'sections' => [
                 'type' => 'array',
@@ -70,16 +65,27 @@ class Panel extends ItemWithItems
      */
     public function add(array $data)
     {
-        $data['panel'] = $this->data['id'];
+        $data['panel'] = $this->prefix . '-' . $this->data['id'];
 
         $this->items[] = new Section($this->app, $data);
     }
 
     /**
      * Register Panel.
+     *
+     * @param \WP_Customize_Manager $customizer
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_panel($this->data['id'], $this->data);
+        $customizer->add_panel($this->prefix . '-' . $this->data['id'], $this->data);
+
+        foreach ($this->items as $section) {
+            $section->register($customizer);
+        }
+    }
+
+    protected function getDefaultId($base)
+    {
+        return esc_attr(sanitize_key(str_replace(' ', '-', $base))); // todo not working with uniqid()
     }
 }

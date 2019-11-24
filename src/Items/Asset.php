@@ -31,7 +31,7 @@ abstract class Asset extends Item
 
         $defaults = [
             'id' => [
-                'default' => $this->getDefaultId($id = $data['af'] . '-' . $data['type'] . '-' . uniqid()),
+                'default' => $this->getDefaultId($data['af'] . '-' . $data['type']),
             ],
             'af' => [
                 'required' => true,

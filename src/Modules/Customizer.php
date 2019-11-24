@@ -4,15 +4,15 @@ namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
-use AlexDashkin\Adwpfw\Items\AdminPage;
+use AlexDashkin\Adwpfw\Items\Customizer\Panel;
 
 /**
- * Admin Settings pages
+ * Customizer settings
  */
 class Customizer extends ModuleWithItems
 {
     /**
-     * @var AdminPage[]
+     * @var Panel[]
      */
     protected $items = [];
 
@@ -24,63 +24,37 @@ class Customizer extends ModuleWithItems
     public function __construct(App $app)
     {
         parent::__construct($app);
-
-        add_action('admin_menu', [$this, 'register']);
-
-        $this->m('Ajax')->add([
-            'name' => 'save',
-            'fields' => [
-                'form' => [
-                    'type' => 'form',
-                    'required' => true,
-                ],
-            ],
-            'callback' => [$this, 'save'],
-        ]);
+        add_action('customize_register', [$this, 'register']);
     }
 
     /**
-     * Add Admin Page
+     * Add Panel
      *
      * @param array $data
      *
-     * @see AdminPage::__construct();
+     * @see Panel::__construct();
      *
      * @throws AdwpfwException
      */
     public function add(array $data)
     {
-        $this->items[] = new AdminPage($this->app, $data); // todo access to values from outside
+        $this->items[] = new Panel($this->app, $data);
     }
 
-    /**
-     * Register Admin Pages
-     */
-    public function register()
+    public function get($id)
     {
-        foreach ($this->items as $item) {
-            $item->register();
-        }
+        return get_theme_mod($this->prefix . '-' . $id);
     }
 
     /**
-     * Save Admin Page posted data.
+     * Register Panel
      *
-     * @param array $data Posted data.
-     * @return array Success or Error array to pass as Ajax response.
+     * @param \WP_Customize_Manager $customizer
      */
-    public function save($data)
+    public function register(\WP_Customize_Manager $customizer)
     {
-        if (empty($data['form'][$this->config['prefix']])) {
-            return Helpers::returnError('Form data is empty');
-        }
-
-        $form = $data['form'][$this->config['prefix']];
-
         foreach ($this->items as $item) {
-            $item->save($form);
+            $item->register($customizer);
         }
-
-        return Helpers::returnSuccess();
     }
 }

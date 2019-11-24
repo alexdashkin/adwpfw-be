@@ -12,6 +12,11 @@ use AlexDashkin\Adwpfw\Items\ItemWithItems;
 class Section extends ItemWithItems
 {
     /**
+     * @var Setting[]
+     */
+    protected $items = [];
+
+    /**
      * Constructor
      *
      * @param App $app
@@ -28,28 +33,17 @@ class Section extends ItemWithItems
                 'default' => $this->getDefaultId($data['title']),
             ],
             'panel' => [
-                'type' => 'int',
                 'required' => true,
             ],
             'title' => [
                 'required' => true,
             ],
-            'priority' => [
-                'type' => 'int',
-                'default' => 160,
-            ],
             'description' => [
                 'default' => '',
             ],
-            'capability' => [
-                'default' => 'edit_theme_options',
-            ],
-            'type' => [
-                'default' => 'default',
-            ],
-            'active_callback' => [
-                'type' => 'callable',
-                'default' => null,
+            'priority' => [
+                'type' => 'int',
+                'default' => 160,
             ],
             'settings' => [
                 'type' => 'array',
@@ -74,7 +68,7 @@ class Section extends ItemWithItems
      */
     public function add(array $data)
     {
-        $data['section'] = $this->data['id'];
+        $data['section'] = $this->prefix . '-' . $this->data['id'];
 
         $this->items[] = new Setting($this->app, $data);
     }
@@ -84,6 +78,15 @@ class Section extends ItemWithItems
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_section($this->data['id'], $this->data);
+        $customizer->add_section($this->prefix . '-' . $this->data['id'], $this->data);
+
+        foreach ($this->items as $setting) {
+            $setting->register($customizer);
+        }
+    }
+
+    protected function getDefaultId($base)
+    {
+        return esc_attr(sanitize_key(str_replace(' ', '-', $base))); // todo not working with uniqid()
     }
 }
