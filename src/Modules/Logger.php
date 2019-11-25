@@ -48,10 +48,11 @@ class Logger
         }
 
         $prefix = $config['prefix'];
+        $maxLogSize = !empty($config['log_size']) ? $config['log_size'] : 1000000;
         $this->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $basePath = Helpers::getUploadsDir($prefix . '/logs');
-        $filename = '/' . $prefix . '-' . date('Y-m-d') . '-' . $suffix . '.log';
+        $filename = $this->getLogFilename($basePath, $prefix, $suffix, $maxLogSize);
         $immediateName = '/' . time() . '-' . $suffix . '.log';
 
         $this->paths[] = $basePath . $filename;
@@ -62,6 +63,28 @@ class Logger
                 $this->paths[] = WC_LOG_DIR . $filename;
             }
         });
+    }
+
+    /**
+     * Iterate existing files and find not full one
+     *
+     * @param string $basePath
+     * @param string $prefix
+     * @param string $suffix
+     * @param int $maxSize
+     * @param int $counter
+     * @return string
+     */
+    private function getLogFilename($basePath, $prefix, $suffix, $maxSize, $counter = 1)
+    {
+        $filename = '/' . $prefix . '-' . date('Y-m-d') . '-' . $suffix . '-' . $counter . '.log';
+        $filePath = $basePath . $filename;
+
+        if (file_exists($filePath) && filesize($filePath) > $maxSize) {
+            return $this->getLogFilename($basePath, $prefix, $suffix, $maxSize, ++$counter);
+        }
+
+        return $filename;
     }
 
     /**
