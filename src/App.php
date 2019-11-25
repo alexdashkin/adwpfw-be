@@ -791,6 +791,17 @@ class App
     }
 
     /**
+     * Get Customizer value
+     *
+     * @param string $id
+     * @return mixed
+     */
+    public function getThemeMod($id)
+    {
+        return $this->m('Customizer')->get($id);
+    }
+
+    /**
      * Add a Metabox.
      *
      * @param array $data {

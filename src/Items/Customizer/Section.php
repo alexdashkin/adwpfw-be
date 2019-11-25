@@ -68,7 +68,7 @@ class Section extends ItemWithItems
      */
     public function add(array $data)
     {
-        $data['section'] = $this->prefix . '-' . $this->data['id'];
+        $data['section'] = $this->prefix . '_' . $this->data['id'];
 
         $this->items[] = new Setting($this->app, $data);
     }
@@ -78,7 +78,7 @@ class Section extends ItemWithItems
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_section($this->prefix . '-' . $this->data['id'], $this->data);
+        $customizer->add_section($this->prefix . '_' . $this->data['id'], $this->data);
 
         foreach ($this->items as $setting) {
             $setting->register($customizer);
@@ -87,6 +87,6 @@ class Section extends ItemWithItems
 
     protected function getDefaultId($base)
     {
-        return esc_attr(sanitize_key(str_replace(' ', '-', $base))); // todo not working with uniqid()
+        return esc_attr(sanitize_key(str_replace(' ', '_', $base)));
     }
 }

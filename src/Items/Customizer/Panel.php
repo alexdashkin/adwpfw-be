@@ -65,7 +65,7 @@ class Panel extends ItemWithItems
      */
     public function add(array $data)
     {
-        $data['panel'] = $this->prefix . '-' . $this->data['id'];
+        $data['panel'] = $this->prefix . '_' . $this->data['id'];
 
         $this->items[] = new Section($this->app, $data);
     }
@@ -77,7 +77,7 @@ class Panel extends ItemWithItems
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_panel($this->prefix . '-' . $this->data['id'], $this->data);
+        $customizer->add_panel($this->prefix . '_' . $this->data['id'], $this->data);
 
         foreach ($this->items as $section) {
             $section->register($customizer);
@@ -94,6 +94,6 @@ class Panel extends ItemWithItems
      */
     protected function getDefaultId($base)
     {
-        return esc_attr(sanitize_key(str_replace(' ', '-', $base)));
+        return esc_attr(sanitize_key(str_replace(' ', '_', $base)));
     }
 }

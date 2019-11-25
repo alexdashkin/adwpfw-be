@@ -43,7 +43,7 @@ class Customizer extends ModuleWithItems
 
     public function get($id)
     {
-        return get_theme_mod($this->prefix . '-' . $id);
+        return get_theme_mod($this->prefix . '_' . $id);
     }
 
     /**

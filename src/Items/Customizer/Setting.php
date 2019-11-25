@@ -65,27 +65,43 @@ class Setting extends Item
     public function register(\WP_Customize_Manager $customizer)
     {
         $data = $this->data;
-        $id = $this->prefix . '-' . $data['id'];
 
-        $customizer->add_setting($id, $data);
+        $id = $this->prefix . '_' . $data['id'];
 
-        switch ($data['type']) {
+        $setting = [
+            'default' => $data['default'],
+            'sanitize_callback' => $data['sanitize_callback'],
+        ];
+
+        $control = [
+            'label' => $data['label'],
+            'description' => $data['description'],
+            'section' => $data['section'],
+            'priority' => $data['priority'],
+            'type' => $data['type'],
+            'input_attrs' => $data['input_attrs'],
+        ];
+
+        $customizer->add_setting($id, $setting);
+
+        switch ($control['type']) {
             case 'image':
-                $data['mime_type'] = 'image';
-                $customizer->add_control(new \WP_Customize_Media_Control($customizer, $id, $data));
+                unset($control['type']);
+                $control['mime_type'] = 'image';
+                $customizer->add_control(new \WP_Customize_Media_Control($customizer, $id, $control));
                 break;
 
             case 'color':
-                $customizer->add_control(new \WP_Customize_Color_Control($customizer, $id, $data));
+                $customizer->add_control(new \WP_Customize_Color_Control($customizer, $id, $control));
                 break;
 
             default:
-                $customizer->add_control($id, $data);
+                $customizer->add_control($id, $control);
         }
     }
 
     protected function getDefaultId($base)
     {
-        return esc_attr(sanitize_key(str_replace(' ', '-', $base))); // todo not working with uniqid()
+        return esc_attr(sanitize_key(str_replace(' ', '_', $base)));
     }
 }
