@@ -84,8 +84,16 @@ class Panel extends ItemWithItems
         }
     }
 
+    /**
+     * Get default Panel ID.
+     * Not working with uniqid() as on subsequent calls it's different
+     * and the Panel disappears from Customizer on page load
+     *
+     * @param string $base
+     * @return string
+     */
     protected function getDefaultId($base)
     {
-        return esc_attr(sanitize_key(str_replace(' ', '-', $base))); // todo not working with uniqid()
+        return esc_attr(sanitize_key(str_replace(' ', '-', $base)));
     }
 }
