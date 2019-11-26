@@ -1145,7 +1145,7 @@ class App
      */
     public function addDashboardWidget(array $data)
     {
-        $this->m('Widgets')->add($data);
+        $this->m('DbWidgets')->add($data);
     }
 
     /**
@@ -1160,6 +1160,11 @@ class App
      */
     public function addDashboardWidgets(array $data)
     {
-        $this->m('Widgets')->addMany($data);
+        $this->m('DbWidgets')->addMany($data);
+    }
+
+    public function addWidget(array $data)
+    {
+        $this->m('Widgets')->add($data);
     }
 }

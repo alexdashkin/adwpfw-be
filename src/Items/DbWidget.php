@@ -6,9 +6,9 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Theme Widget
+ * Admin Dashboard Widget
  */
-class Widget extends Item
+class DbWidget extends Item
 {
     /**
      * Constructor.
@@ -21,26 +21,25 @@ class Widget extends Item
      * @type string $capability Minimum capability. Default 'read'.
      * }
      *
-     * @throws AdwpfwException
      * @see wp_add_dashboard_widget()
      *
+     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['name']),
+                'default' => $this->getDefaultId($data['title']),
             ],
-            'name' => [
+            'title' => [
                 'required' => true,
             ],
             'callback' => [
                 'type' => 'callable',
                 'required' => true,
             ],
-            'options' => [
-                'type' => 'array',
-                'default' => [],
+            'capability' => [
+                'default' => 'read',
             ],
         ];
 
@@ -52,17 +51,10 @@ class Widget extends Item
      */
     public function register()
     {
-        $id = $this->prefix . '_' . $this->data['id'];
+        if (!current_user_can($this->data['capability'])) {
+            return;
+        }
 
-        $class = sprintf('namespace {class %s extends \AlexDashkin\Adwpfw\Items\WpWidget {public function __construct() {parent::__construct();}}}', $id);
-
-        eval($class);
-
-        register_widget($this->prefix . '_' . $this->data['id']);
-    }
-
-    protected function getDefaultId($base)
-    {
-        return uniqid(esc_attr(sanitize_key(str_replace(' ', '_', $base))) . '_');
+        wp_add_dashboard_widget($this->data['id'], $this->data['title'], $this->data['callback']);
     }
 }

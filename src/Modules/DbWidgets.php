@@ -4,15 +4,15 @@ namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
-use AlexDashkin\Adwpfw\Items\Widget;
+use AlexDashkin\Adwpfw\Items\DbWidget;
 
 /**
- * Theme widgets.
+ * Admin Dashboard widgets.
  */
-class Widgets extends ModuleWithItems
+class DbWidgets extends ModuleWithItems
 {
     /**
-     * @var Widget[]
+     * @var DbWidget[]
      */
     protected $items = [];
 
@@ -25,7 +25,7 @@ class Widgets extends ModuleWithItems
     {
         parent::__construct($app);
 
-        add_action('widgets_init', [$this, 'register']);
+        add_action('wp_dashboard_setup', [$this, 'register']);
     }
 
     /**
@@ -39,7 +39,7 @@ class Widgets extends ModuleWithItems
      */
     public function add(array $data)
     {
-        $this->items[] = new Widget($this->app, $data);
+        $this->items[] = new DbWidget($this->app, $data);
     }
 
     /**
