@@ -10,6 +10,8 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
  */
 class Widget extends Item
 {
+    private $widget;
+
     /**
      * Constructor.
      *
@@ -54,15 +56,36 @@ class Widget extends Item
     {
         $id = $this->prefix . '_' . $this->data['id'];
 
-        $class = sprintf('namespace {class %s extends \AlexDashkin\Adwpfw\Items\WpWidget {public function __construct() {parent::__construct();}}}', $id);
+        $args = [
+            'id' => $id,
+            'name' => $this->data['name'],
+        ];
 
-        eval($class);
+        eval($this->m('Twig')->renderFile('php/widget', $args));
 
-        register_widget($this->prefix . '_' . $this->data['id']);
+        register_widget($id);
+
+        add_action($id, [$this, 'render'], 10, 2);
     }
 
+    /**
+     * Render the Widget.
+     */
+    public function render($args, $instance)
+    {
+        echo $this->data['callback']();
+    }
+
+    /**
+     * Get default Widget ID.
+     * Not working with uniqid() as on subsequent calls it's different
+     * and the Widget disappears
+     *
+     * @param string $base
+     * @return string
+     */
     protected function getDefaultId($base)
     {
-        return uniqid(esc_attr(sanitize_key(str_replace(' ', '_', $base))) . '_');
+        return 'widget_' . esc_attr(sanitize_key(str_replace(' ', '_', $base)));
     }
 }
