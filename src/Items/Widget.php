@@ -36,9 +36,13 @@ class Widget extends Item
             'title' => [
                 'required' => true,
             ],
-            'callback' => [
+            'render' => [
                 'type' => 'callable',
                 'required' => true,
+            ],
+            'form' => [
+                'type' => 'callable',
+                'default' => null,
             ],
             'options' => [
                 'type' => 'array',
@@ -65,13 +69,14 @@ class Widget extends Item
 
         register_widget($id);
 
-        add_action($id, [$this, 'render'], 10, 2);
+        add_action('form_' . $id, [$this, 'form'], 10, 2);
+        add_action('render_' . $id, [$this, 'render'], 10, 3);
     }
 
     /**
      * Render the Widget.
      */
-    public function render($args, $instance)
+    public function render($args, $instance, $widget)
     {
         echo $args['before_widget'];
 
@@ -79,9 +84,19 @@ class Widget extends Item
         echo $this->data['title'];
         echo $args['after_title'];
 
-        echo $this->data['callback']();
+        echo $this->data['render']($args, $instance, $widget);
 
         echo $args['after_widget'];
+    }
+
+    /**
+     * Render Settings form.
+     */
+    public function form($instance, $widget)
+    {
+        if ($this->data['form']) {
+            echo $this->data['form']($instance, $widget); // todo build form the same way as Metaboxes
+        }
     }
 
     /**
