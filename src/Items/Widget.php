@@ -31,9 +31,9 @@ class Widget extends Item
     {
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['name']),
+                'default' => $this->getDefaultId($data['title']),
             ],
-            'name' => [
+            'title' => [
                 'required' => true,
             ],
             'callback' => [
@@ -58,7 +58,7 @@ class Widget extends Item
 
         $args = [
             'id' => $id,
-            'name' => $this->data['name'],
+            'name' => $this->data['title'],
         ];
 
         eval($this->m('Twig')->renderFile('php/widget', $args));
@@ -73,7 +73,15 @@ class Widget extends Item
      */
     public function render($args, $instance)
     {
+        echo $args['before_widget'];
+
+        echo $args['before_title'];
+        echo $this->data['title'];
+        echo $args['after_title'];
+
         echo $this->data['callback']();
+
+        echo $args['after_widget'];
     }
 
     /**

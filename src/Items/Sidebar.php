@@ -20,9 +20,9 @@ class Sidebar extends Item
      * @type string $description
      * @type string $class CSS class for container.
      * }
+     * @throws AdwpfwException
      * @see register_sidebar()
      *
-     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {
@@ -49,6 +49,9 @@ class Sidebar extends Item
      */
     public function register()
     {
-        register_sidebar($this->data);
+        $data = $this->data;
+        $data['id'] = $this->prefix . '_' . $data['id'];
+
+        register_sidebar($data);
     }
 }
