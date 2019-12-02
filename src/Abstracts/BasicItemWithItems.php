@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Basic Class
+ * Basic Class with Item functionality containing Items
  */
 abstract class BasicItemWithItems extends BasicItem
 {

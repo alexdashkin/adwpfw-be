@@ -6,12 +6,10 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Theme Widget
+ * Theme Widget.
  */
 class Widget extends Item
 {
-    private $widget;
-
     /**
      * Constructor.
      *
@@ -19,13 +17,13 @@ class Widget extends Item
      * @param array $data {
      * @type string $id Defaults to sanitized $title.
      * @type string $title Widget Title. Required.
-     * @type callable $callback Renders the widget. Required.
-     * @type string $capability Minimum capability. Default 'read'.
+     * @type callable $render Renders front-end. Required.
+     * @type callable $form Renders back-end Widget settings. Required.
      * }
      *
-     * @throws AdwpfwException
      * @see wp_add_dashboard_widget()
      *
+     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {
@@ -43,10 +41,6 @@ class Widget extends Item
             'form' => [
                 'type' => 'callable',
                 'default' => null,
-            ],
-            'options' => [
-                'type' => 'array',
-                'default' => [],
             ],
         ];
 
@@ -102,7 +96,6 @@ class Widget extends Item
     /**
      * Get default Widget ID.
      * Not working with uniqid() as on subsequent calls it's different
-     * and the Widget disappears
      *
      * @param string $base
      * @return string

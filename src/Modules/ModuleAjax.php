@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Ajax Base Module.
+ * Ajax Base Module. To be extended.
  */
 abstract class ModuleAjax extends ModuleWithItems
 {
@@ -21,11 +21,11 @@ abstract class ModuleAjax extends ModuleWithItems
 
 
     /**
-     * Return Success array
+     * Return Success array.
      *
-     * @param string $message
-     * @param array $data Data to return as JSON
-     * @param bool $echo Whether to echo Response right away without returning
+     * @param string $message Message.
+     * @param array $data Data to return as JSON.
+     * @param bool $echo Whether to echo Response right away without returning.
      * @return array
      */
     protected function success($message = '', $data = [], $echo = false)
@@ -34,10 +34,10 @@ abstract class ModuleAjax extends ModuleWithItems
     }
 
     /**
-     * Return Error array
+     * Return Error array.
      *
-     * @param string $message
-     * @param bool $echo Whether to echo Response right away without returning
+     * @param string $message Error message.
+     * @param bool $echo Whether to echo Response right away without returning.
      * @return array
      */
     protected function error($message = '', $echo = false)

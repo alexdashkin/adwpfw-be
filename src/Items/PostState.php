@@ -15,8 +15,8 @@ class PostState extends Item
      *
      * @param App $app
      * @param array $data {
-     * @param int $post_id Post ID.
-     * @param string $state State text.
+     * @param int $post_id Post ID. Required.
+     * @param string $state State text. Required.
      * }
      *
      * @throws AdwpfwException

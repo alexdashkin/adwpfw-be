@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Admin Dashboard Widget
+ * Admin Dashboard Widget.
  */
 class DbWidget extends Item
 {

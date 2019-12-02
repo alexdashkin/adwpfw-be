@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Logger
+ * Logger.
  */
 class Logger
 {
@@ -66,7 +66,7 @@ class Logger
     }
 
     /**
-     * Iterate existing files and find not full one
+     * Iterate existing files and find not full one.
      *
      * @param string $basePath
      * @param string $prefix
@@ -91,8 +91,8 @@ class Logger
      * Add a log entry.
      *
      * @param mixed $message Text or any other type including WP_Error.
-     * @param array $values If passed, vsprintf() func is applied.
-     * @param int $type 1 = Error, 2 = Warning, 4 = Notice.
+     * @param array $values If passed, vsprintf() func is applied. Default [].
+     * @param int $type 1 = Error, 2 = Warning, 4 = Notice. Default 4.
      */
     public function log($message, $values = [], $type = 4)
     {

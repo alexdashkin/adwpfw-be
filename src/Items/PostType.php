@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Post Type
+ * Custom Post Type.
  */
 class PostType extends Item
 {
@@ -16,9 +16,9 @@ class PostType extends Item
      * @param App $app
      * @param array $data {
      * @param string $id ID. Defaults to sanitized $label.
-     * @param string $label Name shown in the menu. Usually plural.
-     * @param string $description A short descriptive summary of what the post type is.
-     * @param array $labels $singular and $plural are required, rest are auto-populated.
+     * @param string $label Name shown in the menu. Usually plural. Required.
+     * @param string $description A short descriptive summary of what the post type is. Default empty.
+     * @param array $labels $singular and $plural are required, the rest is auto-populated.
      * @param bool $public Whether to show in Admin. Default true.
      * }
      *

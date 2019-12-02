@@ -20,8 +20,8 @@ class Hidden extends Text
      * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
      * @type string $tpl Template name. Default 'hidden'.
      * @type string $class CSS Class(es) for the control. Default empty.
-     * @type string $label Label.
-     * @type string $desc Description.
+     * @type string $label Label. Default empty.
+     * @type string $desc Description. Default empty.
      * }
      * @param array $props
      *

@@ -6,26 +6,32 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Menu Page
+ * Admin Page with Settings.
  */
 class AdminPage extends ItemWithItems
 {
+    /**
+     * @var AdminPageTab[]
+     */
+    protected $items = [];
+
     /**
      * Constructor
      *
      * @param App $app
      * @param array $data {
+     * @type string $id ID w/o prefix. Defaults to sanitized $name.
      * @type string $name Text for the left Menu. Required.
      * @type string $title Text for the <title> tag. Defaults to $name.
      * @type string $header Page header without markup. Defaults to $name.
-     * @type string $parent Parent Menu slug. If specified, a sub menu will be added.
+     * @type string $parent Parent Menu slug. If specified, a sub menu will be added. Default empty.
      * @type int $position Position in the Menu. Default 0.
      * @type string $icon The dash icon name for the bar. Default 'dashicons-update'.
      * @type string $capability Minimum capability. Default 'manage_options'.
      * @type array $tabs Tabs: {
      * @type string $title Tab Title.
      * @type array $fields Tab fields.
-     * }
+     * }}
      *
      * @throws AdwpfwException
      */
@@ -137,7 +143,12 @@ class AdminPage extends ItemWithItems
         echo $this->m('Twig')->renderFile('templates/admin-page', $args);
     }
 
-    public function save($data)
+    /**
+     * Save Settings on submit.
+     *
+     * @param array $data
+     */
+    public function save(array $data)
     {
         foreach ($this->items as $item) {
             $item->save($data);

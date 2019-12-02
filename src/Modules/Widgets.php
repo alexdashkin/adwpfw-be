@@ -31,11 +31,11 @@ class Widgets extends ModuleWithItems
     /**
      * Add Widget.
      *
-     * @param array $data
+     * @param array $data. Data to pass to Widget constructor.
      *
      * @throws AdwpfwException
-     * @see Widget::__construct()
      *
+     * @see Widget::__construct()
      */
     public function add(array $data)
     {

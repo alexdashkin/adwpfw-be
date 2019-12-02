@@ -16,11 +16,11 @@ class Endpoint extends Ajax
      * @param App $app
      * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized 'route'.
-     * @type string $namespace Namespace with trailing slash (i.e. prefix/v1/).
-     * @type string $route Route without slashes (i.e. users).
-     * @type string $method get/post.
-     * @type bool $admin Whether available for admins only.
-     * @type array $fields Accepted params [type, required].
+     * @type string $namespace Namespace with trailing slash (e.g. prefix/v1/).
+     * @type string $route Route without slashes (i.e. users). Required.
+     * @type string $method get/post. Default 'post'.
+     * @type bool $admin Whether available for admins only. Default false.
+     * @type array $fields Accepted params [type, required]. Default [].
      * @type callable $callback Handler. Gets an array with $_REQUEST params.
      * Must return array ['success', 'message', 'data']. Required.
      * }
@@ -53,6 +53,7 @@ class Endpoint extends Ajax
 
     /**
      * Register Endpoint.
+     *
      * @return True on success, false on error.
      */
     public function register()

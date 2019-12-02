@@ -34,8 +34,7 @@ class DbWidgets extends ModuleWithItems
      * @param array $data
      *
      * @throws AdwpfwException
-     *@see DbWidget::__construct()
-     *
+     * @see DbWidget::__construct()
      */
     public function add(array $data)
     {

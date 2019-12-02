@@ -7,10 +7,15 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Fields\Field;
 
 /**
- * Metabox
+ * Post Metabox.
  */
 class Metabox extends ItemWithItems
 {
+    /**
+     * @var Field[]
+     */
+    protected $items = [];
+
     /**
      * Constructor.
      *
@@ -18,10 +23,10 @@ class Metabox extends ItemWithItems
      * @param array $data {
      * @type string $id Defaults to sanitized $title.
      * @type string $title Metabox title. Required.
-     * @type array $screen For which Post Types to show.
+     * @type array $screen For which Post Types to show. Default ['post', 'page'].
      * @type string $context normal/side/advanced. Default 'normal'.
      * @type string $priority high/low/default. Default 'default'.
-     * @type array $fields Metabox fields.
+     * @type array $fields Metabox fields. Default [].
      * }
      *
      * @throws AdwpfwException
@@ -37,7 +42,7 @@ class Metabox extends ItemWithItems
             ],
             'screen' => [
                 'type' => 'array',
-                'default' => [],
+                'default' => ['post', 'page'],
             ],
             'context' => [
                 'default' => 'normal',
@@ -47,6 +52,7 @@ class Metabox extends ItemWithItems
             ],
             'fields' => [
                 'type' => 'array',
+                'default' => [],
                 'def' => [
                     'id' => 'field',
                     'type' => 'text',
@@ -64,7 +70,7 @@ class Metabox extends ItemWithItems
     }
 
     /**
-     * Add Field
+     * Add Field.
      *
      * @param array $data Data passed to the Field Constructor.
      *
@@ -144,7 +150,7 @@ class Metabox extends ItemWithItems
     }
 
     /**
-     * Save the posted data
+     * Save the posted data.
      *
      * @param array $data Posted Data
      * @param int $postId

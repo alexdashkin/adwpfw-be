@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Modules\Logger;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
- * Main App Class
+ * Main App Class.
  */
 class App
 {
@@ -22,7 +22,7 @@ class App
     private $modules = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $config Config
      */
@@ -34,9 +34,9 @@ class App
     }
 
     /**
-     * Get Module
+     * Get Module.
      *
-     * If not exists, try to create
+     * If not exists, try to create.
      *
      * @param string $moduleName
      * @return Module|Logger

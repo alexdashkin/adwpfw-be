@@ -17,6 +17,7 @@ abstract class ItemWithItems extends BasicItemWithItems
      * @param array $data
      * @param App $app
      * @param array $props
+     *
      * @throws AdwpfwException
      */
     protected function __construct(App $app, array $data, array $props = [])

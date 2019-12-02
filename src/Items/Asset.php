@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Asset file (CSS/JS)
+ * Asset file (CSS/JS). To be extended.
  */
 abstract class Asset extends Item
 {
@@ -16,6 +16,7 @@ abstract class Asset extends Item
      * @param array $data
      * @param App $app
      * @param array $props
+     *
      * @throws AdwpfwException
      */
     protected function __construct(App $app, array $data, array $props = [])

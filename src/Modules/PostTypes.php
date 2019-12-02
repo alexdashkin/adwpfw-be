@@ -31,7 +31,7 @@ class PostTypes extends ModuleWithItems
     /**
      * Add Post Type.
      *
-     * @param array $data
+     * @param array $data. Data to pass to PostType constructor.
      *
      * @see PostType::__construct();
      *
@@ -43,7 +43,7 @@ class PostTypes extends ModuleWithItems
     }
 
     /**
-     * Register Post Types in WP
+     * Register Post Types.
      */
     public function register()
     {

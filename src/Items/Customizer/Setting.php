@@ -12,11 +12,19 @@ use AlexDashkin\Adwpfw\Items\Item;
 class Setting extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      * @param array $data {
-     * @type array $fields Fields: {
+     * @type string $id Default sanitized label.
+     * @type string $section Section ID. Required.
+     * @type int $priority Default 10.
+     * @type string $label Required.
+     * @type string $description Default empty.
+     * @type string $type Default 'text'.
+     * @type array $input_attrs Attributes for control. Default [].
+     * @type string $default Default value. Default empty.
+     * @type callable $sanitize_callback Default empty.
      * }
      *
      * @throws AdwpfwException
@@ -100,6 +108,14 @@ class Setting extends Item
         }
     }
 
+    /**
+     * Get default Setting ID.
+     * Not working with uniqid() as on subsequent calls it's different
+     * and the Panel disappears from Customizer on page load
+     *
+     * @param string $base
+     * @return string
+     */
     protected function getDefaultId($base)
     {
         return esc_attr(sanitize_key(str_replace(' ', '_', $base)));

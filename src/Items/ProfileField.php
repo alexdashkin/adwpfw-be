@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Fields\Field;
 
 /**
- * User Profile Custom Field
+ * User Profile Custom Field.
  */
 class ProfileField extends Item
 {
@@ -16,6 +16,9 @@ class ProfileField extends Item
      */
     private $field;
 
+    /**
+     * @var string User Meta Key to store the field.
+     */
     private $metaKey;
 
     /**
@@ -26,7 +29,8 @@ class ProfileField extends Item
      * @type string $id Field Name used as a key in $prefix[] array on the Form. Required.
      * @type string $label Field Label. Required.
      * @type string $type Field Type. Default 'text'.
-     * @type string $desc Field Description to be shown below the Field.
+     * @type string $class CSS class. Default 'regular-text'.
+     * @type string $desc Field Description to be shown below the Field. Default empty.
      * }
      *
      * @throws AdwpfwException
@@ -62,9 +66,9 @@ class ProfileField extends Item
     }
 
     /**
-     * Get a field value
+     * Get field value.
      *
-     * @param int|null $userId User ID (defaults to the current user)
+     * @param int $userId User ID (defaults to the current user)
      * @return mixed
      */
     public function get($userId = null)
@@ -81,11 +85,17 @@ class ProfileField extends Item
     /**
      * Get Twig Args for rendering the Field.
      *
-     * @param int $userId User ID.
+     * @param int $userId User ID (defaults to the current user).
      * @return array Twig Args.
      */
     public function getArgs($userId)
     {
+        $userId = $userId ?: get_current_user_id();
+
+        if (!$user = get_user_by('ID', $userId)) {
+            return [];
+        }
+
         return $this->field->getArgs([$this->data['id'] => $this->get($userId)]);
     }
 

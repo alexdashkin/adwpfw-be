@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Form Field
+ * Form Field to be extended.
  */
 abstract class Field extends BasicItem
 {
@@ -68,6 +68,12 @@ abstract class Field extends BasicItem
         parent::__construct($app, $data, array_merge($defaults, $props));
     }
 
+    /**
+     * Get Twig args to render the Field.
+     *
+     * @param array $values
+     * @return array
+     */
     public function getArgs(array $values)
     {
         $this->data['value'] = isset($values[$this->data['id']]) ? $values[$this->data['id']] : $this->data['default'];
@@ -75,6 +81,12 @@ abstract class Field extends BasicItem
         return $this->data;
     }
 
+    /**
+     * Sanitize field value.
+     *
+     * @param mixed $value
+     * @return mixed
+     */
     public function sanitize($value)
     {
         return $value;

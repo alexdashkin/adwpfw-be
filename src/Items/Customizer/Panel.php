@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Items\ItemWithItems;
 
 /**
- * Customizer Panel
+ * Customizer Panel.
  */
 class Panel extends ItemWithItems
 {
@@ -17,12 +17,16 @@ class Panel extends ItemWithItems
     protected $items = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      * @param array $data {
-     * @type array $sections Sections: {
+     * @type string $id Default sanitized title.
+     * @type string $title Required.
+     * @type string $description Default empty.
+     * @type int $priority Default 160.
      * }
+     * @type array $sections
      *
      * @throws AdwpfwException
      */

@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Admin Ajax Action
+ * Ajax Action (admin-ajax.php).
  */
 class AjaxAction extends Ajax
 {
@@ -40,9 +40,10 @@ class AjaxAction extends Ajax
 
     /**
      * Handle the Request.
+     *
      * @param array $request $_REQUEST params
      */
-    public function run($request)
+    public function run(array $request)
     {
         $this->log('Ajax request, action "%s"', [$this->data['name']]);
 

@@ -20,8 +20,8 @@ class Select extends Field
      * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
      * @type string $tpl Template name. Default 'select'.
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
-     * @type string $label Label.
-     * @type string $desc Description.
+     * @type string $label Label. Default empty.
+     * @type string $desc Description. Default empty.
      * @type string $placeholder Placeholder. Default '--- Select ---'.
      * @type array $options Options. Required.
      * @type bool $multiple Default false.
@@ -91,6 +91,12 @@ class Select extends Field
         return $data;
     }
 
+    /**
+     * Sanitize value.
+     *
+     * @param string|array $value
+     * @return string|array
+     */
     public function sanitize($value)
     {
         if (is_array($value)) {

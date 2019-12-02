@@ -20,7 +20,7 @@ class Button extends Field
      * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
      * @type string $tpl Template name. Default 'button'.
      * @type string $class CSS Class(es) for the control. Default empty.
-     * @type string $desc Description.
+     * @type string $desc Description. Default empty.
      * @type string $caption Button Caption. Required.
      * }
      * @param array $props

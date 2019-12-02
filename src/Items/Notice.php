@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Admin Notice
+ * Admin Notice.
  */
 class Notice extends Item
 {
@@ -15,15 +15,15 @@ class Notice extends Item
      *
      * @param App $app
      * @param array $data {
-     * @type string $id Defaults to sanitized $tpl.
-     * @type string $message Message to display (tpl will be ignored).
-     * @type string $tpl Name of the notice Twig template.
+     * @type string $id Defaults to sanitized 'notice'.
+     * @type string $message Message to display (tpl will be ignored). Default empty.
+     * @type string $tpl Name of the notice Twig template. Default empty.
      * @type string $type Notice type (success, error). Default 'success'.
      * @type bool $dismissible Whether can be dismissed. Default true.
      * @type int $days When to show again after dismissed. Default 0.
      * @type array $classes Container CSS classes. Default empty.
      * @type array $args Additional Twig args. Default empty.
-     * @type callable $callback Must return true for the Notice to show.
+     * @type callable $callback Must return true for the Notice to show. Default empty.
      * }
      *
      * @throws AdwpfwException

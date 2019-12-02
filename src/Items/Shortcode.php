@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Shortcode
+ * Shortcode.
  */
 class Shortcode extends Item
 {
@@ -17,7 +17,7 @@ class Shortcode extends Item
      * @param array $data {
      * @type string $id Tag without prefix. Required.
      * @type callable $callback Render function. Gets $atts. Required.
-     * @type array $atts Default atts (key-value pairs).
+     * @type array $atts Default atts (key-value pairs). Default [].
      * }
      *
      * @throws AdwpfwException

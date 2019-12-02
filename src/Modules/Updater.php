@@ -13,7 +13,12 @@ use AlexDashkin\Adwpfw\Items\Theme;
 class Updater extends ModuleWithItems
 {
     /**
-     * Constructor
+     * @var Plugin[]|Theme[]
+     */
+    protected $items = [];
+
+    /**
+     * Constructor.
      *
      * @param App $app
      */
@@ -27,9 +32,9 @@ class Updater extends ModuleWithItems
     }
 
     /**
-     * Add Item.
+     * Add Plugin or Theme.
      *
-     * @param array $data
+     * @param array $data. Data to pass to Plugin/Theme constructor.
      *
      * @throws AdwpfwException
      * @see Plugin::__construct(), Theme::__construct()

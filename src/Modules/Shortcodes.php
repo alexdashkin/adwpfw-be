@@ -31,7 +31,7 @@ class Shortcodes extends ModuleWithItems
     /**
      * Add Shortcode.
      *
-     * @param array $data
+     * @param array $data. Data to pass to Shortcode constructor.
      *
      * @see Shortcode::__construct();
      *

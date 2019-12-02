@@ -55,7 +55,6 @@ class Cron extends ModuleWithItems
      *
      * @throws AdwpfwException
      * @see CronJob::__construct()
-     *
      */
     public function add(array $data)
     {
@@ -63,7 +62,7 @@ class Cron extends ModuleWithItems
     }
 
     /**
-     * Run Jobs
+     * Run Jobs.
      */
     public function run()
     {

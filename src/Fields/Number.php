@@ -20,11 +20,11 @@ class Number extends Field
      * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
      * @type string $tpl Template name. Default 'number'.
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
-     * @type string $label Label.
-     * @type string $desc Description.
-     * @type int $min Min attr
-     * @type int $max Max attr
-     * @type int $step Step attr
+     * @type string $label Label. Default empty.
+     * @type string $desc Description. Default empty.
+     * @type int $min Min attr. Default 0.
+     * @type int $max Max attr. Default 1000000000.
+     * @type int $step Step attr. Default 1.
      * }
      * @param array $props
      *
@@ -56,6 +56,12 @@ class Number extends Field
         parent::__construct($app, $data, array_merge($defaults, $props));
     }
 
+    /**
+     * Sanitize value.
+     *
+     * @param mixed $value
+     * @return int
+     */
     public function sanitize($value)
     {
         return (int)$value;

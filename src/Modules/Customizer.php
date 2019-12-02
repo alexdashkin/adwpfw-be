@@ -17,7 +17,7 @@ class Customizer extends ModuleWithItems
     protected $items = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      */
@@ -28,7 +28,7 @@ class Customizer extends ModuleWithItems
     }
 
     /**
-     * Add Panel
+     * Add Panel.
      *
      * @param array $data
      *
@@ -41,13 +41,19 @@ class Customizer extends ModuleWithItems
         $this->items[] = new Panel($this->app, $data);
     }
 
+    /**
+     * Get Theme Mod.
+     *
+     * @param string $id
+     * @return mixed
+     */
     public function get($id)
     {
         return get_theme_mod($this->prefix . '_' . $id);
     }
 
     /**
-     * Register Panel
+     * Register Panel.
      *
      * @param \WP_Customize_Manager $customizer
      */

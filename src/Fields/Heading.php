@@ -44,9 +44,4 @@ class Heading extends Field
 
         parent::__construct($app, $data, array_merge($defaults, $props));
     }
-
-    public function sanitize($value)
-    {
-        return sanitize_text_field($value);
-    }
 }

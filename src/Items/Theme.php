@@ -6,12 +6,12 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Theme with Self-Update feature
+ * Theme with Self-Update feature.
  */
 class Theme extends Item
 {
     /**
-     * @var array Update transient data
+     * @var array Update transient data.
      */
     private $transient;
 
@@ -23,7 +23,7 @@ class Theme extends Item
      * @type string $id ID for internal use. Defaults to sanitized $slug.
      * @type string $slug Theme's directory name. Required.
      * @type string $package URL of the package. Required.
-     * @type callable $update_callback Function to call on theme update.
+     * @type callable $update_callback Function to call on theme update. Default empty.
      * }
      *
      * @throws AdwpfwException

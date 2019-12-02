@@ -11,6 +11,14 @@ use AlexDashkin\Adwpfw\Items\ProfileField;
  */
 class Profile extends ModuleWithItems
 {
+    /**
+     * @var ProfileField[]
+     */
+    protected $items = [];
+
+    /**
+     * @var string Fields group heading
+     */
     private $heading = 'Custom fields';
 
     /**
@@ -31,7 +39,7 @@ class Profile extends ModuleWithItems
     /**
      * Add Profile Field.
      *
-     * @param array $data
+     * @param array $data. Data to pass to ProfileField constructor.
      *
      * @see ProfileField::__construct();
      *
@@ -52,6 +60,13 @@ class Profile extends ModuleWithItems
         $this->heading = $heading;
     }
 
+    /**
+     * Get profile field value
+     *
+     * @param string $id Field ID.
+     * @param int $userId Defaults to current user.
+     * @return mixed
+     */
     public function get($id, $userId = null)
     {
         if ($item = $this->searchItems(['id' => $id], true)) {
@@ -61,13 +76,21 @@ class Profile extends ModuleWithItems
         return null;
     }
 
+    /**
+     * Set profile field value
+     *
+     * @param string $id Field ID.
+     * @param mixed $value
+     * @param int $userId Defaults to current user.
+     * @return bool
+     */
     public function set($id, $value, $userId = null)
     {
         if ($item = $this->searchItems(['id' => $id], true)) {
             return $item->set($value, $userId);
         }
 
-        return null;
+        return false;
     }
 
     /**

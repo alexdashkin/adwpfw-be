@@ -7,19 +7,24 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Fields\Field;
 
 /**
- * Menu Page Tab
+ * Admin Page Tab.
  */
 class AdminPageTab extends ItemWithItems
 {
     /**
-     * Constructor
+     * @var Field[]
+     */
+    protected $items = [];
+
+    /**
+     * Constructor.
      *
      * @param App $app
      * @param array $data {
-     * @type string $slug Defaults to sanitized $title.
+     * @type string $id Defaults to sanitized $title.
      * @type string $title Tab title. Required.
      * @type bool $form Whether to wrap content with the <form> tag and add 'Save changes' button. Default false.
-     * @type string $option WP Option name where the values are stored. Required if $form is true.
+     * @type string $option WP Option name where the values are stored. Default 'settings'.
      * @type array $fields Tab fields
      * }
      *

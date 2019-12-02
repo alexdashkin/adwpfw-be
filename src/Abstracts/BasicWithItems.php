@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Abstracts;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Basic Class
+ * Basic Class containing Items
  */
 abstract class BasicWithItems extends Basic
 {

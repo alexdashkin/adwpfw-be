@@ -31,7 +31,7 @@ class Rest extends ModuleAjax
     /**
      * Add Endpoint.
      *
-     * @param array $data
+     * @param array $data. Data to pass to Endpoint constructor.
      *
      * @see Endpoint::__construct();
      *

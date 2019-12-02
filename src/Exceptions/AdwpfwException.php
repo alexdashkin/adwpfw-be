@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Exceptions;
 
 /**
- * Main Exception
+ * Exception Class
  */
 class AdwpfwException extends \Exception
 {

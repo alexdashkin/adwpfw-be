@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Top Admin Bar Item
+ * Top Admin Bar Item.
  */
 class AdminBar extends Item
 {
@@ -19,9 +19,9 @@ class AdminBar extends Item
      * @type string $title Bar Title. Required.
      * @type string $parent Parent node ID. Default null.
      * @type string $capability Minimum capability. Default 'manage_options'.
-     * @type string $href URL of the link.
+     * @type string $href URL of the link. Default empty.
      * @type bool $group Whether or not the node is a group. Default false.
-     * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default empty.
+     * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default [].
      * }
      *
      * @see \WP_Admin_Bar::add_node()

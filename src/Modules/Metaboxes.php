@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Items\Metabox;
 
 /**
- * Posts Metaboxes
+ * Posts Metaboxes.
  */
 class Metaboxes extends ModuleWithItems
 {
@@ -49,11 +49,11 @@ class Metaboxes extends ModuleWithItems
     }
 
     /**
-     * Mark registered Metaboxes to be removed
+     * Mark registered Metaboxes to be removed.
      *
      * @param array $metaboxes {
-     * @type string $id
-     * @type array $screen
+     * @type string $id. Required.
+     * @type array $screen. Default [].
      * @type string $context
      * }
      */
@@ -69,7 +69,7 @@ class Metaboxes extends ModuleWithItems
     }
 
     /**
-     * Register and Remove Metaboxes
+     * Register and Remove Metaboxes.
      */
     public function register()
     {
@@ -84,6 +84,13 @@ class Metaboxes extends ModuleWithItems
         }
     }
 
+    /**
+     * Get Metabox value
+     *
+     * @param string $id Metabox ID
+     * @param int $post Post ID. Defaults to the current post.
+     * @return array
+     */
     public function get($id, $post = null)
     {
         if ($item = $this->searchItems(['id' => $id], true)) {
@@ -93,6 +100,14 @@ class Metaboxes extends ModuleWithItems
         return null;
     }
 
+    /**
+     * Set Metabox value
+     *
+     * @param string $id Metabox ID
+     * @param mixed $value
+     * @param int $post Post ID. Defaults to the current post.
+     * @return |null
+     */
     public function set($id, $value, $post = null)
     {
         if ($item = $this->searchItems(['id' => $id], true)) {

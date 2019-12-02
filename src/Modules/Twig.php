@@ -10,7 +10,7 @@ use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
 
 /**
- * Twig Template Engine
+ * Twig Template Engine.
  */
 class Twig extends Module
 {
@@ -115,7 +115,7 @@ class Twig extends Module
      * Render File Template.
      *
      * @param string $name Template file name without .twig.
-     * @param array $args Args to be passed to the Template.
+     * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
     public function renderFile($name, $args = [])
@@ -127,7 +127,7 @@ class Twig extends Module
      * Render Array Template.
      *
      * @param string $name Template name.
-     * @param array $args Args to be passed to the Template.
+     * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
     public function renderArray($name, $args = [])
@@ -140,7 +140,7 @@ class Twig extends Module
      *
      * @param Environment $twig Array or FileSystem Environment
      * @param string $name Template name.
-     * @param array $args Args to be passed to the Template.
+     * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
     private function render($twig, $name, $args = [])

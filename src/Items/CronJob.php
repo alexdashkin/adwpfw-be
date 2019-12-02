@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Cron Job
+ * Cron Job.
  */
 class CronJob extends Item
 {
@@ -19,7 +19,7 @@ class CronJob extends Item
      * @type string $name Job Name. Required.
      * @type callable $callback Handler. Gets $args. Required.
      * @type int $interval Interval in seconds. Default 0.
-     * @type bool $parallel Whether to parallel execution. Default false.
+     * @type bool $parallel Whether to allow parallel execution. Default false.
      * @type array $args Args to be passed to the handler. Default empty.
      * }
      *

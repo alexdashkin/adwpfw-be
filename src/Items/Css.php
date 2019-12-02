@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * CSS file
+ * CSS file.
  */
 class Css extends Asset
 {
@@ -16,8 +16,8 @@ class Css extends Asset
      * @param App $app
      * @param array $data {
      * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
-     * @type string $type admin/front. Required.
-     * @type string $file Path relative to the Plugin root.
+     * @type string $af admin/front. Required.
+     * @type string $file Path relative to the Plugin root without leading slash. Required if URL is empty. Default empty.
      * @type string $url Asset URL. Defaults to $file URL if $file is specified.
      * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
      * @type array $deps List of Dependencies (slugs).

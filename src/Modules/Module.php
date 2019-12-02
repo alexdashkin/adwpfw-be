@@ -8,7 +8,7 @@ use AlexDashkin\Adwpfw\App;
 /**
  * Basic Module
  *
- * Singleton would not work as multiple Apps are possible
+ * Singleton would not work as multiple App instances are possible
  */
 abstract class Module extends Basic
 {

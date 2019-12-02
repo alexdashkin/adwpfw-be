@@ -42,7 +42,7 @@ class Assets extends ModuleWithItems
     }
 
     /**
-     * Add Asset
+     * Add Asset.
      *
      * @param array $data
      *
@@ -84,9 +84,9 @@ class Assets extends ModuleWithItems
     }
 
     /**
-     * Enqueue admin assets
+     * Enqueue admin assets.
      *
-     * Hooked on "admin_enqueue_scripts"
+     * Hooked into "admin_enqueue_scripts"
      */
     public function enqueueAdmin()
     {
@@ -98,9 +98,9 @@ class Assets extends ModuleWithItems
     }
 
     /**
-     * Enqueue front assets
+     * Enqueue front assets.
      *
-     * Hooked on "wp_enqueue_scripts"
+     * Hooked into "wp_enqueue_scripts"
      */
     public function enqueueFront()
     {
@@ -112,7 +112,7 @@ class Assets extends ModuleWithItems
     }
 
     /**
-     * Remove unnecessary and Enqueue registered
+     * Remove unnecessary and Enqueue registered.
      */
     private function enqueue()
     {

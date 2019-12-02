@@ -21,14 +21,14 @@ class Select2 extends Select
      * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
      * @type string $tpl Template name. Default 'select2'.
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
-     * @type string $label Label.
-     * @type string $desc Description.
+     * @type string $label Label. Default empty.
+     * @type string $desc Description. Default empty.
      * @type string $placeholder Placeholder. Default '--- Select ---'.
-     * @type array $options Options.
+     * @type array $options Options. Default [].
      * @type bool $multiple Default false.
-     * @type string $ajax_action Ajax Action to populate options.
-     * @type int $min_chars Minimum query length to start search.
-     * @type callable $label_cb Callback. Callback to build labels for values.
+     * @type string $ajax_action Ajax Action to populate options. Default empty.
+     * @type int $min_chars Minimum query length to start search. Default 3.
+     * @type callable $label_cb Callback. Callback to build labels for values. Default empty.
      * }
      * @param array $props
      *
@@ -60,6 +60,12 @@ class Select2 extends Select
         parent::__construct($app, $data, array_merge($defaults, $props));
     }
 
+    /**
+     * Get Twig args to render the Field.
+     *
+     * @param array $values
+     * @return array
+     */
     public function getArgs(array $values)
     {
         $data = $this->data;

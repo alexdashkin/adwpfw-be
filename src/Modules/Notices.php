@@ -31,7 +31,7 @@ class Notices extends ModuleWithItems
     /**
      * Add Notice.
      *
-     * @param array $data
+     * @param array $data Data passed to Notice constructor.
      *
      * @see Notice::__construct();
      *
@@ -42,6 +42,11 @@ class Notices extends ModuleWithItems
         $this->items[] = new Notice($this->app, $data);
     }
 
+    /**
+     * Show a notice.
+     *
+     * @param string $id Notice ID
+     */
     public function show($id)
     {
         if ($item = $this->searchItems(['id' => $id], true)) {
@@ -49,6 +54,11 @@ class Notices extends ModuleWithItems
         }
     }
 
+    /**
+     * Stop showing a notice.
+     *
+     * @param string $id Notice ID
+     */
     public function stop($id)
     {
         if ($item = $this->searchItems(['id' => $id], true)) {
@@ -56,6 +66,11 @@ class Notices extends ModuleWithItems
         }
     }
 
+    /**
+     * Dismiss a notice.
+     *
+     * @param string $id Notice ID
+     */
     public function dismiss($id)
     {
         if ($item = $this->searchItems(['id' => $id], true)) {

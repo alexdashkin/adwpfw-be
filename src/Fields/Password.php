@@ -20,8 +20,8 @@ class Password extends Text
      * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
      * @type string $tpl Template name. Default 'password'.
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
-     * @type string $label Label.
-     * @type string $desc Description.
+     * @type string $label Label. Default empty.
+     * @type string $desc Description. Default empty.
      * }
      * @param array $props
      *

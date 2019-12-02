@@ -7,7 +7,7 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 use AlexDashkin\Adwpfw\Modules\Helpers;
 
 /**
- * Ajax Endpoint
+ * Abstract Ajax Endpoint. To be extended.
  */
 abstract class Ajax extends Item
 {

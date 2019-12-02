@@ -6,23 +6,24 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Sidebar
+ * Theme Sidebar.
  */
 class Sidebar extends Item
 {
     /**
-     * Constructor
+     * Constructor.
      *
      * @param App $app
      * @param array $data {
      * @type string $id Defaults to sanitized $name.
      * @type string $name Sidebar Title. Required.
-     * @type string $description
-     * @type string $class CSS class for container.
+     * @type string $description. Default empty.
+     * @type string $class CSS class for container. Default empty.
      * }
-     * @throws AdwpfwException
+     *
      * @see register_sidebar()
      *
+     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {

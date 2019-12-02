@@ -30,7 +30,7 @@ class PostStates extends ModuleWithItems
     /**
      * Add Post State.
      *
-     * @param array $data
+     * @param array $data. Data to pass to PostState constructor.
      *
      * @see PostState::__construct();
      *

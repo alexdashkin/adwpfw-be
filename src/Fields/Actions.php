@@ -20,11 +20,12 @@ class Actions extends Field
      * @type string $form Form ID (slug). Used to distinguish multiple forms on one page. Required.
      * @type string $tpl Template name. Default 'actions'.
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
-     * @type string $label Label.
-     * @type string $desc Description.
+     * @type string $label Field Label. Default empty.
+     * @type string $desc Field Description. Default empty.
      * @type array $options Actions list ['label', 'value']. Required.
      * }
      * @param array $props
+     *
      * @throws AdwpfwException
      */
     public function __construct(App $app, array $data, array $props = [])

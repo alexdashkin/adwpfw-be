@@ -6,7 +6,7 @@ use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 
 /**
- * Plugin Self-Update feature
+ * Plugin Self-Update feature.
  */
 class Plugin extends Item
 {
@@ -23,7 +23,7 @@ class Plugin extends Item
      * @type string $id ID for internal use. Defaults to sanitized $path.
      * @type string $path Path to the plugin's main file. Required.
      * @type string $package URL of the package. Required.
-     * @type callable $update_callback Function to call on plugin update.
+     * @type callable $update_callback Function to call on plugin update. Default empty.
      * }
      *
      * @throws AdwpfwException

@@ -16,10 +16,9 @@ class Js extends Asset
      * @param App $app
      * @param array $data {
      * @type string $id Asset ID. Defaults to sanitized $type. Must be unique.
-     * @type string $type css/js. Required.
      * @type string $af admin/front. Required.
-     * @type string $file Path relative to the Plugin root. Default null.
-     * @type string $url Asset URL. Default null.
+     * @type string $file Path relative to the Plugin root without leading slash. Required if URL is empty. Default empty.
+     * @type string $url Asset URL. Defaults to $file URL if $file is specified.
      * @type string $ver Version added as a query string param. Defaults to filemtime() if $file is specified.
      * @type array $deps List of Dependencies (slugs).
      * @type callable $callback Must return true to enqueue the Asset.
@@ -44,6 +43,9 @@ class Js extends Asset
         parent::__construct($app, $data, $props);
     }
 
+    /**
+     * Enqueue Asset.
+     */
     public function enqueue()
     {
         $data = $this->data;

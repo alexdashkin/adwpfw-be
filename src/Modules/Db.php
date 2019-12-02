@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 use AlexDashkin\Adwpfw\App;
 
 /**
- * Database Helper
+ * Database Helper.
  */
 class Db extends Module
 {
@@ -36,7 +36,7 @@ class Db extends Module
      * Perform a DB Query.
      *
      * @param string $query SQL Query.
-     * @param array $values If passed, $wpdb->prepare() will be called first.
+     * @param array $values If passed, $wpdb->prepare() will be called first. Default [].
      * @return mixed
      */
     public function query($query, array $values = [])
@@ -51,7 +51,7 @@ class Db extends Module
      *
      * @param string $table Table Name.
      * @param array $data Data to insert.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return int|bool Insert ID or false if failed.
      */
     public function insert($table, array $data, $own = true)
@@ -68,7 +68,7 @@ class Db extends Module
      * @param string $table Table Name.
      * @param array $data Data to insert.
      * @param array $where Conditions.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return int|bool Insert ID or false if failed.
      */
     public function update($table, array $data, array $where, $own = true)
@@ -84,7 +84,7 @@ class Db extends Module
      * @param string $table Table Name.
      * @param array $data Data to insert.
      * @param array $where Conditions.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return int|bool Insert ID or false if failed.
      */
     public function insertOrUpdate($table, array $data, array $where, $own = true)
@@ -101,7 +101,7 @@ class Db extends Module
      *
      * @param string $table Table Name.
      * @param array $where Conditions.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return bool Succeed?
      */
     public function delete($table, array $where, $own = true)
@@ -117,7 +117,7 @@ class Db extends Module
      * @param string $table Table Name.
      * @param string $var Field name.
      * @param array $where Conditions.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return mixed
      */
     public function getVar($table, $var, array $where, $own = true)
@@ -139,10 +139,10 @@ class Db extends Module
      * Get Results.
      *
      * @param string $table Table Name.
-     * @param array $fields List of Fields.
-     * @param array $where Conditions.
-     * @param bool $single Get single row?
-     * @param bool $own Is own table?
+     * @param array $fields List of Fields. Default [].
+     * @param array $where Conditions. Default [].
+     * @param bool $single Get single row? Default false.
+     * @param bool $own Is own table? Default true.
      * @return mixed
      */
     public function getResults($table, array $fields = [], array $where = [], $single = false, $own = true)
@@ -187,7 +187,7 @@ class Db extends Module
      *
      * @param string $table Table Name.
      * @param array $where Conditions.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return int
      */
     public function getCount($table, array $where = [], $own = true)
@@ -224,7 +224,7 @@ class Db extends Module
      *
      * @param string $table Table Name.
      * @param array $data Data to insert.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return bool
      */
     public function insertRows($table, array $data, $own = true)
@@ -242,7 +242,7 @@ class Db extends Module
         foreach ($data as $index => $row) {
             /*            foreach ($row as $key => &$value) {
                             if (is_string($value)) {
-                                $value = $this->stripValue($value); // todo
+                                $value = $this->stripValue($value); // todo is sanitization needed?
                             }
                         }*/
 
@@ -267,7 +267,7 @@ class Db extends Module
      * Truncate a table.
      *
      * @param string $table Table Name.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return bool
      */
     public function truncateTable($table, $own = true)
@@ -300,7 +300,7 @@ class Db extends Module
      * Get table name with all prefixes.
      *
      * @param string $name Table Name.
-     * @param bool $own Is own table?
+     * @param bool $own Is own table? Default true.
      * @return string
      */
     public function getTable($name, $own = true)

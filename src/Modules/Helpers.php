@@ -299,11 +299,11 @@ class Helpers
      * External API request helper.
      *
      * @param array $args {
-     * @type string $url
-     * @type string $method Get/Post
-     * @type array $headers
-     * @type array $data Data to send
-     * @type int $timeout
+     * @type string $url. Required.
+     * @type string $method Get/Post. Default 'get'.
+     * @type array $headers. Default [].
+     * @type array $data Data to send. Default [].
+     * @type int $timeout. Default 0.
      * }
      *
      * @return mixed Response body or false on failure
@@ -361,9 +361,9 @@ class Helpers
     /**
      * Return Success array.
      *
-     * @param string $message Message.
-     * @param array $data Data to return as JSON.
-     * @param bool $echo Whether to echo Response right away without returning.
+     * @param string $message Message. Default 'Done'.
+     * @param array $data Data to return as JSON. Default [].
+     * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
     public static function returnSuccess($message = 'Done', array $data = [], $echo = false)
@@ -388,8 +388,8 @@ class Helpers
     /**
      * Return Error array.
      *
-     * @param string $message Error message.
-     * @param bool $echo Whether to echo Response right away without returning.
+     * @param string $message Error message. Default 'Unknown Error'.
+     * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
     public static function returnError($message = 'Unknown Error', $echo = false)
@@ -414,7 +414,7 @@ class Helpers
      * Wrapper for false and \WP_Error returns.
      *
      * @param mixed $result Result of a function call.
-     * @param string $errorMessage Message to log on error.
+     * @param string $errorMessage Message to log on error. Default empty.
      * @return bool Whether the call succeeded.
      */
     public static function pr($result, $errorMessage = '')
@@ -459,7 +459,7 @@ class Helpers
      * Used to put output in a variable instead of echo.
      *
      * @param string|array $func Callable.
-     * @param array $args Function args.
+     * @param array $args Function args. Default [].
      * @return string Output
      */
     public static function getOutput($func, $args = [])
@@ -484,7 +484,7 @@ class Helpers
     /**
      * Remove not empty directory.
      *
-     * @param $path
+     * @param string $path
      */
     public static function rmDir($path)
     {
@@ -506,9 +506,9 @@ class Helpers
     }
 
     /**
-     * Disable WP emojis.
+     * Remove WP emojis.
      */
-    public static function disableEmojis()
+    public static function removeEmojis()
     {
         remove_action('admin_print_styles', 'print_emoji_styles');
         remove_action('wp_head', 'print_emoji_detection_script', 7);
@@ -528,8 +528,8 @@ class Helpers
      * Add a log entry.
      *
      * @param mixed $message Text or any other type including WP_Error.
-     * @param array $values If passed, vsprintf() func is applied.
-     * @param int $type 1 = Error, 2 = Warning, 4 = Notice.
+     * @param array $values If passed, vsprintf() func is applied. Default [].
+     * @param int $type 1 = Error, 2 = Warning, 4 = Notice. Default 4.
      */
     private static function log($message, $values = [], $type = 4)
     {
