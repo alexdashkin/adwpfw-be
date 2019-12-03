@@ -25,8 +25,8 @@ class Panel extends ItemWithItems
      * @type string $title Required.
      * @type string $description Default empty.
      * @type int $priority Default 160.
-     * }
      * @type array $sections
+     * }
      *
      * @throws AdwpfwException
      */

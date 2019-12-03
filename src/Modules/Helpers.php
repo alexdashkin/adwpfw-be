@@ -411,11 +411,11 @@ class Helpers
     }
 
     /**
-     * Wrapper for false and \WP_Error returns.
+     * \WP_Error handler.
      *
      * @param mixed $result Result of a function call.
      * @param string $errorMessage Message to log on error. Default empty.
-     * @return bool Whether the call succeeded.
+     * @return mixed|bool Function return or false on WP_Error or empty return.
      */
     public static function pr($result, $errorMessage = '')
     {

@@ -61,7 +61,7 @@ class Profile extends ModuleWithItems
     }
 
     /**
-     * Get profile field value
+     * Get profile field value.
      *
      * @param string $id Field ID.
      * @param int $userId Defaults to current user.
@@ -77,7 +77,7 @@ class Profile extends ModuleWithItems
     }
 
     /**
-     * Set profile field value
+     * Set profile field value.
      *
      * @param string $id Field ID.
      * @param mixed $value
