@@ -33,7 +33,7 @@ class Setting extends Item
     {
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['label']),
+                'default' => sanitize_key(str_replace(' ', '_', $data['label'])),
             ],
             'section' => [
                 'required' => true,
@@ -106,18 +106,5 @@ class Setting extends Item
             default:
                 $customizer->add_control($id, $control);
         }
-    }
-
-    /**
-     * Get default Setting ID.
-     * Not working with uniqid() as on subsequent calls it's different
-     * and the Panel disappears from Customizer on page load
-     *
-     * @param string $base
-     * @return string
-     */
-    protected function getDefaultId($base)
-    {
-        return esc_attr(sanitize_key(str_replace(' ', '_', $base)));
     }
 }

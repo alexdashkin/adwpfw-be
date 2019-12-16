@@ -35,7 +35,7 @@ class Section extends ItemWithItems
     {
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['title']),
+                'default' => sanitize_key(str_replace(' ', '_', $data['title'])),
             ],
             'panel' => [
                 'required' => true,
@@ -88,18 +88,5 @@ class Section extends ItemWithItems
         foreach ($this->items as $setting) {
             $setting->register($customizer);
         }
-    }
-
-    /**
-     * Get default Section ID.
-     * Not working with uniqid() as on subsequent calls it's different
-     * and the Panel disappears from Customizer on page load
-     *
-     * @param string $base
-     * @return string
-     */
-    protected function getDefaultId($base)
-    {
-        return esc_attr(sanitize_key(str_replace(' ', '_', $base)));
     }
 }

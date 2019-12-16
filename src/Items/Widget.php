@@ -29,7 +29,7 @@ class Widget extends Item
     {
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['title']),
+                'default' => 'widget_' . sanitize_key(str_replace(' ', '_', $data['title'])),
             ],
             'title' => [
                 'required' => true,
@@ -75,7 +75,9 @@ class Widget extends Item
         echo $args['before_widget'];
 
         echo $args['before_title'];
+
         echo $this->data['title'];
+
         echo $args['after_title'];
 
         echo $this->data['render']($args, $instance, $widget);
@@ -91,17 +93,5 @@ class Widget extends Item
         if ($this->data['form']) {
             echo $this->data['form']($instance, $widget); // todo build form the same way as Metaboxes
         }
-    }
-
-    /**
-     * Get default Widget ID.
-     * Not working with uniqid() as on subsequent calls it's different
-     *
-     * @param string $base
-     * @return string
-     */
-    protected function getDefaultId($base)
-    {
-        return 'widget_' . esc_attr(sanitize_key(str_replace(' ', '_', $base)));
     }
 }
