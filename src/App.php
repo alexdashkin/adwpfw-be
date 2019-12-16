@@ -89,7 +89,19 @@ class App
     }
 
     /**
-     * Get Var.
+     * Select with an arbitrary Query.
+     *
+     * @param string $query SQL query.
+     * @param array $values If passed, $wpdb->prepare() will be executed first.
+     * @return mixed
+     */
+    public function dbSelectQuery($query, array $values = [])
+    {
+        return $this->m('Db')->selectQuery($query, $values);
+    }
+
+    /**
+     * Get a specific value from a row.
      *
      * @param string $table Table Name without prefixes.
      * @param string $var Field name.

@@ -86,7 +86,21 @@ class Db extends Module
     }
 
     /**
-     * Get Var.
+     * Select with an arbitrary Query.
+     *
+     * @param string $query SQL query.
+     * @param array $values If passed, $wpdb->prepare() will be executed first.
+     * @return mixed
+     */
+    public function selectQuery($query, array $values = [])
+    {
+        $sql = $values ? $this->wpdb->prepare($query, $values) : $query;
+
+        return $this->result($this->wpdb->get_results($sql, 'ARRAY_A'));
+    }
+
+    /**
+     * Get a specific value from a row.
      *
      * @param string $table Table Name.
      * @param string $var Field name.
@@ -119,13 +133,15 @@ class Db extends Module
         }
 
         $condition = implode(' AND ', $whereArr);
-        $query = sprintf('SELECT COUNT(*) FROM `%s`', $t);
+        $query = sprintf('SELECT COUNT(*) cnt FROM `%s`', $t);
 
         if ($where) {
             $query .= ' WHERE ' . $condition;
         }
 
-        return $this->query($query);
+        $results = $this->result($this->wpdb->get_results($query, 'ARRAY_A'));
+
+        return $results && isset($results[0]['cnt']) ? (int)$results[0]['cnt'] : 0;
     }
 
     /**
