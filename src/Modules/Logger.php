@@ -53,7 +53,7 @@ class Logger
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $basePath = Helpers::getUploadsDir($prefix . '/logs');
         $filename = $this->getLogFilename($basePath, $prefix, $suffix, $maxLogSize);
-        $immediateName = '/' . time() . '-' . $suffix . '.log';
+        $immediateName = time() . '-' . $suffix . '.log';
 
         $this->paths[] = $basePath . $filename;
         $this->immediatePath = $basePath . $immediateName;
@@ -77,7 +77,7 @@ class Logger
      */
     private function getLogFilename($basePath, $prefix, $suffix, $maxSize, $counter = 1)
     {
-        $filename = '/' . $prefix . '-' . date('Y-m-d') . '-' . $suffix . '-' . $counter . '.log';
+        $filename = $prefix . '-' . date('Y-m-d') . '-' . $suffix . '-' . $counter . '.log';
         $filePath = $basePath . $filename;
 
         if (file_exists($filePath) && filesize($filePath) > $maxSize) {
