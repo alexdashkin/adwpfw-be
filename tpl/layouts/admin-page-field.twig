@@ -20,14 +20,6 @@
     <div class="adwpfw-control">
 
         {% block control %}
-
-            <input type="text" class="{{ field.class }}"
-                   id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
-                   name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
-                   placeholder="{{ field.placeholder }}"
-                    {% if field.required %} required {% endif %}
-                   value="{{ field.value }}">
-
         {% endblock %}
 
     </div>
