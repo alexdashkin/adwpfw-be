@@ -73,6 +73,49 @@ class App
     }
 
     /**
+     * Select data from a table.
+     *
+     * @param string $table Table Name without prefixes.
+     * @param array $fields List of Fields. Default [] = all.
+     * @param array $where Conditions. Default [].
+     * @param array $order Order by ['by', 'direction']. Default [].
+     * @param bool $single Get single row? Default false.
+     * @param bool $own Is own table? Default true.
+     * @return mixed
+     */
+    public function dbSelect($table, array $fields = [], array $where = [], array $order = [], $single = false, $own = true)
+    {
+        return $this->m('Db')->select($table, $fields, $where, $order, $single, $own);
+    }
+
+    /**
+     * Get Var.
+     *
+     * @param string $table Table Name without prefixes.
+     * @param string $var Field name.
+     * @param array $where Conditions.
+     * @param bool $own Is own table? Default true.
+     * @return mixed
+     */
+    public function dbGetVar($table, $var, array $where, $own = true)
+    {
+        return $this->m('Db')->getVar($table, $var, $where, $own);
+    }
+
+    /**
+     * Get Results Count.
+     *
+     * @param string $table Table Name without prefixes.
+     * @param array $where Conditions. Default [].
+     * @param bool $own Is own table? Default true.
+     * @return int
+     */
+    public function dbGetCount($table, array $where = [], $own = true)
+    {
+        return $this->m('Db')->getCount($table, $where, $own);
+    }
+
+    /**
      * Insert Data into a table.
      *
      * @param string $table Table Name without prefixes.
@@ -83,6 +126,29 @@ class App
     public function dbInsert($table, array $data, $own = true)
     {
         return $this->m('Db')->insert($table, $data, $own);
+    }
+
+    /**
+     * Get Last Insert ID.
+     *
+     * @return int
+     */
+    public function dbInsertId()
+    {
+        return $this->m('Db')->insertId();
+    }
+
+    /**
+     * Insert Multiple Rows with one query.
+     *
+     * @param string $table Table Name without prefixes.
+     * @param array $data Data to insert.
+     * @param bool $own Is own table? Default true.
+     * @return bool
+     */
+    public function dbInsertRows($table, array $data, $own = true)
+    {
+        return $this->m('Db')->insertRows($table, $data, $own);
     }
 
     /**
@@ -124,83 +190,6 @@ class App
     public function dbDelete($table, array $where, $own = true)
     {
         return $this->m('Db')->delete($table, $where, $own);
-    }
-
-    /**
-     * Get Var.
-     *
-     * @param string $table Table Name without prefixes.
-     * @param string $var Field name.
-     * @param array $where Conditions.
-     * @param bool $own Is own table? Default true.
-     * @return mixed
-     */
-    public function dbGetVar($table, $var, array $where, $own = true)
-    {
-        return $this->m('Db')->getVar($table, $var, $where, $own);
-    }
-
-    /**
-     * Get Results.
-     *
-     * @param string $table Table Name without prefixes.
-     * @param array $fields List of Fields. Default [] = all.
-     * @param array $where Conditions. Default [].
-     * @param bool $single Get single row? Default false.
-     * @param bool $own Is own table? Default true.
-     * @return mixed
-     */
-    public function dbGetResults($table, array $fields = [], array $where = [], $single = false, $own = true)
-    {
-        return $this->m('Db')->getResults($table, $fields, $where, $single, $own);
-    }
-
-    /**
-     * Get Results with an arbitrary Query.
-     *
-     * @param string $query SQL query.
-     * @param array $values If passed, $wpdb->prepare() will be executed first.
-     * @return mixed
-     */
-    public function dbGetResultsQuery($query, array $values = [])
-    {
-        return $this->m('Db')->getResultsQuery($query, $values);
-    }
-
-    /**
-     * Get Results Count.
-     *
-     * @param string $table Table Name without prefixes.
-     * @param array $where Conditions. Default [].
-     * @param bool $own Is own table? Default true.
-     * @return int
-     */
-    public function dbGetCount($table, array $where = [], $own = true)
-    {
-        return $this->m('Db')->getCount($table, $where, $own);
-    }
-
-    /**
-     * Get Last Insert ID.
-     *
-     * @return int
-     */
-    public function dbInsertId()
-    {
-        return $this->m('Db')->insertId();
-    }
-
-    /**
-     * Insert Multiple Rows with one query.
-     *
-     * @param string $table Table Name without prefixes.
-     * @param array $data Data to insert.
-     * @param bool $own Is own table? Default true.
-     * @return bool
-     */
-    public function dbInsertRows($table, array $data, $own = true)
-    {
-        return $this->m('Db')->insertRows($table, $data, $own);
     }
 
     /**

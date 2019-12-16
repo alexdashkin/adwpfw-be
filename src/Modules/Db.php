@@ -20,7 +20,7 @@ class Db extends Module
     public $prefix;
 
     /**
-     * Db constructor.
+     * Constructor.
      *
      * @param App $app
      */
@@ -47,6 +47,88 @@ class Db extends Module
     }
 
     /**
+     * Select data from a table.
+     *
+     * @param string $table Table Name.
+     * @param array $fields List of Fields. Default [].
+     * @param array $where Conditions. Default [].
+     * @param array $order Order by ['by', 'direction']. Default [].
+     * @param bool $single Get single row? Default false.
+     * @param bool $own Is own table? Default true.
+     * @return array
+     */
+    public function select($table, array $fields = [], array $where = [], array $order = [], $single = false, $own = true)
+    {
+        $t = $this->getTable($table, $own);
+        $select = implode('`,`', $fields);
+        $select = $select ? '`' . $select . '`' : '*';
+        $whereArr = [];
+
+        foreach ($where as $field => $value) {
+            $whereArr[] = '`' . $field . '`="' . $value . '"';
+        }
+
+        $condition = implode(' AND ', $whereArr);
+        $query = sprintf('SELECT %s FROM `%s`', $select, $t);
+
+        if ($where) {
+            $query .= ' WHERE ' . $condition;
+        }
+
+        if ($order) {
+            $direction = !empty($order['direction']) ? $order['direction'] : 'ASC';
+            $query .= sprintf(' ORDER BY `%s` %s', $order['by'], $direction);
+        }
+
+        $results = $this->result($this->wpdb->get_results($query, 'ARRAY_A'));
+
+        return $results && $single ? reset($results) : $results;
+    }
+
+    /**
+     * Get Var.
+     *
+     * @param string $table Table Name.
+     * @param string $var Field name.
+     * @param array $where Conditions.
+     * @param bool $own Is own table? Default true.
+     * @return string
+     */
+    public function getVar($table, $var, array $where, $own = true)
+    {
+        $row = $this->select($table, [$var], $where, [], true, $own);
+
+        return !empty($row[$var]) ? $row[$var] : null;
+    }
+
+    /**
+     * Get Results Count.
+     *
+     * @param string $table Table Name.
+     * @param array $where Conditions.
+     * @param bool $own Is own table? Default true.
+     * @return int
+     */
+    public function getCount($table, array $where = [], $own = true)
+    {
+        $t = $this->getTable($table, $own);
+        $whereArr = [];
+
+        foreach ($where as $field => $value) {
+            $whereArr[] = '`' . $field . '`="' . $value . '"';
+        }
+
+        $condition = implode(' AND ', $whereArr);
+        $query = sprintf('SELECT COUNT(*) FROM `%s`', $t);
+
+        if ($where) {
+            $query .= ' WHERE ' . $condition;
+        }
+
+        return $this->query($query);
+    }
+
+    /**
      * Insert Data into a table.
      *
      * @param string $table Table Name.
@@ -60,6 +142,54 @@ class Db extends Module
 //		$data = $this->stripArray($data);
 
         return $this->result($this->wpdb->insert($t, $data)) ? $this->wpdb->insert_id : false;
+    }
+
+    /**
+     * Insert Multiple Rows with one query.
+     *
+     * @param string $table Table Name.
+     * @param array $data Rows to insert.
+     * @param bool $own Is own table? Default true.
+     * @return bool
+     */
+    public function insertRows($table, array $data, $own = true)
+    {
+        $data = array_values($data);
+        $t = $this->getTable($table, $own);
+        $values = [];
+        $counter = 0;
+
+        $firstRow = reset($data);
+        $cols = array_keys($firstRow);
+        $columns = '`' . implode('`, `', $cols) . '`';
+        $placeholders = str_repeat('%s, ', count($firstRow));
+
+        foreach ($data as $index => $row) {
+            $values = array_merge($values, array_values($row));
+            $counter++;
+        }
+
+        if (!$counter) {
+            $this->log('Nothing to insert, returning');
+            return false;
+        }
+
+        $this->log("$counter items to insert");
+        $columns = trim($columns, ', ');
+        $placeholders = '(' . trim($placeholders, ', ') . '), ';
+        $query = sprintf('INSERT INTO `%s` (%s) VALUES %s', $t, $columns, trim(str_repeat($placeholders, $counter), ', '));
+
+        return $this->query($query, $values);
+    }
+
+    /**
+     * Get Last Insert ID.
+     *
+     * @return int
+     */
+    public function insertId()
+    {
+        return (int)$this->wpdb->insert_id;
     }
 
     /**
@@ -89,7 +219,7 @@ class Db extends Module
      */
     public function insertOrUpdate($table, array $data, array $where, $own = true)
     {
-        if ($this->getResults($table, [], $where, true, $own)) {
+        if ($this->select($table, [], $where, [], true, $own)) {
             return $this->update($table, $data, $where, $own);
         }
 
@@ -109,158 +239,6 @@ class Db extends Module
         $t = $this->getTable($table, $own);
 
         return $this->result($this->wpdb->delete($t, $where));
-    }
-
-    /**
-     * Get Var.
-     *
-     * @param string $table Table Name.
-     * @param string $var Field name.
-     * @param array $where Conditions.
-     * @param bool $own Is own table? Default true.
-     * @return mixed
-     */
-    public function getVar($table, $var, array $where, $own = true)
-    {
-        $t = $this->getTable($table, $own);
-        $whereArr = [];
-
-        foreach ($where as $field => $value) {
-            $whereArr[] = '`' . $field . '`=' . '"' . $value . '"';
-        }
-
-        $condition = implode(' AND ', $whereArr);
-        $query = sprintf('SELECT `%s` FROM `%s` WHERE %s', $var, $t, $condition);
-
-        return $this->result($this->wpdb->get_var($query));
-    }
-
-    /**
-     * Get Results.
-     *
-     * @param string $table Table Name.
-     * @param array $fields List of Fields. Default [].
-     * @param array $where Conditions. Default [].
-     * @param bool $single Get single row? Default false.
-     * @param bool $own Is own table? Default true.
-     * @return mixed
-     */
-    public function getResults($table, array $fields = [], array $where = [], $single = false, $own = true)
-    {
-        $t = $this->getTable($table, $own);
-        $select = implode('`,`', $fields);
-        $select = $select ? '`' . $select . '`' : '*';
-        $whereArr = [];
-
-        foreach ($where as $field => $value) {
-            $whereArr[] = '`' . $field . '`="' . $value . '"';
-        }
-
-        $condition = implode(' AND ', $whereArr);
-        $query = sprintf('SELECT %s FROM %s', $select, $t);
-
-        if ($where) {
-            $query .= " WHERE $condition";
-        }
-
-        $results = $this->result($this->wpdb->get_results($query, 'ARRAY_A')); // todo add sorting
-
-        return $results && $single ? reset($results) : $results;
-    }
-
-    /**
-     * Get Results with an arbitrary Query.
-     *
-     * @param string $query SQL query.
-     * @param array $values If passed, $wpdb->prepare() will be executed first.
-     * @return mixed
-     */
-    public function getResultsQuery($query, array $values = [])
-    {
-        $sql = $values ? $this->wpdb->prepare($query, $values) : $query;
-
-        return $this->result($this->wpdb->get_results($sql, 'ARRAY_A'));
-    }
-
-    /**
-     * Get Results Count.
-     *
-     * @param string $table Table Name.
-     * @param array $where Conditions.
-     * @param bool $own Is own table? Default true.
-     * @return int
-     */
-    public function getCount($table, array $where = [], $own = true)
-    {
-        $t = $this->getTable($table, $own);
-        $whereArr = [];
-
-        foreach ($where as $field => $value) {
-            $whereArr[] = $field . '=' . '"' . $value . '"';
-        }
-
-        $condition = implode(' AND ', $whereArr);
-        $query = sprintf('SELECT COUNT(*) FROM `%s`', $t);
-
-        if ($where) {
-            $query .= " WHERE $condition";
-        }
-
-        return $this->result((int)$this->wpdb->get_var($query));
-    }
-
-    /**
-     * Get Last Insert ID.
-     *
-     * @return int
-     */
-    public function insertId()
-    {
-        return (int)$this->wpdb->insert_id;
-    }
-
-    /**
-     * Insert Multiple Rows with one query.
-     *
-     * @param string $table Table Name.
-     * @param array $data Data to insert.
-     * @param bool $own Is own table? Default true.
-     * @return bool
-     */
-    public function insertRows($table, array $data, $own = true)
-    {
-        $data = array_values($data);
-        $t = $this->getTable($table, $own);
-        $values = [];
-        $counter = 0;
-
-        $firstRow = reset($data);
-        $cols = array_keys($firstRow);
-        $columns = '`' . implode('`, `', $cols) . '`';
-        $placeholders = str_repeat('%s, ', count($firstRow));
-
-        foreach ($data as $index => $row) {
-            /*            foreach ($row as $key => &$value) {
-                            if (is_string($value)) {
-                                $value = $this->stripValue($value); // todo is sanitization needed?
-                            }
-                        }*/
-
-            $values = array_merge($values, array_values($row));
-            $counter++;
-        }
-
-        if (!$counter) {
-            $this->log('Nothing to insert, returning');
-            return false;
-        }
-
-        $this->log("$counter items to insert");
-        $columns = '(' . trim($columns, ', ') . ')';
-        $placeholders = '(' . trim($placeholders, ', ') . '), ';
-        $query = sprintf('INSERT INTO `%s` %s VALUES ', $t, $columns) . trim(str_repeat($placeholders, $counter), ', ');
-
-        return $this->result($this->query($query, $values));
     }
 
     /**
@@ -288,6 +266,7 @@ class Db extends Module
         foreach ($tables as $table) {
             $t = $this->getTable($table);
             $query = sprintf('SHOW TABLES LIKE "%s"', $t);
+
             if (empty($this->query($query))) {
                 return false;
             }
@@ -357,7 +336,7 @@ class Db extends Module
     }
 
     /**
-     * WP DB functions wrapper
+     * WP DB functions wrapper.
      *
      * @param mixed $result
      * @return mixed
