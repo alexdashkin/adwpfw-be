@@ -84,7 +84,6 @@ class AdminPage extends ItemWithItems
     /**
      * Add Tab.
      *
-     * @param App $app
      * @param array $data Data passed to the Tab Constructor.
      *
      * @throws AdwpfwException

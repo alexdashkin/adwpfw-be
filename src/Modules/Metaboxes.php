@@ -106,7 +106,7 @@ class Metaboxes extends ModuleWithItems
      * @param string $id Metabox ID
      * @param mixed $value
      * @param int $post Post ID. Defaults to the current post.
-     * @return |null
+     * @return bool
      */
     public function set($id, $value, $post = null)
     {
@@ -114,7 +114,7 @@ class Metaboxes extends ModuleWithItems
             return $item->set($value, $post);
         }
 
-        return null;
+        return false;
     }
 
     /**

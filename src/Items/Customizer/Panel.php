@@ -62,7 +62,6 @@ class Panel extends ItemWithItems
     /**
      * Add Section.
      *
-     * @param App $app
      * @param array $data Data passed to the Section Constructor.
      *
      * @throws AdwpfwException

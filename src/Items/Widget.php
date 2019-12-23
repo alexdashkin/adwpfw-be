@@ -69,6 +69,10 @@ class Widget extends Item
 
     /**
      * Render the Widget.
+     *
+     * @param array $args
+     * @param array $instance
+     * @param \WP_Widget $widget
      */
     public function render($args, $instance, $widget)
     {

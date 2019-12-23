@@ -116,7 +116,7 @@ abstract class Ajax extends Item
         }
 
         if (!is_array($result)) {
-            $this->error('Result malformed');
+            $this->error('Result malformed', true);
         }
 
         if (!empty($result['success'])) {

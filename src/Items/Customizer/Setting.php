@@ -69,6 +69,8 @@ class Setting extends Item
 
     /**
      * Register Setting.
+     *
+     * @param \WP_Customize_Manager $customizer
      */
     public function register(\WP_Customize_Manager $customizer)
     {

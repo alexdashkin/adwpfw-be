@@ -106,7 +106,7 @@ class Metabox extends ItemWithItems
     public function set($value, $postId = null)
     {
         if (!$postId = get_post($postId)) {
-            return '';
+            return false;
         }
 
         return update_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->data['id'], $value);

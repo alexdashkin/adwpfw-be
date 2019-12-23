@@ -66,7 +66,6 @@ class Section extends ItemWithItems
     /**
      * Add Setting.
      *
-     * @param App $app
      * @param array $data Data passed to the Setting Constructor.
      *
      * @throws AdwpfwException
@@ -80,6 +79,8 @@ class Section extends ItemWithItems
 
     /**
      * Register Section.
+     *
+     * @param \WP_Customize_Manager $customizer
      */
     public function register(\WP_Customize_Manager $customizer)
     {

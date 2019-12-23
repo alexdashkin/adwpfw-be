@@ -108,20 +108,16 @@ class Helpers
             $row = [];
 
             if ($keys) {
-                if (is_array($keys)) {
-                    if (1 === count($keys)) {
-                        $row = $item[reset($keys)];
-                    } else {
-                        foreach ($keys as $key) {
-                            if (is_array($key)) {
-                                $row[current($key)] = $item[key($key)];
-                            } else {
-                                $row[$key] = $item[$key];
-                            }
+                if (1 === count($keys)) {
+                    $row = $item[reset($keys)];
+                } else {
+                    foreach ($keys as $key) {
+                        if (is_array($key)) {
+                            $row[current($key)] = $item[key($key)];
+                        } else {
+                            $row[$key] = $item[$key];
                         }
                     }
-                } else {
-                    $row = $item[$keys];
                 }
             } else {
                 $row = $item;
@@ -174,7 +170,7 @@ class Helpers
             if (!array_key_exists($key, $arr1)) {
                 $arr1[$key] = $value;
                 continue;
-            };
+            }
 
             if (is_array($arr1[$key]) && is_array($value)) {
                 $arr1[$key] = self::arrayMerge($arr1[$key], $value);
@@ -299,11 +295,11 @@ class Helpers
      * External API request helper.
      *
      * @param array $args {
-     * @type string $url. Required.
+     * @type string $url . Required.
      * @type string $method Get/Post. Default 'get'.
-     * @type array $headers. Default [].
+     * @type array $headers . Default [].
      * @type array $data Data to send. Default [].
-     * @type int $timeout. Default 0.
+     * @type int $timeout . Default 0.
      * }
      *
      * @return mixed Response body or false on failure

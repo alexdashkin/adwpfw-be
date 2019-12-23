@@ -15,11 +15,11 @@ class PostType extends Item
      *
      * @param App $app
      * @param array $data {
-     * @param string $id ID. Defaults to sanitized $label.
-     * @param string $label Name shown in the menu. Usually plural. Required.
-     * @param string $description A short descriptive summary of what the post type is. Default empty.
-     * @param array $labels $singular and $plural are required, the rest is auto-populated.
-     * @param bool $public Whether to show in Admin. Default true.
+     * @type string $id ID. Defaults to sanitized $label.
+     * @type string $label Name shown in the menu. Usually plural. Required.
+     * @type string $description A short descriptive summary of what the post type is. Default empty.
+     * @type array $labels $singular and $plural are required, the rest is auto-populated.
+     * @type bool $public Whether to show in Admin. Default true.
      * }
      *
      * @see register_post_type()

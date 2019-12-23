@@ -947,8 +947,8 @@ class App
      * Add a post state.
      *
      * @param array $data {
-     * @param int $post_id Post ID. Required.
-     * @param string $state State text. Required.
+     * @type int $post_id Post ID. Required.
+     * @type string $state State text. Required.
      * }
      */
     public function addPostState(array $data)
@@ -960,8 +960,8 @@ class App
      * Add post states.
      *
      * @param array $data {
-     * @param int $post_id Post ID. Required.
-     * @param string $state State text. Required.
+     * @type int $post_id Post ID. Required.
+     * @type string $state State text. Required.
      * }
      */
     public function addPostStates(array $data)
@@ -973,11 +973,11 @@ class App
      * Add a Custom Post Type
      *
      * @param array $data {
-     * @param string $id ID. Defaults to sanitized $label.
-     * @param string $label Name shown in the menu. Usually plural. Required.
-     * @param string $description A short descriptive summary of what the post type is. Default empty.
-     * @param array $labels $singular and $plural are required, the rest is auto-populated.
-     * @param bool $public Whether to show in Admin. Default true.
+     * @type string $id ID. Defaults to sanitized $label.
+     * @type string $label Name shown in the menu. Usually plural. Required.
+     * @type string $description A short descriptive summary of what the post type is. Default empty.
+     * @type array $labels $singular and $plural are required, the rest is auto-populated.
+     * @type bool $public Whether to show in Admin. Default true.
      * }
      *
      * @see register_post_type()
@@ -991,11 +991,11 @@ class App
      * Add multiple Post Types
      *
      * @param array $data {
-     * @param string $id ID. Defaults to sanitized $label.
-     * @param string $label Name shown in the menu. Usually plural. Required.
-     * @param string $description A short descriptive summary of what the post type is. Default empty.
-     * @param array $labels $singular and $plural are required, the rest is auto-populated.
-     * @param bool $public Whether to show in Admin. Default true.
+     * @type string $id ID. Defaults to sanitized $label.
+     * @type string $label Name shown in the menu. Usually plural. Required.
+     * @type string $description A short descriptive summary of what the post type is. Default empty.
+     * @type array $labels $singular and $plural are required, the rest is auto-populated.
+     * @type bool $public Whether to show in Admin. Default true.
      * }
      */
     public function addPostTypes(array $data)

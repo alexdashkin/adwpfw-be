@@ -69,7 +69,6 @@ class AdminPageTab extends ItemWithItems
     /**
      * Add Field.
      *
-     * @param App $app
      * @param array $data Data passed to the Field Constructor.
      *
      * @throws AdwpfwException
@@ -94,14 +93,12 @@ class AdminPageTab extends ItemWithItems
             $fields[] = $field->getArgs($values);
         }
 
-        $args = [
+        return [
             'form' => $this->data['form'],
             'title' => $this->data['title'],
             'fields' => $fields,
             'buttons' => $buttons,
         ];
-
-        return $args;
     }
 
     /**

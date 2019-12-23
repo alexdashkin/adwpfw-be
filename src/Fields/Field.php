@@ -12,6 +12,7 @@ use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
 abstract class Field extends BasicItem
 {
     /**
+     * @param App $app
      * @param array $data Field Data
      * @return Field
      * @throws AdwpfwException
