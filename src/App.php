@@ -479,6 +479,14 @@ class App
     }
 
     /**
+     * Remove WP Emojis.
+     */
+    public function removeEmojis()
+    {
+        Helpers::removeEmojis();
+    }
+
+    /**
      * Add a log entry.
      *
      * @param mixed $message Text or any other type including WP_Error.
