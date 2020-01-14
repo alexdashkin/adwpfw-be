@@ -67,6 +67,7 @@ class Js extends Asset
             'dev' => !empty($this->config['dev']),
             'nonce' => wp_create_nonce($prefix),
             'restNonce' => wp_create_nonce('wp_rest'),
+            'ajaxurl' => admin_url('admin-ajax.php'),
         ], $data['localize']);
 
         wp_localize_script($id, $prefix, $localize);
