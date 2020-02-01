@@ -2,7 +2,7 @@
 
 {% block control %}
 
-    <input type="hidden" name="{{ prefix }}[{{ field.id }}]" value="">
+    <input type="hidden" name="{{ prefix }}[{{ field.form }}][{{ field.id }}]" value="">
 
     <select class="adwpfw-select2"
             id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
