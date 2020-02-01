@@ -21,15 +21,15 @@ class Widget extends Item
      * @type callable $form Renders back-end Widget settings. Required.
      * }
      *
+     * @throws AdwpfwException
      * @see wp_add_dashboard_widget()
      *
-     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {
         $props = [
             'id' => [
-                'default' => 'widget_' . sanitize_key(str_replace(' ', '_', $data['title'])),
+                'default' => 'widget_' . $this->getDefaultId($data['title']),
             ],
             'title' => [
                 'required' => true,

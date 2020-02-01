@@ -39,7 +39,7 @@ class AdminPage extends ItemWithItems
     {
         $props = [
             'id' => [
-                'default' => sanitize_key(str_replace(' ', '_', $data['name'])),
+                'default' => $this->getDefaultId($data['name']),
             ],
             'name' => [
                 'required' => true,

@@ -34,7 +34,7 @@ class Panel extends ItemWithItems
     {
         $props = [
             'id' => [
-                'default' => sanitize_key(str_replace(' ', '_', $data['title'])),
+                'default' => $this->getDefaultId($data['title']),
             ],
             'title' => [
                 'required' => true,

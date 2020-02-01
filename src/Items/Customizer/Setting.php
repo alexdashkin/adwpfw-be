@@ -33,7 +33,7 @@ class Setting extends Item
     {
         $props = [
             'id' => [
-                'default' => sanitize_key(str_replace(' ', '_', $data['label'])),
+                'default' => $this->getDefaultId($data['label']),
             ],
             'section' => [
                 'required' => true,
