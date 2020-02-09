@@ -17,6 +17,7 @@ class Heading extends Field
      * @param array $data {
      * @type string $tpl Template name. Default 'heading'.
      * @type string $text Heading text. Required.
+     * @type callable $callback Filters Twig args, gets $value, returns fields[] as key/value pairs. Default empty.
      * }
      * @param array $props
      *
@@ -26,9 +27,11 @@ class Heading extends Field
     {
         $defaults = [
             'id' => [
+                'type' => 'string',
                 'default' => uniqid(),
             ],
             'layout' => [
+                'type' => 'string',
                 'default' => null,
             ],
             'form' => [

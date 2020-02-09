@@ -300,16 +300,7 @@ class Db extends Module
      */
     public function getTable($name, $own = true)
     {
-        if (!$own) {
-            return $this->prefix . $name;
-        }
-
-        if (empty($this->config['tables'][$name])) {
-            $this->log("Table $name not found in config");
-            return '';
-        }
-
-        return $this->prefix . $this->config['prefix'] . '_' . $this->config['tables'][$name];
+        return $own ? $this->prefix . $this->config['prefix'] . '_' . $name : $this->prefix . $name;
     }
 
     /**

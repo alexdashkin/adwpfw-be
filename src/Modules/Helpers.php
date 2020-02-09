@@ -343,7 +343,6 @@ class Helpers
         if (200 !== ($code = wp_remote_retrieve_response_code($remoteResponse))) {
             self::log("Response code: $code");
             return false;
-
         }
 
         if (empty($remoteResponse['body'])) {

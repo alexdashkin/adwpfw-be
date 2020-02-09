@@ -31,9 +31,11 @@ class Button extends Field
     {
         $defaults = [
             'caption' => [
+                'type' => 'string',
                 'required' => true,
             ],
             'tpl' => [
+                'type' => 'string',
                 'default' => 'button',
             ],
         ];

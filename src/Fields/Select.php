@@ -22,6 +22,8 @@ class Select extends Field
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
      * @type string $label Label. Default empty.
      * @type string $desc Description. Default empty.
+     * @type mixed $default Default value. Default empty.
+     * @type callable $callback Filters Twig args, gets $value, returns fields[] as key/value pairs. Default empty.
      * @type string $placeholder Placeholder. Default '--- Select ---'.
      * @type array $options Options. Required.
      * @type bool $multiple Default false.
@@ -34,12 +36,15 @@ class Select extends Field
     {
         $defaults = [
             'tpl' => [
+                'type' => 'string',
                 'default' => 'select',
             ],
             'class' => [
+                'type' => 'string',
                 'default' => 'adwpfw-form-control',
             ],
             'placeholder' => [
+                'type' => 'string',
                 'default' => '--- Select ---',
             ],
             'options' => [

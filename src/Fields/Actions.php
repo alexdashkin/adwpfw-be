@@ -32,9 +32,11 @@ class Actions extends Field
     {
         $defaults = [
             'tpl' => [
+                'type' => 'string',
                 'default' => 'actions',
             ],
             'class' => [
+                'type' => 'string',
                 'default' => 'adwpfw-form-control',
             ],
             'options' => [

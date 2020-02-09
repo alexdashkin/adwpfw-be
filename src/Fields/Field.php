@@ -41,27 +41,38 @@ abstract class Field extends BasicItem
     {
         $defaults = [
             'layout' => [
+                'type' => 'string',
                 'required' => true,
             ],
             'form' => [
+                'type' => 'string',
                 'required' => true,
             ],
             'tpl' => [
+                'type' => 'string',
                 'required' => true,
             ],
             'class' => [
+                'type' => 'string',
                 'default' => null,
             ],
             'required' => [
+                'type' => 'bool',
                 'default' => false,
             ],
             'label' => [
+                'type' => 'string',
                 'default' => null,
             ],
             'desc' => [
+                'type' => 'string',
                 'default' => null,
             ],
             'default' => [
+                'default' => null,
+            ],
+            'callback' => [
+                'type' => 'callable',
                 'default' => null,
             ],
         ];
@@ -78,6 +89,10 @@ abstract class Field extends BasicItem
     public function getArgs(array $values)
     {
         $this->data['value'] = isset($values[$this->data['id']]) ? $values[$this->data['id']] : $this->data['default'];
+
+        if ($this->data['callback'] && is_callable($this->data['callback'])) {
+            $this->data = array_merge($this->data, $this->data['callback']($values));
+        }
 
         return $this->data;
     }

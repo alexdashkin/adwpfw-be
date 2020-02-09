@@ -17,6 +17,7 @@ class Html extends Field
      * @param array $data {
      * @type string $tpl Template name. Default 'html'.
      * @type string $content Required.
+     * @type callable $callback Filters Twig args, gets $value, returns fields[] as key/value pairs. Default empty.
      * }
      * @param array $props
      *
@@ -26,9 +27,11 @@ class Html extends Field
     {
         $defaults = [
             'id' => [
+                'type' => 'string',
                 'default' => uniqid(),
             ],
             'layout' => [
+                'type' => 'string',
                 'default' => null,
             ],
             'form' => [
@@ -38,6 +41,7 @@ class Html extends Field
                 'default' => 'html',
             ],
             'content' => [
+                'type' => 'string',
                 'required' => true,
             ],
         ];

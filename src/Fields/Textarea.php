@@ -22,6 +22,8 @@ class Textarea extends Text
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
      * @type string $label Label. Default empty.
      * @type string $desc Description. Default empty.
+     * @type mixed $default Default value. Default empty.
+     * @type callable $callback Filters Twig args, gets $value, returns fields[] as key/value pairs. Default empty.
      * }
      * @param array $props
      *
@@ -31,6 +33,7 @@ class Textarea extends Text
     {
         $defaults = [
             'tpl' => [
+                'type' => 'string',
                 'default' => 'textarea',
             ],
         ];

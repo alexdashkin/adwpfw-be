@@ -22,6 +22,8 @@ class Text extends Field
      * @type string $class CSS Class(es) for the control. Default 'adwpfw-form-control'.
      * @type string $label Label. Default empty.
      * @type string $desc Description. Default empty.
+     * @type mixed $default Default value. Default empty.
+     * @type callable $callback Filters Twig args, gets $value, returns fields[] as key/value pairs. Default empty.
      * @type string $placeholder Placeholder. Default empty.
      * }
      * @param array $props
@@ -32,12 +34,15 @@ class Text extends Field
     {
         $defaults = [
             'tpl' => [
+                'type' => 'string',
                 'default' => 'text',
             ],
             'placeholder' => [
+                'type' => 'string',
                 'default' => null,
             ],
             'class' => [
+                'type' => 'string',
                 'default' => 'adwpfw-form-control',
             ],
         ];

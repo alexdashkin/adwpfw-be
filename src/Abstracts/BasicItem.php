@@ -56,7 +56,7 @@ abstract class BasicItem extends Basic
     {
         foreach ($this->props as $name => $def) {
             $field = array_merge([
-                'type' => 'string',
+                'type' => 'unknown',
                 'required' => false,
                 'default' => null,
             ], $def);
