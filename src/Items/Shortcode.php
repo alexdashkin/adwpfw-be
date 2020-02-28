@@ -59,6 +59,8 @@ class Shortcode extends Item
      */
     public function render($atts, $content, $tag)
     {
-        return $this->data['callback']($atts);
+        $args = array_merge($this->data['atts'], $atts ?: []);
+
+        return $this->data['callback']($args);
     }
 }
