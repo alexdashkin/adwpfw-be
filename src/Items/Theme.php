@@ -21,7 +21,7 @@ class Theme extends Item
      * @param App $app
      * @param array $data {
      * @type string $id ID for internal use. Defaults to sanitized $slug.
-     * @type string $slug Theme's directory name. Required.
+     * @type string $slug Theme's directory name. Defaults to current theme slug.
      * @type string $package URL of the package. Required.
      * @type callable $update_callback Function to call on theme update. Default empty.
      * }
@@ -30,12 +30,14 @@ class Theme extends Item
      */
     public function __construct(App $app, array $data)
     {
+        $slug = get_stylesheet();
+
         $props = [
             'id' => [
-                'default' => $this->getDefaultId($data['slug']),
+                'default' => $this->getDefaultId($slug),
             ],
             'slug' => [
-                'required' => true,
+                'default' => $slug,
             ],
             'package' => [
                 'required' => true,

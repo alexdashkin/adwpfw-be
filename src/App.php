@@ -1147,7 +1147,7 @@ class App
      * @type string $type plugin/theme. Required.
      * @type string $id ID for internal use. Defaults to sanitized $path.
      * @type string $path Path to the plugin's main file. Required for plugins.
-     * @type string $slug Theme's directory name. Required for themes.
+     * @type string $slug Theme's directory name. Defaults to current theme slug.
      * @type string $package URL of the package. Required.
      * @type callable $update_callback Function to call on plugin update. Default empty.
      * }
