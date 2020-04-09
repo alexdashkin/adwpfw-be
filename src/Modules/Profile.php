@@ -51,16 +51,6 @@ class Profile extends ModuleWithItems
     }
 
     /**
-     * Set Fields Group Heading.
-     *
-     * @param string $heading Heading Text
-     */
-    public function setHeading($heading)
-    {
-        $this->heading = $heading;
-    }
-
-    /**
      * Get profile field value.
      *
      * @param string $id Field ID.
@@ -128,10 +118,15 @@ class Profile extends ModuleWithItems
             $fields[] = $item->getArgs($user->ID);
         }
 
+        // Group
+        $groups = [];
+        foreach ($fields as $field) {
+            $groups[$field['group'] ?: 0][] = $field;
+        }
+
         $args = [
             'prefix' => $this->config['prefix'],
-            'heading' => $this->heading,
-            'fields' => $fields,
+            'groups' => $groups,
         ];
 
         echo $this->m('Twig')->renderFile('templates/profile', $args);

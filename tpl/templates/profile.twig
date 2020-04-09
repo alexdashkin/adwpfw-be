@@ -1,15 +1,21 @@
 <div class="adwpfw-profile adwpfw {{ prefix }}">
 
-    <h3>{{ heading }}</h3>
+    {% for heading, fields in groups %}
 
-    <table class="form-table">
+        {% if heading %}
+                <h3>{{ heading }}</h3>
+        {% endif %}
 
-        {% for field in fields %}
+        <table class="form-table">
 
-            {% include 'fields/' ~ field.tpl ~ '.twig' with {field: field} %}
+            {% for field in fields %}
 
-        {% endfor %}
+                {% include 'fields/' ~ field.tpl ~ '.twig' with {field: field} %}
 
-    </table>
+            {% endfor %}
+
+        </table>
+
+    {% endfor %}
 
 </div>

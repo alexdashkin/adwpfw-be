@@ -51,9 +51,9 @@ class App
 
         $class = '\\' . __NAMESPACE__ . '\\Modules\\' . $moduleName;
 
-/*        if (!class_exists($class)) {
-            throw new AdwpfwException("Module $moduleName not found");
-        }*/
+        /*        if (!class_exists($class)) {
+                    throw new AdwpfwException("Module $moduleName not found");
+                }*/
 
         $this->modules[$moduleName] = new $class($this);
 
@@ -332,7 +332,7 @@ class App
      * Recursive implode.
      *
      * @param array $array
-     * @param string $glue. Default empty.
+     * @param string $glue . Default empty.
      * @return string
      */
     public function deepImplode(array $array, $glue = '')
@@ -439,11 +439,11 @@ class App
      * External API request helper.
      *
      * @param array $args {
-     * @type string $url. Required.
+     * @type string $url . Required.
      * @type string $method Get/Post. Default 'get'.
-     * @type array $headers. Default [].
+     * @type array $headers . Default [].
      * @type array $data Data to send. Default [].
-     * @type int $timeout. Default 0.
+     * @type int $timeout . Default 0.
      * }
      *
      * @return mixed Response body or false on failure
@@ -1013,12 +1013,13 @@ class App
 
     /**
      * Set Profile Fields Group Heading.
+     * Replaced with $group field param
      *
      * @param string $heading Heading Text
+     * @deprecated
      */
     public function setProfileHeading($heading)
     {
-        $this->m('Profile')->setHeading($heading);
     }
 
     /**
@@ -1112,7 +1113,7 @@ class App
      * @param array $data {
      * @type string $id Defaults to sanitized $name.
      * @type string $name Sidebar Title. Required.
-     * @type string $description. Default empty.
+     * @type string $description . Default empty.
      * @type string $class CSS class for container. Default empty.
      * }
      *
@@ -1129,7 +1130,7 @@ class App
      * @param array $data {
      * @type string $id Defaults to sanitized $name.
      * @type string $name Sidebar Title. Required.
-     * @type string $description. Default empty.
+     * @type string $description . Default empty.
      * @type string $class CSS class for container. Default empty.
      * }
      *

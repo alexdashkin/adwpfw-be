@@ -28,6 +28,7 @@ class ProfileField extends Item
      * @param array $data {
      * @type string $id Field Name used as a key in $prefix[] array on the Form. Required.
      * @type string $label Field Label. Required.
+     * @type string $group Field Group. Default null.
      * @type string $type Field Type. Default 'text'.
      * @type string $class CSS class. Default 'regular-text'.
      * @type string $desc Field Description to be shown below the Field. Default empty.
@@ -40,6 +41,9 @@ class ProfileField extends Item
         $props = [
             'id' => [
                 'required' => true,
+            ],
+            'group' => [
+                'default' => null,
             ],
             'label' => [
                 'required' => true,
