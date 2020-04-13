@@ -8,7 +8,7 @@
 
                 {% for field in tab.fields %}
 
-                    {% include 'fields/' ~ field.tpl ~ '.twig' with {field: field} %}
+                    {% include 'fields/' ~ field.tpl ~ '.twig' %}
 
                 {% endfor %}
 
@@ -28,7 +28,7 @@
 
             {% for field in tab.fields %}
 
-                {% include 'fields/' ~ field.tpl ~ '.twig' with {field: field} %}
+                {% include 'fields/' ~ field.tpl ~ '.twig' %}
 
             {% endfor %}
 
