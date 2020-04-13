@@ -146,7 +146,12 @@ class Metabox extends ItemWithItems
             $fields[] = $field->getArgs($values);
         }
 
-        echo $this->m('Twig')->renderFile('templates/metabox', ['fields' => $fields]);
+        $args = [
+            'fields' => $fields,
+            'context' => $this->data['context'],
+        ];
+
+        echo $this->m('Twig')->renderFile('templates/metabox', $args);
     }
 
     /**
