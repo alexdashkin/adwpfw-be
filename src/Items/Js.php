@@ -52,16 +52,27 @@ class Js extends Asset
 
         $callback = $data['callback'];
 
+        // Exit if callback returns false
         if ($callback && is_callable($callback) && !$callback()) {
             return;
         }
 
         $prefix = $this->prefix;
 
-        $id = $prefix . '-' . sanitize_title($data['id']);
+        $id = sanitize_title($data['id']);
 
+        // Enqueue already registered script and exit
+        if (wp_script_is($id, 'registered')) {
+            wp_enqueue_script($id);
+            return;
+        }
+
+        $id = $prefix . '-' . $id;
+
+        // Enqueue new script
         wp_enqueue_script($id, $data['url'], $data['deps'], $data['ver'], true);
 
+        // Localize script
         $localize = array_merge([
             'prefix' => $prefix,
             'dev' => !empty($this->config['dev']),
