@@ -52,9 +52,7 @@ abstract class Ajax extends Item
         $fields = $request;
 
         if (!empty($actionData['fields'])) {
-
             foreach ($actionData['fields'] as $name => $settings) {
-
                 if (!isset($request[$name]) && $settings['required']) {
                     throw new AdwpfwException('Missing required field: ' . $name);
                 }
@@ -110,7 +108,6 @@ abstract class Ajax extends Item
         try {
             $data = $this->validateRequest($params);
             $result = call_user_func($this->data['callback'], $data);
-
         } catch (\Exception $e) {
             $this->error('Exception: ' . $e->getMessage(), true);
         }

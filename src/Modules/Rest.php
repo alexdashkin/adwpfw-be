@@ -31,11 +31,11 @@ class Rest extends ModuleAjax
     /**
      * Add Endpoint.
      *
-     * @param array $data. Data to pass to Endpoint constructor.
-     *
-     * @see Endpoint::__construct();
+     * @param array $data . Data to pass to Endpoint constructor.
      *
      * @throws AdwpfwException
+     * @see Endpoint::__construct();
+     *
      */
     public function add(array $data)
     {

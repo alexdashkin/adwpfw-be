@@ -33,9 +33,9 @@ class Notices extends ModuleWithItems
      *
      * @param array $data Data passed to Notice constructor.
      *
+     * @throws AdwpfwException
      * @see Notice::__construct();
      *
-     * @throws AdwpfwException
      */
     public function add(array $data)
     {

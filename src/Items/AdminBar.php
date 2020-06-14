@@ -2,8 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Items;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+use AlexDashkin\Adwpfw\{App, Exceptions\AdwpfwException};
 
 /**
  * Top Admin Bar Item.
@@ -24,9 +23,9 @@ class AdminBar extends Item
      * @type array $meta Meta data including the following keys: 'html', 'class', 'rel', 'lang', 'dir', 'onclick', 'target', 'title', 'tabindex'. Default [].
      * }
      *
+     * @throws AdwpfwException
      * @see \WP_Admin_Bar::add_node()
      *
-     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {

@@ -27,16 +27,18 @@ class AdminPages extends ModuleWithItems
 
         add_action('admin_menu', [$this, 'register']);
 
-        $this->m('Ajax')->add([
-            'name' => 'save',
-            'fields' => [
-                'form' => [
-                    'type' => 'form',
-                    'required' => true,
+        $this->m('Ajax')->add(
+            [
+                'name' => 'save',
+                'fields' => [
+                    'form' => [
+                        'type' => 'form',
+                        'required' => true,
+                    ],
                 ],
-            ],
-            'callback' => [$this, 'save'],
-        ]);
+                'callback' => [$this, 'save'],
+            ]
+        );
     }
 
     /**
@@ -44,9 +46,9 @@ class AdminPages extends ModuleWithItems
      *
      * @param array $data
      *
+     * @throws AdwpfwException
      * @see AdminPage::__construct();
      *
-     * @throws AdwpfwException
      */
     public function add(array $data)
     {

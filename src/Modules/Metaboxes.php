@@ -39,9 +39,9 @@ class Metaboxes extends ModuleWithItems
      *
      * @param array $data
      *
+     * @throws AdwpfwException
      * @see Metabox::__construct();
      *
-     * @throws AdwpfwException
      */
     public function add(array $data)
     {
@@ -52,17 +52,20 @@ class Metaboxes extends ModuleWithItems
      * Mark registered Metaboxes to be removed.
      *
      * @param array $metaboxes {
-     * @type string $id. Required.
-     * @type array $screen. Default [].
+     * @type string $id . Required.
+     * @type array $screen . Default [].
      * @type string $context
      * }
      */
     public function remove(array $metaboxes)
     {
         foreach ($metaboxes as &$metabox) {
-            $metabox = array_merge([
-                'screen' => [],
-            ], $metabox);
+            $metabox = array_merge(
+                [
+                    'screen' => [],
+                ],
+                $metabox
+            );
         }
 
         $this->remove = array_merge($this->remove, $metaboxes);

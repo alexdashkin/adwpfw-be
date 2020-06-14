@@ -60,10 +60,14 @@ class Endpoint extends Ajax
     {
         $data = $this->data;
 
-        return register_rest_route($data['namespace'], $data['route'], [
-            'methods' => $data['method'],
-            'callback' => [$this, 'run'],
-        ]);
+        return register_rest_route(
+            $data['namespace'],
+            $data['route'],
+            [
+                'methods' => $data['method'],
+                'callback' => [$this, 'run'],
+            ]
+        );
     }
 
     /**

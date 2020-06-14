@@ -34,7 +34,7 @@ class Updater extends ModuleWithItems
     /**
      * Add Plugin or Theme.
      *
-     * @param array $data. Data to pass to Plugin/Theme constructor.
+     * @param array $data . Data to pass to Plugin/Theme constructor.
      *
      * @throws AdwpfwException
      * @see Plugin::__construct(), Theme::__construct()

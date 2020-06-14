@@ -31,11 +31,11 @@ class PostTypes extends ModuleWithItems
     /**
      * Add Post Type.
      *
-     * @param array $data. Data to pass to PostType constructor.
-     *
-     * @see PostType::__construct();
+     * @param array $data . Data to pass to PostType constructor.
      *
      * @throws AdwpfwException
+     * @see PostType::__construct();
+     *
      */
     public function add(array $data)
     {

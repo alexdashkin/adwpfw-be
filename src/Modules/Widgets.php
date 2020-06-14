@@ -31,7 +31,7 @@ class Widgets extends ModuleWithItems
     /**
      * Add Widget.
      *
-     * @param array $data. Data to pass to Widget constructor.
+     * @param array $data . Data to pass to Widget constructor.
      *
      * @throws AdwpfwException
      *

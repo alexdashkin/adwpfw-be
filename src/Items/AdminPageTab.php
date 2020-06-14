@@ -119,7 +119,6 @@ class AdminPageTab extends ItemWithItems
         $values = get_option($this->prefix . '_' . $this->data['option']) ?: [];
 
         foreach ($this->items as $field) {
-
             if (empty($field->data['id']) || !array_key_exists($field->data['id'], $form)) {
                 continue;
             }

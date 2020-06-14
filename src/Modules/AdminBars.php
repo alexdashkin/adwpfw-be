@@ -33,9 +33,9 @@ class AdminBars extends ModuleWithItems
      *
      * @param array $data
      *
+     * @throws AdwpfwException
      * @see AdminBar::__construct()
      *
-     * @throws AdwpfwException
      */
     public function add(array $data)
     {

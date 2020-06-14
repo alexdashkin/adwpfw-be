@@ -39,11 +39,11 @@ class Profile extends ModuleWithItems
     /**
      * Add Profile Field.
      *
-     * @param array $data. Data to pass to ProfileField constructor.
-     *
-     * @see ProfileField::__construct();
+     * @param array $data . Data to pass to ProfileField constructor.
      *
      * @throws AdwpfwException
+     * @see ProfileField::__construct();
+     *
      */
     public function add(array $data)
     {

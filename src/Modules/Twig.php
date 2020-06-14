@@ -145,13 +145,15 @@ class Twig extends Module
      */
     private function render($twig, $name, $args = [])
     {
-        $args = array_merge([
-            'prefix' => $this->config['prefix'],
-        ], $args);
+        $args = array_merge(
+            [
+                'prefix' => $this->config['prefix'],
+            ],
+            $args
+        );
 
         try {
             return $twig->render($name, $args);
-
         } catch (Error $e) {
             $message = $e->getMessage();
             $this->log($message);

@@ -171,7 +171,6 @@ class Metabox extends ItemWithItems
         $values = $this->get($postId);
 
         foreach ($this->items as $field) {
-
             if (empty($field->data['id']) || !array_key_exists($field->data['id'], $form)) {
                 continue;
             }

@@ -22,11 +22,11 @@ class PostType extends Item
      * @type bool $public Whether to show in Admin. Default true.
      * }
      *
+     * @throws AdwpfwException
      * @see register_post_type()
      *
-     * @throws AdwpfwException
      */
-    public function __construct(App $app,array $data)
+    public function __construct(App $app, array $data)
     {
         $props = [
             'id' => [

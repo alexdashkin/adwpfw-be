@@ -21,9 +21,9 @@ class DbWidget extends Item
      * @type string $capability Minimum capability. Default 'read'.
      * }
      *
+     * @throws AdwpfwException
      * @see wp_add_dashboard_widget()
      *
-     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {

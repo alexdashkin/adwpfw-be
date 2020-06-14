@@ -40,4 +40,15 @@ class Textarea extends Text
 
         parent::__construct($app, $data, array_merge($defaults, $props));
     }
+
+    /**
+     * Sanitize value.
+     *
+     * @param string $value
+     * @return string
+     */
+    public function sanitize($value)
+    {
+        return sanitize_textarea_field($value);
+    }
 }

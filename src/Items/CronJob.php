@@ -95,11 +95,9 @@ class CronJob extends Item
 
             try {
                 call_user_func($data['callback'], $data['args']);
-
             } catch (\Exception $e) {
                 $msg = 'Exception: ' . $e->getMessage() . '. Execution aborted.';
                 $this->log($msg);
-
             } finally {
                 $optionValue = get_option($optionName) ?: [];
                 $running = !empty($optionValue[$jobName]['running']) ? $optionValue[$jobName]['running'] : [];

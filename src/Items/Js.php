@@ -2,8 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Items;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+use AlexDashkin\Adwpfw\{App, Exceptions\AdwpfwException};
 
 /**
  * CSS file
@@ -73,13 +72,16 @@ class Js extends Asset
         wp_enqueue_script($id, $data['url'], $data['deps'], $data['ver'], true);
 
         // Localize script
-        $localize = array_merge([
-            'prefix' => $prefix,
-            'dev' => !empty($this->config['dev']),
-            'nonce' => wp_create_nonce($prefix),
-            'restNonce' => wp_create_nonce('wp_rest'),
-            'ajaxurl' => admin_url('admin-ajax.php'),
-        ], $data['localize']);
+        $localize = array_merge(
+            [
+                'prefix' => $prefix,
+                'dev' => !empty($this->config['dev']),
+                'nonce' => wp_create_nonce($prefix),
+                'restNonce' => wp_create_nonce('wp_rest'),
+                'ajaxurl' => admin_url('admin-ajax.php'),
+            ],
+            $data['localize']
+        );
 
         wp_localize_script($id, $prefix, $localize);
     }

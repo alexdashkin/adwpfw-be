@@ -134,7 +134,6 @@ class Notice extends Item
 
         if ($data['message']) {
             return "<div class='$classes' data-id='$id'><p>{$data['message']}</p></div>";
-
         } elseif ($data['tpl']) {
             $data['args']['id'] = $id;
             $data['args']['classes'] = $classes;

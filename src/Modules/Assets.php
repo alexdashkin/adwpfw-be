@@ -46,9 +46,9 @@ class Assets extends ModuleWithItems
      *
      * @param array $data
      *
+     * @throws AdwpfwException
      * @see Css::__construct(), Js::__construct()
      *
-     * @throws AdwpfwException
      */
     public function add(array $data)
     {

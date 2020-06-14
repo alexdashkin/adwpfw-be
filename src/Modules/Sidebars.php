@@ -31,11 +31,11 @@ class Sidebars extends ModuleWithItems
     /**
      * Add Sidebar
      *
-     * @param array $data. Data to pass to Sidebar constructor.
-     *
-     * @see Sidebar::__construct();
+     * @param array $data . Data to pass to Sidebar constructor.
      *
      * @throws AdwpfwException
+     * @see Sidebar::__construct();
+     *
      */
     public function add(array $data)
     {

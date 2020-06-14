@@ -58,11 +58,14 @@ class Logger
         $this->paths[] = $basePath . $filename;
         $this->immediatePath = $basePath . $immediateName;
 
-        add_action('init', function () use ($filename) {
-            if (defined('WC_LOG_DIR') && file_exists(WC_LOG_DIR)) {
-                $this->paths[] = WC_LOG_DIR . $filename;
+        add_action(
+            'init',
+            function () use ($filename) {
+                if (defined('WC_LOG_DIR') && file_exists(WC_LOG_DIR)) {
+                    $this->paths[] = WC_LOG_DIR . $filename;
+                }
             }
-        });
+        );
     }
 
     /**

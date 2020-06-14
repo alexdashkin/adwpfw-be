@@ -64,7 +64,7 @@ class ProfileField extends Item
         $this->data['layout'] = 'profile-field';
         $this->data['form'] = 'profile';
 
-        $this->field = Field::getField($app,  $this->data);
+        $this->field = Field::getField($app, $this->data);
 
         $this->metaKey = $this->prefix . '_' . $this->data['id'];
     }

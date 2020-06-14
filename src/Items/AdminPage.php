@@ -2,8 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Items;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\AdwpfwException;
+use AlexDashkin\Adwpfw\{App, Exceptions\AdwpfwException};
 
 /**
  * Admin Page with Settings.
@@ -69,6 +68,7 @@ class AdminPage extends ItemWithItems
                 'def' => [
                     'title' => 'Tab',
                     'form' => false,
+                    'option' => '',
                     'fields' => [],
                 ],
             ],
@@ -109,7 +109,6 @@ class AdminPage extends ItemWithItems
                 $data['id'],
                 [$this, 'render']
             );
-
         } else {
             $this->data['hook_suffix'] = add_menu_page(
                 $data['title'],

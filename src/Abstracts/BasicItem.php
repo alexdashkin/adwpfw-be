@@ -55,11 +55,14 @@ abstract class BasicItem extends Basic
     protected function validate($data)
     {
         foreach ($this->props as $name => $def) {
-            $field = array_merge([
-                'type' => 'unknown',
-                'required' => false,
-                'default' => null,
-            ], $def);
+            $field = array_merge(
+                [
+                    'type' => 'unknown',
+                    'required' => false,
+                    'default' => null,
+                ],
+                $def
+            );
 
             if (!isset($data[$name])) {
                 if ($field['required']) {

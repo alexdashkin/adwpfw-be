@@ -17,13 +17,13 @@ class Sidebar extends Item
      * @param array $data {
      * @type string $id Defaults to sanitized $name.
      * @type string $name Sidebar Title. Required.
-     * @type string $description. Default empty.
+     * @type string $description . Default empty.
      * @type string $class CSS class for container. Default empty.
      * }
      *
+     * @throws AdwpfwException
      * @see register_sidebar()
      *
-     * @throws AdwpfwException
      */
     public function __construct(App $app, array $data)
     {

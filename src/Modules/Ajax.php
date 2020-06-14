@@ -33,9 +33,9 @@ class Ajax extends ModuleAjax
      *
      * @param array $data
      *
+     * @throws AdwpfwException
      * @see AjaxAction::__construct();
      *
-     * @throws AdwpfwException
      */
     public function add(array $data)
     {

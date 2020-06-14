@@ -31,11 +31,11 @@ class Shortcodes extends ModuleWithItems
     /**
      * Add Shortcode.
      *
-     * @param array $data. Data to pass to Shortcode constructor.
-     *
-     * @see Shortcode::__construct();
+     * @param array $data . Data to pass to Shortcode constructor.
      *
      * @throws AdwpfwException
+     * @see Shortcode::__construct();
+     *
      */
     public function add(array $data)
     {

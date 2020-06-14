@@ -32,9 +32,9 @@ class Customizer extends ModuleWithItems
      *
      * @param array $data
      *
+     * @throws AdwpfwException
      * @see Panel::__construct();
      *
-     * @throws AdwpfwException
      */
     public function add(array $data)
     {

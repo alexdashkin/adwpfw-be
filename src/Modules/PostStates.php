@@ -15,6 +15,7 @@ class PostStates extends ModuleWithItems
      * @var PostState[]
      */
     protected $items = [];
+
     /**
      * Constructor
      *
@@ -30,11 +31,11 @@ class PostStates extends ModuleWithItems
     /**
      * Add Post State.
      *
-     * @param array $data. Data to pass to PostState constructor.
-     *
-     * @see PostState::__construct();
+     * @param array $data . Data to pass to PostState constructor.
      *
      * @throws AdwpfwException
+     * @see PostState::__construct();
+     *
      */
     public function add(array $data)
     {

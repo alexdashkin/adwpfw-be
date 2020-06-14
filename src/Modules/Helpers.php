@@ -131,9 +131,12 @@ class Helpers
         }
 
         if ($sort) {
-            uasort($new, function ($a, $b) use ($sort) {
-                return $a[$sort] > $b[$sort] ? 1 : -1;
-            });
+            uasort(
+                $new,
+                function ($a, $b) use ($sort) {
+                    return $a[$sort] > $b[$sort] ? 1 : -1;
+                }
+            );
         }
 
         return $new;
@@ -150,9 +153,12 @@ class Helpers
     public static function arraySortByKey(array $array, $key, $keepKeys = false)
     {
         $func = $keepKeys ? 'uasort' : 'usort';
-        $func($array, function ($a, $b) use ($key) {
-            return $a[$key] > $b[$key] ? 1 : -1;
-        });
+        $func(
+            $array,
+            function ($a, $b) use ($key) {
+                return $a[$key] > $b[$key] ? 1 : -1;
+            }
+        );
 
         return $array;
     }
@@ -306,12 +312,15 @@ class Helpers
      */
     public static function apiRequest(array $args)
     {
-        $args = array_merge([
-            'method' => 'get',
-            'headers' => [],
-            'data' => [],
-            'timeout' => 0,
-        ], $args);
+        $args = array_merge(
+            [
+                'method' => 'get',
+                'headers' => [],
+                'data' => [],
+                'timeout' => 0,
+            ],
+            $args
+        );
 
         $url = $args['url'];
         $method = strtoupper($args['method']);
@@ -441,9 +450,12 @@ class Helpers
         }
 
         if (is_array($var)) {
-            array_walk_recursive($var, function (&$value) {
-                $value = trim($value);
-            });
+            array_walk_recursive(
+                $var,
+                function (&$value) {
+                    $value = trim($value);
+                }
+            );
         }
 
         return $var;
