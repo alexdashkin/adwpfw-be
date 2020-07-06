@@ -3,7 +3,6 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
 
 class Widget extends Module
 {
@@ -12,13 +11,7 @@ class Widget extends Module
      */
     public function init()
     {
-        App::get(
-            'hook',
-            [
-                'tag' => 'widgets_init',
-                'callback' => [$this, 'register'],
-            ]
-        );
+        $this->hook('widgets_init', [$this, 'register']);
     }
 
     /**

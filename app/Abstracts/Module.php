@@ -127,31 +127,6 @@ abstract class Module
     }
 
     /**
-     * Add Hooks with data validation before firing
-     *
-     * @param array $hooks
-     * @throws AppException
-     */
-    protected function addHooks(array $hooks)
-    {
-        foreach ($hooks as $hook) {
-            App::get(
-                'hook',
-                [
-                    'tag' => $hook['tag'],
-                    'callback' => function () use ($hook) {
-                        // Validate Data before calling
-                        $this->validateData();
-
-                        // Call the callback
-                        return $hook['callback'](...func_get_args());
-                    },
-                ]
-            );
-        }
-    }
-
-    /**
      * Validate data before firing hooks
      *
      * @param array $data

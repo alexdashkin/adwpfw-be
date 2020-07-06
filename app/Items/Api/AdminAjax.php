@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Items\Api;
 
-use AlexDashkin\Adwpfw\App;
-
 class AdminAjax extends Request
 {
     /**
@@ -13,21 +11,8 @@ class AdminAjax extends Request
     {
         $actionName = $this->get('prefix') . '_' . $this->get('action');
 
-        App::get(
-            'hook',
-            [
-                'tag' => 'wp_ajax_' . $actionName,
-                'callback' => [$this, 'handle'],
-            ]
-        );
-
-        App::get(
-            'hook',
-            [
-                'tag' => 'wp_ajax_nopriv_' . $actionName,
-                'callback' => [$this, 'handle'],
-            ]
-        );
+        $this->hook('wp_ajax_' . $actionName, [$this, 'handle']);
+        $this->hook('wp_ajax_nopriv_' . $actionName, [$this, 'handle']);
     }
 
     /**

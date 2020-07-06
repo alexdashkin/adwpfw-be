@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Items\Api;
 
-use AlexDashkin\Adwpfw\App;
-
 class Rest extends Request
 {
     /**
@@ -11,13 +9,7 @@ class Rest extends Request
      */
     public function init()
     {
-        App::get(
-            'hook',
-            [
-                'tag' => 'rest_api_init',
-                'callback' => [$this, 'register'],
-            ]
-        );
+        $this->hook('rest_api_init', [$this, 'register']);
     }
 
     /**
