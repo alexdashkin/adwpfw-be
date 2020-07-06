@@ -3,8 +3,8 @@
 {% block control %}
 
     <select class="{{ field.class }}"
-            id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
-            name="{{ prefix }}[{{ field.form }}][{{ field.id }}]{% if field.multiple %}[]{% endif %}"
+            id="{{ prefix }}-{{ field.form }}-field-{{ field.name }}"
+            name="{{ prefix }}[{{ field.form }}][{{ field.name }}]{% if field.multiple %}[]{% endif %}"
             {% if field.required %} required {% endif %}
             {% if field.multiple %} multiple {% endif %}>
 

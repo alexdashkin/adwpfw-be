@@ -9,8 +9,8 @@
             <label>
 
                 <input type="radio"
-                       id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}-{{ loop.index }}"
-                       name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
+                       id="{{ prefix }}-{{ field.form }}-field-{{ field.name }}-{{ loop.index }}"
+                       name="{{ prefix }}[{{ field.form }}][{{ field.name }}]"
                        value="{{ option.value }}"
                         {% if field.value == option.value %} checked {% endif %}>
                 {{ option.label }}

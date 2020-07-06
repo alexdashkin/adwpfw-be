@@ -2,15 +2,16 @@
 
 {% block control %}
 
-    <input type="hidden" name="{{ prefix }}[{{ field.form }}][{{ field.id }}]" value="">
+    <input type="hidden" name="{{ prefix }}[{{ field.form }}][{{ field.name }}]" value="">
 
     <select class="adwpfw-select2"
-            id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
-            name="{{ prefix }}[{{ field.form }}][{{ field.id }}]{% if field.multiple %}[]{% endif %}"
+            id="{{ prefix }}-{{ field.form }}-field-{{ field.name }}"
+            name="{{ prefix }}[{{ field.form }}][{{ field.name }}]{% if field.multiple %}[]{% endif %}"
             {% if field.required %} required {% endif %}
             {% if field.ajax_action %} data-ajax-action="{{ field.ajax_action }}" {% endif %}
             {% if field.multiple %} multiple {% endif %}
-            data-min-chars="{{ field.min_chars }}">
+            data-min-chars="{{ field.min_chars }}"
+            data-min-items-for-search="{{ field.min_items_for_search }}">
 
         {% for option in field.options %}
             <option value="{{ option.value }}" {{ option.selected }}>{{ option.label }}</option>

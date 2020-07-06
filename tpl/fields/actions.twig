@@ -1,12 +1,10 @@
 {% extends 'layouts/' ~ field.layout ~ '.twig' %}
 
-{% block label %}{% endblock %}
-
 {% block control %}
 
     <div class="adwpfw-actions-selector">
 
-        <select id="{{ prefix }}-field-{{ field.id }}" class="{{ field.class }}">
+        <select id="{{ prefix }}-field-{{ field.name }}" class="{{ field.class }}">
 
             {% for option in field.options %}
                 <option value="{{ option.value }}" {% if option.value == field.value %} selected {% endif %}>

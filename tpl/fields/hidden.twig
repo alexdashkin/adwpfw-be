@@ -3,8 +3,8 @@
 {% block control %}
 
         <input type="hidden"
-               id="{{ prefix }}-{{ field.form }}-field-{{ field.id }}"
-               name="{{ prefix }}[{{ field.form }}][{{ field.id }}]"
+               id="{{ prefix }}-{{ field.form }}-field-{{ field.name }}"
+               name="{{ prefix }}[{{ field.form }}][{{ field.name }}]"
                value="{{ field.value }}">
 
 {% endblock %}
