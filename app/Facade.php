@@ -48,7 +48,7 @@ class Facade
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
      */
-    protected function twig($name, $args = []): string
+    public static function twig($name, $args = []): string
     {
         return App::get('twig')->renderFile($name, $args);
     }
