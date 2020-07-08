@@ -103,6 +103,40 @@ class Facade
     }
 
     /**
+     * Add assets
+     *
+     * @param array $args
+     */
+    public static function addAssets(array $args)
+    {
+        $args = App::get('helpers')->arrayMerge(
+            [
+                'admin' => ['css' => [], 'js' => []],
+                'front' => ['css' => [], 'js' => []],
+            ],
+            $args
+        );
+
+        foreach (['admin', 'front'] as $af) {
+            foreach (['css', 'js'] as $type) {
+                foreach ($args[$af][$type] as $asset) {
+                    $file = is_array($asset) ? $asset['file'] : $asset;
+
+                    App::get(
+                        'asset.' . $type,
+                        [
+                            'type' => $af,
+                            'url' => $args['url'] . $file,
+                            'ver' => filemtime($args['dir'] . $file),
+                            'localize' => $asset['localize'] ?? [],
+                        ]
+                    );
+                }
+            }
+        }
+    }
+
+    /**
      * Add AdminAjax action
      *
      * @param array $args
