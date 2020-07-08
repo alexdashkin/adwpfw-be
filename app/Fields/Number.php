@@ -30,7 +30,7 @@ class Number extends Field
                 ],
                 'max' => [
                     'type' => 'int',
-                    'default' => null,
+                    'default' => PHP_INT_MAX,
                 ],
                 'step' => [
                     'type' => 'int',
