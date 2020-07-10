@@ -135,14 +135,14 @@ class Facade
         foreach (['admin', 'front'] as $af) {
             foreach (['css', 'js'] as $type) {
                 foreach ($args[$af][$type] as $asset) {
-                    $file = is_array($asset) ? $asset['file'] : $asset;
+                    $file = is_array($asset) && !empty($asset['file']) ? $asset['file'] : $asset;
 
                     App::get(
                         'asset.' . $type,
                         [
                             'type' => $af,
-                            'url' => $args['url'] . $file,
-                            'ver' => filemtime($args['dir'] . $file),
+                            'url' => $asset['url'] ?? $args['url'] . $file,
+                            'ver' => !empty($asset['url']) ? '' : filemtime($args['dir'] . $file),
                             'localize' => $asset['localize'] ?? [],
                         ]
                     );
