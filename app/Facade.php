@@ -2,6 +2,8 @@
 
 namespace AlexDashkin\Adwpfw;
 
+use AlexDashkin\Adwpfw\Abstracts\Module;
+use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Fields\Field;
 use AlexDashkin\Adwpfw\Items\AdminPage;
 use AlexDashkin\Adwpfw\Items\AdminPageTab;
@@ -14,6 +16,19 @@ use AlexDashkin\Adwpfw\Modules\Logger;
 
 class Facade
 {
+    /**
+     * Get Framework Module
+     *
+     * @param string $moduleName
+     * @param array $args
+     * @return Module
+     * @throws AppException
+     */
+    public static function get(string $moduleName, array $args = [])
+    {
+        return App::get($moduleName, $args);
+    }
+
     /**
      * Add a log entry
      *
