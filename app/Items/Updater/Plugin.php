@@ -5,8 +5,6 @@ namespace AlexDashkin\Adwpfw\Items\Updater;
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\App;
 
-use const Omct\BASE_FILE;
-
 class Plugin extends Module
 {
     /**
@@ -102,11 +100,11 @@ class Plugin extends Module
             'prefix' => [
                 'required' => true,
             ],
-            'package' => [
+            'file' => [
                 'required' => true,
             ],
-            'file' => [
-                'default' => BASE_FILE,
+            'package' => [
+                'required' => true,
             ],
             'id' => [
                 'default' => function ($data) {
