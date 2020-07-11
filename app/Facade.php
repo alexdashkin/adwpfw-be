@@ -17,6 +17,16 @@ use AlexDashkin\Adwpfw\Modules\Logger;
 class Facade
 {
     /**
+     * Add params to App global config
+     *
+     * @param array $config
+     */
+    public static function setConfig(array $config)
+    {
+        App::the()->setConfig($config);
+    }
+
+    /**
      * Get Framework Module
      *
      * @param string $moduleName
@@ -143,7 +153,7 @@ class Facade
                             'id' => $asset['id'] ?? '',
                             'type' => $af,
                             'url' => $asset['url'] ?? $args['url'] . $file,
-                            'ver' => !empty($asset['url']) ? '' : filemtime($args['dir'] . $file),
+                            'ver' => empty($asset['url']) ? filemtime($args['dir'] . $file) : null,
                             'localize' => $asset['localize'] ?? [],
                         ]
                     );
