@@ -3,7 +3,6 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Fields\Field;
 
 class AdminPageTab extends Module
@@ -12,29 +11,6 @@ class AdminPageTab extends Module
      * @var Field[]
      */
     protected $fields = [];
-
-    /**
-     * Init Module
-     */
-    public function init()
-    {
-        if ($this->get('form')) {
-            App::get(
-                'admin_ajax',
-                [
-                    'prefix' => $this->get('prefix'),
-                    'action' => 'save',
-                    'fields' => [
-                        'form' => [
-                            'type' => 'form',
-                            'required' => true,
-                        ],
-                    ],
-                    'callback' => [$this, 'save'],
-                ]
-            );
-        }
-    }
 
     /**
      * Add Field
@@ -80,18 +56,16 @@ class AdminPageTab extends Module
     /**
      * Save the posted data
      *
-     * @param array $request
+     * @param array $postedData
+     * @return bool
      */
-    public function save(array $request)
+    public function save(array $postedData)
     {
-        $helpers = App::get('helpers');
-        $postedData = $request['form'];
-
-        if (empty($postedData[$this->get('prefix')][$this->get('slug')])) {
-            return $helpers->returnError('Form is empty');
+        if (empty($postedData[$this->get('slug')])) {
+            return false;
         }
 
-        $form = $postedData[$this->get('prefix')][$this->get('slug')];
+        $data = $postedData[$this->get('slug')];
 
         $optionName = $this->get('prefix') . '_' . $this->get('option');
 
@@ -100,18 +74,18 @@ class AdminPageTab extends Module
         foreach ($this->fields as $field) {
             $fieldName = $field->get('name');
 
-            if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
+            if (empty($fieldName) || !array_key_exists($fieldName, $data)) {
                 continue;
             }
 
-            $values[$fieldName] = $field->sanitize($form[$fieldName]);
+            $values[$fieldName] = $field->sanitize($data[$fieldName]);
         }
 
         update_option($optionName, $values);
 
         do_action('adwpfw_settings_saved', $this, $values);
 
-        return $helpers->returnSuccess('Saved');
+        return true;
     }
 
     /**

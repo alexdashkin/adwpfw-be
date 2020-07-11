@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw\Items;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
+use AlexDashkin\Adwpfw\App;
 
 class AdminPage extends Module
 {
@@ -27,6 +28,21 @@ class AdminPage extends Module
     public function init()
     {
         $this->hook('admin_menu', [$this, 'register']);
+
+        App::get(
+            'admin_ajax',
+            [
+                'prefix' => $this->get('prefix'),
+                'action' => 'save',
+                'fields' => [
+                    'form' => [
+                        'type' => 'form',
+                        'required' => true,
+                    ],
+                ],
+                'callback' => [$this, 'save'],
+            ]
+        );
     }
 
     /**
@@ -74,6 +90,32 @@ class AdminPage extends Module
         ];
 
         echo $this->twig('templates/admin-page', $args);
+    }
+
+    /**
+     * Save the posted data
+     *
+     * @param array $request
+     * @return array
+     */
+    public function save(array $request)
+    {
+        $helpers = App::get('helpers');
+        $form = $request['form'];
+
+        if (empty($form[$this->get('prefix')])) {
+            return $helpers->returnError('Form is empty');
+        }
+
+        $data = $form[$this->get('prefix')];
+
+        $saved = false;
+
+        foreach ($this->tabs as $tab) {
+            $saved = $saved || $tab->save($data);
+        }
+
+        return $saved ? $helpers->returnSuccess('Saved') : $helpers->returnError('Nothing to save');
     }
 
     /**
