@@ -140,6 +140,7 @@ class Facade
                     App::get(
                         'asset.' . $type,
                         [
+                            'id' => $asset['id'] ?? '',
                             'type' => $af,
                             'url' => $asset['url'] ?? $args['url'] . $file,
                             'ver' => !empty($asset['url']) ? '' : filemtime($args['dir'] . $file),
