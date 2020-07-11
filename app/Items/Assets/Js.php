@@ -68,7 +68,9 @@ class Js extends Asset
                 },
             ],
             'ver' => [
-                'default' => '',
+                // To bypass trim() as string
+                'type' => 'null',
+                'default' => null,
             ],
             'deps' => [
                 'type' => 'array',
