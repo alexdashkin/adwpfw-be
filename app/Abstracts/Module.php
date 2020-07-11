@@ -72,20 +72,16 @@ abstract class Module
     {
         switch ($type) {
             case 'string':
-                $value = trim($value);
-                break;
+                return trim($value);
 
             case 'int':
-                $value = (int)$value;
-                break;
+                return (int)$value;
 
             case 'bool':
-                $value = (bool)$value;
-                break;
+                return (bool)$value;
 
             case 'array':
-                $value = (array)$value;
-                break;
+                return (array)$value;
         }
 
         return $value;
