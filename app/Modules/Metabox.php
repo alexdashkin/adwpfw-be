@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\Fields\Field;
@@ -36,15 +36,15 @@ class Metabox extends Module
      */
     public function register()
     {
-        $id = $this->get('prefix') . '_' . $this->get('id');
+        $id = $this->gp('prefix') . '_' . $this->gp('id');
 
         add_meta_box(
             $id,
-            $this->get('title'),
+            $this->gp('title'),
             [$this, 'render'],
-            $this->get('screen'),
-            $this->get('context'),
-            $this->get('priority')
+            $this->gp('screen'),
+            $this->gp('context'),
+            $this->gp('priority')
         );
     }
 
@@ -60,7 +60,7 @@ class Metabox extends Module
         $fields = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->get('name');
+            $fieldName = $field->gp('name');
 
             $twigArgs = $field->getTwigArgs($values[$fieldName] ?? null);
 
@@ -69,7 +69,7 @@ class Metabox extends Module
 
         $args = [
             'fields' => $fields,
-            'context' => $this->get('context'),
+            'context' => $this->gp('context'),
         ];
 
         echo $this->twig('templates/metabox', $args);
@@ -87,7 +87,7 @@ class Metabox extends Module
             return '';
         }
 
-        return get_post_meta($post->ID, '_' . $this->get('prefix') . '_' . $this->get('id'), true) ?: [];
+        return get_post_meta($post->ID, '_' . $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
     }
 
     /**
@@ -103,7 +103,7 @@ class Metabox extends Module
             return false;
         }
 
-        return update_post_meta($postId->ID, '_' . $this->get('prefix') . '_' . $this->get('id'), $value);
+        return update_post_meta($postId->ID, '_' . $this->gp('prefix') . '_' . $this->gp('id'), $value);
     }
 
     /**
@@ -113,16 +113,16 @@ class Metabox extends Module
      */
     public function save($postId)
     {
-        if (empty($_POST[$this->get('prefix')][$this->get('id')])) {
+        if (empty($_POST[$this->gp('prefix')][$this->gp('id')])) {
             return;
         }
 
-        $form = $_POST[$this->get('prefix')][$this->get('id')];
+        $form = $_POST[$this->gp('prefix')][$this->gp('id')];
 
         $values = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->get('name');
+            $fieldName = $field->gp('name');
 
             if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
                 continue;
@@ -141,7 +141,7 @@ class Metabox extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'title' => [

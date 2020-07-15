@@ -14,10 +14,10 @@ class Select2 extends Select
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return array_merge(
-            parent::props(),
+            parent::getInitialPropDefs(),
             [
                 'tpl' => [
                     'default' => 'select2',
@@ -46,12 +46,12 @@ class Select2 extends Select
     {
         $args = parent::getTwigArgs($value);
 
-        $valueArr = $this->get('multiple') ? (array)$value : [$value];
+        $valueArr = $this->gp('multiple') ? (array)$value : [$value];
 
         foreach ($valueArr as $item) {
             if (!App::get('helpers')->arraySearch($args['options'], ['value' => $item])) {
                 $args['options'][] = [
-                    'label' => !empty($this->get('label_cb')) ? $this->get('label_cb')($item) : $item,
+                    'label' => !empty($this->gp('label_cb')) ? $this->gp('label_cb')($item) : $item,
                     'value' => $item,
                     'selected' => 'selected',
                 ];

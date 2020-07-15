@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Api;
+namespace AlexDashkin\Adwpfw\Modules\Api;
 
 class Rest extends Request
 {
@@ -18,10 +18,10 @@ class Rest extends Request
     public function register()
     {
         register_rest_route(
-            $this->get('namespace'),
-            $this->get('route'),
+            $this->gp('namespace'),
+            $this->gp('route'),
             [
-                'methods' => $this->get('method'),
+                'methods' => $this->gp('method'),
                 'callback' => [$this, 'handle'],
             ]
         );
@@ -32,7 +32,7 @@ class Rest extends Request
      */
     public function handle(\WP_REST_Request $request)
     {
-        if ($this->get('admin') && !current_user_can('administrator')) {
+        if ($this->gp('admin') && !current_user_can('administrator')) {
             return 'Endpoint is for Admins only';
         }
 
@@ -44,7 +44,7 @@ class Rest extends Request
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'namespace' => [

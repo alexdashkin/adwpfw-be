@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -19,11 +19,11 @@ class Widget extends Module
      */
     public function register()
     {
-        $id = $this->get('prefix') . '_' . $this->get('id');
+        $id = $this->gp('prefix') . '_' . $this->gp('id');
 
         $args = [
             'id' => $id,
-            'name' => $this->get('title'),
+            'name' => $this->gp('title'),
         ];
 
         eval($this->twig('php/widget', $args));
@@ -47,11 +47,11 @@ class Widget extends Module
 
         echo $args['before_title'];
 
-        echo $this->get('title');
+        echo $this->gp('title');
 
         echo $args['after_title'];
 
-        echo $this->get('render')($args, $instance, $widget);
+        echo $this->gp('render')($args, $instance, $widget);
 
         echo $args['after_widget'];
     }
@@ -64,8 +64,8 @@ class Widget extends Module
      */
     public function form(array $instance, \WP_Widget $widget)
     {
-        if ($this->get('form')) {
-            echo $this->get('form')($instance, $widget); // todo build form the same way as Metaboxes
+        if ($this->gp('form')) {
+            echo $this->gp('form')($instance, $widget); // todo build form the same way as Metaboxes
         }
     }
 
@@ -74,7 +74,7 @@ class Widget extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

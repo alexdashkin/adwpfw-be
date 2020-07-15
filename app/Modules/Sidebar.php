@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -19,10 +19,9 @@ class Sidebar extends Module
      */
     public function register()
     {
-        $data = $this->data;
-        $data['id'] = $this->get('prefix') . '_' . $this->get('id');
+        $this->sp('id', $this->gp('prefix') . '_' . $this->gp('id'));
 
-        register_sidebar($data);
+        register_sidebar($this->gp());
     }
 
     /**
@@ -30,7 +29,7 @@ class Sidebar extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

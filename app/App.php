@@ -64,7 +64,6 @@ class App
      * Get Module
      *
      * @param string $alias
-     * @return object
      * @throws AppException
      */
     public static function get($alias, array $args = [])
@@ -90,12 +89,12 @@ class App
             $instance = new $classData['class']();
 
             // Set data
-            if (method_exists($instance, 'setMany')) {
+            if (method_exists($instance, 'spm')) {
                 // Add Global Config values to args
                 $args = array_merge($app->getConfig(), $args);
 
                 // Set Module Data
-                $instance->setMany($args);
+                $instance->spm($args);
             }
 
             // Init instance

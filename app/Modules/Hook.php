@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -13,7 +13,7 @@ class Hook extends Module
     {
         $this->validateData();
 
-        add_filter($this->get('tag'), [$this, 'run'], $this->get('priority'), 100);
+        add_filter($this->gp('tag'), [$this, 'run'], $this->gp('priority'), 100);
     }
 
     /**
@@ -22,9 +22,9 @@ class Hook extends Module
     public function run()
     {
         try {
-            return $this->get('callback')(...func_get_args());
+            return $this->gp('callback')(...func_get_args());
         } catch (\Exception $e) {
-            $this->log('Exception in hook "%s": %s', [$this->get('tag'), $e->getMessage()]);
+            $this->log('Exception in hook "%s": %s', [$this->gp('tag'), $e->getMessage()]);
         }
 
         return false;
@@ -35,7 +35,7 @@ class Hook extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'tag' => [

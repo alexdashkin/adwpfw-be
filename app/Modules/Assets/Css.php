@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Assets;
+namespace AlexDashkin\Adwpfw\Modules\Assets;
 
 /**
  * CSS file
@@ -12,15 +12,15 @@ class Css extends Asset
      */
     public function enqueue()
     {
-        $callback = $this->get('callback');
+        $callback = $this->gp('callback');
 
         if ($callback && is_callable($callback) && !$callback()) {
             return;
         }
 
-        $id = $this->get('prefix') . '-' . sanitize_title($this->get('id'));
+        $id = $this->gp('prefix') . '-' . sanitize_title($this->gp('id'));
 
-        wp_enqueue_style($id, $this->get('url'), $this->get('deps'), $this->get('ver'));
+        wp_enqueue_style($id, $this->gp('url'), $this->gp('deps'), $this->gp('ver'));
     }
 
     /**
@@ -28,7 +28,7 @@ class Css extends Asset
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'type' => [

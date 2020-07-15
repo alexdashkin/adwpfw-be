@@ -5,14 +5,14 @@ namespace AlexDashkin\Adwpfw;
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Items\AdminPage;
-use AlexDashkin\Adwpfw\Items\AdminPageTab;
-use AlexDashkin\Adwpfw\Items\Customizer\Panel;
-use AlexDashkin\Adwpfw\Items\Customizer\Section;
-use AlexDashkin\Adwpfw\Items\Customizer\Setting;
-use AlexDashkin\Adwpfw\Items\Metabox;
-use AlexDashkin\Adwpfw\Items\ProfileSection;
+use AlexDashkin\Adwpfw\Modules\AdminPage;
+use AlexDashkin\Adwpfw\Modules\AdminPageTab;
+use AlexDashkin\Adwpfw\Modules\Customizer\Panel;
+use AlexDashkin\Adwpfw\Modules\Customizer\Section;
+use AlexDashkin\Adwpfw\Modules\Customizer\Setting;
 use AlexDashkin\Adwpfw\Modules\Logger;
+use AlexDashkin\Adwpfw\Modules\Metabox;
+use AlexDashkin\Adwpfw\Modules\ProfileSection;
 
 class Facade
 {
@@ -293,10 +293,10 @@ class Facade
                  */
                 $field = App::get('field.' . $fieldArgs['type'], $fieldArgs);
 
-                $field->setMany(
+                $field->spm(
                     [
                         'layout' => 'admin-page-field',
-                        'form' => $tab->get('slug'),
+                        'form' => $tab->gp('slug'),
                     ]
                 );
 
@@ -327,10 +327,10 @@ class Facade
              */
             $field = App::get('field.' . $fieldArgs['type'], $fieldArgs);
 
-            $field->setMany(
+            $field->spm(
                 [
                     'layout' => 'metabox-field',
-                    'form' => $metabox->get('id'),
+                    'form' => $metabox->gp('id'),
                 ]
             );
 
@@ -358,10 +358,10 @@ class Facade
              */
             $field = App::get('field.' . $fieldArgs['type'], $fieldArgs);
 
-            $field->setMany(
+            $field->spm(
                 [
                     'layout' => 'profile-field',
-                    'form' => $section->get('id'),
+                    'form' => $section->gp('id'),
                     'class' => 'regular-text',
                 ]
             );
@@ -390,7 +390,7 @@ class Facade
              */
             $section = App::get('customizer.section', $sectionArgs);
 
-            $section->set('panel', $panel->get('id'));
+            $section->sp('panel', $panel->gp('id'));
 
             foreach ($sectionArgs['settings'] as $settingArgs) {
                 /**
@@ -398,7 +398,7 @@ class Facade
                  */
                 $setting = App::get('customizer.setting', $settingArgs);
 
-                $setting->set('section', $section->get('id'));
+                $setting->sp('section', $section->gp('id'));
 
                 $section->addSetting($setting);
             }

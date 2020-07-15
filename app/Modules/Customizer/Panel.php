@@ -1,39 +1,47 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Customizer;
+namespace AlexDashkin\Adwpfw\Modules\Customizer;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
-class Section extends Module
+class Panel extends Module
 {
     /**
-     * @var Setting[]
+     * @var Section[]
      */
-    private $settings;
+    private $sections;
 
     /**
-     * Add Setting
+     * Add Section
      *
-     * @param Setting $setting
+     * @param Section $section
      */
-    public function addSetting($setting)
+    public function addSection($section)
     {
-        $setting->set('section', $this->get('prefix') . '_' . $this->get('id'));
+        $section->sp('panel', $this->gp('prefix') . '_' . $this->gp('id'));
 
-        $this->settings[] = $setting;
+        $this->sections[] = $section;
     }
 
     /**
-     * Register Section
+     * Init Module
+     */
+    public function init()
+    {
+        $this->hook('customize_register', [$this, 'register']);
+    }
+
+    /**
+     * Register Panel.
      *
      * @param \WP_Customize_Manager $customizer
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_section($this->get('prefix') . '_' . $this->get('id'), $this->data);
+        $customizer->add_panel($this->gp('prefix') . '_' . $this->gp('id'), $this->gp());
 
-        foreach ($this->settings as $setting) {
-            $setting->register($customizer);
+        foreach ($this->sections as $section) {
+            $section->register($customizer);
         }
     }
 
@@ -42,13 +50,10 @@ class Section extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [
-                'required' => true,
-            ],
-            'panel' => [
                 'required' => true,
             ],
             'title' => [

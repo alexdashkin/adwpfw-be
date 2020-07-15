@@ -12,10 +12,10 @@ class Select extends Field
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return array_merge(
-            parent::props(),
+            parent::getInitialPropDefs(),
             [
                 'tpl' => [
                     'default' => 'select',
@@ -45,18 +45,18 @@ class Select extends Field
 
         $options = [];
 
-        if ($this->get('placeholder')) {
+        if ($this->gp('placeholder')) {
             $options = [
                 [
-                    'label' => $this->get('placeholder'),
+                    'label' => $this->gp('placeholder'),
                     'value' => '',
                     'selected' => '',
                 ]
             ];
         }
 
-        foreach ($this->get('options') as $val => $label) {
-            $selected = $this->get('multiple') ? in_array($val, (array)$value) : $val == $value;
+        foreach ($this->gp('options') as $val => $label) {
+            $selected = $this->gp('multiple') ? in_array($val, (array)$value) : $val == $value;
 
             $options[] = [
                 'label' => $label,
@@ -65,9 +65,9 @@ class Select extends Field
             ];
         }
 
-        $this->set('options', $options);
+        $this->sp('options', $options);
 
-        return $this->data;
+        return $this->gp();
     }
 
     public function sanitizer($value)

@@ -1,14 +1,14 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Updater;
+namespace AlexDashkin\Adwpfw\Modules\Updater;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\App;
 
-class Plugin extends Module
+class Theme extends Module
 {
     /**
-     * @var object Plugin update transient
+     * @var array Theme update transient
      */
     private $transient;
 
@@ -17,35 +17,26 @@ class Plugin extends Module
      */
     public function init()
     {
-        require_once ABSPATH . 'wp-includes/plugin.php';
-        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        $this->validateData();
 
-        $file = plugin_basename($this->get('file'));
-        $exploded = explode('/', $file);
         $newVer = '100.0.0';
 
-        if ($pluginData = get_plugin_data($this->get('file'), false, false)) {
-            $oldVer = $pluginData['Version'];
+        $slug = $this->gp('slug');
+
+        if ($themeData = wp_get_theme($slug)) {
+            $oldVer = $themeData->version;
             $last = (int)substr($oldVer, -1);
             $newVer = substr($oldVer, 0, strlen($oldVer) - 1) . ++$last;
         }
 
         $this->transient = [
-            'id' => $file,
-            'slug' => $exploded[0],
-            'plugin' => $file,
+            'theme' => $slug,
             'new_version' => $newVer,
-            'package' => $this->get('package'),
+            'package' => $this->gp('package'),
             'url' => '',
-            'icons' => [],
-            'banners' => [],
-            'banners_rtl' => [],
-            'tested' => '10.0.0',
-            'compatibility' => new \stdClass(),
         ];
 
-        $this->hook('pre_set_site_transient_update_plugins', [$this, 'register']);
-        $this->hook('upgrader_process_complete', [$this, 'onUpdate']);
+        $this->hook('pre_set_site_transient_update_themes', [$this, 'register']);
     }
 
     /**
@@ -57,7 +48,7 @@ class Plugin extends Module
     public function register($transient)
     {
         if (!empty($transient->checked)) {
-            $transient->response[$this->transient['id']] = (object)$this->transient;
+            $transient->response[$this->gp('slug')] = $this->transient;
         }
 
         return $transient;
@@ -71,18 +62,18 @@ class Plugin extends Module
      */
     public function onUpdate(\WP_Upgrader $upgrader, array $data)
     {
-        if ($data['action'] !== 'update' || $data['type'] !== 'plugin'
-            || empty($data['plugins']) || !in_array($this->transient['id'], $data['plugins'])) {
+        if ($data['action'] !== 'update' || $data['type'] !== 'theme'
+            || empty($data['themes']) || !in_array($this->gp('slug'), $data['themes'])) {
             return;
         }
 
         // Call callback
-        if ($this->get('callback')) {
-            $this->get('callback')();
+        if ($this->gp('callback')) {
+            $this->gp('callback')();
         }
 
         // Clear Twig cache
-        $twigPath = App::get('helpers')->getUploadsDir($this->get('prefix') . '/twig');
+        $twigPath = App::get('helpers')->getUploadsDir($this->gp('prefix') . '/twig');
 
         if (file_exists($twigPath)) {
             App::get('helpers')->rmDir($twigPath);
@@ -94,21 +85,21 @@ class Plugin extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [
                 'required' => true,
             ],
-            'file' => [
-                'required' => true,
-            ],
             'package' => [
                 'required' => true,
             ],
+            'slug' => [
+                'default' => get_stylesheet(),
+            ],
             'id' => [
                 'default' => function ($data) {
-                    return $data['file'];
+                    return $data['slug'];
                 },
             ],
             'callback' => [

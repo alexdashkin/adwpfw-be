@@ -1,10 +1,10 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
-class Db extends Module
+class Query extends Module
 {
     /**
      * @var \wpdb
@@ -73,8 +73,10 @@ class Db extends Module
      */
     public function init()
     {
-        $this->wpdb = $this->get('wpdb');
-        $this->tablePrefix = $this->get('table_prefix');
+        $this->validateData();
+
+        $this->wpdb = $this->gp('wpdb');
+        $this->tablePrefix = $this->gp('table_prefix');
     }
 
     /**
@@ -386,7 +388,7 @@ class Db extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'wpdb' => [

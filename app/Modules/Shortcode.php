@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -19,7 +19,7 @@ class Shortcode extends Module
      */
     public function register()
     {
-        add_shortcode($this->get('prefix') . '_' . $this->get('tag'), [$this, 'render']);
+        add_shortcode($this->gp('prefix') . '_' . $this->gp('tag'), [$this, 'render']);
     }
 
     /**
@@ -32,9 +32,9 @@ class Shortcode extends Module
      */
     public function render($atts, $content, $tag): string
     {
-        $args = array_merge($this->get('atts'), $atts ?: []);
+        $args = array_merge($this->gp('atts'), $atts ?: []);
 
-        return $this->get('callback')($args);
+        return $this->gp('callback')($args);
     }
 
     /**
@@ -42,7 +42,7 @@ class Shortcode extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

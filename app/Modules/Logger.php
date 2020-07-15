@@ -35,9 +35,11 @@ class Logger extends Module
      */
     public function init()
     {
+        $this->validateData();
+
         // Prepare vars
-        $prefix = $this->get('prefix');
-        $maxLogSize = $this->get('size');
+        $prefix = $this->gp('prefix');
+        $maxLogSize = $this->gp('size');
         $this->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $basePath = App::get('helpers')->getUploadsDir($prefix . '/logs');
@@ -86,7 +88,7 @@ class Logger extends Module
     public function log($message, array $values = [], int $level = 4)
     {
         // Skip if message level is lower than defined in config
-        if (!($level & $this->get('level'))) {
+        if (!($level & $this->gp('level'))) {
             return;
         }
 
@@ -140,7 +142,7 @@ class Logger extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

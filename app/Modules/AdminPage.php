@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\App;
@@ -32,7 +32,7 @@ class AdminPage extends Module
         App::get(
             'admin_ajax',
             [
-                'prefix' => $this->get('prefix'),
+                'prefix' => $this->gp('prefix'),
                 'action' => 'save',
                 'fields' => [
                     'form' => [
@@ -50,24 +50,24 @@ class AdminPage extends Module
      */
     public function register()
     {
-        if ($this->get('parent')) {
+        if ($this->gp('parent')) {
             add_submenu_page(
-                $this->get('parent'),
-                $this->get('title'),
-                $this->get('name'),
-                $this->get('capability'),
-                $this->get('slug'),
+                $this->gp('parent'),
+                $this->gp('title'),
+                $this->gp('name'),
+                $this->gp('capability'),
+                $this->gp('slug'),
                 [$this, 'render']
             );
         } else {
             add_menu_page(
-                $this->get('title'),
-                $this->get('name'),
-                $this->get('capability'),
-                $this->get('slug'),
+                $this->gp('title'),
+                $this->gp('name'),
+                $this->gp('capability'),
+                $this->gp('slug'),
                 [$this, 'render'],
-                $this->get('icon'),
-                $this->get('position')
+                $this->gp('icon'),
+                $this->gp('position')
             );
         }
     }
@@ -84,8 +84,8 @@ class AdminPage extends Module
         }
 
         $args = [
-            'prefix' => $this->get('prefix'),
-            'title' => $this->get('title'),
+            'prefix' => $this->gp('prefix'),
+            'title' => $this->gp('title'),
             'tabs' => $tabs,
         ];
 
@@ -103,11 +103,11 @@ class AdminPage extends Module
         $helpers = App::get('helpers');
         $form = $request['form'];
 
-        if (empty($form[$this->get('prefix')])) {
+        if (empty($form[$this->gp('prefix')])) {
             return $helpers->returnError('Form is empty');
         }
 
-        $data = $form[$this->get('prefix')];
+        $data = $form[$this->gp('prefix')];
 
         $saved = false;
 
@@ -123,7 +123,7 @@ class AdminPage extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

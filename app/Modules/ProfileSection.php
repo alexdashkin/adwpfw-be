@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\Fields\Field;
@@ -40,12 +40,12 @@ class ProfileSection extends Module
      */
     public function render(\WP_User $user)
     {
-        $values = get_user_meta($user->ID, $this->get('prefix') . '_' . $this->get('id'), true) ?: [];
+        $values = get_user_meta($user->ID, $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
 
         $fields = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->get('name');
+            $fieldName = $field->gp('name');
 
             $twigArgs = $field->getTwigArgs($values[$fieldName] ?? null);
 
@@ -53,7 +53,7 @@ class ProfileSection extends Module
         }
 
         $args = [
-            'heading' => $this->get('heading'),
+            'heading' => $this->gp('heading'),
             'fields' => $fields,
         ];
 
@@ -72,20 +72,20 @@ class ProfileSection extends Module
             return;
         }
 
-        $sectionData = $this->data;
-        $prefix = $sectionData['prefix'];
-        $metaKey = $prefix . '_' . $sectionData['id'];
+        $id = $this->gp('id');
+        $prefix = $this->gp('prefix');
+        $metaKey = $prefix . '_' . $id;
 
-        if (empty($_POST[$prefix][$sectionData['id']])) {
+        if (empty($_POST[$prefix][$id])) {
             return;
         }
 
-        $form = $_POST[$prefix][$sectionData['id']];
+        $form = $_POST[$prefix][$id];
 
         $values = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->get('name');
+            $fieldName = $field->gp('name');
 
             if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
                 continue;
@@ -104,7 +104,7 @@ class ProfileSection extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

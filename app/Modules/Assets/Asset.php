@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Assets;
+namespace AlexDashkin\Adwpfw\Modules\Assets;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -11,7 +11,7 @@ abstract class Asset extends Module
      */
     public function init()
     {
-        $this->hook('admin' === $this->get('type') ? 'admin_enqueue_scripts' : 'wp_enqueue_scripts', [$this, 'enqueue']);
+        $this->hook('admin' === $this->gp('type') ? 'admin_enqueue_scripts' : 'wp_enqueue_scripts', [$this, 'enqueue']);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Api;
+namespace AlexDashkin\Adwpfw\Modules\Api;
 
 class AdminAjax extends Request
 {
@@ -9,7 +9,9 @@ class AdminAjax extends Request
      */
     public function init()
     {
-        $actionName = $this->get('prefix') . '_' . $this->get('action');
+        $this->validateData();
+
+        $actionName = $this->gp('prefix') . '_' . $this->gp('action');
 
         $this->hook('wp_ajax_' . $actionName, [$this, 'handle']);
         $this->hook('wp_ajax_nopriv_' . $actionName, [$this, 'handle']);
@@ -20,7 +22,7 @@ class AdminAjax extends Request
      */
     public function handle()
     {
-        check_ajax_referer($this->get('prefix'));
+        check_ajax_referer($this->gp('prefix'));
 
         $result = $this->execute($_REQUEST['data'] ?? []);
 
@@ -32,7 +34,7 @@ class AdminAjax extends Request
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

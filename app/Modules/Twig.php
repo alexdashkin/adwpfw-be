@@ -45,9 +45,9 @@ class Twig extends Module
             throw new AppException('Twig not found');
         }
 
-        $data = $this->data;
+        $this->validateData();
 
-        $paths = $this->get('paths');
+        $paths = $this->gp('paths');
         $paths[] = __DIR__ . '/../../tpl';
 
         foreach ($paths as $index => $path) {
@@ -59,11 +59,11 @@ class Twig extends Module
 
         $this->fsLoader = new FilesystemLoader($paths);
 
-        $this->twigFs = new Environment($this->fsLoader, $data);
+        $this->twigFs = new Environment($this->fsLoader, $this->gp());
 
         $this->arrayLoader = new ArrayLoader();
 
-        $this->twigArray = new Environment($this->arrayLoader, $data);
+        $this->twigArray = new Environment($this->arrayLoader, $this->gp());
     }
 
     /**
@@ -145,7 +145,7 @@ class Twig extends Module
     {
         $args = array_merge(
             [
-                'prefix' => $this->get('prefix'),
+                'prefix' => $this->gp('prefix'),
             ],
             $args
         );
@@ -164,7 +164,7 @@ class Twig extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Customizer;
+namespace AlexDashkin\Adwpfw\Modules\Customizer;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -13,20 +13,20 @@ class Setting extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $id = $this->get('prefix') . '_' . $this->get('id');
+        $id = $this->gp('prefix') . '_' . $this->gp('id');
 
         $setting = [
-            'default' => $this->get('default'),
-            'sanitize_callback' => $this->get('sanitize_callback'),
+            'default' => $this->gp('default'),
+            'sanitize_callback' => $this->gp('sanitize_callback'),
         ];
 
         $control = [
-            'label' => $this->get('label'),
-            'description' => $this->get('description'),
-            'section' => $this->get('section'),
-            'priority' => $this->get('priority'),
-            'type' => $this->get('type'),
-            'input_attrs' => $this->get('input_attrs'),
+            'label' => $this->gp('label'),
+            'description' => $this->gp('description'),
+            'section' => $this->gp('section'),
+            'priority' => $this->gp('priority'),
+            'type' => $this->gp('type'),
+            'input_attrs' => $this->gp('input_attrs'),
         ];
 
         $customizer->add_setting($id, $setting);
@@ -52,7 +52,7 @@ class Setting extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

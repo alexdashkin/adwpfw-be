@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Api;
+namespace AlexDashkin\Adwpfw\Modules\Api;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\App;
@@ -20,12 +20,10 @@ abstract class Request extends Module
      */
     protected function validateRequest(array $request): array
     {
-        $actionData = $this->data;
-
         $fields = $request;
 
-        if (!empty($actionData['fields'])) {
-            foreach ($actionData['fields'] as $name => $settings) {
+        if ($fieldDefs = $this->gp('fields')) {
+            foreach ($fieldDefs as $name => $settings) {
                 if (!isset($request[$name]) && $settings['required']) {
                     throw new AppException('Missing required field: ' . $name);
                 }
@@ -81,7 +79,7 @@ abstract class Request extends Module
     {
         try {
             $data = $this->validateRequest($params);
-            $result = $this->get('callback')($data);
+            $result = $this->gp('callback')($data);
         } catch (\Exception $e) {
             return $this->error('Exception: ' . $e->getMessage());
         }

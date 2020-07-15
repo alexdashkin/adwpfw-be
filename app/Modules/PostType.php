@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -23,7 +23,7 @@ class PostType extends Module
      */
     public function register()
     {
-        register_post_type($this->get('prefix') . '_' . $this->get('slug'), $this->data);
+        register_post_type($this->gp('prefix') . '_' . $this->gp('slug'), $this->gp());
     }
 
     /**
@@ -31,10 +31,10 @@ class PostType extends Module
      */
     private function setLabels()
     {
-        $labels = $this->get('labels');
+        $labels = $this->gp('labels');
 
-        $singular = !empty($labels['singular']) ? $labels['singular'] : $this->get('singular');
-        $plural = !empty($labels['plural']) ? $labels['plural'] : $this->get('plural');
+        $singular = !empty($labels['singular']) ? $labels['singular'] : $this->gp('singular');
+        $plural = !empty($labels['plural']) ? $labels['plural'] : $this->gp('plural');
 
         $defaults = [
             'name' => $plural,
@@ -50,7 +50,7 @@ class PostType extends Module
             'not_found_in_trash' => "No $plural Found in Trash",
         ];
 
-        $this->set('labels', array_merge($defaults, $labels));
+        $this->sp('labels', array_merge($defaults, $labels));
     }
 
     /**
@@ -58,7 +58,7 @@ class PostType extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

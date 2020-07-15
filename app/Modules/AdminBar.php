@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -22,13 +22,13 @@ class AdminBar extends Module
      */
     public function register(\WP_Admin_Bar $wpAdminBar)
     {
-        if (!current_user_can($this->get('capability'))) {
+        if (!current_user_can($this->gp('capability'))) {
             return;
         }
 
-        $this->set('id', $this->get('prefix') . '-' . $this->get('id'));
+        $this->sp('id', $this->gp('prefix') . '-' . $this->gp('id'));
 
-        $wpAdminBar->add_node($this->data);
+        $wpAdminBar->add_node($this->gp());
     }
 
     /**
@@ -36,7 +36,7 @@ class AdminBar extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

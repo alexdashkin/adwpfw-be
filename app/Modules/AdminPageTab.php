@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\Fields\Field;
@@ -19,7 +19,7 @@ class AdminPageTab extends Module
      */
     public function addField(Field $field)
     {
-        $field->setMany(['form' => $this->get('slug')]);
+        $field->spm(['form' => $this->gp('slug')]);
 
         $this->fields[] = $field;
     }
@@ -33,12 +33,12 @@ class AdminPageTab extends Module
     {
         $this->validateData();
 
-        $values = get_option($this->get('prefix') . '_' . $this->get('option')) ?: [];
+        $values = get_option($this->gp('prefix') . '_' . $this->gp('option')) ?: [];
 
         $fields = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->get('name');
+            $fieldName = $field->gp('name');
 
             $twigArgs = $field->getTwigArgs($values[$fieldName] ?? null);
 
@@ -46,8 +46,8 @@ class AdminPageTab extends Module
         }
 
         return [
-            'form' => $this->get('form'),
-            'title' => $this->get('title'),
+            'form' => $this->gp('form'),
+            'title' => $this->gp('title'),
             'fields' => $fields,
             'buttons' => [],
         ];
@@ -61,18 +61,18 @@ class AdminPageTab extends Module
      */
     public function save(array $postedData)
     {
-        if (empty($postedData[$this->get('slug')])) {
+        if (empty($postedData[$this->gp('slug')])) {
             return false;
         }
 
-        $data = $postedData[$this->get('slug')];
+        $data = $postedData[$this->gp('slug')];
 
-        $optionName = $this->get('prefix') . '_' . $this->get('option');
+        $optionName = $this->gp('prefix') . '_' . $this->gp('option');
 
         $values = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->get('name');
+            $fieldName = $field->gp('name');
 
             if (empty($fieldName) || !array_key_exists($fieldName, $data)) {
                 continue;
@@ -93,7 +93,7 @@ class AdminPageTab extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

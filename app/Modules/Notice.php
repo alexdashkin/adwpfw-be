@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\App;
@@ -15,11 +15,11 @@ class Notice extends Module
         $this->hook('admin_notices', [$this, 'process']);
 
         // Add Ajax action to dismiss notice
-        if ($this->get('dismissible')) {
+        if ($this->gp('dismissible')) {
             App::get(
                 'admin_ajax',
                 [
-                    'prefix' => $this->get('prefix'),
+                    'prefix' => $this->gp('prefix'),
                     'action' => 'notice_dismiss',
                     'fields' => [
                         'id' => [
@@ -39,14 +39,14 @@ class Notice extends Module
     public function process()
     {
         // Do not show if callback returns false
-        if ($this->get('callback') && !$this->get('callback')()) {
+        if ($this->gp('callback') && !$this->gp('callback')()) {
             return;
         }
 
         // If dismissed but days have not yet passed - do not show
         // To show again immediately - leave days as 0
         // To stop forever - set days as highest possible value
-        if ($this->getDismissed() > time() - $this->get('days') * DAY_IN_SECONDS) {
+        if ($this->getDismissed() > time() - $this->gp('days') * DAY_IN_SECONDS) {
             return;
         }
 
@@ -62,7 +62,7 @@ class Notice extends Module
      */
     public function ajaxDismiss(array $data): array
     {
-        if ($data['id'] === $this->get('id')) {
+        if ($data['id'] === $this->gp('id')) {
             $this->dismiss();
         }
 
@@ -100,7 +100,7 @@ class Notice extends Module
      */
     private function render()
     {
-        return $this->twig($this->get('tpl'), $this->data);
+        return $this->twig($this->gp('tpl'), $this->gp());
     }
 
     /**
@@ -111,11 +111,11 @@ class Notice extends Module
      */
     private function getDismissed()
     {
-        $optionName = $this->get('prefix') . '_notices';
+        $optionName = $this->gp('prefix') . '_notices';
 
         $option = get_option($optionName) ?: [];
 
-        return $option[$this->get('id')] ?? 0;
+        return $option[$this->gp('id')] ?? 0;
     }
 
     /**
@@ -126,11 +126,11 @@ class Notice extends Module
      */
     private function setDismissed($timestamp)
     {
-        $optionName = $this->get('prefix') . '_notices';
+        $optionName = $this->gp('prefix') . '_notices';
 
         $optionValue = get_option($optionName) ?: [];
 
-        $optionValue[$this->get('id')] = $timestamp;
+        $optionValue[$this->gp('id')] = $timestamp;
 
         update_option($optionName, $optionValue);
     }
@@ -140,7 +140,7 @@ class Notice extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

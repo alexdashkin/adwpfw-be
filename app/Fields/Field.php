@@ -19,9 +19,9 @@ abstract class Field extends Module
     {
         $this->validateData();
 
-        $this->set('value', $value);
+        $this->sp('value', $value);
 
-        return $this->data;
+        return $this->gp();
     }
 
     /**
@@ -32,7 +32,7 @@ abstract class Field extends Module
      */
     public function sanitize($value)
     {
-        return is_callable($this->get('sanitizer')) ? $this->get('sanitizer')($value) : $value;
+        return is_callable($this->gp('sanitizer')) ? $this->gp('sanitizer')($value) : $value;
     }
 
     /**
@@ -40,7 +40,7 @@ abstract class Field extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'prefix' => [

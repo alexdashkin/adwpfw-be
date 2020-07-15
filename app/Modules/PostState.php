@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Abstracts\Module;
 
@@ -23,8 +23,8 @@ class PostState extends Module
      */
     public function register(array $states, $post)
     {
-        if ($post->ID === $this->get('post_id')) {
-            $states[] = $this->get('state');
+        if ($post->ID === $this->gp('post_id')) {
+            $states[] = $this->gp('state');
         }
 
         return $states;
@@ -35,7 +35,7 @@ class PostState extends Module
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'post_id' => [

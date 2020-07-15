@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Items\Assets;
+namespace AlexDashkin\Adwpfw\Modules\Assets;
 
 /**
  * CSS file
@@ -12,16 +12,16 @@ class Js extends Asset
      */
     public function enqueue()
     {
-        $callback = $this->get('callback');
+        $callback = $this->gp('callback');
 
         // Exit if callback returns false
         if ($callback && is_callable($callback) && !$callback()) {
             return;
         }
 
-        $prefix = $this->get('prefix');
+        $prefix = $this->gp('prefix');
 
-        $id = sanitize_title($this->get('id'));
+        $id = sanitize_title($this->gp('id'));
 
         // Enqueue already registered script and exit
         if (wp_script_is($id, 'registered')) {
@@ -32,7 +32,7 @@ class Js extends Asset
         $id = $prefix . '-' . $id;
 
         // Enqueue new script
-        wp_enqueue_script($id, $this->get('url'), $this->get('deps'), $this->get('ver'), true);
+        wp_enqueue_script($id, $this->gp('url'), $this->gp('deps'), $this->gp('ver'), true);
 
         // Localize script
         $localize = array_merge(
@@ -42,7 +42,7 @@ class Js extends Asset
                 'rest_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
             ],
-            $this->get('localize')
+            $this->gp('localize')
         );
 
         wp_localize_script($id, $prefix, $localize);
@@ -53,7 +53,7 @@ class Js extends Asset
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return [
             'type' => [

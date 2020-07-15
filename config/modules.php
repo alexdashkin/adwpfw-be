@@ -14,66 +14,70 @@ return [
         'single' => true,
     ],
     'db' => [
-        'class' => AlexDashkin\Adwpfw\Items\Db::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Db::class,
+        'single' => true,
+    ],
+    'query' => [
+        'class' => AlexDashkin\Adwpfw\Modules\Query::class,
     ],
     'hook' => [
-        'class' => AlexDashkin\Adwpfw\Items\Hook::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Hook::class,
     ],
     'asset.css' => [
-        'class' => AlexDashkin\Adwpfw\Items\Assets\Css::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Assets\Css::class,
     ],
     'asset.js' => [
-        'class' => AlexDashkin\Adwpfw\Items\Assets\Js::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Assets\Js::class,
     ],
     'admin_ajax' => [
-        'class' => AlexDashkin\Adwpfw\Items\Api\AdminAjax::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Api\AdminAjax::class,
     ],
     'rest' => [
-        'class' => AlexDashkin\Adwpfw\Items\Api\Rest::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Api\Rest::class,
     ],
     'admin_page' => [
-        'class' => AlexDashkin\Adwpfw\Items\AdminPage::class,
+        'class' => AlexDashkin\Adwpfw\Modules\AdminPage::class,
     ],
     'admin_page_tab' => [
-        'class' => AlexDashkin\Adwpfw\Items\AdminPageTab::class,
+        'class' => AlexDashkin\Adwpfw\Modules\AdminPageTab::class,
     ],
     'admin_bar' => [
-        'class' => AlexDashkin\Adwpfw\Items\AdminBar::class,
+        'class' => AlexDashkin\Adwpfw\Modules\AdminBar::class,
     ],
     'metabox' => [
-        'class' => AlexDashkin\Adwpfw\Items\Metabox::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Metabox::class,
     ],
     'notice' => [
-        'class' => AlexDashkin\Adwpfw\Items\Notice::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Notice::class,
     ],
     'post_state' => [
-        'class' => AlexDashkin\Adwpfw\Items\PostState::class,
+        'class' => AlexDashkin\Adwpfw\Modules\PostState::class,
     ],
     'post_type' => [
-        'class' => AlexDashkin\Adwpfw\Items\PostType::class,
+        'class' => AlexDashkin\Adwpfw\Modules\PostType::class,
     ],
     'profile_section' => [
-        'class' => AlexDashkin\Adwpfw\Items\ProfileSection::class,
+        'class' => AlexDashkin\Adwpfw\Modules\ProfileSection::class,
     ],
     'shortcode' => [
-        'class' => AlexDashkin\Adwpfw\Items\Shortcode::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Shortcode::class,
     ],
     'updater.plugin' => [
-        'class' => AlexDashkin\Adwpfw\Items\Updater\Plugin::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Updater\Plugin::class,
     ],
     'updater.theme' => [
-        'class' => AlexDashkin\Adwpfw\Items\Updater\Theme::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Updater\Theme::class,
     ],
     'widget' => [
-        'class' => AlexDashkin\Adwpfw\Items\Widget::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Widget::class,
     ],
     'customizer.panel' => [
-        'class' => AlexDashkin\Adwpfw\Items\Customizer\Panel::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Customizer\Panel::class,
     ],
     'customizer.section' => [
-        'class' => AlexDashkin\Adwpfw\Items\Customizer\Section::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Customizer\Section::class,
     ],
     'customizer.setting' => [
-        'class' => AlexDashkin\Adwpfw\Items\Customizer\Setting::class,
+        'class' => AlexDashkin\Adwpfw\Modules\Customizer\Setting::class,
     ],
 ];

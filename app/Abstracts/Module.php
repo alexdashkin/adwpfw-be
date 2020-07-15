@@ -8,57 +8,78 @@ use AlexDashkin\Adwpfw\Exceptions\AppException;
 abstract class Module
 {
     /**
-     * @var array Item Data
+     * @var array Item Props
      */
-    protected $data = [];
+    private $props = [];
 
     /**
-     * Get Data value
+     * Get Prop
+     *
+     * @param string $key If omitted, all props will be returned
+     * @return mixed
+     */
+    public function gp(string $key = '')
+    {
+        if ($key) {
+            return $this->getProp($key);
+        }
+
+        $return = [];
+
+        $allProps = array_merge(array_keys($this->getPropDefs()), array_keys($this->props));
+
+        foreach ($allProps as $propName) {
+            $return[$propName] = $this->getProp($propName);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Set Prop
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    public function sp(string $key, $value)
+    {
+        // Get prop definition
+        $prop = $this->getPropDef($key);
+
+        // If prop type is defined - parse by type, else - assign as is
+        $this->props[$key] = $prop ? $this->parsePropByType($value, $prop['type']) : $value;
+    }
+
+    /**
+     * Set Many Props
+     *
+     * @param array $data
+     */
+    public function spm(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $this->sp($key, $value);
+        }
+    }
+
+    /**
+     * Get Single Prop
      *
      * @param string $key
      * @return mixed
      */
-    public function get(string $key)
+    private function getProp($key)
     {
-        if (array_key_exists($key, $this->data)) {
-            return $this->data[$key];
+        // Get Prop Definition if exists
+        $def = $this->getPropDef($key);
+
+        // If no value yet, fill with the default
+        if (!array_key_exists($key, $this->props)) {
+            return $def ? ($def['default'] instanceof \Closure ? $def['default']($this->props) : $def['default']) : null;
         }
 
-        if (!$prop = $this->getProp($key)) {
-            return null;
-        }
-
-        return $prop['default'] instanceof \Closure ? $prop['default']($this->data) : $prop['default'];
-    }
-
-    /**
-     * Set Data value
-     *
-     * @param array $data
-     */
-    public function set(string $key, $value)
-    {
-        $props = $this->getProps();
-
-        if (array_key_exists($key, $props)) {
-            // If prop type is defined - parse by type
-            $this->data[$key] = $this->parseField($props[$key]['type'], $value);
-        } else {
-            // Else - assign as is
-            $this->data[$key] = $value;
-        }
-    }
-
-    /**
-     * Set Many Data values
-     *
-     * @param array $data
-     */
-    public function setMany(array $data)
-    {
-        foreach ($data as $key => $value) {
-            $this->set($key, $value);
-        }
+        // Parse value by type before returning
+        return $def ? $this->parsePropByType($this->props[$key], $def['type']) : $this->props[$key];
     }
 
     /**
@@ -68,7 +89,7 @@ abstract class Module
      * @param mixed $value
      * @return mixed
      */
-    protected function parseField($type, $value)
+    private function parsePropByType($value, $type)
     {
         switch ($type) {
             case 'string':
@@ -92,9 +113,9 @@ abstract class Module
      *
      * @return array
      */
-    protected function getProp(string $key): array
+    private function getPropDef(string $key): array
     {
-        $props = $this->getProps();
+        $props = $this->getPropDefs();
 
         return array_key_exists($key, $props) ? $props[$key] : [];
     }
@@ -104,9 +125,9 @@ abstract class Module
      *
      * @return array
      */
-    protected function getProps(): array
+    private function getPropDefs(): array
     {
-        $props = $this->props();
+        $props = $this->getInitialPropDefs();
 
         foreach ($props as $name => &$def) {
             $def = array_merge(
@@ -130,9 +151,9 @@ abstract class Module
      */
     protected function validateData()
     {
-        $data = $this->data;
+        $data = $this->props;
 
-        $props = $this->getProps();
+        $props = $this->getPropDefs();
 
         foreach ($props as $name => $fieldData) {
             // If a var is not set - assign default or stop
@@ -155,17 +176,17 @@ abstract class Module
             }
 
             // Sanitize by type
-            $item = $this->parseField($fieldData['type'], $item);
+            $item = $this->parsePropByType($item, $fieldData['type']);
         }
 
         // Assign data
-        $this->data = $data;
+        $this->props = $data;
 
         return $data;
     }
 
     /**
-     * Add Hook
+     * Add Hook with props validation in the middle
      *
      * @param string $tag
      * @param callable $callback
@@ -215,5 +236,5 @@ abstract class Module
         App::get('logger')->log($message, $values, $level);
     }
 
-    abstract protected function props(): array;
+    abstract protected function getInitialPropDefs(): array;
 }

@@ -12,10 +12,10 @@ class Radio extends Field
      *
      * @return array
      */
-    protected function props(): array
+    protected function getInitialPropDefs(): array
     {
         return array_merge(
-            parent::props(),
+            parent::getInitialPropDefs(),
             [
                 'tpl' => [
                     'default' => 'radio',
