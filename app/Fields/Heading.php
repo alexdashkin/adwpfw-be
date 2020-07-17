@@ -17,6 +17,9 @@ class Heading extends Field
         return array_merge(
             parent::getInitialPropDefs(),
             [
+                'name' => [
+                    'default' => '',
+                ],
                 'tpl' => [
                     'default' => 'heading',
                 ],
