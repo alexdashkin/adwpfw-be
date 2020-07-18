@@ -57,7 +57,7 @@ abstract class Request extends Module
                             break;
 
                         case 'form':
-                            parse_str($request['form'], $sanitized);
+                            parse_str($sanitized, $sanitized);
                             break;
                     }
 
