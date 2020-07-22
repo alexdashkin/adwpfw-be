@@ -133,7 +133,7 @@ class Metabox extends Module
 
         $this->setValue($values, $postId);
 
-        do_action('adwpfw_metabox_saved', $this, $values);
+        do_action('adwpfw_metabox_saved', $this, $postId, $values);
     }
 
     /**
