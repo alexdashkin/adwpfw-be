@@ -13,6 +13,11 @@ class App
     private static $instance;
 
     /**
+     * @var Facade
+     */
+    private $facade;
+
+    /**
      * @var array
      */
     private $config = [];
@@ -58,6 +63,16 @@ class App
         }
 
         return array_key_exists($key, $this->config) ? $this->config[$key] : null;
+    }
+
+    /**
+     * Get Facade
+     *
+     * @return Facade
+     */
+    public function getFacade(): Facade
+    {
+        return $this->facade;
     }
 
     /**
@@ -123,6 +138,7 @@ class App
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
+            self::$instance->facade = new Facade(self::$instance);
         }
 
         return self::$instance;

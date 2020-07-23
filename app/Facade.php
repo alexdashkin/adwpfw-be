@@ -32,11 +32,21 @@ use AlexDashkin\Adwpfw\Modules\Widget;
 class Facade
 {
     /**
+     * @var App
+     */
+    private $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * Add params to App global config
      *
      * @param array $config
      */
-    public static function setConfig(array $config)
+    public function setConfig(array $config)
     {
         App::the()->setConfig($config);
     }
@@ -49,7 +59,7 @@ class Facade
      * @return Module
      * @throws AppException
      */
-    public static function get(string $moduleName, array $args = [])
+    public function get(string $moduleName, array $args = [])
     {
         return App::get($moduleName, $args);
     }
@@ -61,7 +71,7 @@ class Facade
      * @param array $values If passed, vsprintf() func is applied. Default [].
      * @param int $level 1 = Error, 2 = Warning, 4 = Notice. Default 4.
      */
-    public static function log($message, array $values = [], int $level = 4)
+    public function log($message, array $values = [], int $level = 4)
     {
         /**
          * @var Logger $logger
@@ -77,7 +87,7 @@ class Facade
      * @param string $table
      * @return Query
      */
-    public static function db(string $table = ''): Query
+    public function db(string $table = ''): Query
     {
         return App::get('db')->table($table);
     }
@@ -89,7 +99,7 @@ class Facade
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
      */
-    public static function twig($name, $args = []): string
+    public function twig($name, $args = []): string
     {
         return App::get('twig')->renderFile($name, $args);
     }
@@ -102,7 +112,7 @@ class Facade
      * @param int $priority
      * @return Hook
      */
-    public static function addHook(string $tag, callable $callback, int $priority = 10): Hook
+    public function addHook(string $tag, callable $callback, int $priority = 10): Hook
     {
         return App::get(
             'hook',
@@ -120,7 +130,7 @@ class Facade
      * @param array $args
      * @return AdminBar
      */
-    public static function addAdminBar(array $args): AdminBar
+    public function addAdminBar(array $args): AdminBar
     {
         return App::get('admin_bar', $args);
     }
@@ -131,7 +141,7 @@ class Facade
      * @param array $args
      * @return Css
      */
-    public static function addCss(array $args): Css
+    public function addCss(array $args): Css
     {
         return App::get('asset.css', $args);
     }
@@ -142,7 +152,7 @@ class Facade
      * @param array $args
      * @return Js
      */
-    public static function addJs(array $args): Js
+    public function addJs(array $args): Js
     {
         return App::get('asset.js', $args);
     }
@@ -152,7 +162,7 @@ class Facade
      *
      * @param array $args
      */
-    public static function addAssets(array $args)
+    public function addAssets(array $args)
     {
         $args = App::get('helpers')->arrayMerge(
             [
@@ -188,7 +198,7 @@ class Facade
      * @param array $args
      * @return AdminAjax
      */
-    public static function addAdminAjax(array $args): AdminAjax
+    public function addAdminAjax(array $args): AdminAjax
     {
         return App::get('admin_ajax', $args);
     }
@@ -199,7 +209,7 @@ class Facade
      * @param array $args
      * @return Rest
      */
-    public static function addRestEndpoint(array $args): Rest
+    public function addRestEndpoint(array $args): Rest
     {
         return App::get('rest', $args);
     }
@@ -210,7 +220,7 @@ class Facade
      * @param array $args
      * @return Plugin
      */
-    public static function updaterPlugin(array $args): Plugin
+    public function updaterPlugin(array $args): Plugin
     {
         return App::get('updater.plugin', $args);
     }
@@ -221,7 +231,7 @@ class Facade
      * @param array $args
      * @return Theme
      */
-    public static function updaterTheme(array $args): Theme
+    public function updaterTheme(array $args): Theme
     {
         return App::get('updater.theme', $args);
     }
@@ -232,7 +242,7 @@ class Facade
      * @param array $args
      * @return Sidebar
      */
-    public static function addSidebar(array $args): Sidebar
+    public function addSidebar(array $args): Sidebar
     {
         return App::get('sidebar', $args);
     }
@@ -243,7 +253,7 @@ class Facade
      * @param array $args
      * @return Widget
      */
-    public static function addWidget(array $args): Widget
+    public function addWidget(array $args): Widget
     {
         return App::get('widget', $args);
     }
@@ -254,7 +264,7 @@ class Facade
      * @param array $args
      * @return Shortcode
      */
-    public static function addShortcode(array $args): Shortcode
+    public function addShortcode(array $args): Shortcode
     {
         return App::get('shortcode', $args);
     }
@@ -265,7 +275,7 @@ class Facade
      * @param array $args
      * @return Notice
      */
-    public static function addNotice(array $args): Notice
+    public function addNotice(array $args): Notice
     {
         return App::get('notice', $args);
     }
@@ -276,7 +286,7 @@ class Facade
      * @param array $args
      * @return PostType
      */
-    public static function addCpt(array $args): PostType
+    public function addCpt(array $args): PostType
     {
         return App::get('post_type', $args);
     }
@@ -288,7 +298,7 @@ class Facade
      * @param string $state
      * @return PostState
      */
-    public static function addPostState(int $postId, string $state): PostState
+    public function addPostState(int $postId, string $state): PostState
     {
         return App::get(
             'post_state',
@@ -305,7 +315,7 @@ class Facade
      * @param array $args
      * @return AdminPage
      */
-    public static function addAdminPage(array $args): AdminPage
+    public function addAdminPage(array $args): AdminPage
     {
         /**
          * @var AdminPage $adminPage
@@ -346,7 +356,7 @@ class Facade
      * @param array $args
      * @return Metabox
      */
-    public static function addMetabox(array $args): Metabox
+    public function addMetabox(array $args): Metabox
     {
         /**
          * @var Metabox $metabox
@@ -378,7 +388,7 @@ class Facade
      * @param array $args
      * @return ProfileSection
      */
-    public static function addProfileSection(array $args): ProfileSection
+    public function addProfileSection(array $args): ProfileSection
     {
         /**
          * @var ProfileSection $section
@@ -411,7 +421,7 @@ class Facade
      * @param array $args
      * @return Panel
      */
-    public static function addCustomizerPanel(array $args): Panel
+    public function addCustomizerPanel(array $args): Panel
     {
         /**
          * @var Panel $panel
@@ -449,7 +459,7 @@ class Facade
      * @param string $path
      * @return string
      */
-    public static function getUploadsDir(string $path = ''): string
+    public function getUploadsDir(string $path = ''): string
     {
         return App::get('helpers')->getUploads($path);
     }
@@ -460,7 +470,7 @@ class Facade
      * @param string $path
      * @return string
      */
-    public static function getUploadsUrl(string $path = ''): string
+    public function getUploadsUrl(string $path = ''): string
     {
         return App::get('helpers')->getUploads($path, true);
     }
@@ -473,7 +483,7 @@ class Facade
      * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
-    public static function returnSuccess(string $message = 'Done', array $data = [], bool $echo = false): array
+    public function returnSuccess(string $message = 'Done', array $data = [], bool $echo = false): array
     {
         return App::get('helpers')->returnSuccess($message, $data, $echo);
     }
@@ -485,7 +495,7 @@ class Facade
      * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
-    public static function returnError(string $message = 'Unknown Error', bool $echo = false)
+    public function returnError(string $message = 'Unknown Error', bool $echo = false)
     {
         return App::get('helpers')->returnError($message, $echo);
     }
