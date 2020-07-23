@@ -277,7 +277,7 @@ class Helpers
      * @param bool $getUrl Whether to get URL.
      * @return string
      */
-    private static function getUploads($path = '', $getUrl = false)
+    public function getUploads($path = '', $getUrl = false)
     {
         $uploadDir = wp_upload_dir();
 
@@ -367,7 +367,7 @@ class Helpers
      * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
-    public function returnSuccess($message = 'Done', array $data = [], $echo = false)
+    public function returnSuccess(string $message = 'Done', array $data = [], bool $echo = false): array
     {
         $message = $message ?: 'Done';
 
@@ -393,7 +393,7 @@ class Helpers
      * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
-    public function returnError($message = 'Unknown Error', $echo = false)
+    public function returnError(string $message = 'Unknown Error', bool $echo = false)
     {
         $message = $message ?: 'Unknown Error';
 

@@ -20,6 +20,9 @@ class Actions extends Select
                 'tpl' => [
                     'default' => 'actions',
                 ],
+                'class' => [
+                    'default' => '',
+                ],
             ]
         );
     }

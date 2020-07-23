@@ -22,13 +22,17 @@ class Select2 extends Select
                 'tpl' => [
                     'default' => 'select2',
                 ],
+                'options' => [
+                    'type' => 'array',
+                    'default' => [],
+                ],
                 'ajax_action' => [
                     'type' => 'string',
                     'default' => null,
                 ],
                 'min_chars' => [
                     'type' => 'int',
-                    'default' => 0,
+                    'default' => 3,
                 ],
                 'min_items_for_search' => [
                     'type' => 'int',

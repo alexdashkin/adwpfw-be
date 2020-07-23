@@ -85,7 +85,7 @@ class Query extends Module
      * @param string $table
      * @return $this
      */
-    public function table(string $table): self
+    public function table(string $table = ''): self
     {
         $this->table = $this->tablePrefix . $table;
 
@@ -95,7 +95,7 @@ class Query extends Module
     /**
      * Set the columns to be selected
      *
-     * @param array|mixed $columns
+     * @param array $columns
      * @return $this
      */
     public function columns($columns = [])
@@ -202,7 +202,7 @@ class Query extends Module
      * Insert a new record into the database.
      *
      * @param array $values
-     * @return bool
+     * @return bool|int
      */
     public function insert(array $values)
     {
@@ -260,7 +260,7 @@ class Query extends Module
      */
     public function update(array $values)
     {
-        return $this->wpdb->update($this->table, $values, $this->buildWhereArray());
+        return $this->wpdb->update($this->table, $values, $this->where['conditions']);
     }
 
     /**
@@ -270,7 +270,7 @@ class Query extends Module
      */
     public function delete()
     {
-        return $this->wpdb->delete($this->table, $this->buildWhereArray());
+        return $this->wpdb->delete($this->table, $this->where['conditions']);
     }
 
     /**
@@ -365,22 +365,6 @@ class Query extends Module
         }
 
         return sprintf(' LIMIT %d %d ', (int)$this->offset, (int)$this->limit);
-    }
-
-    /**
-     * Build where array
-     *
-     * @return array
-     */
-    private function buildWhereArray(): array
-    {
-        $whereArr = [];
-
-        foreach ($this->where['conditions'] as $condition) {
-            $whereArr[] = [$condition[0] => $condition[2]];
-        }
-
-        return $whereArr;
     }
 
     /**

@@ -160,7 +160,7 @@ abstract class Module
             if (!isset($data[$name])) {
                 if ($fieldData['required']) {
                     // If required and not set - error
-                    throw new AppException(sprintf('Missing required field "%s"', $name));
+                    throw new AppException(sprintf('%s: missing required field "%s"', get_called_class(), $name));
                 } else {
                     // Else - assign default
                     $data[$name] = $fieldData['default'] instanceof \Closure ? $fieldData['default']($data) : $fieldData['default'];
