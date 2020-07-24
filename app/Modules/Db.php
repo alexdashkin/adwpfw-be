@@ -2,9 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
-
 class Db extends Module
 {
     /**
@@ -17,7 +14,7 @@ class Db extends Module
     {
         $wpdb = $this->gp('wpdb');
 
-        return App::get(
+        return $this->m(
             'query',
             [
                 'wpdb' => $wpdb,

@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Abstracts;
+namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
@@ -8,9 +8,24 @@ use AlexDashkin\Adwpfw\Exceptions\AppException;
 abstract class Module
 {
     /**
+     * @var App
+     */
+    protected $app;
+
+    /**
      * @var array Item Props
      */
     private $props = [];
+
+    /**
+     * Module constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Get Prop
@@ -60,6 +75,16 @@ abstract class Module
         foreach ($data as $key => $value) {
             $this->sp($key, $value);
         }
+    }
+
+    /**
+     * Get App Module
+     *
+     * @param string $alias
+     */
+    protected function m(string $alias, array $args = [])
+    {
+        return $this->app->getModule($alias, $args);
     }
 
     /**
@@ -191,12 +216,12 @@ abstract class Module
      * @param string $tag
      * @param callable $callback
      * @param int $priority
-     * @return Module
+     * @return object
      * @throws AppException
      */
     protected function hook(string $tag, callable $callback, int $priority = 10)
     {
-        return App::get(
+        return $this->m(
             'hook',
             [
                 'tag' => $tag,
@@ -221,7 +246,7 @@ abstract class Module
      */
     protected function twig($name, $args = []): string
     {
-        return App::get('twig')->renderFile($name, $args);
+        return $this->m('twig')->renderFile($name, $args);
     }
 
     /**
@@ -233,7 +258,7 @@ abstract class Module
      */
     protected function log($message, array $values = [], int $level = 4)
     {
-        App::get('logger')->log($message, $values, $level);
+        $this->m('logger')->log($message, $values, $level);
     }
 
     abstract protected function getInitialPropDefs(): array;

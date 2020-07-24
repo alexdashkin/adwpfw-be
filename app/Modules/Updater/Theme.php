@@ -2,8 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Updater;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 class Theme extends Module
 {
@@ -73,10 +72,10 @@ class Theme extends Module
         }
 
         // Clear Twig cache
-        $twigPath = App::get('helpers')->getUploadsDir($this->gp('prefix') . '/twig');
+        $twigPath = $this->m('helpers')->getUploadsDir($this->gp('prefix') . '/twig');
 
         if (file_exists($twigPath)) {
-            App::get('helpers')->rmDir($twigPath);
+            $this->m('helpers')->rmDir($twigPath);
         }
     }
 

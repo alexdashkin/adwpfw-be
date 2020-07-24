@@ -2,9 +2,8 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Api;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
  * Abstract Ajax Endpoint. To be extended.
@@ -100,7 +99,7 @@ abstract class Request extends Module
      */
     protected function success($data = [])
     {
-        return App::get('helpers')->returnSuccess('Done', $data);
+        return $this->m('helpers')->returnSuccess('Done', $data);
     }
 
     /**
@@ -111,6 +110,6 @@ abstract class Request extends Module
      */
     protected function error($message = '')
     {
-        return App::get('helpers')->returnError($message);
+        return $this->m('helpers')->returnError($message);
     }
 }

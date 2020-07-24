@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
-
 class Widget extends Module
 {
     /**

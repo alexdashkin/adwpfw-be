@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
  * Form Field

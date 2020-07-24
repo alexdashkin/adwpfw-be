@@ -2,12 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\App;
-
 /**
  * Helpers
  */
-class Helpers
+class Helpers extends Module
 {
     /**
      * Search in an array.
@@ -540,8 +538,13 @@ class Helpers
         /**
          * @var Logger $logger
          */
-        $logger = App::get('logger');
+        $logger = $this->m('logger');
 
         $logger->log($message, $values, $level);
+    }
+
+    protected function getInitialPropDefs(): array
+    {
+        return [];
     }
 }

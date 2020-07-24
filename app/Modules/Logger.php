@@ -2,9 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
-
 /**
  * Logger
  */
@@ -42,7 +39,7 @@ class Logger extends Module
         $maxLogSize = $this->gp('size');
         $this->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
-        $basePath = App::get('helpers')->getUploadsDir($prefix . '/logs');
+        $basePath = $this->m('helpers')->getUploadsDir($prefix . '/logs');
         $filename = $this->getLogFilename($basePath, $prefix, $suffix, $maxLogSize);
         $immediateName = uniqid() . '-' . $suffix . '.log';
 

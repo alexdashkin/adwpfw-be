@@ -2,9 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
-
 class AdminPage extends Module
 {
     /**
@@ -29,7 +26,7 @@ class AdminPage extends Module
     {
         $this->hook('admin_menu', [$this, 'register']);
 
-        App::get(
+        $this->m(
             'admin_ajax',
             [
                 'prefix' => $this->gp('prefix'),
@@ -100,7 +97,7 @@ class AdminPage extends Module
      */
     public function save(array $request)
     {
-        $helpers = App::get('helpers');
+        $helpers = $this->m('helpers');
         $form = $request['form'];
 
         if (empty($form[$this->gp('prefix')])) {

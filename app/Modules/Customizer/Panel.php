@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Customizer;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 class Panel extends Module
 {

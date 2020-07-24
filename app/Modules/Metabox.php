@@ -2,7 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\Fields\Field;
 
 class Metabox extends Module

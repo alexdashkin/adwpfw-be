@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'facade' => [
+        'class' => AlexDashkin\Adwpfw\Modules\Facade::class,
+        'single' => true,
+    ],
     'logger' => [
         'class' => AlexDashkin\Adwpfw\Modules\Logger::class,
         'single' => true,

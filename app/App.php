@@ -2,21 +2,11 @@
 
 namespace AlexDashkin\Adwpfw;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 class App
 {
-    /**
-     * @var self Single instance
-     */
-    private static $instance;
-
-    /**
-     * @var Facade
-     */
-    private $facade;
-
     /**
      * @var array
      */
@@ -35,7 +25,7 @@ class App
     /**
      * App constructor
      */
-    private function __construct()
+    public function __construct()
     {
         $this->classes = require __DIR__ . '/../config/classes.php';
     }
@@ -66,47 +56,35 @@ class App
     }
 
     /**
-     * Get Facade
-     *
-     * @return Facade
-     */
-    public function getFacade(): Facade
-    {
-        return $this->facade;
-    }
-
-    /**
      * Get Module
      *
      * @param string $alias
      * @throws AppException
      */
-    public static function get($alias, array $args = [])
+    public function getModule($alias, array $args = [])
     {
-        $app = self::the();
-
         // If already exists - return it
-        if (!empty($app->modules[$alias])) {
-            return $app->modules[$alias];
+        if (!empty($this->modules[$alias])) {
+            return $this->modules[$alias];
         }
 
         // If not listed in config - error
-        if (empty($app->classes[$alias]) || !class_exists($app->classes[$alias]['class'])) {
+        if (empty($this->classes[$alias]) || !class_exists($this->classes[$alias]['class'])) {
             throw new AppException(sprintf('Class %s not found', $alias));
         }
 
         // Shorthand
-        $classData = $app->classes[$alias];
+        $classData = $this->classes[$alias];
 
         // Create instance and provide data
         try {
             // Create instance
-            $instance = new $classData['class']();
+            $instance = new $classData['class']($this);
 
             // Set data
             if (method_exists($instance, 'spm')) {
                 // Add Global Config values to args
-                $args = array_merge($app->getConfig(), $args);
+                $args = array_merge($this->getConfig(), $args);
 
                 // Set Module Data
                 $instance->spm($args);
@@ -122,25 +100,10 @@ class App
 
         // Store Singletons in Modules prop
         if (!empty($classData['single'])) {
-            $app->modules[$alias] = $instance;
+            $this->modules[$alias] = $instance;
         }
 
         // Return instance
         return $instance;
-    }
-
-    /**
-     * Get App instance
-     *
-     * @return self
-     */
-    public static function the(): self
-    {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-            self::$instance->facade = new Facade(self::$instance);
-        }
-
-        return self::$instance;
     }
 }

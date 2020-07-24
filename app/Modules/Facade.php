@@ -1,13 +1,10 @@
 <?php
 
-namespace AlexDashkin\Adwpfw;
+namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
+use AlexDashkin\Adwpfw\App;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Modules\AdminBar;
-use AlexDashkin\Adwpfw\Modules\AdminPage;
-use AlexDashkin\Adwpfw\Modules\AdminPageTab;
 use AlexDashkin\Adwpfw\Modules\Api\AdminAjax;
 use AlexDashkin\Adwpfw\Modules\Api\Rest;
 use AlexDashkin\Adwpfw\Modules\Assets\Css;
@@ -15,30 +12,22 @@ use AlexDashkin\Adwpfw\Modules\Assets\Js;
 use AlexDashkin\Adwpfw\Modules\Customizer\Panel;
 use AlexDashkin\Adwpfw\Modules\Customizer\Section;
 use AlexDashkin\Adwpfw\Modules\Customizer\Setting;
-use AlexDashkin\Adwpfw\Modules\Hook;
-use AlexDashkin\Adwpfw\Modules\Logger;
-use AlexDashkin\Adwpfw\Modules\Metabox;
-use AlexDashkin\Adwpfw\Modules\Notice;
-use AlexDashkin\Adwpfw\Modules\PostState;
-use AlexDashkin\Adwpfw\Modules\PostType;
-use AlexDashkin\Adwpfw\Modules\ProfileSection;
-use AlexDashkin\Adwpfw\Modules\Query;
-use AlexDashkin\Adwpfw\Modules\Shortcode;
-use AlexDashkin\Adwpfw\Modules\Sidebar;
 use AlexDashkin\Adwpfw\Modules\Updater\Plugin;
 use AlexDashkin\Adwpfw\Modules\Updater\Theme;
-use AlexDashkin\Adwpfw\Modules\Widget;
 
-class Facade
+class Facade extends Module
 {
     /**
-     * @var App
+     * Get Framework Facade
+     *
+     * @return self
+     * @throws AppException
      */
-    private $app;
-
-    public function __construct(App $app)
+    public static function the(): self
     {
-        $this->app = $app;
+        $app = new App();
+
+        return $app->getModule('facade');
     }
 
     /**
@@ -48,7 +37,7 @@ class Facade
      */
     public function setConfig(array $config)
     {
-        App::the()->setConfig($config);
+        $this->app->setConfig($config);
     }
 
     /**
@@ -56,12 +45,12 @@ class Facade
      *
      * @param string $moduleName
      * @param array $args
-     * @return Module
+     * @return object
      * @throws AppException
      */
     public function get(string $moduleName, array $args = [])
     {
-        return App::get($moduleName, $args);
+        return $this->m($moduleName, $args);
     }
 
     /**
@@ -76,7 +65,7 @@ class Facade
         /**
          * @var Logger $logger
          */
-        $logger = App::get('logger');
+        $logger = $this->m('logger');
 
         $logger->log($message, $values, $level);
     }
@@ -89,7 +78,7 @@ class Facade
      */
     public function db(string $table = ''): Query
     {
-        return App::get('db')->table($table);
+        return $this->m('db')->table($table);
     }
 
     /**
@@ -101,7 +90,7 @@ class Facade
      */
     public function twig($name, $args = []): string
     {
-        return App::get('twig')->renderFile($name, $args);
+        return $this->m('twig')->renderFile($name, $args);
     }
 
     /**
@@ -114,7 +103,7 @@ class Facade
      */
     public function addHook(string $tag, callable $callback, int $priority = 10): Hook
     {
-        return App::get(
+        return $this->m(
             'hook',
             [
                 'tag' => $tag,
@@ -132,7 +121,7 @@ class Facade
      */
     public function addAdminBar(array $args): AdminBar
     {
-        return App::get('admin_bar', $args);
+        return $this->m('admin_bar', $args);
     }
 
     /**
@@ -143,7 +132,7 @@ class Facade
      */
     public function addCss(array $args): Css
     {
-        return App::get('asset.css', $args);
+        return $this->m('asset.css', $args);
     }
 
     /**
@@ -154,7 +143,7 @@ class Facade
      */
     public function addJs(array $args): Js
     {
-        return App::get('asset.js', $args);
+        return $this->m('asset.js', $args);
     }
 
     /**
@@ -164,7 +153,7 @@ class Facade
      */
     public function addAssets(array $args)
     {
-        $args = App::get('helpers')->arrayMerge(
+        $args = $this->m('helpers')->arrayMerge(
             [
                 'admin' => ['css' => [], 'js' => []],
                 'front' => ['css' => [], 'js' => []],
@@ -177,7 +166,7 @@ class Facade
                 foreach ($args[$af][$type] as $asset) {
                     $file = is_array($asset) && !empty($asset['file']) ? $asset['file'] : $asset;
 
-                    App::get(
+                    $this->m(
                         'asset.' . $type,
                         [
                             'id' => $asset['id'] ?? '',
@@ -200,7 +189,7 @@ class Facade
      */
     public function addAdminAjax(array $args): AdminAjax
     {
-        return App::get('admin_ajax', $args);
+        return $this->m('admin_ajax', $args);
     }
 
     /**
@@ -211,7 +200,7 @@ class Facade
      */
     public function addRestEndpoint(array $args): Rest
     {
-        return App::get('rest', $args);
+        return $this->m('rest', $args);
     }
 
     /**
@@ -222,7 +211,7 @@ class Facade
      */
     public function updaterPlugin(array $args): Plugin
     {
-        return App::get('updater.plugin', $args);
+        return $this->m('updater.plugin', $args);
     }
 
     /**
@@ -233,7 +222,7 @@ class Facade
      */
     public function updaterTheme(array $args): Theme
     {
-        return App::get('updater.theme', $args);
+        return $this->m('updater.theme', $args);
     }
 
     /**
@@ -244,7 +233,7 @@ class Facade
      */
     public function addSidebar(array $args): Sidebar
     {
-        return App::get('sidebar', $args);
+        return $this->m('sidebar', $args);
     }
 
     /**
@@ -255,7 +244,7 @@ class Facade
      */
     public function addWidget(array $args): Widget
     {
-        return App::get('widget', $args);
+        return $this->m('widget', $args);
     }
 
     /**
@@ -266,7 +255,7 @@ class Facade
      */
     public function addShortcode(array $args): Shortcode
     {
-        return App::get('shortcode', $args);
+        return $this->m('shortcode', $args);
     }
 
     /**
@@ -277,7 +266,7 @@ class Facade
      */
     public function addNotice(array $args): Notice
     {
-        return App::get('notice', $args);
+        return $this->m('notice', $args);
     }
 
     /**
@@ -288,7 +277,7 @@ class Facade
      */
     public function addCpt(array $args): PostType
     {
-        return App::get('post_type', $args);
+        return $this->m('post_type', $args);
     }
 
     /**
@@ -300,7 +289,7 @@ class Facade
      */
     public function addPostState(int $postId, string $state): PostState
     {
-        return App::get(
+        return $this->m(
             'post_state',
             [
                 'post_id' => $postId,
@@ -320,19 +309,19 @@ class Facade
         /**
          * @var AdminPage $adminPage
          */
-        $adminPage = App::get('admin_page', $args);
+        $adminPage = $this->m('admin_page', $args);
 
         foreach ($args['tabs'] as $tabArgs) {
             /**
              * @var AdminPageTab $tab
              */
-            $tab = App::get('admin_page_tab', $tabArgs);
+            $tab = $this->m('admin_page_tab', $tabArgs);
 
             foreach ($tabArgs['fields'] as $fieldArgs) {
                 /**
                  * @var Field $field
                  */
-                $field = App::get('field.' . $fieldArgs['type'], $fieldArgs);
+                $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
 
                 $field->spm(
                     [
@@ -361,13 +350,13 @@ class Facade
         /**
          * @var Metabox $metabox
          */
-        $metabox = App::get('metabox', $args);
+        $metabox = $this->m('metabox', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
             /**
              * @var Field $field
              */
-            $field = App::get('field.' . $fieldArgs['type'], $fieldArgs);
+            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
 
             $field->spm(
                 [
@@ -393,13 +382,13 @@ class Facade
         /**
          * @var ProfileSection $section
          */
-        $section = App::get('profile_section', $args);
+        $section = $this->m('profile_section', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
             /**
              * @var Field $field
              */
-            $field = App::get('field.' . $fieldArgs['type'], $fieldArgs);
+            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
 
             $field->spm(
                 [
@@ -426,13 +415,13 @@ class Facade
         /**
          * @var Panel $panel
          */
-        $panel = App::get('customizer.panel', $args);
+        $panel = $this->m('customizer.panel', $args);
 
         foreach ($args['sections'] as $sectionArgs) {
             /**
              * @var Section $section
              */
-            $section = App::get('customizer.section', $sectionArgs);
+            $section = $this->m('customizer.section', $sectionArgs);
 
             $section->sp('panel', $panel->gp('id'));
 
@@ -440,7 +429,7 @@ class Facade
                 /**
                  * @var Setting $setting
                  */
-                $setting = App::get('customizer.setting', $settingArgs);
+                $setting = $this->m('customizer.setting', $settingArgs);
 
                 $setting->sp('section', $section->gp('id'));
 
@@ -461,7 +450,7 @@ class Facade
      */
     public function getUploadsDir(string $path = ''): string
     {
-        return App::get('helpers')->getUploads($path);
+        return $this->m('helpers')->getUploads($path);
     }
 
     /**
@@ -472,7 +461,7 @@ class Facade
      */
     public function getUploadsUrl(string $path = ''): string
     {
-        return App::get('helpers')->getUploads($path, true);
+        return $this->m('helpers')->getUploads($path, true);
     }
 
     /**
@@ -485,7 +474,7 @@ class Facade
      */
     public function returnSuccess(string $message = 'Done', array $data = [], bool $echo = false): array
     {
-        return App::get('helpers')->returnSuccess($message, $data, $echo);
+        return $this->m('helpers')->returnSuccess($message, $data, $echo);
     }
 
     /**
@@ -497,6 +486,11 @@ class Facade
      */
     public function returnError(string $message = 'Unknown Error', bool $echo = false)
     {
-        return App::get('helpers')->returnError($message, $echo);
+        return $this->m('helpers')->returnError($message, $echo);
+    }
+
+    protected function getInitialPropDefs(): array
+    {
+        return [];
     }
 }

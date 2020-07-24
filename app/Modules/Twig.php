@@ -2,7 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use Twig\Environment;
 use Twig\Error\Error;

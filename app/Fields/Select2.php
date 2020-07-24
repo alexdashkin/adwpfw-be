@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\App;
-
 /**
  * Select2 Field
  */
@@ -53,7 +51,7 @@ class Select2 extends Select
         $valueArr = $this->gp('multiple') ? (array)$value : [$value];
 
         foreach ($valueArr as $item) {
-            if (!App::get('helpers')->arraySearch($args['options'], ['value' => $item])) {
+            if (!$this->m('helpers')->arraySearch($args['options'], ['value' => $item])) {
                 $args['options'][] = [
                     'label' => !empty($this->gp('label_cb')) ? $this->gp('label_cb')($item) : $item,
                     'value' => $item,

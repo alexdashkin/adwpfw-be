@@ -2,9 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
-use AlexDashkin\Adwpfw\App;
-
 class Notice extends Module
 {
     /**
@@ -16,7 +13,7 @@ class Notice extends Module
 
         // Add Ajax action to dismiss notice
         if ($this->gp('dismissible')) {
-            App::get(
+            $this->m(
                 'admin_ajax',
                 [
                     'prefix' => $this->gp('prefix'),

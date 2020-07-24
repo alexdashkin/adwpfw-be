@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Assets;
 
-use AlexDashkin\Adwpfw\Abstracts\Module;
+use AlexDashkin\Adwpfw\Modules\Module;
 
 abstract class Asset extends Module
 {
