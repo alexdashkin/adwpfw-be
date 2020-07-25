@@ -127,6 +127,17 @@ class Facade extends Module
     }
 
     /**
+     * Add Cron Job
+     *
+     * @param array $args
+     * @return CronJob
+     */
+    public function addCronJob(array $args): CronJob
+    {
+        return $this->m('cron', $args);
+    }
+
+    /**
      * Add CSS asset
      *
      * @param array $args

@@ -48,6 +48,9 @@ return [
     'admin_bar' => [
         'class' => AlexDashkin\Adwpfw\Modules\AdminBar::class,
     ],
+    'cron' => [
+        'class' => AlexDashkin\Adwpfw\Modules\CronJob::class,
+    ],
     'metabox' => [
         'class' => AlexDashkin\Adwpfw\Modules\Metabox::class,
     ],
