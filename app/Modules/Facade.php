@@ -19,11 +19,13 @@ class Facade extends Module
 {
     /**
      * Get Framework Facade
+     * Used as a factory for Framework App
+     * Returns self instance as a FW Module
      *
      * @return self
      * @throws AppException
      */
-    public static function the(): self
+    public static function getInstance(): self
     {
         $app = new App();
 
