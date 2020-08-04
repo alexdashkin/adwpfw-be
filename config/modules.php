@@ -48,6 +48,9 @@ return [
     'admin_bar' => [
         'class' => AlexDashkin\Adwpfw\Modules\AdminBar::class,
     ],
+    'dashboard_widget' => [
+        'class' => AlexDashkin\Adwpfw\Modules\DbWidget::class,
+    ],
     'cron' => [
         'class' => AlexDashkin\Adwpfw\Modules\CronJob::class,
     ],
