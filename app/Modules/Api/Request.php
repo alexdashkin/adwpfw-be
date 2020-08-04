@@ -27,10 +27,12 @@ abstract class Request extends Module
                     throw new AppException('Missing required field: ' . $name);
                 }
 
+                $type = $settings['type'] ?? 'text';
+
                 if (isset($request[$name])) {
                     $sanitized = $request[$name];
 
-                    switch ($settings['type']) {
+                    switch ($type) {
                         case 'text':
                             $sanitized = sanitize_text_field($sanitized);
                             break;
