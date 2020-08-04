@@ -84,6 +84,17 @@ class Facade extends Module
     }
 
     /**
+     * Get Prefixed Table Name
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getTableName(string $name): string
+    {
+        return $this->m('db')->getTableName($name);
+    }
+
+    /**
      * Render Twig Template
      *
      * @param string $name Template file name without .twig.
@@ -124,6 +135,17 @@ class Facade extends Module
     public function addAdminBar(array $args): AdminBar
     {
         return $this->m('admin_bar', $args);
+    }
+
+    /**
+     * Add Dashboard Widget
+     *
+     * @param array $args
+     * @return DbWidget
+     */
+    public function addDbWidget(array $args): DbWidget
+    {
+        return $this->m('dashboard_widget', $args);
     }
 
     /**
@@ -186,6 +208,8 @@ class Facade extends Module
                             'type' => $af,
                             'url' => $asset['url'] ?? $args['url'] . $file,
                             'ver' => empty($asset['url']) ? filemtime($args['dir'] . $file) : null,
+                            'deps' => $asset['deps'] ?? [],
+                            'callback' => $asset['callback'] ?? [],
                             'localize' => $asset['localize'] ?? [],
                         ]
                     );
@@ -500,6 +524,24 @@ class Facade extends Module
     public function returnError(string $message = 'Unknown Error', bool $echo = false)
     {
         return $this->m('helpers')->returnError($message, $echo);
+    }
+
+    /**
+     * External API request helper
+     *
+     * @param array $args {
+     * @type string $url Required.
+     * @type string $method Get/Post. Default 'get'.
+     * @type array $headers Default [].
+     * @type array $data Data to send. Default [].
+     * @type int $timeout Default 0.
+     * }
+     *
+     * @return mixed Response body or false on failure
+     */
+    public function apiRequest(array $args)
+    {
+        return $this->m('helpers')->apiRequest($args);
     }
 
     protected function getInitialPropDefs(): array
