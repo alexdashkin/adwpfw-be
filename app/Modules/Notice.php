@@ -97,7 +97,13 @@ class Notice extends Module
      */
     private function render()
     {
-        return $this->twig($this->gp('tpl'), $this->gp());
+        $args = $this->gp('args');
+
+        $isDismissible = $this->gp('dismissible') ? 'is-dismissible' : '';
+
+        $args['classes'] = sprintf('notice notice-%s notice-%s %s %s', $this->gp('type'), $this->gp('prefix'), $isDismissible, $this->gp('classes'));
+
+        return $this->twig($this->gp('tpl'), $args);
     }
 
     /**
@@ -147,7 +153,9 @@ class Notice extends Module
                 'required' => true,
             ],
             'tpl' => [
-                'default' => 'notice',
+                'default' => function ($data) {
+                    return 'notices/' . $data['id'];
+                },
             ],
             'content' => [
                 'default' => '',
@@ -163,7 +171,7 @@ class Notice extends Module
                 'type' => 'int',
                 'default' => 0,
             ],
-            'class' => [
+            'classes' => [
                 'default' => '',
             ],
             'args' => [

@@ -410,21 +410,15 @@ class Helpers extends Module
     }
 
     /**
-     * \WP_Error handler.
+     * \WP_Error handler
      *
-     * @param mixed $result Result of a function call.
-     * @param string $errorMessage Message to log on error. Default empty.
-     * @return mixed|bool Function return or false on WP_Error or empty return.
+     * @param mixed $result Result of a function call
+     * @return mixed|bool Function return or false on WP_Error
      */
-    public function pr($result, $errorMessage = '')
+    public function pr($result)
     {
-        if (!$result || is_wp_error($result)) {
-            $message = $errorMessage ? 'Error: ' . $errorMessage : 'Error!';
-            $this->log($message);
-
-            if ($result) {
-                $this->log($result);
-            }
+        if ($result instanceof \WP_Error) {
+            $this->log($result->get_error_message());
 
             return false;
         }
