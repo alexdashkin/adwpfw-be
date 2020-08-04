@@ -99,6 +99,8 @@ class Notice extends Module
     {
         $args = $this->gp('args');
 
+        $args['id'] = $this->gp('id');
+
         $isDismissible = $this->gp('dismissible') ? 'is-dismissible' : '';
 
         $args['classes'] = sprintf('notice notice-%s notice-%s %s %s', $this->gp('type'), $this->gp('prefix'), $isDismissible, $this->gp('classes'));
