@@ -10,7 +10,7 @@ class Db extends Module
      * @param string $table
      * @return Query
      */
-    public function table(string $table): Query
+    public function table(string $table = ''): Query
     {
         $wpdb = $this->gp('wpdb');
 
@@ -21,6 +21,19 @@ class Db extends Module
                 'table_prefix' => $wpdb->prefix,
             ]
         )->table($table);
+    }
+
+    /**
+     * Get Prefixed Table Name
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getTableName(string $name): string
+    {
+        $wpdb = $this->gp('wpdb');
+
+        return !empty($wpdb->$name) ? $wpdb->$name : $this->gp('table_prefix') . $name;
     }
 
     /**
