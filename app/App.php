@@ -27,7 +27,7 @@ class App
      */
     public function __construct()
     {
-        $this->classes = require __DIR__ . '/../config/classes.php';
+        $this->classes = require __DIR__ . '/../config/modules.php';
     }
 
     /**
