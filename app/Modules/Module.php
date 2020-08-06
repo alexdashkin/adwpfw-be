@@ -81,6 +81,7 @@ abstract class Module
      * Get App Module
      *
      * @param string $alias
+     * @param array $args
      */
     protected function m(string $alias, array $args = [])
     {
@@ -93,7 +94,7 @@ abstract class Module
      * @param string $key
      * @return mixed
      */
-    private function getProp($key)
+    private function getProp(string $key)
     {
         // Get Prop Definition if exists
         $def = $this->getPropDef($key);
@@ -110,11 +111,11 @@ abstract class Module
     /**
      * Convert value as per the type
      *
-     * @param string $type
      * @param mixed $value
+     * @param string $type
      * @return mixed
      */
-    private function parsePropByType($value, $type)
+    private function parsePropByType($value, string $type)
     {
         switch ($type) {
             case 'string':
@@ -136,6 +137,7 @@ abstract class Module
     /**
      * Get Prop
      *
+     * @param string $key
      * @return array
      */
     private function getPropDef(string $key): array
@@ -171,10 +173,10 @@ abstract class Module
     /**
      * Validate data before firing hooks
      *
-     * @param array $data
+     * @return array
      * @throws AppException
      */
-    protected function validateData()
+    protected function validateData(): array
     {
         $data = $this->props;
 
@@ -216,10 +218,9 @@ abstract class Module
      * @param string $tag
      * @param callable $callback
      * @param int $priority
-     * @return object
-     * @throws AppException
+     * @return Hook
      */
-    protected function hook(string $tag, callable $callback, int $priority = 10)
+    protected function hook(string $tag, callable $callback, int $priority = 10): Hook
     {
         return $this->m(
             'hook',
@@ -244,7 +245,7 @@ abstract class Module
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
      */
-    protected function twig($name, $args = []): string
+    protected function twig(string $name, array $args = []): string
     {
         return $this->m('twig')->renderFile($name, $args);
     }

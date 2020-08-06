@@ -16,7 +16,7 @@ class Panel extends Module
      *
      * @param Section $section
      */
-    public function addSection($section)
+    public function addSection(Section $section)
     {
         $section->sp('panel', $this->gp('prefix') . '_' . $this->gp('id'));
 

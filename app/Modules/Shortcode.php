@@ -28,7 +28,7 @@ class Shortcode extends Module
      * @param string $tag
      * @return string
      */
-    public function render($atts, $content, $tag): string
+    public function render($atts, string $content, string $tag): string
     {
         $args = array_merge($this->gp('atts'), $atts ?: []);
 

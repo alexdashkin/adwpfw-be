@@ -95,7 +95,7 @@ class Notice extends Module
      *
      * @return string
      */
-    private function render()
+    private function render(): string
     {
         $args = $this->gp('args');
 
@@ -111,10 +111,9 @@ class Notice extends Module
     /**
      * Get Notices option
      *
-     * @param string $name Param name
      * @return int Dismissed timestamp
      */
-    private function getDismissed()
+    private function getDismissed(): int
     {
         $optionName = $this->gp('prefix') . '_notices';
 
@@ -126,10 +125,9 @@ class Notice extends Module
     /**
      * Update Notices option
      *
-     * @param string $key Param
      * @param int $timestamp Dismissed timestamp
      */
-    private function setDismissed($timestamp)
+    private function setDismissed(int $timestamp)
     {
         $optionName = $this->gp('prefix') . '_notices';
 

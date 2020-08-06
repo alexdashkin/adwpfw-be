@@ -39,6 +39,12 @@ class Select extends Field
         );
     }
 
+    /**
+     * Get Args for Twig Template
+     *
+     * @param mixed $value
+     * @return array
+     */
     public function getTwigArgs($value): array
     {
         $this->validateData();
@@ -70,6 +76,12 @@ class Select extends Field
         return $this->gp();
     }
 
+    /**
+     * Sanitize Value
+     *
+     * @param mixed $value
+     * @return array|string
+     */
     public function sanitizer($value)
     {
         return is_array($value) ? array_map('sanitize_text_field', $value) : sanitize_text_field($value);

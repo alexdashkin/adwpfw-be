@@ -29,11 +29,14 @@ class Rest extends Request
 
     /**
      * Handle the Request
+     *
+     * @param \WP_REST_Request $request
+     * @return array
      */
-    public function handle(\WP_REST_Request $request)
+    public function handle(\WP_REST_Request $request): array
     {
         if ($this->gp('admin') && !current_user_can('administrator')) {
-            return 'Endpoint is for Admins only';
+            return $this->error('Endpoint is for Admins only');
         }
 
         return $this->execute(array_merge($request->get_query_params(), $request->get_body_params()));

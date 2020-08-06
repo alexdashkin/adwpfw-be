@@ -15,7 +15,7 @@ class Helpers extends Module
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
-    public function arraySearch(array $array, array $conditions, $single = false)
+    public function arraySearch(array $array, array $conditions, bool $single = false)
     {
         $found = [];
         $searchValue = end($conditions);
@@ -47,7 +47,7 @@ class Helpers extends Module
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
-    public function arrayFilter(array $array, array $conditions, $single = false)
+    public function arrayFilter(array $array, array $conditions, bool $single = false)
     {
         $new = [];
         foreach ($array as $item) {
@@ -71,7 +71,7 @@ class Helpers extends Module
      * @param string $key Key to search duplicates by.
      * @return array Filtered array.
      */
-    public function arrayUniqueByKey(array $array, $key)
+    public function arrayUniqueByKey(array $array, string $key): array
     {
         $existing = [];
 
@@ -91,11 +91,11 @@ class Helpers extends Module
      *
      * @param array $array Array to parse.
      * @param array $keys Keys to keep.
-     * @param null $index Key to be used as index.
+     * @param string $index Key to be used as index.
      * @param bool $sort Key to sort by.
      * @return array
      */
-    public function arrayParse(array $array, array $keys, $index = null, $sort = false)
+    public function arrayParse(array $array, array $keys, string $index = null, bool $sort = false): array
     {
         $new = [];
 
@@ -145,7 +145,7 @@ class Helpers extends Module
      * @param bool $keepKeys Keep key=>value assigment when sorting
      * @return array Resulting array.
      */
-    public function arraySortByKey(array $array, $key, $keepKeys = false)
+    public function arraySortByKey(array $array, string $key, bool $keepKeys = false): array
     {
         $func = $keepKeys ? 'uasort' : 'usort';
         $func(
@@ -165,7 +165,7 @@ class Helpers extends Module
      * @param array $arr2
      * @return array
      */
-    public function arrayMerge(array $arr1, array $arr2)
+    public function arrayMerge(array $arr1, array $arr2): array
     {
         foreach ($arr2 as $key => $value) {
             if (!array_key_exists($key, $arr1)) {
@@ -190,7 +190,7 @@ class Helpers extends Module
      * @param array $what Array to be added.
      * @return array
      */
-    public function arrayAddNonExistent(array $where, array $what)
+    public function arrayAddNonExistent(array $where, array $what): array
     {
         foreach ($what as $name => $value) {
             if (!isset($where[$name])) {
@@ -210,7 +210,7 @@ class Helpers extends Module
      * @param string $glue
      * @return string
      */
-    public function deepImplode(array $array, $glue = '')
+    public function deepImplode(array $array, string $glue = ''): string
     {
         $imploded = '';
 
@@ -232,7 +232,7 @@ class Helpers extends Module
      * }
      * @return array Not found items.
      */
-    public function checkDeps(array $items)
+    public function checkDeps(array $items): array
     {
         $notFound = [];
 
@@ -252,7 +252,7 @@ class Helpers extends Module
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
-    public function getUploadsDir($path = '')
+    public function getUploadsDir(string $path = ''): string
     {
         return $this->getUploads($path);
     }
@@ -263,7 +263,7 @@ class Helpers extends Module
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
-    public function getUploadsUrl($path = '')
+    public function getUploadsUrl(string $path = ''): string
     {
         return $this->getUploads($path, true);
     }
@@ -275,7 +275,7 @@ class Helpers extends Module
      * @param bool $getUrl Whether to get URL.
      * @return string
      */
-    public function getUploads($path = '', $getUrl = false)
+    public function getUploads(string $path = '', bool $getUrl = false): string
     {
         $uploadDir = wp_upload_dir();
 
@@ -454,11 +454,11 @@ class Helpers extends Module
      * Get output of a function.
      * Used to put output in a variable instead of echo.
      *
-     * @param string|array $func Callable.
+     * @param callable $func Callable.
      * @param array $args Function args. Default [].
      * @return string Output
      */
-    public function getOutput($func, $args = [])
+    public function getOutput(callable $func, array $args = []): string
     {
         ob_start();
         call_user_func_array($func, $args);
@@ -471,7 +471,7 @@ class Helpers extends Module
      * @param string $hex
      * @return string
      */
-    public function colorToRgb($hex)
+    public function colorToRgb(string $hex): string
     {
         $pattern = strlen($hex) === 4 ? '#%1x%1x%1x' : '#%2x%2x%2x';
         return sscanf($hex, $pattern);
@@ -482,7 +482,7 @@ class Helpers extends Module
      *
      * @param string $path
      */
-    public function rmDir($path)
+    public function rmDir(string $path)
     {
         if (!is_dir($path)) {
             return;

@@ -63,7 +63,7 @@ class Logger extends Module
      * @param int $counter
      * @return string
      */
-    private function getLogFilename($basePath, $prefix, $suffix, $maxSize, $counter = 1)
+    private function getLogFilename(string $basePath, string $prefix, string $suffix, int $maxSize, int $counter = 1): string
     {
         $filename = $prefix . '-' . date('Y-m-d') . '-' . $suffix . '-' . $counter . '.log';
         $filePath = $basePath . $filename;

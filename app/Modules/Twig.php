@@ -101,7 +101,7 @@ class Twig extends Module
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
-    public function renderFile($name, $args = []): string
+    public function renderFile(string $name, array $args = []): string
     {
         return $this->render($this->twigFs, $name . '.twig', $args);
     }
@@ -113,7 +113,7 @@ class Twig extends Module
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
-    public function renderString($tpl, $args = []): string
+    public function renderString(string $tpl, array $args = []): string
     {
         $this->addTemplates(['temp' => $tpl]);
 
@@ -127,7 +127,7 @@ class Twig extends Module
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
-    public function renderArray($name, $args = []): string
+    public function renderArray(string $name, array $args = []): string
     {
         return $this->render($this->twigArray, $name, $args);
     }
@@ -140,7 +140,7 @@ class Twig extends Module
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
-    private function render($twig, $name, $args = []): string
+    private function render(Environment $twig, string $name, array $args = []): string
     {
         $args = array_merge(
             [

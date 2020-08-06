@@ -58,7 +58,7 @@ class AdminPageTab extends Module
      * @param array $postedData
      * @return bool
      */
-    public function save(array $postedData)
+    public function save(array $postedData): bool
     {
         if (empty($postedData[$this->gp('slug')])) {
             return false;

@@ -44,6 +44,12 @@ class Select2 extends Select
         );
     }
 
+    /**
+     * Get Args for Twig Template
+     *
+     * @param mixed $value
+     * @return array
+     */
     public function getTwigArgs($value): array
     {
         $args = parent::getTwigArgs($value);

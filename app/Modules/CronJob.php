@@ -5,13 +5,10 @@ namespace AlexDashkin\Adwpfw\Modules;
 class CronJob extends Module
 {
     /**
-     * Init Module
+     * Run Job
      */
     public function init()
     {
-        // Validate Props before starting
-        $this->validateData();
-
         // If we are not in WP Cron - return
         if (!defined('DOING_CRON') || !DOING_CRON) {
             return;
@@ -54,10 +51,13 @@ class CronJob extends Module
         $running[] = $startTime;
 
         // Update Cron Option before launching the job
-        $this->updateOption($jobName, [
-            'last' => $startTime,
-            'running' => $running
-        ]);
+        $this->updateOption(
+            $jobName,
+            [
+                'last' => $startTime,
+                'running' => $running
+            ]
+        );
 
         // Try to run the job
         try {
@@ -77,10 +77,13 @@ class CronJob extends Module
             }
 
             // Update Cron Option
-            $this->updateOption($jobName, [
-                'last' => $startTime,
-                'running' => $running
-            ]);
+            $this->updateOption(
+                $jobName,
+                [
+                    'last' => $startTime,
+                    'running' => $running
+                ]
+            );
         }
 
         $this->log('Done');
@@ -98,7 +101,7 @@ class CronJob extends Module
 
         $optionValue = get_option($optionName) ?: [];
 
-        return $optionValue[$name] ?? [];
+        return !empty($optionValue[$name]) && is_array($optionValue[$name]) ? $optionValue[$name] : [];
     }
 
     /**

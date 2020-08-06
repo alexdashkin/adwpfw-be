@@ -76,7 +76,7 @@ abstract class Request extends Module
      * @param array $params Request params
      * @return array
      */
-    protected function execute(array $params)
+    protected function execute(array $params): array
     {
         try {
             $data = $this->validateRequest($params);
@@ -95,11 +95,10 @@ abstract class Request extends Module
     /**
      * Return Success array
      *
-     * @param string $message Message.
      * @param array $data Data to return as JSON.
      * @return array
      */
-    protected function success($data = [])
+    protected function success(array $data = []): array
     {
         return $this->m('helpers')->returnSuccess('Done', $data);
     }
@@ -110,7 +109,7 @@ abstract class Request extends Module
      * @param string $message Error message.
      * @return array
      */
-    protected function error($message = '')
+    protected function error(string $message = ''): array
     {
         return $this->m('helpers')->returnError($message);
     }

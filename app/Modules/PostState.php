@@ -19,7 +19,7 @@ class PostState extends Module
      * @param \WP_Post $post Post
      * @return array Modified States
      */
-    public function register(array $states, $post)
+    public function register(array $states, \WP_Post $post): array
     {
         if ($post->ID === $this->gp('post_id')) {
             $states[] = $this->gp('state');

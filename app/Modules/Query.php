@@ -65,9 +65,6 @@ class Query extends Module
 
     /**
      * Constructor
-     *
-     * @param \wpdb $wpdb
-     * @param string $tablePrefix
      */
     public function init()
     {
@@ -96,7 +93,7 @@ class Query extends Module
      * @param array $columns
      * @return $this
      */
-    public function columns($columns = [])
+    public function columns(array $columns = []): self
     {
         $this->columns = $columns;
 
@@ -108,7 +105,7 @@ class Query extends Module
      *
      * @return $this
      */
-    public function distinct()
+    public function distinct(): self
     {
         $this->distinct = true;
 
@@ -122,7 +119,7 @@ class Query extends Module
      * @param string $compare
      * @return $this
      */
-    public function where(array $conditions, string $compare = 'and')
+    public function where(array $conditions, string $compare = 'and'): self
     {
         $this->where = [
             'conditions' => $conditions,
@@ -179,8 +176,10 @@ class Query extends Module
 
     /**
      * Execute the query as a "select" statement.
+     *
+     * @return array
      */
-    public function select()
+    public function select(): array
     {
         $columns = implode('`,`', $this->columns);
         $columns = $columns ? '`' . $columns . '`' : '*';
@@ -200,11 +199,11 @@ class Query extends Module
      * Insert a new record into the database.
      *
      * @param array $values
-     * @return bool|int
+     * @return int
      */
-    public function insert(array $values)
+    public function insert(array $values): int
     {
-        return $this->wpdb->insert($this->table, $values) ? $this->wpdb->insert_id : false;
+        return $this->wpdb->insert($this->table, $values) ? $this->wpdb->insert_id : 0;
     }
 
     /**
@@ -286,7 +285,7 @@ class Query extends Module
      * @param array $values If passed, $wpdb->prepare() will be called first. Default [].
      * @return bool|int
      */
-    public function query($query, array $values = [])
+    public function query(string $query, array $values = [])
     {
         $sql = $values ? $this->wpdb->prepare($query, $values) : $query;
 
@@ -300,7 +299,7 @@ class Query extends Module
      * @param array $values If passed, $wpdb->prepare() will be called first. Default [].
      * @return array
      */
-    public function getResults($query, array $values = [])
+    public function getResults(string $query, array $values = []): array
     {
         $sql = $values ? $this->wpdb->prepare($query, $values) : $query;
 
@@ -320,8 +319,8 @@ class Query extends Module
 
         $whereArr = [];
 
-        foreach ($this->where['conditions'] as $condition) {
-            $whereArr[] = sprintf('`%s` %s "%s"', $condition[0], $condition[1], $condition[2]);
+        foreach ($this->where['conditions'] as $field => $value) {
+            $whereArr[] = sprintf('`%s`="%s"', $field, $value);
         }
 
         $whereClause = implode(" {$this->where['compare']} ", $whereArr);

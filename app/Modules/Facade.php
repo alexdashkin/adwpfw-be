@@ -48,7 +48,6 @@ class Facade extends Module
      * @param string $moduleName
      * @param array $args
      * @return object
-     * @throws AppException
      */
     public function get(string $moduleName, array $args = [])
     {
@@ -101,7 +100,7 @@ class Facade extends Module
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
      */
-    public function twig($name, $args = []): string
+    public function twig(string $name, array $args = []): string
     {
         return $this->m('twig')->renderFile($name, $args);
     }
@@ -544,6 +543,66 @@ class Facade extends Module
         return $this->m('helpers')->apiRequest($args);
     }
 
+    /**
+     * Call a method in a loop (e.g. to add multiple items)
+     *
+     * @param string $method
+     * @param array $args
+     * @return array
+     * @throws AppException
+     */
+    public function addMany(string $method, array $args): array
+    {
+        // If singular method exists - call it in a loop
+        if (method_exists($this, $method) && is_array($args)) {
+            $return = [];
+
+            foreach ($args as $item) {
+                $return[] = $this->$method($item);
+            }
+        } else {
+            throw new AppException(sprintf('Method %s not found', $method));
+        }
+
+        return $return;
+    }
+
+    /**
+     * Magic call of singular methods for plural calls
+     * E.g. addAdminBars() etc.
+     *
+     * @param string $method
+     * @param array $args
+     * @return array
+     * @throws AppException
+     */
+    public function __call(string $method, array $args): array
+    {
+        // Get last char of the called method
+        $lastChar = substr($method, -1);
+
+        // Get method name without last char
+        $singularMethod = substr($method, 0, -1);
+
+        // If singular method exists - call it in a loop
+        if ('s' === $lastChar && method_exists($this, $singularMethod) && is_array($args[0])) {
+            $return = [];
+
+            foreach ($args[0] as $item) {
+                $return[] = $this->$singularMethod($item);
+            }
+        } else {
+            throw new AppException(sprintf('Method %s not found', $singularMethod));
+        }
+
+        return $return;
+    }
+
+    /**
+     * Mock to be able to extend parent Module
+     *
+     * @return array
+     */
     protected function getInitialPropDefs(): array
     {
         return [];

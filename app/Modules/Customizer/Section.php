@@ -16,7 +16,7 @@ class Section extends Module
      *
      * @param Setting $setting
      */
-    public function addSetting($setting)
+    public function addSetting(Setting $setting)
     {
         $setting->sp('section', $this->gp('prefix') . '_' . $this->gp('id'));
 

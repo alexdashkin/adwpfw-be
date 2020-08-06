@@ -59,9 +59,10 @@ class App
      * Get Module
      *
      * @param string $alias
+     * @param array $args
      * @throws AppException
      */
-    public function getModule($alias, array $args = [])
+    public function getModule(string $alias, array $args = [])
     {
         // If already exists - return it
         if (!empty($this->modules[$alias])) {

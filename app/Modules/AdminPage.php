@@ -95,7 +95,7 @@ class AdminPage extends Module
      * @param array $request
      * @return array
      */
-    public function save(array $request)
+    public function save(array $request): array
     {
         $helpers = $this->m('helpers');
         $form = $request['form'];

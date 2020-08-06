@@ -80,7 +80,7 @@ class Metabox extends Module
      * @param int $postId Post ID (defaults to the current post).
      * @return mixed
      */
-    public function getValue($postId = 0)
+    public function getValue(int $postId = 0)
     {
         if (!$post = get_post($postId)) {
             return '';
@@ -93,10 +93,10 @@ class Metabox extends Module
      * Set a Metabox Value.
      *
      * @param mixed $value Value to set.
-     * @param int|null $postId Post ID (defaults to the current post).
+     * @param int $postId Post ID (defaults to the current post).
      * @return bool
      */
-    public function setValue($value, $postId = null)
+    public function setValue($value, int $postId = 0): bool
     {
         if (!$postId = get_post($postId)) {
             return false;
@@ -110,7 +110,7 @@ class Metabox extends Module
      *
      * @param int $postId
      */
-    public function save($postId)
+    public function save(int $postId)
     {
         if (empty($_POST[$this->gp('prefix')][$this->gp('id')])) {
             return;
