@@ -347,6 +347,10 @@ class Facade extends Module
          */
         $adminPage = $this->m('admin_page', $args);
 
+        if (empty($args['tabs'])) {
+            return $adminPage;
+        }
+
         foreach ($args['tabs'] as $tabArgs) {
             /**
              * @var AdminPageTab $tab

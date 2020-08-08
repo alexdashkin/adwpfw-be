@@ -92,10 +92,10 @@ class Helpers extends Module
      * @param array $array Array to parse.
      * @param array $keys Keys to keep.
      * @param string $index Key to be used as index.
-     * @param bool $sort Key to sort by.
+     * @param string $sort Key to sort by.
      * @return array
      */
-    public function arrayParse(array $array, array $keys, string $index = null, bool $sort = false): array
+    public function arrayParse(array $array, array $keys = [], string $index = '', string $sort = ''): array
     {
         $new = [];
 

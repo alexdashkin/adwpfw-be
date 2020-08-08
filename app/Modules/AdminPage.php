@@ -74,6 +74,10 @@ class AdminPage extends Module
      */
     public function render()
     {
+        if (!$this->tabs) {
+            return '';
+        }
+
         $tabs = [];
 
         foreach ($this->tabs as $tab) {
