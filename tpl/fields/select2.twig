@@ -10,6 +10,7 @@
             {% if field.required %} required {% endif %}
             {% if field.ajax_action %} data-ajax-action="{{ field.ajax_action }}" {% endif %}
             {% if field.multiple %} multiple {% endif %}
+            data-placeholder="{{ field.placeholder }}"
             data-min-chars="{{ field.min_chars }}"
             data-min-items-for-search="{{ field.min_items_for_search }}">
 

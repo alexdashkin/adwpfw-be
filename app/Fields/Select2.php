@@ -54,7 +54,11 @@ class Select2 extends Select
     {
         $args = parent::getTwigArgs($value);
 
-        $valueArr = $this->gp('multiple') ? (array)$value : [$value];
+        $multiple = $this->gp('multiple');
+
+        $valueArr = $multiple ? (array)$value : [$value];
+
+
 
         foreach ($valueArr as $item) {
             if (!$this->m('helpers')->arraySearch($args['options'], ['value' => $item])) {

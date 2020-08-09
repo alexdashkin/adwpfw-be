@@ -51,7 +51,7 @@ class Select extends Field
 
         $options = [];
 
-        if ($this->gp('placeholder')) {
+        if ($this->gp('placeholder') && !$this->gp('multiple')) {
             $options = [
                 [
                     'label' => $this->gp('placeholder'),
