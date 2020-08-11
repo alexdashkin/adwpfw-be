@@ -35,6 +35,8 @@ class Rest extends Request
      */
     public function handle(\WP_REST_Request $request): array
     {
+        $this->log('REST request: "%s%s"', [$this->gp('namespace'), $this->gp('route')]);
+
         if ($this->gp('admin') && !current_user_can('administrator')) {
             return $this->error('Endpoint is for Admins only');
         }

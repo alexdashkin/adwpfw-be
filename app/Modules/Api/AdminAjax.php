@@ -24,6 +24,8 @@ class AdminAjax extends Request
     {
         check_ajax_referer($this->gp('prefix'));
 
+        $this->log('Ajax request: "%s_%s"', [$this->gp('prefix'), $this->gp('action')]);
+
         $result = $this->execute($_REQUEST['data'] ?? []);
 
         wp_send_json($result);
