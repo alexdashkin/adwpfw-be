@@ -26,7 +26,7 @@ class AdminPage extends Module
     {
         $this->hook('admin_menu', [$this, 'register']);
 
-        $this->m(
+        $this->m( // todo it's impossible to add more than one AdminPage because AJAX action name is the same for all pages
             'admin_ajax',
             [
                 'prefix' => $this->gp('prefix'),
@@ -75,7 +75,7 @@ class AdminPage extends Module
     public function render()
     {
         if (!$this->tabs) {
-            return '';
+            return;
         }
 
         $tabs = [];
