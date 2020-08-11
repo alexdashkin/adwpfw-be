@@ -5,9 +5,19 @@ namespace AlexDashkin\Adwpfw\Modules;
 class CronJob extends Module
 {
     /**
-     * Run Job
+     * Init Module.
+     * Main App runs on "init" with 0 priority.
+     * Run on "init" with default 10 priority to run the Job after the App has fully constructed.
      */
     public function init()
+    {
+        $this->hook('init', [$this, 'run']);
+    }
+
+    /**
+     * Run Job
+     */
+    public function run()
     {
         // If we are not in WP Cron - return
         if (!defined('DOING_CRON') || !DOING_CRON) {
@@ -105,7 +115,7 @@ class CronJob extends Module
     }
 
     /**
-     * Update Cron option.
+     * Update Cron option
      *
      * @param string $name Param name
      * @param array $value Value
