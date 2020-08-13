@@ -64,7 +64,7 @@ class Query extends Module
     private $offset = 0;
 
     /**
-     * Constructor
+     * Init Module
      */
     public function init()
     {

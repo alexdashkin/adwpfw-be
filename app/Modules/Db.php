@@ -5,6 +5,14 @@ namespace AlexDashkin\Adwpfw\Modules;
 class Db extends Module
 {
     /**
+     * Init Module
+     */
+    public function init()
+    {
+        $this->validateData();
+    }
+
+    /**
      * Start a DB query
      *
      * @param string $table
