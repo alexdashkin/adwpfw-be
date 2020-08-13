@@ -169,7 +169,7 @@ class Twig extends Module
             'prefix' => [
                 'required' => true,
             ],
-            'cache_path' => [
+            'cache' => [
                 'required' => true,
             ],
             'paths' => [
