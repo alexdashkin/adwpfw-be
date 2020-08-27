@@ -23,6 +23,7 @@ class Rest extends Request
             [
                 'methods' => $this->gp('method'),
                 'callback' => [$this, 'handle'],
+                'permission_callback' => '__return_true'
             ]
         );
     }
