@@ -4,7 +4,7 @@
 
     <input type="hidden" name="{{ prefix }}[{{ field.form }}][{{ field.name }}]" value="">
 
-    <select class="adwpfw-select2"
+    <select class="adwpfw-select2 {{ field.class }}"
             id="{{ prefix }}-{{ field.form }}-field-{{ field.name }}"
             name="{{ prefix }}[{{ field.form }}][{{ field.name }}]{% if field.multiple %}[]{% endif %}"
             {% if field.required %} required {% endif %}
