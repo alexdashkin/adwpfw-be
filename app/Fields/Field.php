@@ -19,6 +19,8 @@ abstract class Field extends Module
     {
         $this->validateData();
 
+        $value = is_callable($this->gp('filter')) ? $this->gp('filter')($value) : $value;
+
         $this->sp('value', $value);
 
         return $this->gp();
@@ -78,6 +80,10 @@ abstract class Field extends Module
                 'default' => null,
             ],
             'sanitizer' => [
+                'type' => 'callable',
+                'default' => null,
+            ],
+            'filter' => [
                 'type' => 'callable',
                 'default' => null,
             ],
