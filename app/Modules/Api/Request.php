@@ -59,6 +59,7 @@ abstract class Request extends Module
 
                         case 'form':
                             parse_str($sanitized, $sanitized);
+                            $sanitized = array_map('stripslashes_deep', $sanitized);
                             break;
                     }
 
