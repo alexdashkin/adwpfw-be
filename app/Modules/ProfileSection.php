@@ -39,7 +39,7 @@ class ProfileSection extends Module
      */
     public function render(\WP_User $user)
     {
-        $values = get_user_meta($user->ID, $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
+        $values = get_user_meta($user->ID, '_' . $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
 
         $fields = [];
 
@@ -73,7 +73,7 @@ class ProfileSection extends Module
 
         $id = $this->gp('id');
         $prefix = $this->gp('prefix');
-        $metaKey = $prefix . '_' . $id;
+        $metaKey = '_' . $prefix . '_' . $id;
 
         if (empty($_POST[$prefix][$id])) {
             return;
