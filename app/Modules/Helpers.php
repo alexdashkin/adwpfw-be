@@ -247,7 +247,7 @@ class Helpers extends Module
     }
 
     /**
-     * Get path to the WP Uploads dir with trailing slash.
+     * Get path to the WP Uploads dir with trailing slash
      *
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
@@ -258,7 +258,7 @@ class Helpers extends Module
     }
 
     /**
-     * Get URL of the WP Uploads dir with trailing slash.
+     * Get URL of the WP Uploads dir with trailing slash
      *
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
@@ -521,6 +521,150 @@ class Helpers extends Module
     }
 
     /**
+     * Get prefixed post meta
+     *
+     * @param string $name
+     * @param int $postId
+     * @return mixed
+     */
+    public function getPostMeta(string $name, int $postId = 0)
+    {
+        return $this->getMeta($name, 'post', $postId);
+    }
+
+    /**
+     * Get prefixed user meta
+     *
+     * @param string $name
+     * @param int $userId
+     * @return mixed
+     */
+    public function getUserMeta(string $name, int $userId = 0)
+    {
+        return $this->getMeta($name, 'user', $userId);
+    }
+
+    /**
+     * Update prefixed post meta
+     *
+     * @param string $name
+     * @param mixed $value
+     * @param int $postId
+     * @return int|bool
+     */
+    public function updatePostMeta(string $name, $value, int $postId = 0)
+    {
+        return $this->setMeta($name, 'post', $value, $postId);
+    }
+
+    /**
+     * Update prefixed user meta
+     *
+     * @param string $name
+     * @param mixed $value
+     * @param int $userId
+     * @return int|bool
+     */
+    public function updateUserMeta(string $name, $value, int $userId = 0)
+    {
+        return $this->setMeta($name, 'user', $value, $userId);
+    }
+
+    /**
+     * Get prefixed option
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getOption(string $name)
+    {
+        return get_option($this->gp('prefix') . '_' . $name);
+    }
+
+    /**
+     * Update prefixed option
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return bool
+     */
+    public function updateOption(string $name, $value): bool
+    {
+        return update_option($this->gp('prefix') . '_' . $name, $value);
+    }
+
+    /**
+     * Get Settings value
+     *
+     * @param string $key
+     * @param string $optionName
+     * @return mixed
+     */
+    public function setting(string $key, string $optionName = 'settings')
+    {
+        $settings = $this->getOption($optionName);
+
+        return array_key_exists($key, $settings) ? $settings[$key] : null;
+    }
+
+    /**
+     * Get prefixed cache entry
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function cacheGet(string $name)
+    {
+        return wp_cache_get($name, $this->gp('prefix'));
+    }
+
+    /**
+     * Update prefixed cache entry
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return bool
+     */
+    public function cacheSet(string $name, $value)
+    {
+        return wp_cache_set($name, $value, $this->gp('prefix'));
+    }
+
+    /**
+     * Get prefixed post/user meta
+     *
+     * @param string $name
+     * @param string $type
+     * @param int $objectId
+     * @return mixed
+     */
+    private function getMeta(string $name, string $type, int $objectId = 0)
+    {
+        $objectId = $objectId ?: get_queried_object_id();
+
+        $func = 'get_' . $type . '_meta';
+
+        return $func($objectId, '_' . $this->gp('prefix') . '_' . $name, true);
+    }
+
+    /**
+     * Update prefixed post/user meta
+     *
+     * @param string $name
+     * @param string $type
+     * @param int $objectId
+     * @return int|bool
+     */
+    private function setMeta(string $name, string $type, $value, int $objectId = 0)
+    {
+        $objectId = $objectId ?: get_queried_object_id();
+
+        $func = 'update_' . $type . '_meta';
+
+        return $func($objectId, '_' . $this->gp('prefix') . '_' . $name, $value);
+    }
+
+    /**
      * Add a log entry
      *
      * @param mixed $message Text or any other type including WP_Error.
@@ -539,6 +683,10 @@ class Helpers extends Module
 
     protected function getInitialPropDefs(): array
     {
-        return [];
+        return [
+            'prefix' => [
+                'required' => true,
+            ],
+        ];
     }
 }
