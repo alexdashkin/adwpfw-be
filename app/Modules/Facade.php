@@ -20,8 +20,10 @@ use AlexDashkin\Adwpfw\Modules\Updater\Theme;
  *
  * @method mixed getPostMeta(string $name, int $postId = 0) Get prefixed post meta
  * @method mixed getUserMeta(string $name, int $userId = 0) Get prefixed user meta
+ * @method mixed getTermMeta(string $name, int $termId = 0) Get prefixed term meta
  * @method int|bool updatePostMeta(string $name, $value, int $postId = 0) Update prefixed post meta
  * @method int|bool updateUserMeta(string $name, $value, int $userId = 0) Update prefixed user meta
+ * @method int|bool updateTermMeta(string $name, $value, int $termId = 0) Update prefixed term meta
  * @method mixed getOption(string $name) Get prefixed option
  * @method bool updateOption(string $name, $value) Update prefixed option
  * @method mixed setting(string $key, string $optionName = 'settings') Get Setting value
@@ -453,6 +455,39 @@ class Facade extends Module
             $field->spm(
                 [
                     'layout' => 'profile-field',
+                    'form' => $section->gp('id'),
+                    'class' => 'regular-text',
+                ]
+            );
+
+            $section->addField($field);
+        }
+
+        return $section;
+    }
+
+    /**
+     * Add Custom Fields to Term editing screen
+     *
+     * @param array $args
+     * @return TermMeta
+     */
+    public function addTermMeta(array $args): TermMeta
+    {
+        /**
+         * @var TermMeta $section
+         */
+        $section = $this->m('term_meta', $args);
+
+        foreach ($args['fields'] as $fieldArgs) {
+            /**
+             * @var Field $field
+             */
+            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+
+            $field->spm(
+                [
+                    'layout' => 'term-field',
                     'form' => $section->gp('id'),
                     'class' => 'regular-text',
                 ]

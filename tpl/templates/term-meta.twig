@@ -1,0 +1,17 @@
+<div class="{{ prefix }} adwpfw adwpfw-term-meta">
+
+    {% if heading %}
+        <h2>{{ heading }}</h2>
+    {% endif %}
+
+    <table class="form-table">
+
+        {% for field in fields %}
+
+            {% include 'fields/' ~ field.tpl ~ '.twig' %}
+
+        {% endfor %}
+
+    </table>
+
+</div>

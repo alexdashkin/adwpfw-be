@@ -4,7 +4,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Fields\Field;
 
-class ProfileSection extends Module
+class TermMeta extends Module
 {
     /**
      * @var Field[]
@@ -26,20 +26,22 @@ class ProfileSection extends Module
      */
     public function init()
     {
-        $this->hook('show_user_profile', [$this, 'render']);
-        $this->hook('edit_user_profile', [$this, 'render']);
-        $this->hook('personal_options_update', [$this, 'save']);
-        $this->hook('edit_user_profile_update', [$this, 'save']);
+        $this->validateData();
+
+        $taxonomy = $this->gp('taxonomy');
+
+        $this->hook($taxonomy . '_edit_form', [$this, 'render']);
+        $this->hook('edited_' . $taxonomy, [$this, 'save']);
     }
 
     /**
      * Render Section
      *
-     * @param \WP_User $user
+     * @param \WP_Term $term
      */
-    public function render(\WP_User $user)
+    public function render(\WP_Term $term)
     {
-        $values = get_user_meta($user->ID, '_' . $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
+        $values = get_term_meta($term->term_id, '_' . $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
 
         $fields = [];
 
@@ -52,25 +54,19 @@ class ProfileSection extends Module
         }
 
         $args = [
-            'heading' => $this->gp('heading'),
             'fields' => $fields,
         ];
 
-        echo $this->twig('templates/profile-section', $args);
+        echo $this->twig('templates/term-meta', $args);
     }
 
     /**
-     * Save Section fields
+     * Save Term fields
      *
-     * @param int $userId User ID.
+     * @param int $termId Term ID
      */
-    public function save(int $userId)
+    public function save(int $termId)
     {
-        if (!current_user_can('edit_user')) {
-            $this->log('Current user has no permissions to edit users');
-            return;
-        }
-
         $id = $this->gp('id');
         $prefix = $this->gp('prefix');
         $metaKey = '_' . $prefix . '_' . $id;
@@ -93,9 +89,9 @@ class ProfileSection extends Module
             $values[$fieldName] = $field->sanitize($form[$fieldName]);
         }
 
-        update_user_meta($userId, $metaKey, $values);
+        update_term_meta($termId, $metaKey, $values);
 
-        do_action('adwpfw_profile_saved', $this, $values);
+        do_action('adwpfw_term_saved', $this, $values);
     }
 
     /**
@@ -110,6 +106,9 @@ class ProfileSection extends Module
                 'required' => true,
             ],
             'id' => [
+                'required' => true,
+            ],
+            'taxonomy' => [
                 'required' => true,
             ],
             'heading' => [

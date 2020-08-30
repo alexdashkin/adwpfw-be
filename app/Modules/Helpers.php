@@ -545,6 +545,18 @@ class Helpers extends Module
     }
 
     /**
+     * Get prefixed term meta
+     *
+     * @param string $name
+     * @param int $termId
+     * @return mixed
+     */
+    public function getTermMeta(string $name, int $termId = 0)
+    {
+        return $this->getMeta($name, 'term', $termId);
+    }
+
+    /**
      * Update prefixed post meta
      *
      * @param string $name
@@ -568,6 +580,19 @@ class Helpers extends Module
     public function updateUserMeta(string $name, $value, int $userId = 0)
     {
         return $this->setMeta($name, 'user', $value, $userId);
+    }
+
+    /**
+     * Update prefixed term meta
+     *
+     * @param string $name
+     * @param mixed $value
+     * @param int $termId
+     * @return int|bool
+     */
+    public function updateTermMeta(string $name, $value, int $termId = 0)
+    {
+        return $this->setMeta($name, 'term', $value, $termId);
     }
 
     /**

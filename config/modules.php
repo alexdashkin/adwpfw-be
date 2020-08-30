@@ -69,6 +69,9 @@ return [
     'profile_section' => [
         'class' => AlexDashkin\Adwpfw\Modules\ProfileSection::class,
     ],
+    'term_meta' => [
+        'class' => AlexDashkin\Adwpfw\Modules\TermMeta::class,
+    ],
     'shortcode' => [
         'class' => AlexDashkin\Adwpfw\Modules\Shortcode::class,
     ],

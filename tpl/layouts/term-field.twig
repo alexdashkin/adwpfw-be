@@ -1,0 +1,26 @@
+<tr class="form-field">
+    <th scope="row">
+
+        {% block label %}
+
+            <label for="{{ prefix }}-{{ field.form }}-field-{{ field.name }}">{{ field.label }}</label>
+
+        {% endblock %}
+
+    </th>
+
+    <td>
+
+        {% block control %}
+        {% endblock %}
+
+        {% block desc %}
+
+            {% if field.desc %}
+                <p class="description">{{ field.desc }}</p>
+            {% endif %}
+
+        {% endblock %}
+
+    </td>
+</tr>
