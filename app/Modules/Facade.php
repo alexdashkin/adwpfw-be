@@ -15,6 +15,26 @@ use AlexDashkin\Adwpfw\Modules\Customizer\Setting;
 use AlexDashkin\Adwpfw\Modules\Updater\Plugin;
 use AlexDashkin\Adwpfw\Modules\Updater\Theme;
 
+/**
+ * Magic methods delegated to Helpers
+ *
+ * @method mixed getPostMeta(string $name, int $postId = 0) Get prefixed post meta
+ * @method mixed getUserMeta(string $name, int $userId = 0) Get prefixed user meta
+ * @method int|bool updatePostMeta(string $name, $value, int $postId = 0) Update prefixed post meta
+ * @method int|bool updateUserMeta(string $name, $value, int $userId = 0) Update prefixed user meta
+ * @method mixed getOption(string $name) Get prefixed option
+ * @method bool updateOption(string $name, $value) Update prefixed option
+ * @method mixed setting(string $key, string $optionName = 'settings') Get Setting value
+ * @method mixed cacheGet(string $name) Get prefixed cache entry
+ * @method mixed cacheSet(string $name, $value) Set prefixed cache entry
+ * @method mixed pr($result) WP_Error handler
+ * @method array returnSuccess(string $message = 'Done', array $data = [], bool $echo = false) Return Success array
+ * @method array returnError(string $message = 'Unknown Error', bool $echo = false) Return Error array
+ * @method array arraySearch(array $array, array $conditions, bool $single = false) Search in an array
+ * @method string getUploadsDir(string $path = '') Get path to the WP Uploads dir with trailing slash
+ * @method string getUploadsUrl(string $path = '') Get URL of the WP Uploads dir with trailing slash
+ * @method string getOutput(callable $func, array $args = []) Get output of a function
+ */
 class Facade extends Module
 {
     /**
@@ -483,71 +503,6 @@ class Facade extends Module
     }
 
     /**
-     * Get Uploads Dir Path
-     *
-     * @param string $path
-     * @return string
-     */
-    public function getUploadsDir(string $path = ''): string
-    {
-        return $this->m('helpers')->getUploads($path);
-    }
-
-    /**
-     * Get Uploads URL
-     *
-     * @param string $path
-     * @return string
-     */
-    public function getUploadsUrl(string $path = ''): string
-    {
-        return $this->m('helpers')->getUploads($path, true);
-    }
-
-    /**
-     * Return Success array.
-     *
-     * @param string $message Message. Default 'Done'.
-     * @param array $data Data to return as JSON. Default [].
-     * @param bool $echo Whether to echo Response right away without returning. Default false.
-     * @return array
-     */
-    public function returnSuccess(string $message = 'Done', array $data = [], bool $echo = false): array
-    {
-        return $this->m('helpers')->returnSuccess($message, $data, $echo);
-    }
-
-    /**
-     * Return Error array.
-     *
-     * @param string $message Error message. Default 'Unknown Error'.
-     * @param bool $echo Whether to echo Response right away without returning. Default false.
-     * @return array
-     */
-    public function returnError(string $message = 'Unknown Error', bool $echo = false)
-    {
-        return $this->m('helpers')->returnError($message, $echo);
-    }
-
-    /**
-     * External API request helper
-     *
-     * @param array $args {
-     * @type string $url Required.
-     * @type string $method Get/Post. Default 'get'.
-     * @type array $headers Default [].
-     * @type array $data Data to send. Default [].
-     * @type int $timeout Default 0.
-     * }
-     *
-     * @return mixed Response body or false on failure
-     */
-    public function apiRequest(array $args)
-    {
-        return $this->m('helpers')->apiRequest($args);
-    }
-
-    /**
      * Call a method in a loop (e.g. to add multiple items)
      *
      * @param string $method
@@ -572,31 +527,41 @@ class Facade extends Module
     }
 
     /**
+     * Delegate call to Helpers OR
      * Magic call of singular methods for plural calls
      * E.g. addAdminBars() etc.
      *
      * @param string $method
      * @param array $args
-     * @return array
+     * @return mixed
      * @throws AppException
      */
-    public function __call(string $method, array $args): array
+    public function __call(string $method, array $args)
     {
-        // Get last char of the called method
-        $lastChar = substr($method, -1);
+        // Helpers shorthand
+        $helpers = $this->m('helpers');
 
-        // Get method name without last char
-        $singularMethod = substr($method, 0, -1);
+        // If method is found in Helpers - run it
+        if (method_exists($helpers, $method)) {
+            return $helpers->$method(...$args);
 
-        // If singular method exists - call it in a loop
-        if ('s' === $lastChar && method_exists($this, $singularMethod) && is_array($args[0])) {
-            $return = [];
-
-            foreach ($args[0] as $item) {
-                $return[] = $this->$singularMethod($item);
-            }
         } else {
-            throw new AppException(sprintf('Method %s not found', $singularMethod));
+            // Get last char of the called method
+            $lastChar = substr($method, -1);
+
+            // Get method name without last char
+            $singularMethod = substr($method, 0, -1);
+
+            // If singular method exists - call it in a loop
+            if ('s' === $lastChar && method_exists($this, $singularMethod) && is_array($args[0])) {
+                $return = [];
+
+                foreach ($args[0] as $item) {
+                    $return[] = $this->$singularMethod($item);
+                }
+            } else {
+                throw new AppException(sprintf('Method %s not found', $singularMethod));
+            }
         }
 
         return $return;
