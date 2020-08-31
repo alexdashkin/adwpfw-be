@@ -17,12 +17,21 @@ abstract class Field extends Module
      */
     public function getTwigArgs($value): array
     {
+        // Validate props
         $this->validateData();
 
+        // Set default value if not set
+        if (is_null($value) && !is_null($this->gp('default'))) {
+            $value = $this->gp('default');
+        }
+
+        // Call filter if set
         $value = is_callable($this->gp('filter')) ? $this->gp('filter')($value) : $value;
 
+        // Set value prop
         $this->sp('value', $value);
 
+        // Return all data
         return $this->gp();
     }
 
@@ -77,6 +86,7 @@ abstract class Field extends Module
                 'default' => '',
             ],
             'default' => [
+                'type' => 'mixed',
                 'default' => null,
             ],
             'sanitizer' => [
