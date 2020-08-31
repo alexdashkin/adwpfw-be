@@ -1,15 +1,20 @@
 <tr class="form-field">
-    <th scope="row">
 
-        {% block label %}
+    {% if field.label %}
 
-            <label for="{{ prefix }}-{{ field.form }}-field-{{ field.name }}">{{ field.label }}</label>
+        <th scope="row">
 
-        {% endblock %}
+            {% block label %}
 
-    </th>
+                <label for="{{ prefix }}-{{ field.form }}-field-{{ field.name }}">{{ field.label }}</label>
 
-    <td>
+            {% endblock %}
+
+        </th>
+
+    {% endif %}
+
+    <td {% if not field.label %} colspan="2" {% endif %}>
 
         {% block control %}
         {% endblock %}
