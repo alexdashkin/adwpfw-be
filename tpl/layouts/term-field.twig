@@ -14,7 +14,7 @@
 
     {% endif %}
 
-    <td {% if not field.label %} colspan="2" {% endif %}>
+    <td {% if not field.label %} colspan="2" style="padding:0" {% endif %}>
 
         {% block control %}
         {% endblock %}
@@ -28,4 +28,5 @@
         {% endblock %}
 
     </td>
+
 </tr>
