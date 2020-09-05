@@ -2,18 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\App;
-use AlexDashkin\Adwpfw\Exceptions\AppException;
-use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Modules\Api\AdminAjax;
-use AlexDashkin\Adwpfw\Modules\Api\Rest;
-use AlexDashkin\Adwpfw\Modules\Assets\Css;
-use AlexDashkin\Adwpfw\Modules\Assets\Js;
-use AlexDashkin\Adwpfw\Modules\Customizer\Panel;
-use AlexDashkin\Adwpfw\Modules\Customizer\Section;
-use AlexDashkin\Adwpfw\Modules\Customizer\Setting;
-use AlexDashkin\Adwpfw\Modules\Updater\Plugin;
-use AlexDashkin\Adwpfw\Modules\Updater\Theme;
+use AlexDashkin\Adwpfw\{App, Exceptions\AppException, Fields\Field, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\Updater\Plugin, Modules\Updater\Theme};
 
 /**
  * Magic methods delegated to Helpers
@@ -36,6 +25,7 @@ use AlexDashkin\Adwpfw\Modules\Updater\Theme;
  * @method string getUploadsDir(string $path = '') Get path to the WP Uploads dir with trailing slash
  * @method string getUploadsUrl(string $path = '') Get URL of the WP Uploads dir with trailing slash
  * @method string getOutput(callable $func, array $args = []) Get output of a function
+ * @method string apiRequest(array $args) External API request helper
  */
 class Facade extends Module
 {
@@ -579,7 +569,6 @@ class Facade extends Module
         // If method is found in Helpers - run it
         if (method_exists($helpers, $method)) {
             return $helpers->$method(...$args);
-
         } else {
             // Get last char of the called method
             $lastChar = substr($method, -1);
