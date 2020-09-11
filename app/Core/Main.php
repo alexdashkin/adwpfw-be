@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Core;
 
-use AlexDashkin\Adwpfw\{App, Exceptions\AppException, Fields\Field, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\PostType, Modules\ProfileSection, Modules\Query, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\PostType, Modules\ProfileSection, Modules\Query, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
 
 /**
  * Main Facade
@@ -27,7 +27,7 @@ class Main
     public function __construct(App $app)
     {
         $this->app = $app;
-        
+
         $this->prefix = $this->app->config('prefix');
     }
 
@@ -51,6 +51,32 @@ class Main
     public function getTableName(string $name): string
     {
         return $this->m('db')->getTableName($name);
+    }
+
+    /**
+     * Render PHP Template
+     *
+     * @param string $name Template file name without .php
+     * @param array $args Args to be passed to the Template. Default [].
+     * @return string Rendered Template
+     */
+    public function render(string $name, array $args = []): string
+    {
+        $appPath = $this->app->config('template_path', '');
+        $fwPath = __DIR__ . '/../../tpl';
+        $paths = $appPath ? [$appPath, $fwPath] : [$fwPath];
+
+        foreach ($paths as $path) {
+            $file = trailingslashit($path) . $name . '.php';
+            if (file_exists($file)) {
+                ob_start();
+                extract($args);
+                include $file;
+                return ob_get_clean();
+            }
+        }
+
+        return '';
     }
 
     /**

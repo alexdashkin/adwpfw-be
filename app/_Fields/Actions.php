@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
- * Button Field
+ * Actions Field
  */
-class Button extends Field
+class Actions extends Select
 {
     /**
      * Get Field props
@@ -18,7 +18,10 @@ class Button extends Field
             parent::getInitialPropDefs(),
             [
                 'tpl' => [
-                    'default' => 'button',
+                    'default' => 'actions',
+                ],
+                'class' => [
+                    'default' => '',
                 ],
             ]
         );

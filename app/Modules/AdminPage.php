@@ -68,7 +68,7 @@ class AdminPage extends Module
         $tabs = [];
 
         foreach ($this->tabs as $tab) {
-            $tabs[] = $tab->getTwigArgs();
+            $tabs[] = $tab->render();
         }
 
         $args = [
@@ -77,7 +77,7 @@ class AdminPage extends Module
             'tabs' => $tabs,
         ];
 
-        echo $this->twig('templates/admin-page', $args);
+        echo $this->app->main->render('templates/admin-page', $args);
     }
 
     /**
@@ -88,16 +88,14 @@ class AdminPage extends Module
      */
     protected function getDefault(string $key)
     {
+        $name = $this->getProp('name');
+
         switch ($key) {
-            case 'slug':
-                return sanitize_key(str_replace(' ', '-', $this->getProp('name')));
             case 'title':
             case 'header':
-                return $this->getProp('name');
-            case 'parent':
-                return 0;
-            case 'position':
-                return 0;
+                return $name;
+            case 'slug':
+                return sanitize_key(str_replace(' ', '-', $name));
             case 'icon':
                 return 'dashicons-update';
             case 'capability':

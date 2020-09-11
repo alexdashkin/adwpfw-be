@@ -3,20 +3,8 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 return [
-    'facade' => [
-        'class' => Facade::class,
-        'single' => true,
-    ],
-    'logger' => [
-        'class' => Logger::class,
-        'single' => true,
-    ],
     'twig' => [
         'class' => Twig::class,
-        'single' => true,
-    ],
-    'helpers' => [
-        'class' => Helpers::class,
         'single' => true,
     ],
     'db' => [
@@ -35,10 +23,10 @@ return [
     'asset.js' => [
         'class' => Assets\Js::class,
     ],
-    'admin_ajax' => [
+    'api.ajax' => [
         'class' => Api\AdminAjax::class,
     ],
-    'rest' => [
+    'api.rest' => [
         'class' => Api\Rest::class,
     ],
     'admin_page' => [
@@ -95,43 +83,7 @@ return [
     'customizer.setting' => [
         'class' => Customizer\Setting::class,
     ],
-    'field.actions' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Actions::class,
-    ],
-    'field.button' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Button::class,
-    ],
-    'field.checkbox' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Checkbox::class,
-    ],
-    'field.custom' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Custom::class,
-    ],
-    'field.heading' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Heading::class,
-    ],
-    'field.hidden' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Hidden::class,
-    ],
-    'field.number' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Number::class,
-    ],
-    'field.password' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Password::class,
-    ],
-    'field.radio' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Radio::class,
-    ],
-    'field.select' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Select::class,
-    ],
-    'field.select2' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Select2::class,
-    ],
-    'field.text' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Text::class,
-    ],
-    'field.textarea' => [
-        'class' => AlexDashkin\Adwpfw\Fields\Textarea::class,
+    'field' => [
+        'class' => Field::class,
     ],
 ];

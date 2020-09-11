@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
- * Textarea Field
+ * Password Field
  */
-class Textarea extends Field
+class Password extends Field
 {
     /**
      * Get Field props
@@ -18,11 +18,7 @@ class Textarea extends Field
             parent::getInitialPropDefs(),
             [
                 'tpl' => [
-                    'default' => 'textarea',
-                ],
-                'sanitizer' => [
-                    'type' => 'callable',
-                    'default' => 'sanitize_textarea_field',
+                    'default' => 'password',
                 ],
             ]
         );

@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
  * Number Field

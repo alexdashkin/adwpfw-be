@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
- * Text Field
+ * Button Field
  */
-class Text extends Field
+class Button extends Field
 {
     /**
      * Get Field props
@@ -18,11 +18,7 @@ class Text extends Field
             parent::getInitialPropDefs(),
             [
                 'tpl' => [
-                    'default' => 'text',
-                ],
-                'sanitizer' => [
-                    'type' => 'callable',
-                    'default' => 'sanitize_text_field',
+                    'default' => 'button',
                 ],
             ]
         );

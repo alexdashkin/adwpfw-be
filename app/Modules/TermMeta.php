@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Fields\Field;
+use AlexDashkin\Adwpfw\_Fields\Field;
 
 class TermMeta extends Module
 {

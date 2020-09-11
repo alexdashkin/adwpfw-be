@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
- * Hidden Field
+ * Text Field
  */
-class Hidden extends Field
+class Text extends Field
 {
     /**
      * Get Field props
@@ -18,7 +18,7 @@ class Hidden extends Field
             parent::getInitialPropDefs(),
             [
                 'tpl' => [
-                    'default' => 'hidden',
+                    'default' => 'text',
                 ],
                 'sanitizer' => [
                     'type' => 'callable',

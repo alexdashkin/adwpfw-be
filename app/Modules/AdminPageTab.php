@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Fields\Field;
-
 class AdminPageTab extends Module
 {
     /**
@@ -58,38 +56,27 @@ class AdminPageTab extends Module
      */
     public function addField(Field $field)
     {
-        $field->setProps(['form' => $this->getProp('slug')]);
+        $field->setProp('form', $this->getProp('slug'));
 
         $this->fields[] = $field;
     }
 
     /**
-     * Get Twig args
+     * Render Tab
      *
-     * @return array
+     * @return string
      */
-    public function getTwigArgs(): array
+    public function render(): string
     {
-        $this->validateData();
-
         $values = get_option($this->config('prefix') . '_' . $this->getProp('option')) ?: [];
 
-        $fields = [];
+        $html = '';
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
-
-            $twigArgs = $field->getTwigArgs($values[$fieldName] ?? null);
-
-            $fields[] = $twigArgs;
+            $html .= $field->render($values[$field->getProp('name')] ?? null);
         }
 
-        return [
-            'form' => $this->getProp('form'),
-            'title' => $this->getProp('title'),
-            'fields' => $fields,
-            'buttons' => [],
-        ];
+        return $html;
     }
 
     /**
@@ -143,8 +130,6 @@ class AdminPageTab extends Module
         switch ($key) {
             case 'slug':
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            case 'form':
-                return false;
             case 'option':
                 return 'settings';
         }

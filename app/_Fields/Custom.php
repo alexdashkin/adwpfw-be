@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
- * Heading Field
+ * Custom Field
  */
-class Heading extends Field
+class Custom extends Field
 {
     /**
      * Get Field props
@@ -17,11 +17,8 @@ class Heading extends Field
         return array_merge(
             parent::getInitialPropDefs(),
             [
-                'name' => [
-                    'default' => '',
-                ],
                 'tpl' => [
-                    'default' => 'heading',
+                    'default' => 'custom',
                 ],
             ]
         );

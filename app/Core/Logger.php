@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Core;
 
-use AlexDashkin\Adwpfw\App;
-
 /**
  * Logger
  */
@@ -43,7 +41,7 @@ class Logger
         $maxLogSize = $this->app->config('log')['size'] ?? 1000000;
         $this->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
-        $basePath = $this->m('helpers')->getUploadsDir($prefix . '/logs');
+        $basePath = $this->app->main->getUploadsDir($prefix . '/logs');
         $filename = $this->getLogFilename($basePath, $prefix, $suffix, $maxLogSize);
         $immediateName = uniqid() . '-' . $suffix . '.log';
 
@@ -136,25 +134,5 @@ class Logger
         if (file_exists($this->immediatePath)) {
             unlink($this->immediatePath);
         }
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'level' => [
-                'default' => 7,
-            ],
-            'size' => [
-                'default' => 1000000,
-            ],
-        ];
     }
 }

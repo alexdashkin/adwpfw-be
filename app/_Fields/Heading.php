@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
- * Checkbox Field
+ * Heading Field
  */
-class Checkbox extends Field
+class Heading extends Field
 {
     /**
      * Get Field props
@@ -17,12 +17,11 @@ class Checkbox extends Field
         return array_merge(
             parent::getInitialPropDefs(),
             [
-                'tpl' => [
-                    'default' => 'checkbox',
+                'name' => [
+                    'default' => '',
                 ],
-                'sanitizer' => [
-                    'type' => 'callable',
-                    'default' => 'sanitize_text_field',
+                'tpl' => [
+                    'default' => 'heading',
                 ],
             ]
         );

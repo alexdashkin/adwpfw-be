@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\App;
+use AlexDashkin\Adwpfw\Core\App;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 
 abstract class Module
@@ -29,23 +29,13 @@ abstract class Module
 
     /**
      * Get Single Prop
-     * Throws Exception if no value and no default provided
      *
      * @param string $key
      * @return mixed
-     * @throws AppException
      */
     protected function getProp(string $key)
     {
-        if (array_key_exists($key, $this->props)) {
-            return $this->props[$key];
-        }
-
-        if (!is_null($default = $this->getDefault($key))) {
-            return $default;
-        }
-
-        throw new AppException(sprintf('Prop %s not found', $key));
+        return array_key_exists($key, $this->props) ? $this->props[$key] : $this->getDefault($key);
     }
 
     /**

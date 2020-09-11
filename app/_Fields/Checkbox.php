@@ -1,11 +1,11 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Fields;
+namespace AlexDashkin\Adwpfw\_Fields;
 
 /**
- * Actions Field
+ * Checkbox Field
  */
-class Actions extends Select
+class Checkbox extends Field
 {
     /**
      * Get Field props
@@ -18,10 +18,11 @@ class Actions extends Select
             parent::getInitialPropDefs(),
             [
                 'tpl' => [
-                    'default' => 'actions',
+                    'default' => 'checkbox',
                 ],
-                'class' => [
-                    'default' => '',
+                'sanitizer' => [
+                    'type' => 'callable',
+                    'default' => 'sanitize_text_field',
                 ],
             ]
         );

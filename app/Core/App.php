@@ -1,9 +1,7 @@
 <?php
 
-namespace AlexDashkin\Adwpfw;
+namespace AlexDashkin\Adwpfw\Core;
 
-use AlexDashkin\Adwpfw\Core\Logger;
-use AlexDashkin\Adwpfw\Core\Main;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Modules\Module;
 
@@ -41,7 +39,7 @@ class App
     {
         $this->config = $config;
 
-        $this->classDefs = require __DIR__ . '/../config/modules.php';
+        $this->classDefs = require __DIR__ . '/../../config/modules.php';
 
         $this->main = new Main($this);
 
@@ -50,23 +48,13 @@ class App
 
     /**
      * Get a Config value.
-     * Throws Exception if no value and no default provided
      *
      * @param string $key
      * @return mixed
-     * @throws AppException
      */
     public function config(string $key, $default = null)
     {
-        if (array_key_exists($key, $this->config)) {
-            return $this->config[$key];
-        }
-
-        if (!is_null($default)) {
-            return $default;
-        }
-
-        throw new AppException(sprintf('Config value %s not found', $key));
+        return array_key_exists($key, $this->config) ? $this->config[$key] : $default;
     }
 
     /**
