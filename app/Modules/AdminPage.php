@@ -16,6 +16,8 @@ class AdminPage extends Module
      */
     public function addTab(AdminPageTab $tab)
     {
+        $tab->setParent($this);
+
         $this->tabs[] = $tab;
     }
 
@@ -25,21 +27,6 @@ class AdminPage extends Module
     public function init()
     {
         $this->addHook('admin_menu', [$this, 'register']);
-
-        $this->m( // todo it's impossible to add more than one AdminPage because AJAX action name is the same for all pages. Possible solution - move ajax action to AdminPageTab class
-            'admin_ajax',
-            [
-                'prefix' => $this->config('prefix'),
-                'action' => 'save',
-                'fields' => [
-                    'form' => [
-                        'type' => 'form',
-                        'required' => true,
-                    ],
-                ],
-                'callback' => [$this, 'save'],
-            ]
-        );
     }
 
     /**
@@ -47,9 +34,9 @@ class AdminPage extends Module
      */
     public function register()
     {
-        if ($this->getProp('parent')) {
+        if ($parent = $this->getProp('parent')) {
             add_submenu_page(
-                $this->getProp('parent'),
+                $parent,
                 $this->getProp('title'),
                 $this->getProp('name'),
                 $this->getProp('capability'),
@@ -94,73 +81,29 @@ class AdminPage extends Module
     }
 
     /**
-     * Save the posted data
+     * Get Default Prop value
      *
-     * @param array $request
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    public function save(array $request): array
+    protected function getDefault(string $key)
     {
-        $helpers = $this->m('helpers');
-        $form = $request['form'];
-
-        if (empty($form[$this->config('prefix')])) {
-            return $helpers->returnError('Form is empty');
+        switch ($key) {
+            case 'slug':
+                return sanitize_key(str_replace(' ', '-', $this->getProp('name')));
+            case 'title':
+            case 'header':
+                return $this->getProp('name');
+            case 'parent':
+                return 0;
+            case 'position':
+                return 0;
+            case 'icon':
+                return 'dashicons-update';
+            case 'capability':
+                return 'manage_options';
         }
 
-        $data = $form[$this->config('prefix')];
-
-        $saved = false;
-
-        foreach ($this->tabs as $tab) {
-            $saved = $saved || $tab->save($data);
-        }
-
-        return $saved ? $helpers->returnSuccess('Saved') : $helpers->returnError('Nothing to save');
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'name' => [
-                'required' => true,
-            ],
-            'slug' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '-', $data['name']));
-                },
-            ],
-            'title' => [
-                'default' => function ($data) {
-                    return $data['name'];
-                },
-            ],
-            'header' => [
-                'default' => function ($data) {
-                    return $data['name'];
-                },
-            ],
-            'parent' => [
-                'default' => null,
-            ],
-            'position' => [
-                'type' => 'int',
-                'default' => 0,
-            ],
-            'icon' => [
-                'default' => 'dashicons-update',
-            ],
-            'capability' => [
-                'default' => 'manage_options'
-            ],
-        ];
+        return null;
     }
 }

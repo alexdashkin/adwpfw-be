@@ -7,9 +7,49 @@ use AlexDashkin\Adwpfw\Fields\Field;
 class AdminPageTab extends Module
 {
     /**
+     * @var AdminPage
+     */
+    protected $parent;
+
+    /**
      * @var Field[]
      */
     protected $fields = [];
+
+    /**
+     * Init Module
+     */
+    public function init()
+    {
+        $this->addHook('admin_menu', [$this, 'register']);
+
+        if ($this->getProp('form')) {
+            $this->m(
+                'admin_ajax',
+                [
+                    'prefix' => $this->config('prefix'),
+                    'action' => sprintf('save_%s_%s', $this->parent->getProp('slug'), $this->getProp('slug')),
+                    'fields' => [
+                        'form' => [
+                            'type' => 'form',
+                            'required' => true,
+                        ],
+                    ],
+                    'callback' => [$this, 'save'],
+                ]
+            );
+        }
+    }
+
+    /**
+     * Set Parent Page
+     *
+     * @param AdminPage $parent
+     */
+    public function setParent(AdminPage $parent)
+    {
+        $this->parent = $parent;
+    }
 
     /**
      * Add Field
@@ -55,16 +95,21 @@ class AdminPageTab extends Module
     /**
      * Save the posted data
      *
-     * @param array $postedData
-     * @return bool
+     * @param array $request
+     * @return array
      */
-    public function save(array $postedData): bool
+    public function save(array $request): array
     {
-        if (empty($postedData[$this->getProp('slug')])) {
-            return false;
+        $main = $this->m('main');
+        $form = $request['form'];
+        $prefix = $this->config('prefix');
+        $slug = $this->getProp('slug');
+
+        if (empty($form[$prefix][$slug])) {
+            return $main->returnError('Form is empty');
         }
 
-        $data = $postedData[$this->getProp('slug')];
+        $data = $form[$prefix][$slug];
 
         $optionName = $this->config('prefix') . '_' . $this->getProp('option');
 
@@ -84,36 +129,26 @@ class AdminPageTab extends Module
 
         do_action('adwpfw_settings_saved', $this, $values);
 
-        return true;
+        return $main->returnSuccess('Saved');
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'title' => [
-                'required' => true,
-            ],
-            'slug' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '-', $data['title']));
-                },
-            ],
-            'form' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-            'option' => [
-                'default' => 'settings',
-            ],
-        ];
-    }
+        switch ($key) {
+            case 'slug':
+                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+            case 'form':
+                return false;
+            case 'option':
+                return 'settings';
+        }
 
+        return null;
+    }
 }

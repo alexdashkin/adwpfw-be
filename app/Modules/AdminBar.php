@@ -20,14 +20,28 @@ class AdminBar extends Module
      */
     public function register(\WP_Admin_Bar $wpAdminBar)
     {
-        if (!current_user_can($this->getProp('capability', 'manage_options'))) {
+        if (!current_user_can($this->getProp('capability'))) {
             return;
         }
 
-        $defaultId = sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-
-        $this->setProp('id', $this->config('prefix') . '-' . $this->getProp('id', $defaultId));
+        $this->setProp('id', $this->config('prefix') . '-' . $this->getProp('id'));
 
         $wpAdminBar->add_node($this->getProps());
+    }
+
+    /**
+     * Get Default Prop value
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected function getDefault(string $key)
+    {
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+        }
+
+        return null;
     }
 }

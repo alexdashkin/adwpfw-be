@@ -35,13 +35,13 @@ abstract class Module
      * @return mixed
      * @throws AppException
      */
-    protected function getProp(string $key, $default = null)
+    protected function getProp(string $key)
     {
         if (array_key_exists($key, $this->props)) {
             return $this->props[$key];
         }
 
-        if (!is_null($default)) {
+        if (!is_null($default = $this->getDefault($key))) {
             return $default;
         }
 
@@ -74,11 +74,22 @@ abstract class Module
      *
      * @param array $data
      */
-    public function setProps(array $data)
+    protected function setProps(array $data)
     {
         foreach ($data as $key => $value) {
             $this->setProp($key, $value);
         }
+    }
+
+    /**
+     * Get Default Prop value. To be overridden.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected function getDefault(string $key)
+    {
+        return null;
     }
 
     /**
