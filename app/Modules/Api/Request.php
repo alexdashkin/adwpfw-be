@@ -21,7 +21,7 @@ abstract class Request extends Module
     {
         $fields = $request;
 
-        if ($fieldDefs = $this->gp('fields')) {
+        if ($fieldDefs = $this->getProp('fields')) {
             foreach ($fieldDefs as $name => $settings) {
                 if (!isset($request[$name]) && $settings['required']) {
                     throw new AppException('Missing required field: ' . $name);
@@ -81,7 +81,7 @@ abstract class Request extends Module
     {
         try {
             $data = $this->validateRequest($params);
-            $result = $this->gp('callback')($data);
+            $result = $this->getProp('callback')($data);
         } catch (\Exception $e) {
             return $this->error('Exception: ' . $e->getMessage());
         }

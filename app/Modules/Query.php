@@ -70,8 +70,8 @@ class Query extends Module
     {
         $this->validateData();
 
-        $this->wpdb = $this->gp('wpdb');
-        $this->tablePrefix = $this->gp('table_prefix');
+        $this->wpdb = $this->getProp('wpdb');
+        $this->tablePrefix = $this->getProp('table_prefix');
     }
 
     /**

@@ -11,10 +11,10 @@ class AdminAjax extends Request
     {
         $this->validateData();
 
-        $actionName = $this->gp('prefix') . '_' . $this->gp('action');
+        $actionName = $this->config('prefix') . '_' . $this->getProp('action');
 
-        $this->hook('wp_ajax_' . $actionName, [$this, 'handle']);
-        $this->hook('wp_ajax_nopriv_' . $actionName, [$this, 'handle']);
+        $this->addHook('wp_ajax_' . $actionName, [$this, 'handle']);
+        $this->addHook('wp_ajax_nopriv_' . $actionName, [$this, 'handle']);
     }
 
     /**
@@ -22,9 +22,9 @@ class AdminAjax extends Request
      */
     public function handle()
     {
-        check_ajax_referer($this->gp('prefix'));
+        check_ajax_referer($this->config('prefix'));
 
-        $this->log('Ajax request: "%s_%s"', [$this->gp('prefix'), $this->gp('action')]);
+        $this->log('Ajax request: "%s_%s"', [$this->config('prefix'), $this->getProp('action')]);
 
         $result = $this->execute($_REQUEST['data'] ?? []);
 

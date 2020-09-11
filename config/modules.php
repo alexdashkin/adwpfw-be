@@ -1,97 +1,99 @@
 <?php
 
+namespace AlexDashkin\Adwpfw\Modules;
+
 return [
     'facade' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Facade::class,
+        'class' => Facade::class,
         'single' => true,
     ],
     'logger' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Logger::class,
+        'class' => Logger::class,
         'single' => true,
     ],
     'twig' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Twig::class,
+        'class' => Twig::class,
         'single' => true,
     ],
     'helpers' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Helpers::class,
+        'class' => Helpers::class,
         'single' => true,
     ],
     'db' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Db::class,
+        'class' => Db::class,
         'single' => true,
     ],
     'query' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Query::class,
+        'class' => Query::class,
     ],
     'hook' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Hook::class,
+        'class' => Hook::class,
     ],
     'asset.css' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Assets\Css::class,
+        'class' => Assets\Css::class,
     ],
     'asset.js' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Assets\Js::class,
+        'class' => Assets\Js::class,
     ],
     'admin_ajax' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Api\AdminAjax::class,
+        'class' => Api\AdminAjax::class,
     ],
     'rest' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Api\Rest::class,
+        'class' => Api\Rest::class,
     ],
     'admin_page' => [
-        'class' => AlexDashkin\Adwpfw\Modules\AdminPage::class,
+        'class' => AdminPage::class,
     ],
     'admin_page_tab' => [
-        'class' => AlexDashkin\Adwpfw\Modules\AdminPageTab::class,
+        'class' => AdminPageTab::class,
     ],
     'admin_bar' => [
-        'class' => AlexDashkin\Adwpfw\Modules\AdminBar::class,
+        'class' => AdminBar::class,
     ],
     'dashboard_widget' => [
-        'class' => AlexDashkin\Adwpfw\Modules\DbWidget::class,
+        'class' => DbWidget::class,
     ],
     'cron' => [
-        'class' => AlexDashkin\Adwpfw\Modules\CronJob::class,
+        'class' => CronJob::class,
     ],
     'metabox' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Metabox::class,
+        'class' => Metabox::class,
     ],
     'notice' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Notice::class,
+        'class' => Notice::class,
     ],
     'post_state' => [
-        'class' => AlexDashkin\Adwpfw\Modules\PostState::class,
+        'class' => PostState::class,
     ],
     'post_type' => [
-        'class' => AlexDashkin\Adwpfw\Modules\PostType::class,
+        'class' => PostType::class,
     ],
     'profile_section' => [
-        'class' => AlexDashkin\Adwpfw\Modules\ProfileSection::class,
+        'class' => ProfileSection::class,
     ],
     'term_meta' => [
-        'class' => AlexDashkin\Adwpfw\Modules\TermMeta::class,
+        'class' => TermMeta::class,
     ],
     'shortcode' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Shortcode::class,
+        'class' => Shortcode::class,
     ],
     'updater.plugin' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Updater\Plugin::class,
+        'class' => Updater\Plugin::class,
     ],
     'updater.theme' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Updater\Theme::class,
+        'class' => Updater\Theme::class,
     ],
     'widget' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Widget::class,
+        'class' => Widget::class,
     ],
     'customizer.panel' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Customizer\Panel::class,
+        'class' => Customizer\Panel::class,
     ],
     'customizer.section' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Customizer\Section::class,
+        'class' => Customizer\Section::class,
     ],
     'customizer.setting' => [
-        'class' => AlexDashkin\Adwpfw\Modules\Customizer\Setting::class,
+        'class' => Customizer\Setting::class,
     ],
     'field.actions' => [
         'class' => AlexDashkin\Adwpfw\Fields\Actions::class,

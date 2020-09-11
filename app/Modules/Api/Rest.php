@@ -9,7 +9,7 @@ class Rest extends Request
      */
     public function init()
     {
-        $this->hook('rest_api_init', [$this, 'register']);
+        $this->addHook('rest_api_init', [$this, 'register']);
     }
 
     /**
@@ -18,10 +18,10 @@ class Rest extends Request
     public function register()
     {
         register_rest_route(
-            $this->gp('namespace'),
-            $this->gp('route'),
+            $this->getProp('namespace'),
+            $this->getProp('route'),
             [
-                'methods' => $this->gp('method'),
+                'methods' => $this->getProp('method'),
                 'callback' => [$this, 'handle'],
                 'permission_callback' => '__return_true'
             ]
@@ -36,9 +36,9 @@ class Rest extends Request
      */
     public function handle(\WP_REST_Request $request): array
     {
-        $this->log('REST request: "%s%s"', [$this->gp('namespace'), $this->gp('route')]);
+        $this->log('REST request: "%s%s"', [$this->getProp('namespace'), $this->getProp('route')]);
 
-        if ($this->gp('admin') && !current_user_can('administrator')) {
+        if ($this->getProp('admin') && !current_user_can('administrator')) {
             return $this->error('Endpoint is for Admins only');
         }
 

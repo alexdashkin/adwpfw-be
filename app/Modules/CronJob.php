@@ -11,7 +11,7 @@ class CronJob extends Module
      */
     public function init()
     {
-        $this->hook('init', [$this, 'run']);
+        $this->addHook('init', [$this, 'run']);
     }
 
     /**
@@ -25,7 +25,7 @@ class CronJob extends Module
         }
 
         // Current Job Name
-        $jobName = $this->gp('name');
+        $jobName = $this->getProp('name');
 
         // Cron option value for current job
         $option = $this->getOption($jobName);
@@ -35,7 +35,7 @@ class CronJob extends Module
         $lastRun = $option['last'] ?? 0;
 
         // If interval is not expired - exit
-        if ($lastRun && (time() - $this->gp('interval')) < $lastRun) {
+        if ($lastRun && (time() - $this->getProp('interval')) < $lastRun) {
             return;
         }
 
@@ -52,7 +52,7 @@ class CronJob extends Module
         }
 
         // If another process is running and parallel is disabled - abort
-        if ($running && !$this->gp('parallel')) {
+        if ($running && !$this->getProp('parallel')) {
             $this->log('Another instance is running, aborting');
             return;
         }
@@ -71,7 +71,7 @@ class CronJob extends Module
 
         // Try to run the job
         try {
-            $this->gp('callback')();
+            $this->getProp('callback')();
         } catch (\Exception $e) {
             $msg = 'Exception: ' . $e->getMessage() . '. Execution aborted.';
             $this->log($msg);
@@ -107,7 +107,7 @@ class CronJob extends Module
      */
     private function getOption(string $name): array
     {
-        $optionName = $this->gp('prefix') . '_cron';
+        $optionName = $this->config('prefix') . '_cron';
 
         $optionValue = get_option($optionName) ?: [];
 
@@ -122,7 +122,7 @@ class CronJob extends Module
      */
     private function updateOption(string $name, array $value)
     {
-        $optionName = $this->gp('prefix') . '_cron';
+        $optionName = $this->config('prefix') . '_cron';
 
         $optionValue = get_option($optionName) ?: [];
 

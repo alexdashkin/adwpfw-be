@@ -12,16 +12,16 @@ class Js extends Asset
      */
     public function enqueue()
     {
-        $callback = $this->gp('callback');
+        $callback = $this->getProp('callback');
 
         // Exit if callback returns false
         if ($callback && is_callable($callback) && !$callback()) {
             return;
         }
 
-        $prefix = $this->gp('prefix');
+        $prefix = $this->config('prefix');
 
-        $id = sanitize_title($this->gp('id'));
+        $id = sanitize_title($this->getProp('id'));
 
         // Enqueue already registered script and exit
         if (wp_script_is($id, 'registered')) {
@@ -32,7 +32,7 @@ class Js extends Asset
         $id = $prefix . '-' . $id;
 
         // Enqueue new script
-        wp_enqueue_script($id, $this->gp('url'), $this->gp('deps'), $this->gp('ver'), true);
+        wp_enqueue_script($id, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
 
         // Localize script
         $localize = array_merge(
@@ -42,7 +42,7 @@ class Js extends Asset
                 'rest_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
             ],
-            $this->gp('localize')
+            $this->getProp('localize')
         );
 
         wp_localize_script($id, $prefix, $localize);

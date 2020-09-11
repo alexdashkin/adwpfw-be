@@ -9,7 +9,7 @@ class AdminBar extends Module
      */
     public function init()
     {
-        $this->hook('admin_bar_menu', [$this, 'register'], 99);
+        $this->addHook('admin_bar_menu', [$this, 'register'], 99);
     }
 
     /**
@@ -20,51 +20,14 @@ class AdminBar extends Module
      */
     public function register(\WP_Admin_Bar $wpAdminBar)
     {
-        if (!current_user_can($this->gp('capability'))) {
+        if (!current_user_can($this->getProp('capability', 'manage_options'))) {
             return;
         }
 
-        $this->sp('id', $this->gp('prefix') . '-' . $this->gp('id'));
+        $defaultId = sanitize_key(str_replace(' ', '-', $this->getProp('title')));
 
-        $wpAdminBar->add_node($this->gp());
-    }
+        $this->setProp('id', $this->config('prefix') . '-' . $this->getProp('id', $defaultId));
 
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'title' => [
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '-', $data['title']));
-                },
-            ],
-            'parent' => [
-                'default' => null,
-            ],
-            'capability' => [
-                'default' => 'manage_options'
-            ],
-            'href' => [
-                'default' => null,
-            ],
-            'group' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-            'meta' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
+        $wpAdminBar->add_node($this->getProps());
     }
 }

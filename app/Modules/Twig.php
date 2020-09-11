@@ -46,7 +46,7 @@ class Twig extends Module
 
         $this->validateData();
 
-        $paths = $this->gp('paths');
+        $paths = $this->getProp('paths');
         $paths[] = __DIR__ . '/../../tpl';
 
         foreach ($paths as $index => $path) {
@@ -58,11 +58,11 @@ class Twig extends Module
 
         $this->fsLoader = new FilesystemLoader($paths);
 
-        $this->twigFs = new Environment($this->fsLoader, $this->gp());
+        $this->twigFs = new Environment($this->fsLoader, $this->getProps());
 
         $this->arrayLoader = new ArrayLoader();
 
-        $this->twigArray = new Environment($this->arrayLoader, $this->gp());
+        $this->twigArray = new Environment($this->arrayLoader, $this->getProps());
     }
 
     /**
@@ -144,7 +144,7 @@ class Twig extends Module
     {
         $args = array_merge(
             [
-                'prefix' => $this->gp('prefix'),
+                'prefix' => $this->config('prefix'),
             ],
             $args
         );

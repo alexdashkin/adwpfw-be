@@ -26,8 +26,8 @@ class Metabox extends Module
      */
     public function init()
     {
-        $this->hook('add_meta_boxes', [$this, 'register'], 20);
-        $this->hook('save_post', [$this, 'save']);
+        $this->addHook('add_meta_boxes', [$this, 'register'], 20);
+        $this->addHook('save_post', [$this, 'save']);
     }
 
     /**
@@ -35,15 +35,15 @@ class Metabox extends Module
      */
     public function register()
     {
-        $id = $this->gp('prefix') . '_' . $this->gp('id');
+        $id = $this->config('prefix') . '_' . $this->getProp('id');
 
         add_meta_box(
             $id,
-            $this->gp('title'),
+            $this->getProp('title'),
             [$this, 'render'],
-            $this->gp('screen'),
-            $this->gp('context'),
-            $this->gp('priority')
+            $this->getProp('screen'),
+            $this->getProp('context'),
+            $this->getProp('priority')
         );
     }
 
@@ -68,7 +68,7 @@ class Metabox extends Module
 
         $args = [
             'fields' => $fields,
-            'context' => $this->gp('context'),
+            'context' => $this->getProp('context'),
         ];
 
         echo $this->twig('templates/metabox', $args);
@@ -86,7 +86,7 @@ class Metabox extends Module
             return '';
         }
 
-        return get_post_meta($post->ID, '_' . $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
+        return get_post_meta($post->ID, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
     }
 
     /**
@@ -102,7 +102,7 @@ class Metabox extends Module
             return false;
         }
 
-        return update_post_meta($postId->ID, '_' . $this->gp('prefix') . '_' . $this->gp('id'), $value);
+        return update_post_meta($postId->ID, '_' . $this->config('prefix') . '_' . $this->getProp('id'), $value);
     }
 
     /**
@@ -112,11 +112,11 @@ class Metabox extends Module
      */
     public function save(int $postId)
     {
-        if (empty($_POST[$this->gp('prefix')][$this->gp('id')])) {
+        if (empty($_POST[$this->config('prefix')][$this->getProp('id')])) {
             return;
         }
 
-        $form = $_POST[$this->gp('prefix')][$this->gp('id')];
+        $form = $_POST[$this->config('prefix')][$this->getProp('id')];
 
         $values = [];
 

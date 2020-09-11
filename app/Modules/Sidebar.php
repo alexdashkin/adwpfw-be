@@ -9,7 +9,7 @@ class Sidebar extends Module
      */
     public function init()
     {
-        $this->hook('widgets_init', [$this, 'register']);
+        $this->addHook('widgets_init', [$this, 'register']);
     }
 
     /**
@@ -17,9 +17,9 @@ class Sidebar extends Module
      */
     public function register()
     {
-        $this->sp('id', $this->gp('prefix') . '_' . $this->gp('id'));
+        $this->setProp('id', $this->config('prefix') . '_' . $this->getProp('id'));
 
-        register_sidebar($this->gp());
+        register_sidebar($this->getProps());
     }
 
     /**

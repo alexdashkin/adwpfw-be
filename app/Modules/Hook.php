@@ -11,7 +11,7 @@ class Hook extends Module
     {
         $this->validateData();
 
-        add_filter($this->gp('tag'), [$this, 'run'], $this->gp('priority'), 100);
+        add_filter($this->getProp('tag'), [$this, 'run'], $this->getProp('priority'), 100);
     }
 
     /**
@@ -20,9 +20,9 @@ class Hook extends Module
     public function run()
     {
         try {
-            return $this->gp('callback')(...func_get_args());
+            return $this->getProp('callback')(...func_get_args());
         } catch (\Exception $e) {
-            $this->log('Exception in hook "%s": %s', [$this->gp('tag'), $e->getMessage()]);
+            $this->log('Exception in hook "%s": %s', [$this->getProp('tag'), $e->getMessage()]);
         }
 
         return false;

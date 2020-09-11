@@ -24,12 +24,12 @@ class AdminPage extends Module
      */
     public function init()
     {
-        $this->hook('admin_menu', [$this, 'register']);
+        $this->addHook('admin_menu', [$this, 'register']);
 
-        $this->m( // todo it's impossible to add more than one AdminPage because AJAX action name is the same for all pages
+        $this->m( // todo it's impossible to add more than one AdminPage because AJAX action name is the same for all pages. Possible solution - move ajax action to AdminPageTab class
             'admin_ajax',
             [
-                'prefix' => $this->gp('prefix'),
+                'prefix' => $this->config('prefix'),
                 'action' => 'save',
                 'fields' => [
                     'form' => [
@@ -47,24 +47,24 @@ class AdminPage extends Module
      */
     public function register()
     {
-        if ($this->gp('parent')) {
+        if ($this->getProp('parent')) {
             add_submenu_page(
-                $this->gp('parent'),
-                $this->gp('title'),
-                $this->gp('name'),
-                $this->gp('capability'),
-                $this->gp('slug'),
+                $this->getProp('parent'),
+                $this->getProp('title'),
+                $this->getProp('name'),
+                $this->getProp('capability'),
+                $this->getProp('slug'),
                 [$this, 'render']
             );
         } else {
             add_menu_page(
-                $this->gp('title'),
-                $this->gp('name'),
-                $this->gp('capability'),
-                $this->gp('slug'),
+                $this->getProp('title'),
+                $this->getProp('name'),
+                $this->getProp('capability'),
+                $this->getProp('slug'),
                 [$this, 'render'],
-                $this->gp('icon'),
-                $this->gp('position')
+                $this->getProp('icon'),
+                $this->getProp('position')
             );
         }
     }
@@ -85,8 +85,8 @@ class AdminPage extends Module
         }
 
         $args = [
-            'prefix' => $this->gp('prefix'),
-            'title' => $this->gp('title'),
+            'prefix' => $this->config('prefix'),
+            'title' => $this->getProp('title'),
             'tabs' => $tabs,
         ];
 
@@ -104,11 +104,11 @@ class AdminPage extends Module
         $helpers = $this->m('helpers');
         $form = $request['form'];
 
-        if (empty($form[$this->gp('prefix')])) {
+        if (empty($form[$this->config('prefix')])) {
             return $helpers->returnError('Form is empty');
         }
 
-        $data = $form[$this->gp('prefix')];
+        $data = $form[$this->config('prefix')];
 
         $saved = false;
 

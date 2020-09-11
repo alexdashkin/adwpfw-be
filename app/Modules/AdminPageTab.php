@@ -18,7 +18,7 @@ class AdminPageTab extends Module
      */
     public function addField(Field $field)
     {
-        $field->spm(['form' => $this->gp('slug')]);
+        $field->setProps(['form' => $this->getProp('slug')]);
 
         $this->fields[] = $field;
     }
@@ -32,7 +32,7 @@ class AdminPageTab extends Module
     {
         $this->validateData();
 
-        $values = get_option($this->gp('prefix') . '_' . $this->gp('option')) ?: [];
+        $values = get_option($this->config('prefix') . '_' . $this->getProp('option')) ?: [];
 
         $fields = [];
 
@@ -45,8 +45,8 @@ class AdminPageTab extends Module
         }
 
         return [
-            'form' => $this->gp('form'),
-            'title' => $this->gp('title'),
+            'form' => $this->getProp('form'),
+            'title' => $this->getProp('title'),
             'fields' => $fields,
             'buttons' => [],
         ];
@@ -60,13 +60,13 @@ class AdminPageTab extends Module
      */
     public function save(array $postedData): bool
     {
-        if (empty($postedData[$this->gp('slug')])) {
+        if (empty($postedData[$this->getProp('slug')])) {
             return false;
         }
 
-        $data = $postedData[$this->gp('slug')];
+        $data = $postedData[$this->getProp('slug')];
 
-        $optionName = $this->gp('prefix') . '_' . $this->gp('option');
+        $optionName = $this->config('prefix') . '_' . $this->getProp('option');
 
         $values = [];
 

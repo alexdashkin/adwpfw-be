@@ -9,7 +9,7 @@ class PostState extends Module
      */
     public function init()
     {
-        $this->hook('display_post_states', [$this, 'register']);
+        $this->addHook('display_post_states', [$this, 'register']);
     }
 
     /**
@@ -21,8 +21,8 @@ class PostState extends Module
      */
     public function register(array $states, \WP_Post $post): array
     {
-        if ($post->ID === $this->gp('post_id')) {
-            $states[] = $this->gp('state');
+        if ($post->ID === $this->getProp('post_id')) {
+            $states[] = $this->getProp('state');
         }
 
         return $states;

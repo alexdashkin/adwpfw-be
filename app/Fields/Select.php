@@ -51,18 +51,18 @@ class Select extends Field
 
         $options = [];
 
-        if ($this->gp('placeholder') && !$this->gp('multiple')) {
+        if ($this->getProp('placeholder') && !$this->getProp('multiple')) {
             $options = [
                 [
-                    'label' => $this->gp('placeholder'),
+                    'label' => $this->getProp('placeholder'),
                     'value' => '',
                     'selected' => '',
                 ]
             ];
         }
 
-        foreach ($this->gp('options') as $val => $label) {
-            $selected = $this->gp('multiple') ? in_array($val, (array)$value) : $val == $value;
+        foreach ($this->getProp('options') as $val => $label) {
+            $selected = $this->getProp('multiple') ? in_array($val, (array)$value) : $val == $value;
 
             $options[] = [
                 'label' => $label,
@@ -71,9 +71,9 @@ class Select extends Field
             ];
         }
 
-        $this->sp('options', $options);
+        $this->setProp('options', $options);
 
-        return $this->gp();
+        return $this->getProps();
     }
 
     /**

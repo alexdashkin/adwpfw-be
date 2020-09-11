@@ -12,15 +12,15 @@ class Css extends Asset
      */
     public function enqueue()
     {
-        $callback = $this->gp('callback');
+        $callback = $this->getProp('callback');
 
         if ($callback && is_callable($callback) && !$callback()) {
             return;
         }
 
-        $id = $this->gp('prefix') . '-' . sanitize_title($this->gp('id'));
+        $id = $this->config('prefix') . '-' . sanitize_title($this->getProp('id'));
 
-        wp_enqueue_style($id, $this->gp('url'), $this->gp('deps'), $this->gp('ver'));
+        wp_enqueue_style($id, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'));
     }
 
     /**

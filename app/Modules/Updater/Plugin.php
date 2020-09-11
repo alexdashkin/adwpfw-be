@@ -21,11 +21,11 @@ class Plugin extends Module
         require_once ABSPATH . 'wp-includes/plugin.php';
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-        $file = plugin_basename($this->gp('file'));
+        $file = plugin_basename($this->getProp('file'));
         $exploded = explode('/', $file);
         $newVer = '100.0.0';
 
-        if ($pluginData = get_plugin_data($this->gp('file'), false, false)) {
+        if ($pluginData = get_plugin_data($this->getProp('file'), false, false)) {
             $oldVer = $pluginData['Version'];
             $last = (int)substr($oldVer, -1);
             $newVer = substr($oldVer, 0, strlen($oldVer) - 1) . ++$last;
@@ -36,7 +36,7 @@ class Plugin extends Module
             'slug' => $exploded[0],
             'plugin' => $file,
             'new_version' => $newVer,
-            'package' => $this->gp('package'),
+            'package' => $this->getProp('package'),
             'url' => '',
             'icons' => [],
             'banners' => [],
@@ -45,8 +45,8 @@ class Plugin extends Module
             'compatibility' => new \stdClass(),
         ];
 
-        $this->hook('pre_set_site_transient_update_plugins', [$this, 'register']);
-        $this->hook('upgrader_process_complete', [$this, 'onUpdate']);
+        $this->addHook('pre_set_site_transient_update_plugins', [$this, 'register']);
+        $this->addHook('upgrader_process_complete', [$this, 'onUpdate']);
     }
 
     /**
@@ -78,12 +78,12 @@ class Plugin extends Module
         }
 
         // Call callback
-        if ($this->gp('callback')) {
-            $this->gp('callback')();
+        if ($this->getProp('callback')) {
+            $this->getProp('callback')();
         }
 
         // Clear Twig cache
-        $twigPath = $this->m('helpers')->getUploadsDir($this->gp('prefix') . '/twig');
+        $twigPath = $this->m('helpers')->getUploadsDir($this->config('prefix') . '/twig');
 
         if (file_exists($twigPath)) {
             $this->m('helpers')->rmDir($twigPath);

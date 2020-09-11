@@ -1,12 +1,504 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules;
+namespace AlexDashkin\Adwpfw\Core;
+
+use AlexDashkin\Adwpfw\{App, Exceptions\AppException, Fields\Field, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\PostType, Modules\ProfileSection, Modules\Query, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
 
 /**
- * Helpers
+ * Main Facade
  */
-class Helpers extends Module
+class Main
 {
+    /**
+     * @var App
+     */
+    private $app;
+
+    /**
+     * @var string
+     */
+    private $prefix;
+
+    /**
+     * Constructor
+     *
+     * @param App $app
+     */
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+        
+        $this->prefix = $this->app->config('prefix');
+    }
+
+    /**
+     * Perform a Database query
+     *
+     * @param string $table
+     * @return Query
+     */
+    public function db(string $table = ''): Query
+    {
+        return $this->m('db')->table($table);
+    }
+
+    /**
+     * Get Prefixed Table Name
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getTableName(string $name): string
+    {
+        return $this->m('db')->getTableName($name);
+    }
+
+    /**
+     * Render Twig Template
+     *
+     * @param string $name Template file name without .twig.
+     * @param array $args Args to be passed to the Template. Default [].
+     * @return string Rendered Template
+     */
+    public function twig(string $name, array $args = []): string
+    {
+        return $this->m('twig')->renderFile($name, $args);
+    }
+
+    /**
+     * Add Hook (action/filter)
+     *
+     * @param string $tag
+     * @param callable $callback
+     * @param int $priority
+     * @return Hook
+     */
+    public function addHook(string $tag, callable $callback, int $priority = 10): Hook
+    {
+        return $this->m(
+            'hook',
+            [
+                'tag' => $tag,
+                'callback' => $callback,
+                'priority' => $priority,
+            ]
+        );
+    }
+
+    /**
+     * Add Admin Bar
+     *
+     * @param array $args
+     * @return AdminBar
+     */
+    public function addAdminBar(array $args): AdminBar
+    {
+        return $this->m('admin_bar', $args);
+    }
+
+    /**
+     * Add Dashboard Widget
+     *
+     * @param array $args
+     * @return DbWidget
+     */
+    public function addDbWidget(array $args): DbWidget
+    {
+        return $this->m('dashboard_widget', $args);
+    }
+
+    /**
+     * Add Cron Job
+     *
+     * @param array $args
+     * @return CronJob
+     */
+    public function addCronJob(array $args): CronJob
+    {
+        return $this->m('cron', $args);
+    }
+
+    /**
+     * Add CSS asset
+     *
+     * @param array $args
+     * @return Css
+     */
+    public function addCss(array $args): Css
+    {
+        return $this->m('asset.css', $args);
+    }
+
+    /**
+     * Add JS asset
+     *
+     * @param array $args
+     * @return Js
+     */
+    public function addJs(array $args): Js
+    {
+        return $this->m('asset.js', $args);
+    }
+
+    /**
+     * Add assets
+     *
+     * @param array $args
+     */
+    public function addAssets(array $args)
+    {
+        $args = $this->m('helpers')->arrayMerge(
+            [
+                'admin' => ['css' => [], 'js' => []],
+                'front' => ['css' => [], 'js' => []],
+            ],
+            $args
+        );
+
+        foreach (['admin', 'front'] as $af) {
+            foreach (['css', 'js'] as $type) {
+                foreach ($args[$af][$type] as $asset) {
+                    $file = is_array($asset) && !empty($asset['file']) ? $asset['file'] : $asset;
+
+                    $this->m(
+                        'asset.' . $type,
+                        [
+                            'id' => $asset['id'] ?? '',
+                            'type' => $af,
+                            'url' => $asset['url'] ?? $args['url'] . $file,
+                            'ver' => empty($asset['url']) ? filemtime($args['dir'] . $file) : null,
+                            'deps' => $asset['deps'] ?? [],
+                            'callback' => $asset['callback'] ?? [],
+                            'localize' => $asset['localize'] ?? [],
+                        ]
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Add AdminAjax action
+     *
+     * @param array $args
+     * @return AdminAjax
+     */
+    public function addAdminAjax(array $args): AdminAjax
+    {
+        return $this->m('admin_ajax', $args);
+    }
+
+    /**
+     * Add REST API Endpoint
+     *
+     * @param array $args
+     * @return Rest
+     */
+    public function addRestEndpoint(array $args): Rest
+    {
+        return $this->m('rest', $args);
+    }
+
+    /**
+     * Add Plugin Updater
+     *
+     * @param array $args
+     * @return Plugin
+     */
+    public function updaterPlugin(array $args): Plugin
+    {
+        return $this->m('updater.plugin', $args);
+    }
+
+    /**
+     * Add Theme Updater
+     *
+     * @param array $args
+     * @return Theme
+     */
+    public function updaterTheme(array $args): Theme
+    {
+        return $this->m('updater.theme', $args);
+    }
+
+    /**
+     * Add Sidebar
+     *
+     * @param array $args
+     * @return Sidebar
+     */
+    public function addSidebar(array $args): Sidebar
+    {
+        return $this->m('sidebar', $args);
+    }
+
+    /**
+     * Add Widget
+     *
+     * @param array $args
+     * @return Widget
+     */
+    public function addWidget(array $args): Widget
+    {
+        return $this->m('widget', $args);
+    }
+
+    /**
+     * Add Shortcode
+     *
+     * @param array $args
+     * @return Shortcode
+     */
+    public function addShortcode(array $args): Shortcode
+    {
+        return $this->m('shortcode', $args);
+    }
+
+    /**
+     * Add Admin Notice
+     *
+     * @param array $args
+     * @return Notice
+     */
+    public function addNotice(array $args): Notice
+    {
+        return $this->m('notice', $args);
+    }
+
+    /**
+     * Add Custom Post Type
+     *
+     * @param array $args
+     * @return PostType
+     */
+    public function addCpt(array $args): PostType
+    {
+        return $this->m('post_type', $args);
+    }
+
+    /**
+     * Add Post State
+     *
+     * @param int $postId
+     * @param string $state
+     * @return PostState
+     */
+    public function addPostState(int $postId, string $state): PostState
+    {
+        return $this->m(
+            'post_state',
+            [
+                'post_id' => $postId,
+                'state' => $state,
+            ]
+        );
+    }
+
+    /**
+     * Add Admin Page
+     *
+     * @param array $args
+     * @return AdminPage
+     */
+    public function addAdminPage(array $args): AdminPage
+    {
+        /**
+         * @var AdminPage $adminPage
+         */
+        $adminPage = $this->m('admin_page', $args);
+
+        if (empty($args['tabs'])) {
+            return $adminPage;
+        }
+
+        foreach ($args['tabs'] as $tabArgs) {
+            /**
+             * @var AdminPageTab $tab
+             */
+            $tab = $this->m('admin_page_tab', $tabArgs);
+
+            foreach ($tabArgs['fields'] as $fieldArgs) {
+                /**
+                 * @var Field $field
+                 */
+                $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+
+                $field->setProps(
+                    [
+                        'layout' => 'admin-page-field',
+                        'form' => $tab->gp('slug'),
+                    ]
+                );
+
+                $tab->addField($field);
+            }
+
+            $adminPage->addTab($tab);
+        }
+
+        return $adminPage;
+    }
+
+    /**
+     * Add Metabox
+     *
+     * @param array $args
+     * @return Metabox
+     */
+    public function addMetabox(array $args): Metabox
+    {
+        /**
+         * @var Metabox $metabox
+         */
+        $metabox = $this->m('metabox', $args);
+
+        foreach ($args['fields'] as $fieldArgs) {
+            /**
+             * @var Field $field
+             */
+            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+
+            $field->setProps(
+                [
+                    'layout' => 'metabox-field',
+                    'form' => $metabox->gp('id'),
+                ]
+            );
+
+            $metabox->addField($field);
+        }
+
+        return $metabox;
+    }
+
+    /**
+     * Add User Profile Editor Section
+     *
+     * @param array $args
+     * @return ProfileSection
+     */
+    public function addProfileSection(array $args): ProfileSection
+    {
+        /**
+         * @var ProfileSection $section
+         */
+        $section = $this->m('profile_section', $args);
+
+        foreach ($args['fields'] as $fieldArgs) {
+            /**
+             * @var Field $field
+             */
+            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+
+            $field->setProps(
+                [
+                    'layout' => 'profile-field',
+                    'form' => $section->gp('id'),
+                    'class' => 'regular-text',
+                ]
+            );
+
+            $section->addField($field);
+        }
+
+        return $section;
+    }
+
+    /**
+     * Add Custom Fields to Term editing screen
+     *
+     * @param array $args
+     * @return TermMeta
+     */
+    public function addTermMeta(array $args): TermMeta
+    {
+        /**
+         * @var TermMeta $section
+         */
+        $section = $this->m('term_meta', $args);
+
+        foreach ($args['fields'] as $fieldArgs) {
+            /**
+             * @var Field $field
+             */
+            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+
+            $field->setProps(
+                [
+                    'layout' => 'term-field',
+                    'form' => $section->gp('id'),
+                    'class' => 'regular-text',
+                ]
+            );
+
+            $section->addField($field);
+        }
+
+        return $section;
+    }
+
+    /**
+     * Add Customizer Panel
+     *
+     * @param array $args
+     * @return Panel
+     */
+    public function addCustomizerPanel(array $args): Panel
+    {
+        /**
+         * @var Panel $panel
+         */
+        $panel = $this->m('customizer.panel', $args);
+
+        foreach ($args['sections'] as $sectionArgs) {
+            /**
+             * @var Section $section
+             */
+            $section = $this->m('customizer.section', $sectionArgs);
+
+            $section->sp('panel', $panel->gp('id'));
+
+            foreach ($sectionArgs['settings'] as $settingArgs) {
+                /**
+                 * @var Setting $setting
+                 */
+                $setting = $this->m('customizer.setting', $settingArgs);
+
+                $setting->sp('section', $section->gp('id'));
+
+                $section->addSetting($setting);
+            }
+
+            $panel->addSection($section);
+        }
+
+        return $panel;
+    }
+
+    /**
+     * Call a method in a loop (e.g. to add multiple items)
+     *
+     * @param string $method
+     * @param array $args
+     * @return array
+     * @throws AppException
+     */
+    public function addMany(string $method, array $args): array
+    {
+        // If singular method exists - call it in a loop
+        if (method_exists($this, $method) && is_array($args)) {
+            $return = [];
+
+            foreach ($args as $item) {
+                $return[] = $this->$method($item);
+            }
+        } else {
+            throw new AppException(sprintf('Method %s not found', $method));
+        }
+
+        return $return;
+    }
+
     /**
      * Search in an array.
      *
@@ -603,7 +1095,7 @@ class Helpers extends Module
      */
     public function getOption(string $name)
     {
-        return get_option($this->gp('prefix') . '_' . $name);
+        return get_option($this->prefix . '_' . $name);
     }
 
     /**
@@ -615,7 +1107,7 @@ class Helpers extends Module
      */
     public function updateOption(string $name, $value): bool
     {
-        return update_option($this->gp('prefix') . '_' . $name, $value);
+        return update_option($this->prefix . '_' . $name, $value);
     }
 
     /**
@@ -640,7 +1132,7 @@ class Helpers extends Module
      */
     public function cacheGet(string $name)
     {
-        return wp_cache_get($name, $this->gp('prefix'));
+        return wp_cache_get($name, $this->prefix);
     }
 
     /**
@@ -652,7 +1144,7 @@ class Helpers extends Module
      */
     public function cacheSet(string $name, $value)
     {
-        return wp_cache_set($name, $value, $this->gp('prefix'));
+        return wp_cache_set($name, $value, $this->prefix);
     }
 
     /**
@@ -669,7 +1161,7 @@ class Helpers extends Module
 
         $func = 'get_' . $type . '_meta';
 
-        return $func($objectId, '_' . $this->gp('prefix') . '_' . $name, true);
+        return $func($objectId, '_' . $this->prefix . '_' . $name, true);
     }
 
     /**
@@ -677,6 +1169,7 @@ class Helpers extends Module
      *
      * @param string $name
      * @param string $type
+     * @param mixed $value
      * @param int $objectId
      * @return int|bool
      */
@@ -686,7 +1179,7 @@ class Helpers extends Module
 
         $func = 'update_' . $type . '_meta';
 
-        return $func($objectId, '_' . $this->gp('prefix') . '_' . $name, $value);
+        return $func($objectId, '_' . $this->prefix . '_' . $name, $value);
     }
 
     /**
@@ -696,22 +1189,19 @@ class Helpers extends Module
      * @param array $values If passed, vsprintf() func is applied. Default [].
      * @param int $level 1 = Error, 2 = Warning, 4 = Notice. Default 4.
      */
-    protected function log($message, array $values = [], int $level = 4)
+    public function log($message, array $values = [], int $level = 4)
     {
-        /**
-         * @var Logger $logger
-         */
-        $logger = $this->m('logger');
-
-        $logger->log($message, $values, $level);
+        $this->app->logger->log($message, $values, $level);
     }
 
-    protected function getInitialPropDefs(): array
+    /**
+     * Get App Module
+     *
+     * @param string $alias
+     * @param array $args
+     */
+    private function m(string $alias, array $args = [])
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-        ];
+        return $this->app->make($alias, $args);
     }
 }

@@ -9,14 +9,14 @@ class Notice extends Module
      */
     public function init()
     {
-        $this->hook('admin_notices', [$this, 'process']);
+        $this->addHook('admin_notices', [$this, 'process']);
 
         // Add Ajax action to dismiss notice
-        if ($this->gp('dismissible')) {
+        if ($this->getProp('dismissible')) {
             $this->m(
                 'admin_ajax',
                 [
-                    'prefix' => $this->gp('prefix'),
+                    'prefix' => $this->config('prefix'),
                     'action' => 'notice_dismiss',
                     'fields' => [
                         'id' => [
@@ -36,14 +36,14 @@ class Notice extends Module
     public function process()
     {
         // Do not show if callback returns false
-        if ($this->gp('callback') && !$this->gp('callback')()) {
+        if ($this->getProp('callback') && !$this->getProp('callback')()) {
             return;
         }
 
         // If dismissed but days have not yet passed - do not show
         // To show again immediately - leave days as 0
         // To stop forever - set days as highest possible value
-        if ($this->getDismissed() > time() - $this->gp('days') * DAY_IN_SECONDS) {
+        if ($this->getDismissed() > time() - $this->getProp('days') * DAY_IN_SECONDS) {
             return;
         }
 
@@ -59,7 +59,7 @@ class Notice extends Module
      */
     public function ajaxDismiss(array $data): array
     {
-        if ($data['id'] === $this->gp('id')) {
+        if ($data['id'] === $this->getProp('id')) {
             $this->dismiss();
         }
 
@@ -97,15 +97,15 @@ class Notice extends Module
      */
     private function render(): string
     {
-        $args = $this->gp('args');
+        $args = $this->getProp('args');
 
-        $args['id'] = $this->gp('id');
+        $args['id'] = $this->getProp('id');
 
-        $isDismissible = $this->gp('dismissible') ? 'is-dismissible' : '';
+        $isDismissible = $this->getProp('dismissible') ? 'is-dismissible' : '';
 
-        $args['classes'] = sprintf('notice notice-%s notice-%s %s %s', $this->gp('type'), $this->gp('prefix'), $isDismissible, $this->gp('classes'));
+        $args['classes'] = sprintf('notice notice-%s notice-%s %s %s', $this->getProp('type'), $this->config('prefix'), $isDismissible, $this->getProp('classes'));
 
-        return $this->twig($this->gp('tpl'), $args);
+        return $this->twig($this->getProp('tpl'), $args);
     }
 
     /**
@@ -115,11 +115,11 @@ class Notice extends Module
      */
     private function getDismissed(): int
     {
-        $optionName = $this->gp('prefix') . '_notices';
+        $optionName = $this->config('prefix') . '_notices';
 
         $option = get_option($optionName) ?: [];
 
-        return $option[$this->gp('id')] ?? 0;
+        return $option[$this->getProp('id')] ?? 0;
     }
 
     /**
@@ -129,11 +129,11 @@ class Notice extends Module
      */
     private function setDismissed(int $timestamp)
     {
-        $optionName = $this->gp('prefix') . '_notices';
+        $optionName = $this->config('prefix') . '_notices';
 
         $optionValue = get_option($optionName) ?: [];
 
-        $optionValue[$this->gp('id')] = $timestamp;
+        $optionValue[$this->getProp('id')] = $timestamp;
 
         update_option($optionName, $optionValue);
     }

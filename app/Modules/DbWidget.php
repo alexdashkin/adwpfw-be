@@ -9,7 +9,7 @@ class DbWidget extends Module
      */
     public function init()
     {
-        $this->hook('wp_dashboard_setup', [$this, 'register']);
+        $this->addHook('wp_dashboard_setup', [$this, 'register']);
     }
 
     /**
@@ -17,11 +17,11 @@ class DbWidget extends Module
      */
     public function register()
     {
-        if (!current_user_can($this->gp('capability'))) {
+        if (!current_user_can($this->getProp('capability'))) {
             return;
         }
 
-        wp_add_dashboard_widget($this->gp('id'), $this->gp('title'), $this->gp('callback'));
+        wp_add_dashboard_widget($this->getProp('id'), $this->getProp('title'), $this->getProp('callback'));
     }
 
     /**

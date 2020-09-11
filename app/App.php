@@ -2,6 +2,8 @@
 
 namespace AlexDashkin\Adwpfw;
 
+use AlexDashkin\Adwpfw\Core\Logger;
+use AlexDashkin\Adwpfw\Core\Main;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Modules\Module;
 
@@ -10,12 +12,22 @@ class App
     /**
      * @var array
      */
-    private $config = [];
+    private $config;
 
     /**
      * @var array
      */
-    private $classes;
+    private $classDefs;
+
+    /**
+     * @var Main
+     */
+    public $main;
+
+    /**
+     * @var Logger
+     */
+    public $logger;
 
     /**
      * @var Module[]
@@ -25,44 +37,46 @@ class App
     /**
      * App constructor
      */
-    public function __construct()
+    public function __construct(array $config)
     {
-        $this->classes = require __DIR__ . '/../config/modules.php';
+        $this->config = $config;
+
+        $this->classDefs = require __DIR__ . '/../config/modules.php';
+
+        $this->main = new Main($this);
+
+        $this->logger = new Logger($this);
     }
 
     /**
-     * Add params to App global config
-     *
-     * @param array $config
-     */
-    public function setConfig(array $config)
-    {
-        $this->config = array_merge($this->config, $config);
-    }
-
-    /**
-     * Get a Config value
+     * Get a Config value.
+     * Throws Exception if no value and no default provided
      *
      * @param string $key
-     * @return array|mixed|null
+     * @return mixed
+     * @throws AppException
      */
-    public function getConfig(string $key = '')
+    public function config(string $key, $default = null)
     {
-        if (!$key) {
-            return $this->config;
+        if (array_key_exists($key, $this->config)) {
+            return $this->config[$key];
         }
 
-        return array_key_exists($key, $this->config) ? $this->config[$key] : null;
+        if (!is_null($default)) {
+            return $default;
+        }
+
+        throw new AppException(sprintf('Config value %s not found', $key));
     }
 
     /**
-     * Get Module
+     * Make/Get a Module
      *
      * @param string $alias
      * @param array $args
      * @throws AppException
      */
-    public function getModule(string $alias, array $args = [])
+    public function make(string $alias, array $args = [])
     {
         // If already exists - return it
         if (!empty($this->modules[$alias])) {
@@ -70,12 +84,12 @@ class App
         }
 
         // If not listed in config - error
-        if (empty($this->classes[$alias]) || !class_exists($this->classes[$alias]['class'])) {
+        if (empty($this->classDefs[$alias]) || !class_exists($this->classDefs[$alias]['class'])) {
             throw new AppException(sprintf('Class %s not found', $alias));
         }
 
         // Shorthand
-        $classData = $this->classes[$alias];
+        $classData = $this->classDefs[$alias];
 
         // Create instance and provide data
         try {
@@ -83,12 +97,9 @@ class App
             $instance = new $classData['class']($this);
 
             // Set data
-            if (method_exists($instance, 'spm')) {
-                // Add Global Config values to args
-                $args = array_merge($this->getConfig(), $args);
-
+            if (method_exists($instance, 'setProps')) {
                 // Set Module Data
-                $instance->spm($args);
+                $instance->setProps($args);
             }
 
             // Init instance

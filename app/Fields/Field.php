@@ -21,18 +21,18 @@ abstract class Field extends Module
         $this->validateData();
 
         // Set default value if not set
-        if (is_null($value) && !is_null($this->gp('default'))) {
-            $value = $this->gp('default');
+        if (is_null($value) && !is_null($this->getProp('default'))) {
+            $value = $this->getProp('default');
         }
 
         // Call filter if set
-        $value = is_callable($this->gp('filter')) ? $this->gp('filter')($value) : $value;
+        $value = is_callable($this->getProp('filter')) ? $this->getProp('filter')($value) : $value;
 
         // Set value prop
-        $this->sp('value', $value);
+        $this->setProp('value', $value);
 
         // Return all data
-        return $this->gp();
+        return $this->getProps();
     }
 
     /**
@@ -43,7 +43,7 @@ abstract class Field extends Module
      */
     public function sanitize($value)
     {
-        return is_callable($this->gp('sanitizer')) ? $this->gp('sanitizer')($value) : $value;
+        return is_callable($this->getProp('sanitizer')) ? $this->getProp('sanitizer')($value) : $value;
     }
 
     /**

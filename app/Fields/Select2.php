@@ -54,7 +54,7 @@ class Select2 extends Select
     {
         $args = parent::getTwigArgs($value);
 
-        $multiple = $this->gp('multiple');
+        $multiple = $this->getProp('multiple');
 
         $valueArr = $multiple ? (array)$value : [$value];
 
@@ -63,7 +63,7 @@ class Select2 extends Select
         foreach ($valueArr as $item) {
             if (!$this->m('helpers')->arraySearch($args['options'], ['value' => $item])) {
                 $args['options'][] = [
-                    'label' => !empty($this->gp('label_cb')) ? $this->gp('label_cb')($item) : $item,
+                    'label' => !empty($this->getProp('label_cb')) ? $this->getProp('label_cb')($item) : $item,
                     'value' => $item,
                     'selected' => 'selected',
                 ];

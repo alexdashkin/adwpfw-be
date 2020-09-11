@@ -13,20 +13,20 @@ class Setting extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $id = $this->gp('prefix') . '_' . $this->gp('id');
+        $id = $this->config('prefix') . '_' . $this->getProp('id');
 
         $setting = [
-            'default' => $this->gp('default'),
-            'sanitize_callback' => $this->gp('sanitize_callback'),
+            'default' => $this->getProp('default'),
+            'sanitize_callback' => $this->getProp('sanitize_callback'),
         ];
 
         $control = [
-            'label' => $this->gp('label'),
-            'description' => $this->gp('description'),
-            'section' => $this->gp('section'),
-            'priority' => $this->gp('priority'),
-            'type' => $this->gp('type'),
-            'input_attrs' => $this->gp('input_attrs'),
+            'label' => $this->getProp('label'),
+            'description' => $this->getProp('description'),
+            'section' => $this->getProp('section'),
+            'priority' => $this->getProp('priority'),
+            'type' => $this->getProp('type'),
+            'input_attrs' => $this->getProp('input_attrs'),
         ];
 
         $customizer->add_setting($id, $setting);

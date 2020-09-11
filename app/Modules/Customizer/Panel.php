@@ -18,7 +18,7 @@ class Panel extends Module
      */
     public function addSection(Section $section)
     {
-        $section->sp('panel', $this->gp('prefix') . '_' . $this->gp('id'));
+        $section->sp('panel', $this->config('prefix') . '_' . $this->getProp('id'));
 
         $this->sections[] = $section;
     }
@@ -28,7 +28,7 @@ class Panel extends Module
      */
     public function init()
     {
-        $this->hook('customize_register', [$this, 'register']);
+        $this->addHook('customize_register', [$this, 'register']);
     }
 
     /**
@@ -38,7 +38,7 @@ class Panel extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_panel($this->gp('prefix') . '_' . $this->gp('id'), $this->gp());
+        $customizer->add_panel($this->config('prefix') . '_' . $this->getProp('id'), $this->getProps());
 
         foreach ($this->sections as $section) {
             $section->register($customizer);

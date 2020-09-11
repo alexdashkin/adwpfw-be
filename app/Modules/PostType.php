@@ -13,7 +13,7 @@ class PostType extends Module
         $this->setLabels();
 
         // Register CPT
-        $this->hook('init', [$this, 'register'], 20);
+        $this->addHook('init', [$this, 'register'], 20);
     }
 
     /**
@@ -21,7 +21,7 @@ class PostType extends Module
      */
     public function register()
     {
-        register_post_type($this->gp('prefix') . '_' . $this->gp('slug'), $this->gp());
+        register_post_type($this->config('prefix') . '_' . $this->getProp('slug'), $this->getProps());
     }
 
     /**
@@ -29,10 +29,10 @@ class PostType extends Module
      */
     private function setLabels()
     {
-        $labels = $this->gp('labels');
+        $labels = $this->getProp('labels');
 
-        $singular = !empty($labels['singular']) ? $labels['singular'] : $this->gp('singular');
-        $plural = !empty($labels['plural']) ? $labels['plural'] : $this->gp('plural');
+        $singular = !empty($labels['singular']) ? $labels['singular'] : $this->getProp('singular');
+        $plural = !empty($labels['plural']) ? $labels['plural'] : $this->getProp('plural');
 
         $defaults = [
             'name' => $plural,
@@ -48,7 +48,7 @@ class PostType extends Module
             'not_found_in_trash' => "No $plural Found in Trash",
         ];
 
-        $this->sp('labels', array_merge($defaults, $labels));
+        $this->setProp('labels', array_merge($defaults, $labels));
     }
 
     /**

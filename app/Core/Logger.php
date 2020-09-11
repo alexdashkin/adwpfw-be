@@ -1,11 +1,13 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules;
+namespace AlexDashkin\Adwpfw\Core;
+
+use AlexDashkin\Adwpfw\App;
 
 /**
  * Logger
  */
-class Logger extends Module
+class Logger
 {
     /**
      * @var int Start Timestamp
@@ -28,15 +30,17 @@ class Logger extends Module
     private $immediatePath;
 
     /**
-     * Init Module
+     * Constructor
+     *
+     * @param App $app
      */
-    public function init()
+    public function __construct(App $app)
     {
-        $this->validateData();
+        $this->app = $app;
 
         // Prepare vars
-        $prefix = $this->gp('prefix');
-        $maxLogSize = $this->gp('size');
+        $prefix = $this->app->config('prefix');
+        $maxLogSize = $this->app->config('log')['size'] ?? 1000000;
         $this->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $basePath = $this->m('helpers')->getUploadsDir($prefix . '/logs');
@@ -85,7 +89,7 @@ class Logger extends Module
     public function log($message, array $values = [], int $level = 4)
     {
         // Skip if message level is lower than defined in config
-        if (!($level & $this->gp('level'))) {
+        if (!($level & $this->app->config('log')['level'] ?? 7)) {
             return;
         }
 

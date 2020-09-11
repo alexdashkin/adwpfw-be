@@ -9,7 +9,7 @@ class Widget extends Module
      */
     public function init()
     {
-        $this->hook('widgets_init', [$this, 'register']);
+        $this->addHook('widgets_init', [$this, 'register']);
     }
 
     /**
@@ -17,19 +17,19 @@ class Widget extends Module
      */
     public function register()
     {
-        $id = $this->gp('prefix') . '_' . $this->gp('id');
+        $id = $this->config('prefix') . '_' . $this->getProp('id');
 
         $args = [
             'id' => $id,
-            'name' => $this->gp('title'),
+            'name' => $this->getProp('title'),
         ];
 
         eval($this->twig('php/widget', $args));
 
         register_widget($id);
 
-        $this->hook('form_' . $id, [$this, 'form']);
-        $this->hook('render_' . $id, [$this, 'render']);
+        $this->addHook('form_' . $id, [$this, 'form']);
+        $this->addHook('render_' . $id, [$this, 'render']);
     }
 
     /**
@@ -45,11 +45,11 @@ class Widget extends Module
 
         echo $args['before_title'];
 
-        echo $this->gp('title');
+        echo $this->getProp('title');
 
         echo $args['after_title'];
 
-        echo $this->gp('render')($args, $instance, $widget);
+        echo $this->getProp('render')($args, $instance, $widget);
 
         echo $args['after_widget'];
     }
@@ -62,8 +62,8 @@ class Widget extends Module
      */
     public function form(array $instance, \WP_Widget $widget)
     {
-        if ($this->gp('form')) {
-            echo $this->gp('form')($instance, $widget); // todo build form the same way as Metaboxes
+        if ($this->getProp('form')) {
+            echo $this->getProp('form')($instance, $widget); // todo build form the same way as Metaboxes
         }
     }
 

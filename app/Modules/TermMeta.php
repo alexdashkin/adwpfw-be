@@ -28,10 +28,10 @@ class TermMeta extends Module
     {
         $this->validateData();
 
-        $taxonomy = $this->gp('taxonomy');
+        $taxonomy = $this->getProp('taxonomy');
 
-        $this->hook($taxonomy . '_edit_form', [$this, 'render']);
-        $this->hook('edited_' . $taxonomy, [$this, 'save']);
+        $this->addHook($taxonomy . '_edit_form', [$this, 'render']);
+        $this->addHook('edited_' . $taxonomy, [$this, 'save']);
     }
 
     /**
@@ -41,7 +41,7 @@ class TermMeta extends Module
      */
     public function render(\WP_Term $term)
     {
-        $values = get_term_meta($term->term_id, '_' . $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
+        $values = get_term_meta($term->term_id, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
 
         $fields = [];
 
@@ -67,8 +67,8 @@ class TermMeta extends Module
      */
     public function save(int $termId)
     {
-        $id = $this->gp('id');
-        $prefix = $this->gp('prefix');
+        $id = $this->getProp('id');
+        $prefix = $this->config('prefix');
         $metaKey = '_' . $prefix . '_' . $id;
 
         if (empty($_POST[$prefix][$id])) {

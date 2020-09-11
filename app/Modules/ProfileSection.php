@@ -26,10 +26,10 @@ class ProfileSection extends Module
      */
     public function init()
     {
-        $this->hook('show_user_profile', [$this, 'render']);
-        $this->hook('edit_user_profile', [$this, 'render']);
-        $this->hook('personal_options_update', [$this, 'save']);
-        $this->hook('edit_user_profile_update', [$this, 'save']);
+        $this->addHook('show_user_profile', [$this, 'render']);
+        $this->addHook('edit_user_profile', [$this, 'render']);
+        $this->addHook('personal_options_update', [$this, 'save']);
+        $this->addHook('edit_user_profile_update', [$this, 'save']);
     }
 
     /**
@@ -39,7 +39,7 @@ class ProfileSection extends Module
      */
     public function render(\WP_User $user)
     {
-        $values = get_user_meta($user->ID, '_' . $this->gp('prefix') . '_' . $this->gp('id'), true) ?: [];
+        $values = get_user_meta($user->ID, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
 
         $fields = [];
 
@@ -52,7 +52,7 @@ class ProfileSection extends Module
         }
 
         $args = [
-            'heading' => $this->gp('heading'),
+            'heading' => $this->getProp('heading'),
             'fields' => $fields,
         ];
 
@@ -71,8 +71,8 @@ class ProfileSection extends Module
             return;
         }
 
-        $id = $this->gp('id');
-        $prefix = $this->gp('prefix');
+        $id = $this->getProp('id');
+        $prefix = $this->config('prefix');
         $metaKey = '_' . $prefix . '_' . $id;
 
         if (empty($_POST[$prefix][$id])) {

@@ -9,7 +9,7 @@ class Shortcode extends Module
      */
     public function init()
     {
-        $this->hook('init', [$this, 'register']);
+        $this->addHook('init', [$this, 'register']);
     }
 
     /**
@@ -17,7 +17,7 @@ class Shortcode extends Module
      */
     public function register()
     {
-        add_shortcode($this->gp('prefix') . '_' . $this->gp('tag'), [$this, 'render']);
+        add_shortcode($this->config('prefix') . '_' . $this->getProp('tag'), [$this, 'render']);
     }
 
     /**
@@ -30,9 +30,9 @@ class Shortcode extends Module
      */
     public function render($atts, string $content, string $tag): string
     {
-        $args = array_merge($this->gp('atts'), $atts ?: []);
+        $args = array_merge($this->getProp('atts'), $atts ?: []);
 
-        return $this->gp('callback')($args);
+        return $this->getProp('callback')($args);
     }
 
     /**

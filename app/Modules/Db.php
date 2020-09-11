@@ -20,7 +20,7 @@ class Db extends Module
      */
     public function table(string $table = ''): Query
     {
-        $wpdb = $this->gp('wpdb');
+        $wpdb = $this->getProp('wpdb');
 
         return $this->m(
             'query',
@@ -39,9 +39,9 @@ class Db extends Module
      */
     public function getTableName(string $name): string
     {
-        $wpdb = $this->gp('wpdb');
+        $wpdb = $this->getProp('wpdb');
 
-        return !empty($wpdb->$name) ? $wpdb->$name : $this->gp('table_prefix') . $name;
+        return !empty($wpdb->$name) ? $wpdb->$name : $this->getProp('table_prefix') . $name;
     }
 
     /**

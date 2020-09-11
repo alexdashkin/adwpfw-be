@@ -18,7 +18,7 @@ class Section extends Module
      */
     public function addSetting(Setting $setting)
     {
-        $setting->sp('section', $this->gp('prefix') . '_' . $this->gp('id'));
+        $setting->sp('section', $this->config('prefix') . '_' . $this->getProp('id'));
 
         $this->settings[] = $setting;
     }
@@ -30,7 +30,7 @@ class Section extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_section($this->gp('prefix') . '_' . $this->gp('id'), $this->gp());
+        $customizer->add_section($this->config('prefix') . '_' . $this->getProp('id'), $this->getProps());
 
         foreach ($this->settings as $setting) {
             $setting->register($customizer);

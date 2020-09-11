@@ -20,7 +20,7 @@ class Theme extends Module
 
         $newVer = '100.0.0';
 
-        $slug = $this->gp('slug');
+        $slug = $this->getProp('slug');
 
         if ($themeData = wp_get_theme($slug)) {
             $oldVer = $themeData->version;
@@ -31,11 +31,11 @@ class Theme extends Module
         $this->transient = [
             'theme' => $slug,
             'new_version' => $newVer,
-            'package' => $this->gp('package'),
+            'package' => $this->getProp('package'),
             'url' => '',
         ];
 
-        $this->hook('pre_set_site_transient_update_themes', [$this, 'register']);
+        $this->addHook('pre_set_site_transient_update_themes', [$this, 'register']);
     }
 
     /**
@@ -47,7 +47,7 @@ class Theme extends Module
     public function register($transient)
     {
         if (!empty($transient->checked)) {
-            $transient->response[$this->gp('slug')] = $this->transient;
+            $transient->response[$this->getProp('slug')] = $this->transient;
         }
 
         return $transient;
@@ -62,17 +62,17 @@ class Theme extends Module
     public function onUpdate(\WP_Upgrader $upgrader, array $data)
     {
         if ($data['action'] !== 'update' || $data['type'] !== 'theme'
-            || empty($data['themes']) || !in_array($this->gp('slug'), $data['themes'])) {
+            || empty($data['themes']) || !in_array($this->getProp('slug'), $data['themes'])) {
             return;
         }
 
         // Call callback
-        if ($this->gp('callback')) {
-            $this->gp('callback')();
+        if ($this->getProp('callback')) {
+            $this->getProp('callback')();
         }
 
         // Clear Twig cache
-        $twigPath = $this->m('helpers')->getUploadsDir($this->gp('prefix') . '/twig');
+        $twigPath = $this->m('helpers')->getUploadsDir($this->config('prefix') . '/twig');
 
         if (file_exists($twigPath)) {
             $this->m('helpers')->rmDir($twigPath);
