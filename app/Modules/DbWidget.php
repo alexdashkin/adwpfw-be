@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * title*, callback*, id, capability
+ */
 class DbWidget extends Module
 {
     /**
@@ -25,31 +28,20 @@ class DbWidget extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'title' => [
-                'required' => true,
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '-', $data['title']));
-                },
-            ],
-            'capability' => [
-                'default' => 'read',
-            ],
-        ];
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+            case 'capability':
+                return 'read';
+        }
+
+        return null;
     }
 }

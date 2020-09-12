@@ -8,16 +8,6 @@ use AlexDashkin\Adwpfw\Modules\Module;
 class App
 {
     /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * @var array
-     */
-    private $classDefs;
-
-    /**
      * @var Main
      */
     public $main;
@@ -28,12 +18,28 @@ class App
     public $logger;
 
     /**
+     * @var Twig
+     */
+    public $twig;
+
+    /**
+     * @var array
+     */
+    private $config;
+
+    /**
+     * @var array
+     */
+    private $classDefs;
+
+    /**
      * @var Module[]
      */
     private $modules = [];
 
     /**
      * App constructor
+     * Config: env = dev/prod, prefix, log[size,level], template_path
      */
     public function __construct(array $config)
     {
@@ -44,6 +50,10 @@ class App
         $this->main = new Main($this);
 
         $this->logger = new Logger($this);
+
+        if ($this->config('twig')) {
+            $this->twig = new Twig($this);
+        }
     }
 
     /**

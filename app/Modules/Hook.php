@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * tag*, callback*, priority
+ */
 class Hook extends Module
 {
     /**
@@ -9,8 +12,6 @@ class Hook extends Module
      */
     public function init()
     {
-        $this->validateData();
-
         add_filter($this->getProp('tag'), [$this, 'run'], $this->getProp('priority'), 100);
     }
 
@@ -29,24 +30,18 @@ class Hook extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'tag' => [
-                'required' => true,
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'required' => true,
-            ],
-            'priority' => [
-                'type' => 'int',
-                'default' => 10,
-            ],
-        ];
+        switch ($key) {
+            case 'priority':
+                return 10;
+        }
+
+        return null;
     }
 }

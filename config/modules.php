@@ -2,18 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-return [
-    'twig' => [
-        'class' => Twig::class,
-        'single' => true,
-    ],
-    'db' => [
-        'class' => Db::class,
-        'single' => true,
-    ],
-    'query' => [
-        'class' => Query::class,
-    ],
+return [ // todo inline, remove 'class' key
     'hook' => [
         'class' => Hook::class,
     ],

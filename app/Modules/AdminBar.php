@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * title*, id, parent, href, group, meta, capability
+ */
 class AdminBar extends Module
 {
     /**

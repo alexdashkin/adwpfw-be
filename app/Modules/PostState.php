@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * post_id*, state*
+ */
 class PostState extends Module
 {
     /**
@@ -26,23 +29,5 @@ class PostState extends Module
         }
 
         return $states;
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'post_id' => [
-                'type' => 'int',
-                'required' => true,
-            ],
-            'state' => [
-                'required' => true,
-            ],
-        ];
     }
 }

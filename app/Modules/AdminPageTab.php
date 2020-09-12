@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * title*, slug, form, option
+ */
 class AdminPageTab extends Module
 {
     /**

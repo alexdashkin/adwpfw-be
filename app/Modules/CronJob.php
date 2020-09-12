@@ -2,12 +2,15 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * name*, callback*, interval, parallel
+ */
 class CronJob extends Module
 {
     /**
      * Init Module.
      * Main App runs on "init" with 0 priority.
-     * Run on "init" with default 10 priority to run the Job after the App has fully constructed.
+     * Run on "init" with the default 10 priority to run the Job after the App has fully constructed.
      */
     public function init()
     {
@@ -129,34 +132,5 @@ class CronJob extends Module
         $optionValue[$name] = $value;
 
         update_option($optionName, $optionValue);
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'name' => [
-                'required' => true,
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'required' => true,
-            ],
-            'interval' => [
-                'type' => 'int',
-                'default' => 0,
-            ],
-            'parallel' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-        ];
     }
 }

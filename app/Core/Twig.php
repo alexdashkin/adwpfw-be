@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules;
+namespace AlexDashkin\Adwpfw\Core;
 
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use Twig\Environment;
@@ -11,8 +11,13 @@ use Twig\Loader\FilesystemLoader;
 /**
  * Twig Template Engine
  */
-class Twig extends Module
+class Twig
 {
+    /**
+     * @var App
+     */
+    private $app;
+
     /**
      * @var FilesystemLoader
      */
@@ -38,31 +43,36 @@ class Twig extends Module
      *
      * @throws AppException
      */
-    public function init()
+    public function __construct(App $app)
     {
+        $this->app = $app;
+
         if (!class_exists('\Twig\Environment')) {
             throw new AppException('Twig not found');
         }
 
-        $this->validateData();
-
-        $paths = $this->getProp('paths');
-        $paths[] = __DIR__ . '/../../tpl';
+        $paths = [$this->app->config('template_path') ?? null, __DIR__ . '/../../tpl'];
 
         foreach ($paths as $index => $path) {
             if (!file_exists($path)) {
-                $this->log('Path "%s" does not exist', [$path]);
+                $this->app->logger->log('Path "%s" does not exist', [$path]);
                 unset($paths[$index]);
             }
         }
 
+        $envArgs = [
+            'debug' => 'dev' === $this->app->config('env'),
+            'cache' => $this->app->main->getUploadsDir($this->app->config('prefix') . '/twig'),
+            'autoescape' => false,
+        ];
+
         $this->fsLoader = new FilesystemLoader($paths);
 
-        $this->twigFs = new Environment($this->fsLoader, $this->getProps());
+        $this->twigFs = new Environment($this->fsLoader, $envArgs);
 
         $this->arrayLoader = new ArrayLoader();
 
-        $this->twigArray = new Environment($this->arrayLoader, $this->getProps());
+        $this->twigArray = new Environment($this->arrayLoader, $envArgs);
     }
 
     /**
@@ -74,7 +84,7 @@ class Twig extends Module
     {
         foreach ($paths as $path) {
             if (file_exists($path)) {
-                $this->log('Path "%s" does not exist', [$path]);
+                $this->app->logger->log('Path "%s" does not exist', [$path]);
                 continue;
             }
 
@@ -144,7 +154,7 @@ class Twig extends Module
     {
         $args = array_merge(
             [
-                'prefix' => $this->config('prefix'),
+                'prefix' => $this->app->config('prefix'),
             ],
             $args
         );
@@ -153,35 +163,8 @@ class Twig extends Module
             return $twig->render($name, $args);
         } catch (Error $e) {
             $message = $e->getMessage();
-            $this->log($message);
+            $this->app->logger->log($message);
             return 'Unable to render Template: ' . $message;
         }
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'cache' => [
-                'required' => true,
-            ],
-            'paths' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-            'debug' => [
-                'default' => false,
-            ],
-            'autoescape' => [
-                'default' => false,
-            ],
-        ];
     }
 }

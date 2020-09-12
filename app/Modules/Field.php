@@ -35,7 +35,7 @@ class Field extends Module
     }
 
     /**
-     * Sanitize field value
+     * Sanitize field value on save
      *
      * @param mixed $value
      * @return mixed
@@ -72,7 +72,7 @@ class Field extends Module
     }
 
     /**
-     * Get Select Template Args
+     * Prepare Select Template Args
      *
      * @param mixed $value
      * @return array
@@ -107,7 +107,7 @@ class Field extends Module
     }
 
     /**
-     * Get Select2 Template Args
+     * Prepare Select2 Template Args
      *
      * @param mixed $value
      * @return array

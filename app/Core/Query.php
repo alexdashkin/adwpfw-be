@@ -1,8 +1,8 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules;
+namespace AlexDashkin\Adwpfw\Core;
 
-class Query extends Module
+class Query
 {
     /**
      * @var \wpdb
@@ -64,27 +64,17 @@ class Query extends Module
     private $offset = 0;
 
     /**
-     * Init Module
-     */
-    public function init()
-    {
-        $this->validateData();
-
-        $this->wpdb = $this->getProp('wpdb');
-        $this->tablePrefix = $this->getProp('table_prefix');
-    }
-
-    /**
      * Set table
      *
      * @param string $table
-     * @return $this
      */
-    public function table(string $table = ''): self
+    public function __construct(string $table = '')
     {
-        $this->table = $this->tablePrefix . $table;
+        $this->wpdb = $GLOBALS['wpdb'];
 
-        return $this;
+        $this->tablePrefix = $this->wpdb->prefix;
+
+        $this->table = $this->tablePrefix . $table;
     }
 
     /**
@@ -362,25 +352,5 @@ class Query extends Module
         }
 
         return sprintf(' LIMIT %d %d ', (int)$this->offset, (int)$this->limit);
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'wpdb' => [
-                'type' => 'object',
-                'required' => true,
-            ],
-            'table_prefix' => [
-                'default' => function ($data) {
-                    return $data['wpdb']->prefix;
-                },
-            ],
-        ];
     }
 }

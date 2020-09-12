@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * name*, title, header, capability, slug, icon, position, parent
+ */
 class AdminPage extends Module
 {
     /**
