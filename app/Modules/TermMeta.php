@@ -37,13 +37,11 @@ class TermMeta extends Module
      */
     public function render(\WP_Term $term)
     {
+        $args = $this->getProps();
         $values = get_term_meta($term->term_id, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
+        $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
-        $args = [
-            'fields' => Field::renderMany($this->fields, $values),
-        ];
-
-        echo $this->app->main->render('templates/term-meta', $args);
+        return $this->app->main->render('templates/term-meta', $args);
     }
 
     /**
@@ -66,7 +64,7 @@ class TermMeta extends Module
         $values = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
+            $fieldName = $field->getProp('name');
 
             if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
                 continue;
@@ -78,28 +76,5 @@ class TermMeta extends Module
         update_term_meta($termId, $metaKey, $values);
 
         do_action('adwpfw_term_saved', $this, $values);
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'id' => [
-                'required' => true,
-            ],
-            'taxonomy' => [
-                'required' => true,
-            ],
-            'heading' => [
-                'default' => '',
-            ],
-        ];
     }
 }

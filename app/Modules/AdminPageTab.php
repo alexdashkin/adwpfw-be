@@ -71,9 +71,11 @@ class AdminPageTab extends Module
      */
     public function render(): string
     {
+        $args = $this->getProps();
         $values = get_option($this->config('prefix') . '_' . $this->getProp('option')) ?: [];
+        $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
-        return Field::renderMany($this->fields, $values);
+        return $this->app->main->render('templates/admin-page-tab', $args);
     }
 
     /**
@@ -100,7 +102,7 @@ class AdminPageTab extends Module
         $values = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
+            $fieldName = $field->getProp('name');
 
             if (empty($fieldName) || !array_key_exists($fieldName, $data)) {
                 continue;

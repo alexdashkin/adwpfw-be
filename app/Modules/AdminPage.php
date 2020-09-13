@@ -71,7 +71,10 @@ class AdminPage extends Module
         $tabs = [];
 
         foreach ($this->tabs as $tab) {
-            $tabs[] = $tab->render();
+            $tabs[] = [
+                'title' => $tab->getProp('title'),
+                'content' => $tab->render(),
+            ];
         }
 
         $args = [

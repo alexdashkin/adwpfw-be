@@ -141,19 +141,19 @@ class Field extends Module
      *
      * @param array $fields
      * @param array $values
-     * @return string
+     * @return array
      */
-    public static function renderMany(array $fields, array $values): string
+    public static function getArgsForMany(array $fields, array $values): array
     {
-        $html = '';
+        $args = [];
 
         foreach ($fields as $field) {
-            $fieldName = $field->getProp('name');
-
-            $html .= $field->render($values[$fieldName] ?? null);
+            $fieldArgs = $field->getProps();
+            $fieldArgs['content'] = $field->render($values[$fieldArgs['name']] ?? null);
+            $args[] = $fieldArgs;
         }
 
-        return $html;
+        return $args;
     }
 
     /**

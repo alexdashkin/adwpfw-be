@@ -33,7 +33,7 @@ abstract class Module
      * @param string $key
      * @return mixed
      */
-    protected function getProp(string $key)
+    public function getProp(string $key)
     {
         return array_key_exists($key, $this->props) ? $this->props[$key] : $this->getDefault($key);
     }
@@ -43,7 +43,7 @@ abstract class Module
      *
      * @return array
      */
-    protected function getProps(): array
+    public function getProps(): array
     {
         return $this->props;
     }
@@ -54,7 +54,7 @@ abstract class Module
      * @param string $key
      * @param mixed $value
      */
-    protected function setProp(string $key, $value)
+    public function setProp(string $key, $value)
     {
         $this->props[$key] = $value;
     }
@@ -64,7 +64,7 @@ abstract class Module
      *
      * @param array $data
      */
-    protected function setProps(array $data)
+    public function setProps(array $data)
     {
         foreach ($data as $key => $value) {
             $this->setProp($key, $value);

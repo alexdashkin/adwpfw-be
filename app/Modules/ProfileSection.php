@@ -40,14 +40,11 @@ class ProfileSection extends Module
      */
     public function render(\WP_User $user)
     {
+        $args = $this->getProps();
         $values = get_user_meta($user->ID, '_' . $this->config('prefix') . '_' . $this->getProp('slug'), true) ?: [];
+        $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
-        $args = [
-            'heading' => $this->getProp('heading'),
-            'fields' => Field::renderMany($this->fields, $values),
-        ];
-
-        echo $this->app->main->render('templates/profile-section', $args);
+        return $this->app->main->render('templates/profile-section', $args);
     }
 
     /**

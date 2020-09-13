@@ -55,12 +55,11 @@ class Metabox extends Module
      */
     public function render(\WP_Post $post)
     {
-        $args = [
-            'fields' => Field::renderMany($this->fields, $this->getValue($post->ID)),
-            'context' => $this->getProp('context'),
-        ];
+        $args = $this->getProps();
+        $values = $this->getValue($post->ID);
+        $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
-        echo $this->app->main->render('templates/metabox', $args);
+        return $this->app->main->render('templates/metabox', $args);
     }
 
     /**

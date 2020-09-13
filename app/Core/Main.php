@@ -328,9 +328,7 @@ class Main
      */
     public function addAdminPage(array $args): AdminPage
     {
-        /**
-         * @var AdminPage $adminPage
-         */
+        /** @var AdminPage $adminPage */
         $adminPage = $this->m('admin_page', $args);
 
         if (empty($args['tabs'])) {
@@ -338,23 +336,14 @@ class Main
         }
 
         foreach ($args['tabs'] as $tabArgs) {
-            /**
-             * @var AdminPageTab $tab
-             */
+            /** @var AdminPageTab $tab */
             $tab = $this->m('admin_page_tab', $tabArgs);
 
             foreach ($tabArgs['fields'] as $fieldArgs) {
-                /**
-                 * @var Field $field
-                 */
-                $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+                /** @var Field $field */
+                $field = $this->m('field', $fieldArgs);
 
-                $field->setProps(
-                    [
-                        'layout' => 'admin-page-field',
-                        'form' => $tab->gp('slug'),
-                    ]
-                );
+                $field->setProp('form', $tab->getProp('slug'));
 
                 $tab->addField($field);
             }
@@ -373,23 +362,14 @@ class Main
      */
     public function addMetabox(array $args): Metabox
     {
-        /**
-         * @var Metabox $metabox
-         */
+        /** @var Metabox $metabox */
         $metabox = $this->m('metabox', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
-            /**
-             * @var Field $field
-             */
-            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+            /** @var Field $field */
+            $field = $this->m('field', $fieldArgs);
 
-            $field->setProps(
-                [
-                    'layout' => 'metabox-field',
-                    'form' => $metabox->gp('id'),
-                ]
-            );
+            $field->setProp('form', $metabox->getProp('id'));
 
             $metabox->addField($field);
         }
@@ -405,22 +385,17 @@ class Main
      */
     public function addProfileSection(array $args): ProfileSection
     {
-        /**
-         * @var ProfileSection $section
-         */
+        /** @var ProfileSection $section */
         $section = $this->m('profile_section', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
-            /**
-             * @var Field $field
-             */
-            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+            /** @var Field $field */
+            $field = $this->m('field', $fieldArgs);
 
             $field->setProps(
                 [
-                    'layout' => 'profile-field',
-                    'form' => $section->gp('id'),
-                    'class' => 'regular-text',
+                    'form' => $section->getProp('id'),
+                    'classes' => 'regular-text',
                 ]
             );
 
@@ -438,22 +413,17 @@ class Main
      */
     public function addTermMeta(array $args): TermMeta
     {
-        /**
-         * @var TermMeta $section
-         */
+        /** @var TermMeta $section */
         $section = $this->m('term_meta', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
-            /**
-             * @var Field $field
-             */
-            $field = $this->m('field.' . $fieldArgs['type'], $fieldArgs);
+            /** @var Field $field */
+            $field = $this->m('field', $fieldArgs);
 
             $field->setProps(
                 [
-                    'layout' => 'term-field',
-                    'form' => $section->gp('id'),
-                    'class' => 'regular-text',
+                    'form' => $section->getProp('id'),
+                    'classes' => 'regular-text',
                 ]
             );
 
@@ -471,26 +441,20 @@ class Main
      */
     public function addCustomizerPanel(array $args): Panel
     {
-        /**
-         * @var Panel $panel
-         */
+        /** @var Panel $panel */
         $panel = $this->m('customizer.panel', $args);
 
         foreach ($args['sections'] as $sectionArgs) {
-            /**
-             * @var Section $section
-             */
+            /** @var Section $section */
             $section = $this->m('customizer.section', $sectionArgs);
 
-            $section->sp('panel', $panel->gp('id'));
+            $section->setProp('panel', $panel->getProp('id'));
 
             foreach ($sectionArgs['settings'] as $settingArgs) {
-                /**
-                 * @var Setting $setting
-                 */
+                /** @var Setting $setting */
                 $setting = $this->m('customizer.setting', $settingArgs);
 
-                $setting->sp('section', $section->gp('id'));
+                $setting->setProp('section', $section->getProp('id'));
 
                 $section->addSetting($setting);
             }
