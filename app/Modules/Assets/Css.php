@@ -18,7 +18,7 @@ class Css extends Asset
             return;
         }
 
-        $id = $this->config('prefix') . '-' . sanitize_title($this->getProp('id'));
+        $id = $this->prefix . '-' . sanitize_title($this->getProp('id'));
 
         wp_enqueue_style($id, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'));
     }

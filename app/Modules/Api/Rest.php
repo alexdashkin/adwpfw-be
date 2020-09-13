@@ -49,18 +49,16 @@ class Rest extends Request
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'method':
-                return 'post';
-        }
-
-        return null;
+        return [
+            'namespace' => 'adwpfw/v1',
+            'route' => 'test',
+            'method' => 'post',
+        ];
     }
 }

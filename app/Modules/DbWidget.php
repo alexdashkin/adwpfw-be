@@ -28,20 +28,18 @@ class DbWidget extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'title' => 'Dashboard Widget',
+            'id' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            case 'capability':
-                return 'read';
-        }
-
-        return null;
+            },
+            'capability' => 'read',
+        ];
     }
 }

@@ -16,7 +16,7 @@ class Setting extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $id = $this->config('prefix') . '_' . $this->getProp('id');
+        $id = $this->prefix . '_' . $this->getProp('id');
 
         $setting = [
             'default' => $this->getProp('default'),
@@ -51,20 +51,17 @@ class Setting extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'type' => 'text',
+            'id' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('label')));
-            case 'type':
-                return 'text';
-        }
-
-        return null;
+            },
+        ];
     }
 }

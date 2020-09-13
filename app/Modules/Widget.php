@@ -20,7 +20,7 @@ class Widget extends Module
      */
     public function register()
     {
-        $id = $this->config('prefix') . '_' . $this->getProp('id');
+        $id = $this->prefix . '_' . $this->getProp('id');
 
         $args = [
             'id' => $id,
@@ -71,18 +71,17 @@ class Widget extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'title' => 'Widget',
+            'id' => function () {
                 return 'widget_' . sanitize_key(str_replace(' ', '_', $this->getProp('title')));
-        }
-
-        return null;
+            },
+        ];
     }
 }

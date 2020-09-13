@@ -36,7 +36,7 @@ class Metabox extends Module
      */
     public function register()
     {
-        $id = $this->config('prefix') . '_' . $this->getProp('id');
+        $id = $this->prefix . '_' . $this->getProp('id');
 
         add_meta_box(
             $id,
@@ -74,7 +74,7 @@ class Metabox extends Module
             return '';
         }
 
-        return get_post_meta($post->ID, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
+        return get_post_meta($post->ID, '_' . $this->prefix . '_' . $this->getProp('id'), true) ?: [];
     }
 
     /**
@@ -90,7 +90,7 @@ class Metabox extends Module
             return false;
         }
 
-        return update_post_meta($postId->ID, '_' . $this->config('prefix') . '_' . $this->getProp('id'), $value);
+        return update_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->getProp('id'), $value);
     }
 
     /**
@@ -100,11 +100,11 @@ class Metabox extends Module
      */
     public function save(int $postId)
     {
-        if (empty($_POST[$this->config('prefix')][$this->getProp('id')])) {
+        if (empty($_POST[$this->prefix][$this->getProp('id')])) {
             return;
         }
 
-        $form = $_POST[$this->config('prefix')][$this->getProp('id')];
+        $form = $_POST[$this->prefix][$this->getProp('id')];
 
         $values = [];
 
@@ -124,20 +124,19 @@ class Metabox extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'title' => 'Metabox',
+            'id' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            case 'screen':
-                return ['post', 'page'];
-        }
-
-        return null;
+            },
+            'screen' => ['post', 'page'],
+            'context' => 'normal',
+        ];
     }
 }

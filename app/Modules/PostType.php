@@ -24,7 +24,7 @@ class PostType extends Module
      */
     public function register()
     {
-        register_post_type($this->config('prefix') . '_' . $this->getProp('slug'), $this->getProps());
+        register_post_type($this->prefix . '_' . $this->getProp('slug'), $this->getProps());
     }
 
     /**
@@ -55,22 +55,18 @@ class PostType extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'plural':
-                return $this->getProp('singular').'s';
-            case 'slug':
+        return [
+            'plural' => $this->getProp('singular').'s',
+            'slug' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
-            case 'public':
-                return true;
-        }
-
-        return null;
+            },
+            'public' => true,
+        ];
     }
 }

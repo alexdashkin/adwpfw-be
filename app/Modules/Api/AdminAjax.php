@@ -12,7 +12,7 @@ class AdminAjax extends Request
      */
     public function init()
     {
-        $actionName = $this->config('prefix') . '_' . $this->getProp('action');
+        $actionName = $this->prefix . '_' . $this->getProp('action');
 
         $this->addHook('wp_ajax_' . $actionName, [$this, 'handle']);
         $this->addHook('wp_ajax_nopriv_' . $actionName, [$this, 'handle']);
@@ -23,9 +23,9 @@ class AdminAjax extends Request
      */
     public function handle()
     {
-        check_ajax_referer($this->config('prefix'));
+        check_ajax_referer($this->prefix);
 
-        $this->log('Ajax request: "%s_%s"', [$this->config('prefix'), $this->getProp('action')]);
+        $this->log('Ajax request: "%s_%s"', [$this->prefix, $this->getProp('action')]);
 
         $result = $this->execute($_REQUEST['data'] ?? []);
 

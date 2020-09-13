@@ -1,7 +1,7 @@
 <div class="<?= $prefix ?> adwpfw adwpfw-profile-section">
 
-    <?php if ($heading): ?>
-        <h2><?= $heading ?></h2>
+    <?php if ($title): ?>
+        <h2><?= $title ?></h2>
     <?php endif; ?>
 
     <table class="form-table">

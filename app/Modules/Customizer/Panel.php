@@ -21,7 +21,7 @@ class Panel extends Module
      */
     public function addSection(Section $section)
     {
-        $section->setProp('panel', $this->config('prefix') . '_' . $this->getProp('id'));
+        $section->setProp('panel', $this->prefix . '_' . $this->getProp('id'));
 
         $this->sections[] = $section;
     }
@@ -41,26 +41,23 @@ class Panel extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_panel($this->config('prefix') . '_' . $this->getProp('id'), $this->getProps());
+        $customizer->add_panel($this->prefix . '_' . $this->getProp('id'), $this->getProps());
 
         foreach ($this->sections as $section) {
             $section->register($customizer);
         }
     }
-
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'id' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
-        }
-
-        return null;
+            },
+        ];
     }
 }

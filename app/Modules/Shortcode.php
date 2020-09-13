@@ -20,7 +20,7 @@ class Shortcode extends Module
      */
     public function register()
     {
-        add_shortcode($this->config('prefix') . '_' . $this->getProp('tag'), [$this, 'render']);
+        add_shortcode($this->prefix . '_' . $this->getProp('tag'), [$this, 'render']);
     }
 
     /**

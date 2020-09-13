@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * name*, id, tpl, label, placeholder, desc, required, default, classes, filter, sanitizer
+ * name*, id, tpl, label, placeholder, desc, required, default, classes
  */
 class Field extends Module
 {
@@ -12,7 +12,7 @@ class Field extends Module
      */
     public function init()
     {
-        $prefix = $this->config('prefix');
+        $prefix = $this->prefix;
 
         // Common rendering filters
         $this->addHook(sprintf('%s_render_field_select', $prefix), [$this, 'select']);
@@ -38,7 +38,7 @@ class Field extends Module
         // Call filter if set
         $value = is_callable($this->getProp('filter')) ? $this->getProp('filter')($value) : $value;
 
-        $prefix = $this->config('prefix');
+        $prefix = $this->prefix;
 
         // Prepare template args
         $args = $this->getProps();
@@ -62,7 +62,7 @@ class Field extends Module
      */
     public function sanitize($value)
     {
-        return apply_filters(sprintf('%s_sanitize_field_%s', $this->config('prefix'), $this->getProp('type')), $value);
+        return apply_filters(sprintf('%s_sanitize_field_%s', $this->prefix, $this->getProp('type')), $value);
     }
 
     /**
@@ -175,5 +175,25 @@ class Field extends Module
         }
 
         return null;
+    }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'name' => 'field',
+            'id' => function () {
+                return sanitize_key(str_replace([' ', '_'], '-', $this->getProp('name')));
+            },
+            'tpl' => $this->getProp('type'),
+            'label' => '',
+            'placeholder' => '',
+            'desc' => '',
+            'classes' => '',
+        ];
     }
 }

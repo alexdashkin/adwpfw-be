@@ -30,18 +30,14 @@ class Hook extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'priority':
-                return 10;
-        }
-
-        return null;
+        return [
+            'priority' => 10,
+        ];
     }
 }

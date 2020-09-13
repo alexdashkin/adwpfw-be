@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * name*, id, description, class
+ * name*, id
  */
 class Sidebar extends Module
 {
@@ -20,24 +20,23 @@ class Sidebar extends Module
      */
     public function register()
     {
-        $this->setProp('id', $this->config('prefix') . '_' . $this->getProp('id'));
+        $this->setProp('id', $this->prefix . '_' . $this->getProp('id'));
 
         register_sidebar($this->getProps());
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'name' => 'Sidebar',
+            'id' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('name')));
-        }
-
-        return null;
+            },
+        ];
     }
 }

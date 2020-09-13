@@ -110,7 +110,7 @@ class CronJob extends Module
      */
     private function getOption(string $name): array
     {
-        $optionName = $this->config('prefix') . '_cron';
+        $optionName = $this->prefix . '_cron';
 
         $optionValue = get_option($optionName) ?: [];
 
@@ -125,12 +125,25 @@ class CronJob extends Module
      */
     private function updateOption(string $name, array $value)
     {
-        $optionName = $this->config('prefix') . '_cron';
+        $optionName = $this->prefix . '_cron';
 
         $optionValue = get_option($optionName) ?: [];
 
         $optionValue[$name] = $value;
 
         update_option($optionName, $optionValue);
+    }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'name' => 'cron_job',
+            'interval' => 0,
+        ];
     }
 }

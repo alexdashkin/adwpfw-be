@@ -173,7 +173,7 @@ class Main
      */
     public function addAssets(array $args)
     {
-        $args = $this->m('helpers')->arrayMerge(
+        $args = $this->arrayMerge(
             [
                 'admin' => ['css' => [], 'js' => []],
                 'front' => ['css' => [], 'js' => []],
@@ -211,7 +211,7 @@ class Main
      */
     public function addAdminAjax(array $args): AdminAjax
     {
-        return $this->m('admin_ajax', $args);
+        return $this->m('api.ajax', $args);
     }
 
     /**
@@ -222,7 +222,7 @@ class Main
      */
     public function addRestEndpoint(array $args): Rest
     {
-        return $this->m('rest', $args);
+        return $this->m('api.rest', $args);
     }
 
     /**
@@ -336,6 +336,10 @@ class Main
         }
 
         foreach ($args['tabs'] as $tabArgs) {
+
+            // Do it here because we need parent slug in tab.init()
+            $tabArgs['parent_slug'] = $adminPage->getProp('slug');
+
             /** @var AdminPageTab $tab */
             $tab = $this->m('admin_page_tab', $tabArgs);
 

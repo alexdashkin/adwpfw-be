@@ -19,7 +19,7 @@ class Js extends Asset
             return;
         }
 
-        $prefix = $this->config('prefix');
+        $prefix = $this->prefix;
 
         $id = $this->getProp('id');
 

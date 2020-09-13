@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * slug*, heading
+ * slug*, title
  */
 class ProfileSection extends Module
 {
@@ -41,7 +41,7 @@ class ProfileSection extends Module
     public function render(\WP_User $user)
     {
         $args = $this->getProps();
-        $values = get_user_meta($user->ID, '_' . $this->config('prefix') . '_' . $this->getProp('slug'), true) ?: [];
+        $values = get_user_meta($user->ID, '_' . $this->prefix . '_' . $this->getProp('slug'), true) ?: [];
         $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
         return $this->app->main->render('templates/profile-section', $args);
@@ -60,7 +60,7 @@ class ProfileSection extends Module
         }
 
         $id = $this->getProp('slug');
-        $prefix = $this->config('prefix');
+        $prefix = $this->prefix;
         $metaKey = '_' . $prefix . '_' . $id;
 
         if (empty($_POST[$prefix][$id])) {
@@ -84,5 +84,20 @@ class ProfileSection extends Module
         update_user_meta($userId, $metaKey, $values);
 
         do_action('adwpfw_profile_saved', $this, $values);
+    }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'title' => 'Custom',
+            'slug' => function () {
+                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+            },
+        ];
     }
 }

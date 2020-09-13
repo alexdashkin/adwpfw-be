@@ -73,7 +73,7 @@ class Theme extends Module
         }
 
         // Clear Twig cache
-        $twigPath = $this->app->main->getUploadsDir($this->config('prefix') . '/twig');
+        $twigPath = $this->app->main->getUploadsDir($this->prefix . '/twig');
 
         if (file_exists($twigPath)) {
             $this->app->main->rmDir($twigPath);

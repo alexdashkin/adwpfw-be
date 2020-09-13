@@ -15,7 +15,12 @@ abstract class Module
     /**
      * @var array Item Props
      */
-    private $props = [];
+    protected $props = [];
+
+    /**
+     * @var string
+     */
+    protected $prefix;
 
     /**
      * Module constructor
@@ -25,6 +30,8 @@ abstract class Module
     public function __construct(App $app)
     {
         $this->app = $app;
+
+        $this->prefix = $this->config('prefix');
     }
 
     /**
@@ -45,7 +52,17 @@ abstract class Module
      */
     public function getProps(): array
     {
-        return $this->props;
+        $set = $default = [];
+
+        foreach ($this->defaults() as $key => $value) {
+            $default[$key] = $this->getDefault($key);
+        }
+
+        foreach ($this->props as $key => $value) {
+            $set[$key] = $this->getProp($key);
+        }
+
+        return array_merge($default, $set);
     }
 
     /**
@@ -72,13 +89,19 @@ abstract class Module
     }
 
     /**
-     * Get Default Prop value. To be overridden.
+     * Get Default Prop value
      *
      * @param string $key
      * @return mixed
      */
     protected function getDefault(string $key)
     {
+        $defaults = $this->defaults();
+
+        if (array_key_exists($key, $defaults)) {
+            return is_callable($defaults[$key]) ? $defaults[$key]() : $defaults[$key];
+        }
+
         return null;
     }
 
@@ -136,5 +159,14 @@ abstract class Module
     protected function log($message, array $values = [], int $level = 4)
     {
         $this->app->logger->log($message, $values, $level);
+    }
+
+    /**
+     * Get Default prop values, to be overridden
+     *
+     * @return array
+     */
+    protected function defaults(): array {
+        return [];
     }
 }

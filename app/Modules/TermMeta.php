@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * taxonomy*, title
+ */
 class TermMeta extends Module
 {
     /**
@@ -38,7 +41,7 @@ class TermMeta extends Module
     public function render(\WP_Term $term)
     {
         $args = $this->getProps();
-        $values = get_term_meta($term->term_id, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
+        $values = get_term_meta($term->term_id, '_' . $this->prefix . '_' . $this->getProp('id'), true) ?: [];
         $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
         return $this->app->main->render('templates/term-meta', $args);
@@ -52,7 +55,7 @@ class TermMeta extends Module
     public function save(int $termId)
     {
         $id = $this->getProp('id');
-        $prefix = $this->config('prefix');
+        $prefix = $this->prefix;
         $metaKey = '_' . $prefix . '_' . $id;
 
         if (empty($_POST[$prefix][$id])) {
@@ -76,5 +79,18 @@ class TermMeta extends Module
         update_term_meta($termId, $metaKey, $values);
 
         do_action('adwpfw_term_saved', $this, $values);
+    }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'title' => 'Custom',
+            'taxonomy' => 'category',
+        ];
     }
 }

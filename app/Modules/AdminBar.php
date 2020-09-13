@@ -27,24 +27,23 @@ class AdminBar extends Module
             return;
         }
 
-        $this->setProp('id', $this->config('prefix') . '-' . $this->getProp('id'));
+        $this->setProp('id', $this->prefix . '-' . $this->getProp('id'));
 
         $wpAdminBar->add_node($this->getProps());
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'title' => 'Admin Bar',
+            'id' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-        }
-
-        return null;
+            }
+        ];
     }
 }

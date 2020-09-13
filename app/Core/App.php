@@ -76,23 +76,18 @@ class App
      */
     public function make(string $alias, array $args = [])
     {
-        // If already exists - return it
-        if (!empty($this->modules[$alias])) {
-            return $this->modules[$alias];
-        }
-
         // If not listed in config - error
-        if (empty($this->classDefs[$alias]) || !class_exists($this->classDefs[$alias]['class'])) {
+        if (empty($this->classDefs[$alias]) || !class_exists($this->classDefs[$alias])) {
             throw new AppException(sprintf('Class %s not found', $alias));
         }
 
         // Shorthand
-        $classData = $this->classDefs[$alias];
+        $class = $this->classDefs[$alias];
 
         // Create instance and provide data
         try {
             // Create instance
-            $instance = new $classData['class']($this);
+            $instance = new $class($this);
 
             // Set data
             if (method_exists($instance, 'setProps')) {
@@ -108,10 +103,8 @@ class App
             throw new AppException(sprintf('Unable to create instance for "%s": %s', $alias, $e->getMessage()));
         }
 
-        // Store Singletons in Modules prop
-        if (!empty($classData['single'])) {
-            $this->modules[$alias] = $instance;
-        }
+        // Store in Modules prop
+        $this->modules[$alias][] = $instance;
 
         // Return instance
         return $instance;

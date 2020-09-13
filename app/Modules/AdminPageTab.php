@@ -22,14 +22,12 @@ class AdminPageTab extends Module
      */
     public function init()
     {
-        $this->addHook('admin_menu', [$this, 'register']);
-
         if ($this->getProp('form')) {
             $this->m(
-                'admin_ajax',
+                'api.ajax',
                 [
-                    'prefix' => $this->config('prefix'),
-                    'action' => sprintf('save_%s_%s', $this->parent->getProp('slug'), $this->getProp('slug')),
+                    'prefix' => $this->prefix,
+                    'action' => sprintf('save_%s_%s', $this->getProp('parent_slug'), $this->getProp('slug')),
                     'fields' => [
                         'form' => [
                             'type' => 'form',
@@ -72,7 +70,7 @@ class AdminPageTab extends Module
     public function render(): string
     {
         $args = $this->getProps();
-        $values = get_option($this->config('prefix') . '_' . $this->getProp('option')) ?: [];
+        $values = get_option($this->prefix . '_' . $this->getProp('option')) ?: [];
         $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
         return $this->app->main->render('templates/admin-page-tab', $args);
@@ -88,7 +86,7 @@ class AdminPageTab extends Module
     {
         $main = $this->m('main');
         $form = $request['form'];
-        $prefix = $this->config('prefix');
+        $prefix = $this->prefix;
         $slug = $this->getProp('slug');
 
         if (empty($form[$prefix][$slug])) {
@@ -97,7 +95,7 @@ class AdminPageTab extends Module
 
         $data = $form[$prefix][$slug];
 
-        $optionName = $this->config('prefix') . '_' . $this->getProp('option');
+        $optionName = $this->prefix . '_' . $this->getProp('option');
 
         $values = [];
 
@@ -119,20 +117,18 @@ class AdminPageTab extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'slug':
+        return [
+            'title' => 'Tab',
+            'slug' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            case 'option':
-                return 'settings';
-        }
-
-        return null;
+            },
+            'option' => 'settings',
+        ];
     }
 }

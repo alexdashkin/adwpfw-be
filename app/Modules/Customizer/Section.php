@@ -21,7 +21,7 @@ class Section extends Module
      */
     public function addSetting(Setting $setting)
     {
-        $setting->setProp('section', $this->config('prefix') . '_' . $this->getProp('id'));
+        $setting->setProp('section', $this->prefix . '_' . $this->getProp('id'));
 
         $this->settings[] = $setting;
     }
@@ -33,7 +33,7 @@ class Section extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_section($this->config('prefix') . '_' . $this->getProp('id'), $this->getProps());
+        $customizer->add_section($this->prefix . '_' . $this->getProp('id'), $this->getProps());
 
         foreach ($this->settings as $setting) {
             $setting->register($customizer);
@@ -41,18 +41,16 @@ class Section extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
-        switch ($key) {
-            case 'id':
+        return [
+            'id' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
-        }
-
-        return null;
+            },
+        ];
     }
 }

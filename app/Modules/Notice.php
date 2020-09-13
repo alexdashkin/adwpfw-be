@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * slug*, content*, type, dismissible, days, classes, args, show_callback
+ * id*, content*, type, dismissible, days, classes, args, show_callback
  */
 class Notice extends Module
 {
@@ -17,10 +17,10 @@ class Notice extends Module
         // Add Ajax action to dismiss notice
         if ($this->getProp('dismissible')) {
             $this->m(
-                'admin_ajax',
+                'api.ajax',
                 [
-                    'prefix' => $this->config('prefix'),
-                    'action' => 'dismiss_notice_' . $this->getProp('slug'),
+                    'prefix' => $this->prefix,
+                    'action' => 'dismiss_notice_' . $this->getProp('id'),
                     'callback' => [$this, 'ajaxDismiss'],
                 ]
             );
@@ -93,11 +93,11 @@ class Notice extends Module
     {
         $args = $this->getProp('args');
 
-        $args['slug'] = $this->getProp('slug');
+        $args['id'] = $this->getProp('id');
 
         $isDismissible = $this->getProp('dismissible') ? 'is-dismissible' : '';
 
-        $args['classes'] = sprintf('notice notice-%s %s adwpfw-notice %s-notice %s', $this->getProp('type'), $isDismissible, $this->config('prefix'), $this->getProp('classes'));
+        $args['classes'] = sprintf('notice notice-%s %s adwpfw-notice %s-notice %s', $this->getProp('type'), $isDismissible, $this->prefix, $this->getProp('classes'));
 
         return $this->app->main->render(__DIR__ . '/../../tpl/notice.php', $args);
     }
@@ -109,11 +109,11 @@ class Notice extends Module
      */
     private function getDismissed(): int
     {
-        $optionName = $this->config('prefix') . '_notices';
+        $optionName = $this->prefix . '_notices';
 
         $option = get_option($optionName) ?: [];
 
-        return $option[$this->getProp('slug')] ?? 0;
+        return $option[$this->getProp('id')] ?? 0;
     }
 
     /**
@@ -123,12 +123,25 @@ class Notice extends Module
      */
     private function setDismissed(int $timestamp)
     {
-        $optionName = $this->config('prefix') . '_notices';
+        $optionName = $this->prefix . '_notices';
 
         $optionValue = get_option($optionName) ?: [];
 
-        $optionValue[$this->getProp('slug')] = $timestamp;
+        $optionValue[$this->getProp('id')] = $timestamp;
 
         update_option($optionName, $optionValue);
+    }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'type' => 'success',
+            'args' => [],
+        ];
     }
 }

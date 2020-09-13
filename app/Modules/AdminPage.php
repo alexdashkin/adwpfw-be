@@ -78,7 +78,7 @@ class AdminPage extends Module
         }
 
         $args = [
-            'prefix' => $this->config('prefix'),
+            'prefix' => $this->prefix,
             'title' => $this->getProp('title'),
             'tabs' => $tabs,
         ];
@@ -87,27 +87,24 @@ class AdminPage extends Module
     }
 
     /**
-     * Get Default Prop value
+     * Get Default prop values
      *
-     * @param string $key
-     * @return mixed
+     * @return array
      */
-    protected function getDefault(string $key)
+    protected function defaults(): array
     {
         $name = $this->getProp('name');
 
-        switch ($key) {
-            case 'title':
-            case 'header':
-                return $name;
-            case 'slug':
-                return sanitize_key(str_replace(' ', '-', $name));
-            case 'icon':
-                return 'dashicons-update';
-            case 'capability':
-                return 'manage_options';
-        }
-
-        return null;
+        return [
+            'name' => 'Admin Page',
+            'title' => $name,
+            'header' => $name,
+            'slug' => function () {
+                return sanitize_key(str_replace(' ', '-', $this->getProp('name')));
+            },
+            'icon' => 'dashicons-update',
+            'position' => 100,
+            'capability' => 'manage_options',
+        ];
     }
 }
