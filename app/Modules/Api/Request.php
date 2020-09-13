@@ -101,7 +101,7 @@ abstract class Request extends Module
      */
     protected function success(array $data = []): array
     {
-        return $this->m('helpers')->returnSuccess('Done', $data);
+        return $this->app->main->returnSuccess('Done', $data);
     }
 
     /**
@@ -112,6 +112,6 @@ abstract class Request extends Module
      */
     protected function error(string $message = ''): array
     {
-        return $this->m('helpers')->returnError($message);
+        return $this->app->main->returnError($message);
     }
 }

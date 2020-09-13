@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * tag*, callback*, atts
+ */
 class Shortcode extends Module
 {
     /**
@@ -30,33 +33,8 @@ class Shortcode extends Module
      */
     public function render($atts, string $content, string $tag): string
     {
-        $args = array_merge($this->getProp('atts'), $atts ?: []);
+        $args = array_merge($this->getProp('atts') ?: [], $atts ?: []);
 
         return $this->getProp('callback')($args);
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'tag' => [
-                'required' => true,
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'required' => true,
-            ],
-            'atts' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
     }
 }

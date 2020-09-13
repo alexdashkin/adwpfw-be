@@ -15,6 +15,22 @@ abstract class Asset extends Module
     }
 
     /**
+     * Get Default Prop value
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected function getDefault(string $key)
+    {
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace(' ', '_', $this->getProp('type')));
+        }
+
+        return null;
+    }
+
+    /**
      * Enqueue asset
      */
     abstract public function enqueue();

@@ -73,13 +73,7 @@ class AdminPageTab extends Module
     {
         $values = get_option($this->config('prefix') . '_' . $this->getProp('option')) ?: [];
 
-        $html = '';
-
-        foreach ($this->fields as $field) {
-            $html .= $field->render($values[$field->getProp('name')] ?? null);
-        }
-
-        return $html;
+        return Field::renderMany($this->fields, $values);
     }
 
     /**

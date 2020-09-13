@@ -4,6 +4,9 @@ namespace AlexDashkin\Adwpfw\Modules\Updater;
 
 use AlexDashkin\Adwpfw\Modules\Module;
 
+/**
+ * file*, package*, callback
+ */
 class Plugin extends Module
 {
     /**
@@ -16,8 +19,6 @@ class Plugin extends Module
      */
     public function init()
     {
-        $this->validateData();
-
         require_once ABSPATH . 'wp-includes/plugin.php';
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
@@ -83,39 +84,10 @@ class Plugin extends Module
         }
 
         // Clear Twig cache
-        $twigPath = $this->m('helpers')->getUploadsDir($this->config('prefix') . '/twig');
+        $twigPath = $this->app->main->getUploadsDir($this->config('prefix') . '/twig');
 
         if (file_exists($twigPath)) {
-            $this->m('helpers')->rmDir($twigPath);
+            $this->app->main->rmDir($twigPath);
         }
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'file' => [
-                'required' => true,
-            ],
-            'package' => [
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return $data['file'];
-                },
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'default' => null,
-            ],
-        ];
     }
 }

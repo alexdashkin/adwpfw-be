@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * name*, id, description, class
+ */
 class Sidebar extends Module
 {
     /**
@@ -23,30 +26,18 @@ class Sidebar extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'name' => [
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '_', $data['name']));
-                },
-            ],
-            'description' => [
-                'default' => null,
-            ],
-            'class' => [
-                'default' => null,
-            ],
-        ];
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace(' ', '_', $this->getProp('name')));
+        }
+
+        return null;
     }
 }

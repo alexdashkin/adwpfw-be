@@ -2,8 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\_Fields\Field;
-
+/**
+ * slug*, heading
+ */
 class ProfileSection extends Module
 {
     /**
@@ -39,24 +40,14 @@ class ProfileSection extends Module
      */
     public function render(\WP_User $user)
     {
-        $values = get_user_meta($user->ID, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
-
-        $fields = [];
-
-        foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
-
-            $twigArgs = $field->getTwigArgs($values[$fieldName] ?? null);
-
-            $fields[] = $twigArgs;
-        }
+        $values = get_user_meta($user->ID, '_' . $this->config('prefix') . '_' . $this->getProp('slug'), true) ?: [];
 
         $args = [
             'heading' => $this->getProp('heading'),
-            'fields' => $fields,
+            'fields' => Field::renderMany($this->fields, $values),
         ];
 
-        echo $this->twig('templates/profile-section', $args);
+        echo $this->app->main->render('templates/profile-section', $args);
     }
 
     /**
@@ -71,7 +62,7 @@ class ProfileSection extends Module
             return;
         }
 
-        $id = $this->getProp('id');
+        $id = $this->getProp('slug');
         $prefix = $this->config('prefix');
         $metaKey = '_' . $prefix . '_' . $id;
 
@@ -84,7 +75,7 @@ class ProfileSection extends Module
         $values = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
+            $fieldName = $field->getProp('name');
 
             if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
                 continue;
@@ -96,25 +87,5 @@ class ProfileSection extends Module
         update_user_meta($userId, $metaKey, $values);
 
         do_action('adwpfw_profile_saved', $this, $values);
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'id' => [
-                'required' => true,
-            ],
-            'heading' => [
-                'default' => '',
-            ],
-        ];
     }
 }

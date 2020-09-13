@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\_Fields\Field;
-
 class TermMeta extends Module
 {
     /**
@@ -26,8 +24,6 @@ class TermMeta extends Module
      */
     public function init()
     {
-        $this->validateData();
-
         $taxonomy = $this->getProp('taxonomy');
 
         $this->addHook($taxonomy . '_edit_form', [$this, 'render']);
@@ -43,21 +39,11 @@ class TermMeta extends Module
     {
         $values = get_term_meta($term->term_id, '_' . $this->config('prefix') . '_' . $this->getProp('id'), true) ?: [];
 
-        $fields = [];
-
-        foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
-
-            $twigArgs = $field->getTwigArgs($values[$fieldName] ?? null);
-
-            $fields[] = $twigArgs;
-        }
-
         $args = [
-            'fields' => $fields,
+            'fields' => Field::renderMany($this->fields, $values),
         ];
 
-        echo $this->twig('templates/term-meta', $args);
+        echo $this->app->main->render('templates/term-meta', $args);
     }
 
     /**

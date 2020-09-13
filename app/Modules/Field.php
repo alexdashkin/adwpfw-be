@@ -3,10 +3,25 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * Admin Form Field
+ * name*, id, tpl, label, placeholder, desc, required, default, classes, filter, sanitizer
  */
 class Field extends Module
 {
+    /**
+     * Init Module
+     */
+    public function init()
+    {
+        $prefix = $this->config('prefix');
+
+        // Common rendering filters
+        $this->addHook(sprintf('%s_render_field_select', $prefix), [$this, 'select']);
+        $this->addHook(sprintf('%s_render_field_select2', $prefix), [$this, 'select2']);
+
+        // Common saving sanitizers
+        $this->addHook(sprintf('%s_sanitize_field_text', $prefix), 'sanitize_text_field');
+    }
+
     /**
      * Render Admin Field
      *
@@ -23,12 +38,17 @@ class Field extends Module
         // Call filter if set
         $value = is_callable($this->getProp('filter')) ? $this->getProp('filter')($value) : $value;
 
-        // Set value prop
-        $this->setProp('value', $value);
+        $prefix = $this->config('prefix');
 
         // Prepare template args
         $args = $this->getProps();
-        $args['prefix'] = $this->config('prefix');
+        $args['prefix'] = $prefix;
+        $args['id'] = $prefix . '-' . $this->getProp('id');
+        $args['name'] = sprintf('%s[%s][%s]', $prefix, $this->getProp('form'), $this->getProp('name'));
+        $args['required'] = $this->getProp('required') ? 'required' : '';
+        $args['value'] = $value;
+
+        $args = apply_filters(sprintf('%s_render_field_%s', $prefix, $this->getProp('type')), $args);
 
         // Render template
         return $this->app->main->render('fields/' . $this->getProp('tpl'), $args);
@@ -42,57 +62,39 @@ class Field extends Module
      */
     public function sanitize($value)
     {
-        return is_callable($this->getProp('sanitizer')) ? $this->getProp('sanitizer')($value) : $value;
+        return apply_filters(sprintf('%s_sanitize_field_%s', $this->config('prefix'), $this->getProp('type')), $value);
     }
 
     /**
-     * Get Default Prop value
+     * Filter Select Template Args
      *
-     * @param string $key
-     * @return mixed
-     */
-    protected function getDefault(string $key)
-    {
-        $type = $this->getProp('type');
-
-        switch ($key) {
-            case 'tpl':
-                return $type;
-
-            case 'filter':
-                switch ($type) {
-                    case 'select':
-                        return [$this, 'select'];
-                    case 'select2':
-                        return [$this, 'select2'];
-                }
-        }
-
-        return null;
-    }
-
-    /**
-     * Prepare Select Template Args
-     *
-     * @param mixed $value
+     * @param array $args
      * @return array
      */
-    public function select($value): array
+    public function select(array $args): array
     {
+        $value = $args['value'];
+        $multiple = !empty($args['multiple']);
+        $args['multiple'] = $multiple ? 'multiple' : '';
+
+        if ($multiple) {
+            $args['name'] .= '[]';
+        }
+
         $options = [];
 
-        if ($this->getProp('placeholder') && !$this->getProp('multiple')) {
+        if (!empty($args['placeholder']) && !$multiple) {
             $options = [
                 [
-                    'label' => $this->getProp('placeholder'),
+                    'label' => $args['placeholder'],
                     'value' => '',
                     'selected' => '',
                 ]
             ];
         }
 
-        foreach ($this->getProp('options') as $val => $label) {
-            $selected = $this->getProp('multiple') ? in_array($val, (array)$value) : $val == $value;
+        foreach ($args['options'] as $val => $label) {
+            $selected = $multiple ? in_array($val, (array)$value) : $val == $value;
 
             $options[] = [
                 'label' => $label,
@@ -101,22 +103,23 @@ class Field extends Module
             ];
         }
 
-        $this->setProp('options', $options);
+        $args['options'] = $options;
 
-        return $this->getProps();
+        return $args;
     }
 
     /**
-     * Prepare Select2 Template Args
+     * Filter Select2 Template Args
      *
-     * @param mixed $value
+     * @param array $args
      * @return array
      */
-    public function select2($value): array
+    public function select2(array $args): array
     {
-        $args = $this->select($value);
+        $args = $this->select($args);
 
-        $multiple = $this->getProp('multiple');
+        $value = $args['value'];
+        $multiple = !empty($args['multiple']);
 
         $valueArr = $multiple ? (array)$value : [$value];
 
@@ -131,5 +134,46 @@ class Field extends Module
         }
 
         return $args;
+    }
+
+    /**
+     * Render a set of fields
+     *
+     * @param array $fields
+     * @param array $values
+     * @return string
+     */
+    public static function renderMany(array $fields, array $values): string
+    {
+        $html = '';
+
+        foreach ($fields as $field) {
+            $fieldName = $field->getProp('name');
+
+            $html .= $field->render($values[$fieldName] ?? null);
+        }
+
+        return $html;
+    }
+
+    /**
+     * Get Default Prop value
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected function getDefault(string $key)
+    {
+        $type = $this->getProp('type');
+
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace([' ', '_'], '-', $this->getProp('name')));
+
+            case 'tpl':
+                return $type;
+        }
+
+        return null;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Api;
 
+/**
+ * namespace*, route*, callback*, method, admin, fields
+ */
 class Rest extends Request
 {
     /**
@@ -46,34 +49,18 @@ class Rest extends Request
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'namespace' => [
-                'required' => true,
-            ],
-            'route' => [
-                'required' => true,
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'required' => true,
-            ],
-            'method' => [
-                'default' => 'post',
-            ],
-            'admin' => [
-                'type' => 'bool',
-                'default' => false,
-            ],
-            'fields' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
+        switch ($key) {
+            case 'method':
+                return 'post';
+        }
+
+        return null;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Api;
 
+/**
+ * action*, callback*, fields
+ */
 class AdminAjax extends Request
 {
     /**
@@ -9,8 +12,6 @@ class AdminAjax extends Request
      */
     public function init()
     {
-        $this->validateData();
-
         $actionName = $this->config('prefix') . '_' . $this->getProp('action');
 
         $this->addHook('wp_ajax_' . $actionName, [$this, 'handle']);
@@ -29,30 +30,5 @@ class AdminAjax extends Request
         $result = $this->execute($_REQUEST['data'] ?? []);
 
         wp_send_json($result);
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'action' => [
-                'required' => true,
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'required' => true,
-            ],
-            'fields' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
     }
 }

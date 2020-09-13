@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules\Assets;
 
 /**
- * CSS file
+ * type*, url*, id, ver, deps, callback, localize
  */
 class Js extends Asset
 {
@@ -21,7 +21,7 @@ class Js extends Asset
 
         $prefix = $this->config('prefix');
 
-        $id = sanitize_title($this->getProp('id'));
+        $id = $this->getProp('id');
 
         // Enqueue already registered script and exit
         if (wp_script_is($id, 'registered')) {
@@ -46,44 +46,5 @@ class Js extends Asset
         );
 
         wp_localize_script($id, $prefix, $localize);
-    }
-
-    /**
-     * Get Class props
-     *
-     * @return array
-     */
-    protected function getInitialPropDefs(): array
-    {
-        return [
-            'type' => [
-                'required' => true,
-            ],
-            'url' => [
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return $data['type'];
-                },
-            ],
-            'ver' => [
-                // To bypass trim() as string
-                'type' => 'null',
-                'default' => null,
-            ],
-            'deps' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-            'callback' => [
-                'type' => 'callable',
-                'default' => null,
-            ],
-            'localize' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-        ];
     }
 }

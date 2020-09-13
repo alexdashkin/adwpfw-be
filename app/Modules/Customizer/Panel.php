@@ -4,6 +4,9 @@ namespace AlexDashkin\Adwpfw\Modules\Customizer;
 
 use AlexDashkin\Adwpfw\Modules\Module;
 
+/**
+ * title*, id, description, priority
+ */
 class Panel extends Module
 {
     /**
@@ -18,7 +21,7 @@ class Panel extends Module
      */
     public function addSection(Section $section)
     {
-        $section->sp('panel', $this->config('prefix') . '_' . $this->getProp('id'));
+        $section->setProp('panel', $this->config('prefix') . '_' . $this->getProp('id'));
 
         $this->sections[] = $section;
     }
@@ -46,31 +49,18 @@ class Panel extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'title' => [
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '_', $data['title']));
-                },
-            ],
-            'description' => [
-                'default' => '',
-            ],
-            'priority' => [
-                'type' => 'int',
-                'default' => 160,
-            ],
-        ];
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
+        }
+
+        return null;
     }
 }

@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * title*, id, screen, context, priority
+ */
 class Metabox extends Module
 {
     /**
@@ -52,24 +55,12 @@ class Metabox extends Module
      */
     public function render(\WP_Post $post)
     {
-        $values = $this->getValue($post->ID);
-
-        $fields = [];
-
-        foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
-
-            $twigArgs = $field->getTwigArgs($values[$fieldName] ?? null);
-
-            $fields[] = $twigArgs;
-        }
-
         $args = [
-            'fields' => $fields,
+            'fields' => Field::renderMany($this->fields, $this->getValue($post->ID)),
             'context' => $this->getProp('context'),
         ];
 
-        echo $this->twig('templates/metabox', $args);
+        echo $this->app->main->render('templates/metabox', $args);
     }
 
     /**
@@ -119,7 +110,7 @@ class Metabox extends Module
         $values = [];
 
         foreach ($this->fields as $field) {
-            $fieldName = $field->gp('name');
+            $fieldName = $field->getProp('name');
 
             if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
                 continue;
@@ -134,31 +125,20 @@ class Metabox extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'title' => [
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '-', $data['title']));
-                },
-            ],
-            'screen' => [
-                'type' => 'array',
-                'default' => ['post', 'page'],
-            ],
-            'context' => [
-                'default' => 'normal',
-            ],
-            'priority' => [
-                'default' => 'default',
-            ],
-        ];
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+            case 'screen':
+                return ['post', 'page'];
+        }
+
+        return null;
     }
 }

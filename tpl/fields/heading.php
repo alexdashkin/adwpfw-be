@@ -1,0 +1,1 @@
+<h2 class="adwpfw-heading"><?= $text ?></h2>

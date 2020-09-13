@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * title*, render*, form, id
+ */
 class Widget extends Module
 {
     /**
@@ -24,7 +27,7 @@ class Widget extends Module
             'name' => $this->getProp('title'),
         ];
 
-        eval($this->twig('php/widget', $args));
+        eval($this->app->main->render('php/widget', $args));
 
         register_widget($id);
 
@@ -55,7 +58,7 @@ class Widget extends Module
     }
 
     /**
-     * Render Settings form.
+     * Render Settings form
      *
      * @param array $instance
      * @param \WP_Widget $widget
@@ -68,32 +71,18 @@ class Widget extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'title' => [
-                'required' => true,
-            ],
-            'render' => [
-                'type' => 'callable',
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return 'widget_' . sanitize_key(str_replace(' ', '_', $data['title']));
-                },
-            ],
-            'form' => [
-                'type' => 'callable',
-                'default' => null,
-            ],
-        ];
+        switch ($key) {
+            case 'id':
+                return 'widget_' . sanitize_key(str_replace(' ', '_', $this->getProp('title')));
+        }
+
+        return null;
     }
 }

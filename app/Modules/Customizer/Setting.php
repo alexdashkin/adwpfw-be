@@ -4,6 +4,9 @@ namespace AlexDashkin\Adwpfw\Modules\Customizer;
 
 use AlexDashkin\Adwpfw\Modules\Module;
 
+/**
+ * label*, section, id, type, description, priority
+ */
 class Setting extends Module
 {
     /**
@@ -48,48 +51,20 @@ class Setting extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'section' => [
-                'required' => true,
-            ],
-            'label' => [
-                'required' => true,
-            ],
-            'id' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '_', $data['label']));
-                },
-            ],
-            'priority' => [
-                'type' => 'int',
-                'default' => 10,
-            ],
-            'type' => [
-                'default' => 'text',
-            ],
-            'description' => [
-                'default' => '',
-            ],
-            'input_attrs' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-            'default' => [
-                'default' => '',
-            ],
-            'sanitize_callback' => [
-                'type' => 'callable',
-                'default' => null,
-            ],
-        ];
+        switch ($key) {
+            case 'id':
+                return sanitize_key(str_replace(' ', '_', $this->getProp('label')));
+            case 'type':
+                return 'text';
+        }
+
+        return null;
     }
 }

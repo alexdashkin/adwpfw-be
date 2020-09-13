@@ -2,6 +2,9 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+/**
+ * singular*, plural, slug, labels, description, public
+ */
 class PostType extends Module
 {
     /**
@@ -52,40 +55,22 @@ class PostType extends Module
     }
 
     /**
-     * Get Class props
+     * Get Default Prop value
      *
-     * @return array
+     * @param string $key
+     * @return mixed
      */
-    protected function getInitialPropDefs(): array
+    protected function getDefault(string $key)
     {
-        return [
-            'prefix' => [
-                'required' => true,
-            ],
-            'singular' => [
-                'required' => true,
-            ],
-            'plural' => [
-                'default' => function ($data) {
-                    return $data['singular'] . 's';
-                },
-            ],
-            'slug' => [
-                'default' => function ($data) {
-                    return sanitize_key(str_replace(' ', '_', $data['singular']));
-                },
-            ],
-            'labels' => [
-                'type' => 'array',
-                'default' => [],
-            ],
-            'description' => [
-                'default' => '',
-            ],
-            'public' => [
-                'type' => 'bool',
-                'default' => true,
-            ],
-        ];
+        switch ($key) {
+            case 'plural':
+                return $this->getProp('singular').'s';
+            case 'slug':
+                return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
+            case 'public':
+                return true;
+        }
+
+        return null;
     }
 }
