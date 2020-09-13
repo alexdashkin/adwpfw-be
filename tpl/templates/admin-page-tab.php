@@ -2,7 +2,7 @@
 
     <?php if($form): ?>
 
-        <form class="adwpfw-form">
+        <form class="adwpfw-form" data-slug="<?= $slug ?>">
 
             <?= $fields ?>
 

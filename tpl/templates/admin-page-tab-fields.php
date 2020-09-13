@@ -11,7 +11,9 @@
 
                     <?php if ($field['desc']): ?>
                         <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help">
-                            <span class="tooltiptext"><?= $field['desc'] ?></span>
+                            <div class="adwpfw-tooltip-wrapper">
+                                <span class="adwpfw-tooltip-text"><?= $field['desc'] ?></span>
+                            </div>
                         </div>
                     <?php endif; ?>
                 </div>

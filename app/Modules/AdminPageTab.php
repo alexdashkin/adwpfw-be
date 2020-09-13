@@ -27,7 +27,7 @@ class AdminPageTab extends Module
                 'api.ajax',
                 [
                     'prefix' => $this->prefix,
-                    'action' => sprintf('save_%s_%s', $this->getProp('parent_slug'), $this->getProp('slug')),
+                    'action' => sprintf('save_%s', $this->getProp('slug')),
                     'fields' => [
                         'form' => [
                             'type' => 'form',
@@ -86,13 +86,12 @@ class AdminPageTab extends Module
      */
     public function save(array $request): array
     {
-        $main = $this->m('main');
         $form = $request['form'];
         $prefix = $this->prefix;
         $slug = $this->getProp('slug');
 
         if (empty($form[$prefix][$slug])) {
-            return $main->returnError('Form is empty');
+            return $this->app->main->returnError('Form is empty');
         }
 
         $data = $form[$prefix][$slug];
@@ -115,7 +114,7 @@ class AdminPageTab extends Module
 
         do_action('adwpfw_settings_saved', $this, $values);
 
-        return $main->returnSuccess('Saved');
+        return $this->app->main->returnSuccess('Saved');
     }
 
     /**

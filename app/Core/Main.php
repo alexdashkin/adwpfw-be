@@ -48,7 +48,7 @@ class Main
      */
     public function filterCheckbox(array $args, Field $field): array
     {
-        $args['checked'] = !empty($args['value']);
+        $args['checked'] = !empty($args['value']) ? 'checked' : '';
 
         return $args;
     }
@@ -114,6 +114,7 @@ class Main
         $valueArr = $multiple ? (array)$value : [$value];
 
         foreach ($valueArr as $item) {
+            $item = (int)$item;
             if (!$this->app->main->arraySearch($args['options'], ['value' => $item])) {
                 $args['options'][] = [
                     'label' => !empty($field->getProp('label_cb')) ? $field->getProp('label_cb')($item) : $item,
@@ -431,9 +432,6 @@ class Main
         }
 
         foreach ($args['tabs'] as $tabArgs) {
-
-            // Do it here because we need parent slug in tab.init()
-            $tabArgs['parent_slug'] = $adminPage->getProp('slug');
 
             /** @var AdminPageTab $tab */
             $tab = $this->m('admin_page_tab', $tabArgs);

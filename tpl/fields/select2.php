@@ -1,5 +1,3 @@
-<input type="hidden" name="<?= $name ?>" value="">
-
 <select class="adwpfw-select2 <?= $classes ?>"
         id="<?= $id ?>"
         name="<?= $name ?>"
