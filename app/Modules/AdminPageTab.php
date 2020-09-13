@@ -71,7 +71,9 @@ class AdminPageTab extends Module
     {
         $args = $this->getProps();
         $values = get_option($this->prefix . '_' . $this->getProp('option')) ?: [];
-        $args['fields'] = Field::getArgsForMany($this->fields, $values);
+        $fields = Field::getArgsForMany($this->fields, $values);
+
+        $args['fields'] = $this->app->main->render('templates/admin-page-tab-fields', ['fields' => $fields]);
 
         return $this->app->main->render('templates/admin-page-tab', $args);
     }

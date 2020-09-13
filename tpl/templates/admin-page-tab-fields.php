@@ -8,13 +8,13 @@
 
                 <div class="adwpfw-label">
                     <label for="<?= $field['id'] ?>"><?= $field['label'] ?></label>
-                </div>
 
-                <?php if ($field['desc']): ?>
-                    <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help">
-                        <span class="tooltiptext"><?= $field['desc'] ?></span>
-                    </div>
-                <?php endif; ?>
+                    <?php if ($field['desc']): ?>
+                        <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help">
+                            <span class="tooltiptext"><?= $field['desc'] ?></span>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
             <?php endif; ?>
 

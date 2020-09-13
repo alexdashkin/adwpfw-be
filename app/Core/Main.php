@@ -28,7 +28,102 @@ class Main
     {
         $this->app = $app;
 
-        $this->prefix = $this->app->config('prefix');
+        $this->prefix = $prefix = $this->app->config('prefix');
+
+        // Common rendering filters
+        $this->addHook(sprintf('%s_render_field_checkbox', $prefix), [$this, 'filterCheckbox']);
+        $this->addHook(sprintf('%s_render_field_select', $prefix), [$this, 'filterSelect']);
+        $this->addHook(sprintf('%s_render_field_select2', $prefix), [$this, 'filterSelect2']);
+
+        // Common saving sanitizers
+        $this->addHook(sprintf('%s_sanitize_field_text', $prefix), 'sanitize_text_field');
+    }
+
+    /**
+     * Filter Checkbox Template Args
+     *
+     * @param array $args
+     * @param Field $field
+     * @return array
+     */
+    public function filterCheckbox(array $args, Field $field): array
+    {
+        $args['checked'] = !empty($args['value']);
+
+        return $args;
+    }
+
+    /**
+     * Filter Select Template Args
+     *
+     * @param array $args
+     * @param Field $field
+     * @return array
+     */
+    public function filterSelect(array $args, Field $field): array
+    {
+        $value = $args['value'];
+        $multiple = !empty($args['multiple']);
+        $args['multiple'] = $multiple ? 'multiple' : '';
+
+        if ($multiple) {
+            $args['name'] .= '[]';
+        }
+
+        $options = [];
+
+        if (!empty($args['placeholder']) && !$multiple) {
+            $options = [
+                [
+                    'label' => $args['placeholder'],
+                    'value' => '',
+                    'selected' => '',
+                ]
+            ];
+        }
+
+        foreach ($args['options'] ?? [] as $val => $label) {
+            $selected = $multiple ? in_array($val, (array)$value) : $val == $value;
+
+            $options[] = [
+                'label' => $label,
+                'value' => $val,
+                'selected' => $selected ? 'selected' : '',
+            ];
+        }
+
+        $args['options'] = $options;
+
+        return $args;
+    }
+
+    /**
+     * Filter Select2 Template Args
+     *
+     * @param array $args
+     * @param Field $field
+     * @return array
+     */
+    public function filterSelect2(array $args, Field $field): array
+    {
+        $args = $this->filterSelect($args, $field);
+
+        $value = $args['value'];
+        $multiple = !empty($args['multiple']);
+
+        $valueArr = $multiple ? (array)$value : [$value];
+
+        foreach ($valueArr as $item) {
+            if (!$this->app->main->arraySearch($args['options'], ['value' => $item])) {
+                $args['options'][] = [
+                    'label' => !empty($field->getProp('label_cb')) ? $field->getProp('label_cb')($item) : $item,
+                    'value' => $item,
+                    'selected' => 'selected',
+                ];
+            }
+        }
+
+        return $args;
     }
 
     /**
