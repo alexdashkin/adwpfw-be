@@ -115,6 +115,7 @@ class AdminPageTab extends Module
             'slug' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
             },
+            'form' => false,
             'option' => 'settings',
         ];
     }
