@@ -79,4 +79,16 @@ class Theme extends Module
             $this->main->rmDir($twigPath);
         }
     }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'slug' => get_stylesheet(),
+        ];
+    }
 }
