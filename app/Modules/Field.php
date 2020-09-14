@@ -69,7 +69,14 @@ class Field extends Module
         return $args;
     }
 
-    public static function getFieldValues($fields, $form)
+    /**
+     * Get several Field values helper
+     *
+     * @param array $fields
+     * @param array $form
+     * @return array
+     */
+    public static function getFieldValues(array $fields, array $form): array
     {
         $values = [];
 
