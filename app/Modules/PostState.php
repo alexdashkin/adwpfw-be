@@ -25,7 +25,8 @@ class PostState extends Module
     public function register(array $states, \WP_Post $post): array
     {
         if ($post->ID === $this->getProp('post_id')) {
-            $states[] = $this->getProp('state');
+            $state = $this->getProp('state');
+            $states[sanitize_key(str_replace(' ', '_', $this->prefix . '_' . $state))] = $state;
         }
 
         return $states;
