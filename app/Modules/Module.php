@@ -4,7 +4,6 @@ namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Core\App;
 use AlexDashkin\Adwpfw\Core\Main;
-use AlexDashkin\Adwpfw\Exceptions\AppException;
 
 abstract class Module
 {
@@ -114,12 +113,11 @@ abstract class Module
     }
 
     /**
-     * Get a Config value.
-     * Throws Exception if no value and no default provided
+     * Get a Config value
      *
      * @param string $key
+     * @param mixed $default
      * @return mixed
-     * @throws AppException
      */
     protected function config(string $key, $default = null)
     {
@@ -174,7 +172,8 @@ abstract class Module
      *
      * @return array
      */
-    protected function defaults(): array {
+    protected function defaults(): array
+    {
         return [];
     }
 }

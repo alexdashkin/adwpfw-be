@@ -94,23 +94,9 @@ class AdminPageTab extends Module
             return $this->main->returnError('Form is empty');
         }
 
-        $data = $form[$prefix][$slug];
+        $values = Field::getFieldValues($this->fields, $form[$prefix][$slug]);
 
-        $optionName = $this->prefix . '_' . $this->getProp('option');
-
-        $values = [];
-
-        foreach ($this->fields as $field) {
-            $fieldName = $field->getProp('name');
-
-            if (empty($fieldName) || !array_key_exists($fieldName, $data)) {
-                continue;
-            }
-
-            $values[$fieldName] = $field->sanitize($data[$fieldName]);
-        }
-
-        update_option($optionName, $values);
+        update_option($this->prefix . '_' . $this->getProp('option'), $values);
 
         do_action('adwpfw_settings_saved', $this, $values);
 

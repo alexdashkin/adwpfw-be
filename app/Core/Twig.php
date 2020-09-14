@@ -41,6 +41,7 @@ class Twig
     /**
      * Init Module
      *
+     * @param App $app
      * @throws AppException
      */
     public function __construct(App $app)

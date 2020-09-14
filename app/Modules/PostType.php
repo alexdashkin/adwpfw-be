@@ -62,7 +62,7 @@ class PostType extends Module
     protected function defaults(): array
     {
         return [
-            'plural' => $this->getProp('singular').'s',
+            'plural' => $this->getProp('singular') . 's',
             'slug' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
             },

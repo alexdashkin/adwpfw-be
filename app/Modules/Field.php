@@ -69,6 +69,23 @@ class Field extends Module
         return $args;
     }
 
+    public static function getFieldValues($fields, $form)
+    {
+        $values = [];
+
+        foreach ($fields as $field) {
+            $fieldName = $field->getProp('name');
+
+            if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
+                continue;
+            }
+
+            $values[$fieldName] = $field->sanitize($form[$fieldName]);
+        }
+
+        return $values;
+    }
+
     /**
      * Get Default prop values
      *

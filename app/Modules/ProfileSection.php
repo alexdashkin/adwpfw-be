@@ -61,27 +61,14 @@ class ProfileSection extends Module
 
         $id = $this->getProp('id');
         $prefix = $this->prefix;
-        $metaKey = '_' . $prefix . '_' . $id;
 
         if (empty($_POST[$prefix][$id])) {
             return;
         }
 
-        $form = $_POST[$prefix][$id];
+        $values = Field::getFieldValues($this->fields, $_POST[$prefix][$id]);
 
-        $values = [];
-
-        foreach ($this->fields as $field) {
-            $fieldName = $field->getProp('name');
-
-            if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
-                continue;
-            }
-
-            $values[$fieldName] = $field->sanitize($form[$fieldName]);
-        }
-
-        update_user_meta($userId, $metaKey, $values);
+        update_user_meta($userId, '_' . $prefix . '_' . $id, $values);
 
         do_action('adwpfw_profile_saved', $this, $values);
     }

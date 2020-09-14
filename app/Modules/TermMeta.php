@@ -56,27 +56,14 @@ class TermMeta extends Module
     {
         $id = $this->getProp('id');
         $prefix = $this->prefix;
-        $metaKey = '_' . $prefix . '_' . $id;
 
         if (empty($_POST[$prefix][$id])) {
             return;
         }
 
-        $form = $_POST[$prefix][$id];
+        $values = Field::getFieldValues($this->fields, $_POST[$prefix][$id]);
 
-        $values = [];
-
-        foreach ($this->fields as $field) {
-            $fieldName = $field->getProp('name');
-
-            if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
-                continue;
-            }
-
-            $values[$fieldName] = $field->sanitize($form[$fieldName]);
-        }
-
-        update_term_meta($termId, $metaKey, $values);
+        update_term_meta($termId, '_' . $prefix . '_' . $id, $values);
 
         do_action('adwpfw_term_saved', $this, $values);
     }

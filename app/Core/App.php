@@ -39,7 +39,8 @@ class App
 
     /**
      * App constructor
-     * Config: env = dev/prod, prefix, log[size,level], template_path
+     *
+     * @param array $config env = dev/prod, prefix, log[size,level], template_path
      */
     public function __construct(array $config)
     {
@@ -48,37 +49,54 @@ class App
         $this->classDefs = require __DIR__ . '/../../config/modules.php';
     }
 
+    /**
+     * Get Main class
+     *
+     * @return Main
+     */
     public function getMain()
     {
         if (!$this->main) {
             $this->main = new Main($this);
         }
-        
+
         return $this->main;
     }
 
+    /**
+     * Get Logger
+     *
+     * @return Logger
+     */
     public function getLogger()
     {
         if (!$this->logger) {
             $this->logger = new Logger($this);
         }
-        
+
         return $this->logger;
     }
 
+    /**
+     * Get Twig
+     *
+     * @return Twig
+     * @throws AppException
+     */
     public function getTwig()
     {
         if (!$this->twig) {
             $this->twig = new Twig($this);
         }
-        
+
         return $this->twig;
     }
 
     /**
-     * Get a Config value.
+     * Get a Config value
      *
      * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     public function config(string $key, $default = null)

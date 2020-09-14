@@ -27,6 +27,7 @@ abstract class Asset extends Module
             },
         ];
     }
+
     /**
      * Enqueue asset
      */

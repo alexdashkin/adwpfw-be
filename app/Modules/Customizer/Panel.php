@@ -47,6 +47,7 @@ class Panel extends Module
             $section->register($customizer);
         }
     }
+
     /**
      * Get Default prop values
      *

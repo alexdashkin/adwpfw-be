@@ -8,6 +8,11 @@ namespace AlexDashkin\Adwpfw\Core;
 class Logger
 {
     /**
+     * @var App
+     */
+    private $app;
+
+    /**
      * @var int Start Timestamp
      */
     private $start;
