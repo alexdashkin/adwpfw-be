@@ -55,14 +55,14 @@ class Twig
 
         foreach ($paths as $index => $path) {
             if (!file_exists($path)) {
-                $this->app->logger->log('Path "%s" does not exist', [$path]);
+                $this->app->getLogger()->log('Path "%s" does not exist', [$path]);
                 unset($paths[$index]);
             }
         }
 
         $envArgs = [
             'debug' => 'dev' === $this->app->config('env'),
-            'cache' => $this->app->main->getUploadsDir($this->app->config('prefix') . '/twig'),
+            'cache' => $this->app->getMain()->getUploadsDir($this->app->config('prefix') . '/twig'),
             'autoescape' => false,
         ];
 
@@ -84,7 +84,7 @@ class Twig
     {
         foreach ($paths as $path) {
             if (file_exists($path)) {
-                $this->app->logger->log('Path "%s" does not exist', [$path]);
+                $this->app->getLogger()->log('Path "%s" does not exist', [$path]);
                 continue;
             }
 
@@ -163,7 +163,7 @@ class Twig
             return $twig->render($name, $args);
         } catch (Error $e) {
             $message = $e->getMessage();
-            $this->app->logger->log($message);
+            $this->app->getLogger()->log($message);
             return 'Unable to render Template: ' . $message;
         }
     }

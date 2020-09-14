@@ -8,7 +8,7 @@
 
         <?php foreach ($fields as $field): ?>
 
-            <tr>
+            <tr class="form-field">
 
                 <?php if ($field['label']): ?>
 
@@ -18,7 +18,7 @@
 
                 <?php endif; ?>
 
-                <td <?= $field['label'] ? 'colspan="2" style="padding:0"' : '' ?>>
+                <td <?= !$field['label'] ? 'colspan="2" style="padding:0"' : '' ?>>
 
                     <?= $field['content'] ?>
 

@@ -10,17 +10,17 @@ class App
     /**
      * @var Main
      */
-    public $main;
+    private $main;
 
     /**
      * @var Logger
      */
-    public $logger;
+    private $logger;
 
     /**
      * @var Twig
      */
-    public $twig;
+    private $twig;
 
     /**
      * @var array
@@ -46,14 +46,33 @@ class App
         $this->config = $config;
 
         $this->classDefs = require __DIR__ . '/../../config/modules.php';
+    }
 
-        $this->main = new Main($this);
+    public function getMain()
+    {
+        if (!$this->main) {
+            $this->main = new Main($this);
+        }
+        
+        return $this->main;
+    }
 
-        $this->logger = new Logger($this);
+    public function getLogger()
+    {
+        if (!$this->logger) {
+            $this->logger = new Logger($this);
+        }
+        
+        return $this->logger;
+    }
 
-        if ($this->config('twig')) {
+    public function getTwig()
+    {
+        if (!$this->twig) {
             $this->twig = new Twig($this);
         }
+        
+        return $this->twig;
     }
 
     /**

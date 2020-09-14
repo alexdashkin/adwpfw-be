@@ -73,9 +73,9 @@ class AdminPageTab extends Module
         $values = get_option($this->prefix . '_' . $this->getProp('option')) ?: [];
         $fields = Field::getArgsForMany($this->fields, $values);
 
-        $args['fields'] = $this->app->main->render('templates/admin-page-tab-fields', ['fields' => $fields]);
+        $args['fields'] = $this->main->render('templates/admin-page-tab-fields', ['fields' => $fields]);
 
-        return $this->app->main->render('templates/admin-page-tab', $args);
+        return $this->main->render('templates/admin-page-tab', $args);
     }
 
     /**
@@ -91,7 +91,7 @@ class AdminPageTab extends Module
         $slug = $this->getProp('slug');
 
         if (empty($form[$prefix][$slug])) {
-            return $this->app->main->returnError('Form is empty');
+            return $this->main->returnError('Form is empty');
         }
 
         $data = $form[$prefix][$slug];
@@ -114,7 +114,7 @@ class AdminPageTab extends Module
 
         do_action('adwpfw_settings_saved', $this, $values);
 
-        return $this->app->main->returnSuccess('Saved');
+        return $this->main->returnSuccess('Saved');
     }
 
     /**

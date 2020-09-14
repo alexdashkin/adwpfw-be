@@ -44,7 +44,7 @@ class TermMeta extends Module
         $values = get_term_meta($term->term_id, '_' . $this->prefix . '_' . $this->getProp('id'), true) ?: [];
         $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
-        return $this->app->main->render('templates/term-meta', $args);
+        echo $this->main->render('templates/term-meta', $args);
     }
 
     /**

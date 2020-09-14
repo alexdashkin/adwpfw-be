@@ -99,7 +99,7 @@ class Notice extends Module
 
         $args['classes'] = sprintf('notice notice-%s %s adwpfw-notice %s-notice %s', $this->getProp('type'), $isDismissible, $this->prefix, $this->getProp('classes'));
 
-        return $this->app->main->render(__DIR__ . '/../../tpl/notice.php', $args);
+        return $this->main->render(__DIR__ . '/../../tpl/notice.php', $args);
     }
 
     /**

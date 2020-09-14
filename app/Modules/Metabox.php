@@ -59,7 +59,7 @@ class Metabox extends Module
         $values = $this->getValue($post->ID);
         $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
-        return $this->app->main->render('templates/metabox', $args);
+        echo $this->main->render('templates/metabox', $args);
     }
 
     /**

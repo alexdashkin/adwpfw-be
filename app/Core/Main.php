@@ -30,13 +30,14 @@ class Main
 
         $this->prefix = $prefix = $this->app->config('prefix');
 
+        // Cannot use addHook here as any Module needs Main instance, so getting a loop
         // Common rendering filters
-        $this->addHook(sprintf('%s_render_field_checkbox', $prefix), [$this, 'filterCheckbox']);
-        $this->addHook(sprintf('%s_render_field_select', $prefix), [$this, 'filterSelect']);
-        $this->addHook(sprintf('%s_render_field_select2', $prefix), [$this, 'filterSelect2']);
+        add_filter(sprintf('%s_render_field_checkbox', $prefix), [$this, 'filterCheckbox'], 10, 2);
+        add_filter(sprintf('%s_render_field_select', $prefix), [$this, 'filterSelect'], 10, 2);
+        add_filter(sprintf('%s_render_field_select2', $prefix), [$this, 'filterSelect2'], 10, 2);
 
         // Common saving sanitizers
-        $this->addHook(sprintf('%s_sanitize_field_text', $prefix), 'sanitize_text_field');
+        add_filter(sprintf('%s_sanitize_field_text', $prefix), 'sanitize_text_field');
     }
 
     /**
@@ -108,6 +109,8 @@ class Main
     {
         $args = $this->filterSelect($args, $field);
 
+        $args['min_chars'] = $args['min_chars'] ?? 3;
+        $args['min_items_for_search'] = $args['min_items_for_search'] ?? 10;
         $value = $args['value'];
         $multiple = !empty($args['multiple']);
 
@@ -115,7 +118,7 @@ class Main
 
         foreach ($valueArr as $item) {
             $item = (int)$item;
-            if (!$this->app->main->arraySearch($args['options'], ['value' => $item])) {
+            if (!$this->arraySearch($args['options'], ['value' => $item])) {
                 $args['options'][] = [
                     'label' => !empty($field->getProp('label_cb')) ? $field->getProp('label_cb')($item) : $item,
                     'value' => $item,
@@ -158,10 +161,12 @@ class Main
      */
     public function render(string $name, array $args = []): string
     {
+        $args['prefix'] = $this->prefix;
         $appPath = $this->app->config('template_path', '');
         $fwPath = __DIR__ . '/../../tpl';
         $paths = $appPath ? [$appPath, $fwPath] : [$fwPath];
 
+        // Searching for PHP templates
         foreach ($paths as $path) {
             $file = trailingslashit($path) . $name . '.php';
             if (file_exists($file)) {
@@ -172,7 +177,14 @@ class Main
             }
         }
 
-        return '';
+        // Searching for Twig templates
+        $file = trailingslashit($appPath) . $name . '.twig';
+        if (file_exists($file)) {
+            return $this->twig($name, $args);
+        }
+
+        // Not found
+        return sprintf('Template %s not found', $name);
     }
 
     /**
@@ -184,7 +196,7 @@ class Main
      */
     public function twig(string $name, array $args = []): string
     {
-        return $this->m('twig')->renderFile($name, $args);
+        return $this->app->getTwig()->renderFile($name, $args);
     }
 
     /**
@@ -432,7 +444,6 @@ class Main
         }
 
         foreach ($args['tabs'] as $tabArgs) {
-
             /** @var AdminPageTab $tab */
             $tab = $this->m('admin_page_tab', $tabArgs);
 
@@ -1278,7 +1289,7 @@ class Main
      */
     public function log($message, array $values = [], int $level = 4)
     {
-        $this->app->logger->log($message, $values, $level);
+        $this->app->getLogger()->log($message, $values, $level);
     }
 
     /**

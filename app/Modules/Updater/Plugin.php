@@ -84,10 +84,10 @@ class Plugin extends Module
         }
 
         // Clear Twig cache
-        $twigPath = $this->app->main->getUploadsDir($this->prefix . '/twig');
+        $twigPath = $this->main->getUploadsDir($this->prefix . '/twig');
 
         if (file_exists($twigPath)) {
-            $this->app->main->rmDir($twigPath);
+            $this->main->rmDir($twigPath);
         }
     }
 }

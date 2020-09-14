@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * slug*, title
+ * id*, title
  */
 class ProfileSection extends Module
 {
@@ -41,10 +41,10 @@ class ProfileSection extends Module
     public function render(\WP_User $user)
     {
         $args = $this->getProps();
-        $values = get_user_meta($user->ID, '_' . $this->prefix . '_' . $this->getProp('slug'), true) ?: [];
+        $values = get_user_meta($user->ID, '_' . $this->prefix . '_' . $this->getProp('id'), true) ?: [];
         $args['fields'] = Field::getArgsForMany($this->fields, $values);
 
-        return $this->app->main->render('templates/profile-section', $args);
+        echo $this->main->render('templates/profile-section', $args);
     }
 
     /**
@@ -59,7 +59,7 @@ class ProfileSection extends Module
             return;
         }
 
-        $id = $this->getProp('slug');
+        $id = $this->getProp('id');
         $prefix = $this->prefix;
         $metaKey = '_' . $prefix . '_' . $id;
 
@@ -95,8 +95,8 @@ class ProfileSection extends Module
     {
         return [
             'title' => 'Custom',
-            'slug' => function () {
-                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+            'id' => function () {
+                return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
             },
         ];
     }

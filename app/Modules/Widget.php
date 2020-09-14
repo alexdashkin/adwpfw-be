@@ -27,7 +27,7 @@ class Widget extends Module
             'name' => $this->getProp('title'),
         ];
 
-        eval($this->app->main->render('php/widget', $args));
+        eval($this->main->render('php/widget', $args));
 
         register_widget($id);
 

@@ -35,7 +35,7 @@ class Field extends Module
         $args = apply_filters(sprintf('%s_render_field_%s', $prefix, $this->getProp('type')), $args, $this);
 
         // Render template
-        return $this->app->main->render('fields/' . $this->getProp('tpl'), $args);
+        return $this->main->render('fields/' . $this->getProp('tpl'), $args);
     }
 
     /**

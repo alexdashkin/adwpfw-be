@@ -3,10 +3,16 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Core\App;
+use AlexDashkin\Adwpfw\Core\Main;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 
 abstract class Module
 {
+    /**
+     * @var Main
+     */
+    protected $main;
+
     /**
      * @var App
      */
@@ -30,6 +36,8 @@ abstract class Module
     public function __construct(App $app)
     {
         $this->app = $app;
+
+        $this->main = $app->getMain();
 
         $this->prefix = $this->config('prefix');
     }
@@ -158,7 +166,7 @@ abstract class Module
      */
     protected function log($message, array $values = [], int $level = 4)
     {
-        $this->app->logger->log($message, $values, $level);
+        $this->app->getLogger()->log($message, $values, $level);
     }
 
     /**

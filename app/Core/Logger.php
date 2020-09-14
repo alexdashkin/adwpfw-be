@@ -41,7 +41,7 @@ class Logger
         $maxLogSize = $this->app->config('log')['size'] ?? 1000000;
         $this->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
-        $basePath = $this->app->main->getUploadsDir($prefix . '/logs');
+        $basePath = $this->app->getMain()->getUploadsDir($prefix . '/logs');
         $filename = $this->getLogFilename($basePath, $prefix, $suffix, $maxLogSize);
         $immediateName = uniqid() . '-' . $suffix . '.log';
 

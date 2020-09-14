@@ -83,7 +83,7 @@ class AdminPage extends Module
             'tabs' => $tabs,
         ];
 
-        echo $this->app->main->render('templates/admin-page', $args);
+        echo $this->main->render('templates/admin-page', $args);
     }
 
     /**
