@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * title*, render*, form, id
+ * title*, render*, form, id, assets[]
  */
 class Widget extends Module
 {
@@ -27,12 +27,36 @@ class Widget extends Module
             'name' => $this->getProp('title'),
         ];
 
+        // Register the class
         eval($this->main->render('php/widget', $args));
 
+        // Register widget
         register_widget($id);
 
+        // Add render hooks
         $this->addHook('form_' . $id, [$this, 'form']);
         $this->addHook('render_' . $id, [$this, 'render']);
+
+        // If no associated assets or no widget on the page - return
+        if (!is_active_widget(false, false, $id) || !$assets = $this->getProp('assets')) {
+            return;
+        }
+
+        // Enqueue widget assets
+        foreach ($assets as $asset) {
+            $this->m(
+                'asset.' . $asset['type'],
+                [
+                    'id' => $id,
+                    'type' => 'front',
+                    'url' => $asset['url'] ?? $assets['url'] . $asset['file'],
+                    'ver' => empty($asset['url']) ? filemtime($assets['dir'] . $asset['file']) : null,
+                    'deps' => $asset['deps'] ?? [],
+                    'callback' => $asset['callback'] ?? [],
+                    'localize' => $asset['localize'] ?? [],
+                ]
+            );
+        }
     }
 
     /**

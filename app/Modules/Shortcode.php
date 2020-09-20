@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * tag*, callback*, atts
+ * tag*, callback*, atts, assets[]
  */
 class Shortcode extends Module
 {
@@ -12,7 +12,7 @@ class Shortcode extends Module
      */
     public function init()
     {
-        $this->addHook('init', [$this, 'register']);
+        $this->addHook('template_redirect', [$this, 'register']);
     }
 
     /**
@@ -20,7 +20,41 @@ class Shortcode extends Module
      */
     public function register()
     {
-        add_shortcode($this->prefix . '_' . $this->getProp('tag'), [$this, 'render']);
+        // Add shortcode
+        $tag = $this->prefix . '_' . $this->getProp('tag');
+        add_shortcode($tag, [$this, 'render']);
+
+        // If no associated assets - return
+        if (!$assets = $this->getProp('assets')) {
+            return;
+        }
+
+        // Get current post and ensure it's a post
+        $post = get_queried_object();
+        if (!$post instanceof \WP_Post) {
+            return;
+        }
+
+        // If our shortcode is not used - do nothing
+        if (!has_shortcode($post->post_content, $tag)) {
+            return;
+        }
+
+        // Enqueue shortcode assets
+        foreach ($assets as $asset) {
+            $this->m(
+                'asset.' . $asset['type'],
+                [
+                    'id' => $tag,
+                    'type' => 'front',
+                    'url' => $asset['url'] ?? $assets['url'] . $asset['file'],
+                    'ver' => empty($asset['url']) ? filemtime($assets['dir'] . $asset['file']) : null,
+                    'deps' => $asset['deps'] ?? [],
+                    'callback' => $asset['callback'] ?? [],
+                    'localize' => $asset['localize'] ?? [],
+                ]
+            );
+        }
     }
 
     /**
