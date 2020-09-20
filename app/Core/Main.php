@@ -1209,6 +1209,17 @@ class Main
     }
 
     /**
+     * Get prefixed customizer value
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getThemeMod(string $name)
+    {
+        return get_theme_mod($this->prefix . '_' . $name);
+    }
+
+    /**
      * Get Settings value
      *
      * @param string $key
