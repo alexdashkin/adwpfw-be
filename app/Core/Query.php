@@ -74,7 +74,9 @@ class Query
 
         $this->tablePrefix = $this->wpdb->prefix;
 
-        $this->table = $this->tablePrefix . $table;
+        if ($table) {
+            $this->table = $this->tablePrefix . $table;
+        }
     }
 
     /**
