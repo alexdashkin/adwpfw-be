@@ -136,7 +136,7 @@ class Main
      * @param string $table
      * @return Query
      */
-    public function db(string $table = null): Query
+    public function db(string $table = ''): Query
     {
         return new Query($table);
     }
