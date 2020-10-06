@@ -117,7 +117,7 @@ class Main
         $valueArr = $multiple ? (array)$value : [$value];
 
         foreach ($valueArr as $item) {
-            $item = (int)$item;
+//            $item = (int)$item;
             if (!$this->arraySearch($args['options'], ['value' => $item])) {
                 $args['options'][] = [
                     'label' => !empty($field->getProp('label_cb')) ? $field->getProp('label_cb')($item) : $item,
