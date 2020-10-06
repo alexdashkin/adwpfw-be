@@ -34,8 +34,8 @@ class PostType extends Module
     {
         $labels = $this->getProp('labels');
 
-        $singular = !empty($labels['singular']) ? $labels['singular'] : $this->getProp('singular');
-        $plural = !empty($labels['plural']) ? $labels['plural'] : $this->getProp('plural');
+        $singular = $labels['singular'] ?? $this->getProp('singular');
+        $plural = $labels['plural'] ?? $this->getProp('plural');
 
         $defaults = [
             'name' => $plural,
@@ -67,6 +67,7 @@ class PostType extends Module
                 return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
             },
             'public' => true,
+            'labels' => [],
         ];
     }
 }
