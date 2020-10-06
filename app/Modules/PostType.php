@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * singular*, plural, slug, labels, description, public
+ * singular*, plural, slug, labels, description, public, columns
  */
 class PostType extends Module
 {
@@ -17,6 +17,12 @@ class PostType extends Module
 
         // Register CPT
         $this->addHook('init', [$this, 'register'], 20);
+
+        $slug = $this->prefix . '_' . $this->getProp('slug');
+
+        // Extra columns
+        $this->addHook(sprintf('manage_%s_posts_columns', $slug), [$this, 'colNames']);
+        $this->addHook(sprintf('manage_%s_posts_custom_column', $slug), [$this, 'colValues']);
     }
 
     /**
@@ -52,6 +58,44 @@ class PostType extends Module
         ];
 
         $this->setProp('labels', array_merge($defaults, $labels));
+    }
+
+    /**
+     * Add custom column headings
+     *
+     * @param array $cols
+     * @return array
+     */
+    public function colNames(array $cols): array
+    {
+        if (!$columns = $this->getProp('columns')) {
+            return $cols;
+        }
+
+        $extraCols = [];
+
+        foreach ($columns as $column) {
+            $extraCols[$column['name']] = $column['label'];
+        }
+
+        return array_merge($cols, $extraCols);
+    }
+
+    /**
+     * Output custom column
+     *
+     * @param string $colName
+     * @param int $postId
+     */
+    public function colValues(string $colName, int $postId)
+    {
+        $columns = $this->getProp('columns');
+
+        if (!$column = $this->main->arraySearch($columns, ['name' => $colName], true)) {
+            return;
+        }
+
+        echo $column['callback']($postId);
     }
 
     /**
