@@ -24,10 +24,10 @@ class Js extends Asset
         $id = $this->getProp('id');
 
         // Enqueue already registered script and exit
-        if (wp_script_is($id, 'registered')) {
+/*        if (wp_script_is($id, 'registered')) {
             wp_enqueue_script($id);
             return;
-        }
+        }*/
 
         $id = $prefix . '-' . $id;
 
