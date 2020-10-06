@@ -1112,6 +1112,42 @@ class Main
     }
 
     /**
+     * Add Image Sizes
+     *
+     * @param array $sizes
+     */
+    public function addImageSizes(array $sizes)
+    {
+        $filter = [];
+        foreach ($sizes as $size) {
+            add_image_size($size['name'], $size['width']);
+            $filter[$size['name']] = $size['title'];
+        }
+        $this->addHook(
+            'image_size_names_choose',
+            function ($sizes) use ($filter) {
+                return array_merge($sizes, $filter);
+            }
+        );
+    }
+
+    /**
+     * Add Theme Support
+     *
+     * @param array $features
+     */
+    public function addThemeSupport(array $features)
+    {
+        foreach ($features as $feature => $args) {
+            if (is_numeric($feature) && is_string($args)) {
+                add_theme_support($args);
+            } else {
+                add_theme_support($feature, $args);
+            }
+        }
+    }
+
+    /**
      * Get prefixed post meta
      *
      * @param string $name
