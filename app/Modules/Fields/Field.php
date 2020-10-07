@@ -119,6 +119,7 @@ class Field extends Module
     protected function defaults(): array
     {
         return [
+            'name' => 'field', // some fields have no name (e.g. heading)
             'id' => function () {
                 return $this->prefix . '-' . sanitize_key(str_replace([' ', '_'], '-', $this->getProp('name')));
             },
