@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Core;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\PostType, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Fields\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\PostType, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
 
 /**
  * Main Facade
@@ -29,105 +29,26 @@ class Main
         $this->app = $app;
 
         $this->prefix = $prefix = $this->app->config('prefix');
-
-        // Cannot use addHook here as any Module needs Main instance, so getting a loop
-        // Common rendering filters
-        add_filter(sprintf('%s_render_field_checkbox', $prefix), [$this, 'filterCheckbox'], 10, 2);
-        add_filter(sprintf('%s_render_field_select', $prefix), [$this, 'filterSelect'], 10, 2);
-        add_filter(sprintf('%s_render_field_select2', $prefix), [$this, 'filterSelect2'], 10, 2);
-
-        // Common saving sanitizers
-        add_filter(sprintf('%s_sanitize_field_text', $prefix), 'sanitize_text_field');
     }
 
     /**
-     * Filter Checkbox Template Args
+     * Get Field instance by type
      *
      * @param array $args
-     * @param Field $field
-     * @return array
+     * @return Field
      */
-    public function filterCheckbox(array $args, Field $field): array
+    public function getField(array $args): Field
     {
-        $args['checked'] = !empty($args['value']) ? 'checked' : '';
-
-        return $args;
-    }
-
-    /**
-     * Filter Select Template Args
-     *
-     * @param array $args
-     * @param Field $field
-     * @return array
-     */
-    public function filterSelect(array $args, Field $field): array
-    {
-        $value = $args['value'];
-        $multiple = !empty($args['multiple']);
-        $args['multiple'] = $multiple ? 'multiple' : '';
-
-        if ($multiple) {
-            $args['name'] .= '[]';
+        switch ($args['type']) {
+            case 'checkbox':
+                return $this->m('field.checkbox', $args);
+            case 'select':
+                return $this->m('field.select', $args);
+            case 'select2':
+                return $this->m('field.select2', $args);
         }
 
-        $options = [];
-
-        if (!empty($args['placeholder']) && !$multiple) {
-            $options = [
-                [
-                    'label' => $args['placeholder'],
-                    'value' => '',
-                    'selected' => '',
-                ]
-            ];
-        }
-
-        foreach ($args['options'] ?? [] as $val => $label) {
-            $selected = $multiple ? in_array($val, (array)$value) : $val == $value;
-
-            $options[] = [
-                'label' => $label,
-                'value' => $val,
-                'selected' => $selected ? 'selected' : '',
-            ];
-        }
-
-        $args['options'] = $options;
-
-        return $args;
-    }
-
-    /**
-     * Filter Select2 Template Args
-     *
-     * @param array $args
-     * @param Field $field
-     * @return array
-     */
-    public function filterSelect2(array $args, Field $field): array
-    {
-        $args = $this->filterSelect($args, $field);
-
-        $args['min_chars'] = $args['min_chars'] ?? 3;
-        $args['min_items_for_search'] = $args['min_items_for_search'] ?? 10;
-        $value = $args['value'];
-        $multiple = !empty($args['multiple']);
-
-        $valueArr = $multiple ? (array)$value : [$value];
-
-        foreach ($valueArr as $item) {
-//            $item = (int)$item;
-            if (!$this->arraySearch($args['options'], ['value' => $item])) {
-                $args['options'][] = [
-                    'label' => !empty($field->getProp('label_cb')) ? $field->getProp('label_cb')($item) : $item,
-                    'value' => $item,
-                    'selected' => 'selected',
-                ];
-            }
-        }
-
-        return $args;
+        return $this->m('field', $args);
     }
 
     /**
@@ -153,9 +74,9 @@ class Main
     }
 
     /**
-     * Render PHP Template
+     * Render Template (PHP/Twig)
      *
-     * @param string $name Template file name without .php
+     * @param string $name Template file name without .php/twig
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
      */
@@ -448,8 +369,7 @@ class Main
             $tab = $this->m('admin_page_tab', $tabArgs);
 
             foreach ($tabArgs['fields'] as $fieldArgs) {
-                /** @var Field $field */
-                $field = $this->m('field', $fieldArgs);
+                $field = $this->getField($fieldArgs);
 
                 $field->setProp('form', $tab->getProp('slug'));
 
@@ -474,8 +394,7 @@ class Main
         $metabox = $this->m('metabox', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
-            /** @var Field $field */
-            $field = $this->m('field', $fieldArgs);
+            $field = $this->getField($fieldArgs);
 
             $field->setProp('form', $metabox->getProp('id'));
 
@@ -497,8 +416,7 @@ class Main
         $section = $this->m('profile_section', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
-            /** @var Field $field */
-            $field = $this->m('field', $fieldArgs);
+            $field = $this->getField($fieldArgs);
 
             $field->setProps(
                 [
@@ -525,8 +443,7 @@ class Main
         $section = $this->m('term_meta', $args);
 
         foreach ($args['fields'] as $fieldArgs) {
-            /** @var Field $field */
-            $field = $this->m('field', $fieldArgs);
+            $field = $this->getField($fieldArgs);
 
             $field->setProps(
                 [
