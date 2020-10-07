@@ -1,12 +1,21 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules;
+namespace AlexDashkin\Adwpfw\Modules\Fields;
+
+use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
  * name*, id, tpl, label, placeholder, desc, required, default, classes
  */
 class Field extends Module
 {
+    /**
+     * Template Args
+     *
+     * @var array
+     */
+    protected $args = [];
+
     /**
      * Render Admin Field
      *
@@ -16,23 +25,13 @@ class Field extends Module
     public function render($value): string
     {
         // Set default value if not set
-        if (is_null($value) && !is_null($this->getProp('default'))) {
-            $value = $this->getProp('default');
-        }
-
-        // Call filter if set
-        $value = is_callable($this->getProp('filter')) ? $this->getProp('filter')($value) : $value;
-
-        $prefix = $this->prefix;
+        $this->args['value'] = (is_null($value) && !is_null($this->getProp('default'))) ? $this->getProp('default') : $value;
 
         // Prepare template args
-        $args = $this->getProps();
-        $args['prefix'] = $prefix;
-        $args['name'] = sprintf('%s[%s][%s]', $prefix, $this->getProp('form'), $this->getProp('name'));
-        $args['required'] = $this->getProp('required') ? 'required' : '';
-        $args['value'] = $value;
+        $this->prepareArgs();
 
-        $args = apply_filters(sprintf('%s_render_field_%s', $prefix, $this->getProp('type')), $args, $this);
+        // Filter args before passing to template
+        $args = apply_filters(sprintf('%s_render_field_%s', $this->prefix, $this->getProp('type')), $this->args, $this);
 
         // Render template
         return $this->main->render('fields/' . $this->getProp('tpl'), $args);
@@ -72,7 +71,7 @@ class Field extends Module
     /**
      * Get several Field values helper
      *
-     * @param array $fields
+     * @param Field[] $fields
      * @param array $form
      * @return array
      */
@@ -94,6 +93,25 @@ class Field extends Module
     }
 
     /**
+     * Prepare Template Args
+     */
+    protected function prepareArgs()
+    {
+        $prefix = $this->prefix;
+
+        $args = array_merge(
+            $this->getProps(),
+            [
+                'prefix' => $prefix,
+                'name' => sprintf('%s[%s][%s]', $prefix, $this->getProp('form'), $this->getProp('name')),
+                'required' => $this->getProp('required') ? 'required' : '',
+            ]
+        );
+
+        $this->args = array_merge($this->args, $args);
+    }
+
+    /**
      * Get Default prop values
      *
      * @return array
@@ -101,7 +119,6 @@ class Field extends Module
     protected function defaults(): array
     {
         return [
-            'name' => 'field',
             'id' => function () {
                 return $this->prefix . '-' . sanitize_key(str_replace([' ', '_'], '-', $this->getProp('name')));
             },
@@ -110,7 +127,6 @@ class Field extends Module
             'placeholder' => '',
             'desc' => '',
             'classes' => 'widefat',
-            'options' => [],
         ];
     }
 }

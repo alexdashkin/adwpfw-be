@@ -23,8 +23,11 @@ return [
     'updater.plugin' => Updater\Plugin::class,
     'updater.theme' => Updater\Theme::class,
     'widget' => Widget::class,
-    'field' => Field::class,
     'customizer.panel' => Customizer\Panel::class,
     'customizer.section' => Customizer\Section::class,
     'customizer.setting' => Customizer\Setting::class,
+    'field' => Fields\Field::class,
+    'field.checkbox' => Fields\Checkbox::class,
+    'field.select' => Fields\Select::class,
+    'field.select2' => Fields\Select2::class,
 ];
