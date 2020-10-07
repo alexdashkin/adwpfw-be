@@ -4,9 +4,12 @@ namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Core\App;
 use AlexDashkin\Adwpfw\Core\Main;
+use AlexDashkin\Adwpfw\Traits\Props;
 
 abstract class Module
 {
+    use Props;
+
     /**
      * @var Main
      */
@@ -16,11 +19,6 @@ abstract class Module
      * @var App
      */
     protected $app;
-
-    /**
-     * @var array Item Props
-     */
-    protected $props = [];
 
     /**
      * @var string
@@ -39,77 +37,6 @@ abstract class Module
         $this->main = $app->getMain();
 
         $this->prefix = $this->config('prefix');
-    }
-
-    /**
-     * Get Single Prop
-     *
-     * @param string $key
-     * @return mixed
-     */
-    public function getProp(string $key)
-    {
-        return array_key_exists($key, $this->props) ? $this->props[$key] : $this->getDefault($key);
-    }
-
-    /**
-     * Get All Props
-     *
-     * @return array
-     */
-    public function getProps(): array
-    {
-        $set = $default = [];
-
-        foreach ($this->defaults() as $key => $value) {
-            $default[$key] = $this->getDefault($key);
-        }
-
-        foreach ($this->props as $key => $value) {
-            $set[$key] = $this->getProp($key);
-        }
-
-        return array_merge($default, $set);
-    }
-
-    /**
-     * Set Single Prop
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    public function setProp(string $key, $value)
-    {
-        $this->props[$key] = $value;
-    }
-
-    /**
-     * Set Many Props
-     *
-     * @param array $data
-     */
-    public function setProps(array $data)
-    {
-        foreach ($data as $key => $value) {
-            $this->setProp($key, $value);
-        }
-    }
-
-    /**
-     * Get Default Prop value
-     *
-     * @param string $key
-     * @return mixed
-     */
-    protected function getDefault(string $key)
-    {
-        $defaults = $this->defaults();
-
-        if (array_key_exists($key, $defaults)) {
-            return is_callable($defaults[$key]) ? $defaults[$key]() : $defaults[$key];
-        }
-
-        return null;
     }
 
     /**
@@ -165,15 +92,5 @@ abstract class Module
     protected function log($message, array $values = [], int $level = 4)
     {
         $this->app->getLogger()->log($message, $values, $level);
-    }
-
-    /**
-     * Get Default prop values, to be overridden
-     *
-     * @return array
-     */
-    protected function defaults(): array
-    {
-        return [];
     }
 }
