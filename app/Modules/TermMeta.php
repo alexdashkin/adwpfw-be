@@ -2,6 +2,8 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\Fields\Field;
+
 /**
  * taxonomy*, title
  */
