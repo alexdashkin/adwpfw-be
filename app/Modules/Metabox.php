@@ -21,6 +21,8 @@ class Metabox extends Module
      */
     public function addField(Field $field)
     {
+        $field->setProp('context', 'post');
+
         $this->fields[] = $field;
     }
 
@@ -58,41 +60,10 @@ class Metabox extends Module
     public function render(\WP_Post $post)
     {
         $args = $this->getProps();
-        $values = $this->getValue($post->ID);
-        $args['fields'] = Field::getArgsForMany($this->fields, $values);
+
+        $args['fields'] = Field::renderMany($this->fields, $post->ID);
 
         echo $this->main->render('templates/metabox', $args);
-    }
-
-    /**
-     * Get a Metabox Value.
-     *
-     * @param int $postId Post ID (defaults to the current post).
-     * @return mixed
-     */
-    public function getValue(int $postId = 0)
-    {
-        if (!$post = get_post($postId)) {
-            return '';
-        }
-
-        return get_post_meta($post->ID, '_' . $this->prefix . '_' . $this->getProp('id'), true) ?: [];
-    }
-
-    /**
-     * Set a Metabox Value.
-     *
-     * @param mixed $value Value to set.
-     * @param int $postId Post ID (defaults to the current post).
-     * @return bool
-     */
-    public function setValue($value, int $postId = 0): bool
-    {
-        if (!$postId = get_post($postId)) {
-            return false;
-        }
-
-        return update_post_meta($postId->ID, '_' . $this->prefix . '_' . $this->getProp('id'), $value);
     }
 
     /**
@@ -102,25 +73,13 @@ class Metabox extends Module
      */
     public function save(int $postId)
     {
-        if (empty($_POST[$this->prefix][$this->getProp('id')])) {
+        if (empty($_POST[$this->prefix])) {
             return;
         }
 
-        $form = $_POST[$this->prefix][$this->getProp('id')];
+        $values = $_POST[$this->prefix];
 
-        $values = [];
-
-        foreach ($this->fields as $field) {
-            $fieldName = $field->getProp('name');
-
-            if (empty($fieldName) || !array_key_exists($fieldName, $form)) {
-                continue;
-            }
-
-            $values[$fieldName] = $field->sanitize($form[$fieldName]);
-        }
-
-        $this->setValue($values, $postId);
+        Field::setMany($this->fields, $values, $postId);
 
         do_action('adwpfw_metabox_saved', $this, $postId, $values);
     }

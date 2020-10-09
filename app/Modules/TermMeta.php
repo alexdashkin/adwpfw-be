@@ -21,6 +21,8 @@ class TermMeta extends Module
      */
     public function addField(Field $field)
     {
+        $field->setProp('context', 'term');
+
         $this->fields[] = $field;
     }
 
@@ -43,8 +45,8 @@ class TermMeta extends Module
     public function render(\WP_Term $term)
     {
         $args = $this->getProps();
-        $values = get_term_meta($term->term_id, '_' . $this->prefix . '_' . $this->getProp('id'), true) ?: [];
-        $args['fields'] = Field::getArgsForMany($this->fields, $values);
+
+        $args['fields'] = Field::renderMany($this->fields, $term->term_id);
 
         echo $this->main->render('templates/term-meta', $args);
     }
@@ -56,16 +58,13 @@ class TermMeta extends Module
      */
     public function save(int $termId)
     {
-        $id = $this->getProp('id');
-        $prefix = $this->prefix;
-
-        if (empty($_POST[$prefix][$id])) {
+        if (empty($_POST[$this->prefix])) {
             return;
         }
 
-        $values = Field::getFieldValues($this->fields, $_POST[$prefix][$id]);
+        $values = $_POST[$this->prefix];
 
-        update_term_meta($termId, '_' . $prefix . '_' . $id, $values);
+        Field::setMany($this->fields, $values, $termId);
 
         do_action('adwpfw_term_saved', $this, $values);
     }

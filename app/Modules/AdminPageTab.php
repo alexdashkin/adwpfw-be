@@ -59,7 +59,7 @@ class AdminPageTab extends Module
      */
     public function addField(Field $field)
     {
-        $field->setProp('form', $this->getProp('slug'));
+        $field->setProp('context', 'option');
 
         $this->fields[] = $field;
     }
@@ -72,8 +72,8 @@ class AdminPageTab extends Module
     public function render(): string
     {
         $args = $this->getProps();
-        $values = get_option($this->prefix . '_' . $this->getProp('option')) ?: [];
-        $fields = Field::getArgsForMany($this->fields, $values);
+
+        $fields = Field::renderMany($this->fields);
 
         $args['fields'] = $this->main->render('templates/admin-page-tab-fields', ['fields' => $fields]);
 
@@ -89,16 +89,14 @@ class AdminPageTab extends Module
     public function save(array $request): array
     {
         $form = $request['form'];
-        $prefix = $this->prefix;
-        $slug = $this->getProp('slug');
 
-        if (empty($form[$prefix][$slug])) {
+        if (empty($form[$this->prefix])) {
             return $this->main->returnError('Form is empty');
         }
 
-        $values = Field::getFieldValues($this->fields, $form[$prefix][$slug]);
+        $values = $form[$this->prefix];
 
-        update_option($this->prefix . '_' . $this->getProp('option'), $values);
+        Field::setMany($this->fields, $values);
 
         do_action('adwpfw_settings_saved', $this, $values);
 

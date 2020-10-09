@@ -21,6 +21,8 @@ class ProfileSection extends Module
      */
     public function addField(Field $field)
     {
+        $field->setProp('context', 'user');
+
         $this->fields[] = $field;
     }
 
@@ -43,8 +45,8 @@ class ProfileSection extends Module
     public function render(\WP_User $user)
     {
         $args = $this->getProps();
-        $values = get_user_meta($user->ID, '_' . $this->prefix . '_' . $this->getProp('id'), true) ?: [];
-        $args['fields'] = Field::getArgsForMany($this->fields, $values);
+
+        $args['fields'] = Field::renderMany($this->fields, $user->ID);
 
         echo $this->main->render('templates/profile-section', $args);
     }
@@ -61,16 +63,13 @@ class ProfileSection extends Module
             return;
         }
 
-        $id = $this->getProp('id');
-        $prefix = $this->prefix;
-
-        if (empty($_POST[$prefix][$id])) {
+        if (empty($_POST[$this->prefix])) {
             return;
         }
 
-        $values = Field::getFieldValues($this->fields, $_POST[$prefix][$id]);
+        $values = $_POST[$this->prefix];
 
-        update_user_meta($userId, '_' . $prefix . '_' . $id, $values);
+        Field::setMany($this->fields, $values, $userId);
 
         do_action('adwpfw_profile_saved', $this, $values);
     }
