@@ -37,6 +37,7 @@ class Theme extends Module
         ];
 
         $this->addHook('pre_set_site_transient_update_themes', [$this, 'register']);
+        $this->addHook('upgrader_process_complete', [$this, 'onUpdate']);
     }
 
     /**
@@ -60,7 +61,7 @@ class Theme extends Module
      * @param \WP_Upgrader $upgrader
      * @param array $data
      */
-    public function onUpdate(\WP_Upgrader $upgrader, array $data)
+    public function onUpdate(\WP_Upgrader $upgrader, array $data) // todo probably don't work - check
     {
         if ($data['action'] !== 'update' || $data['type'] !== 'theme'
             || empty($data['themes']) || !in_array($this->getProp('slug'), $data['themes'])) {
