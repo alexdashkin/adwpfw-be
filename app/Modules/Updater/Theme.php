@@ -61,7 +61,7 @@ class Theme extends Module
      * @param \WP_Upgrader $upgrader
      * @param array $data
      */
-    public function onUpdate(\WP_Upgrader $upgrader, array $data) // todo probably don't work - check
+    public function onUpdate(\WP_Upgrader $upgrader, array $data)
     {
         if ($data['action'] !== 'update' || $data['type'] !== 'theme'
             || empty($data['themes']) || !in_array($this->getProp('slug'), $data['themes'])) {
