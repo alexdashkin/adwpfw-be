@@ -37,13 +37,15 @@ class AdminPage extends Module
      */
     public function register()
     {
+        $slug = sprintf('%s-%s', $this->prefix, $this->getProp('slug'));
+
         if ($parent = $this->getProp('parent')) {
             add_submenu_page(
                 $parent,
                 $this->getProp('title'),
                 $this->getProp('name'),
                 $this->getProp('capability'),
-                $this->getProp('slug'),
+                $slug,
                 [$this, 'render']
             );
         } else {
@@ -51,7 +53,7 @@ class AdminPage extends Module
                 $this->getProp('title'),
                 $this->getProp('name'),
                 $this->getProp('capability'),
-                $this->getProp('slug'),
+                $slug,
                 [$this, 'render'],
                 $this->getProp('icon'),
                 $this->getProp('position')
