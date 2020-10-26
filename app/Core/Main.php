@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Core;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Fields\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\PostType, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\Block, Modules\Cpt, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Fields\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
 
 /**
  * Main Facade
@@ -213,20 +213,7 @@ class Main
         foreach (['admin', 'front'] as $af) {
             foreach (['css', 'js'] as $type) {
                 foreach ($args[$af][$type] as $asset) {
-                    $file = is_array($asset) && !empty($asset['file']) ? $asset['file'] : $asset;
-
-                    $this->m(
-                        'asset.' . $type,
-                        [
-                            'id' => $asset['id'] ?? '',
-                            'type' => $af,
-                            'url' => $asset['url'] ?? $args['url'] . $file,
-                            'ver' => empty($asset['url']) ? filemtime($args['dir'] . $file) : null,
-                            'deps' => $asset['deps'] ?? [],
-                            'callback' => $asset['callback'] ?? [],
-                            'localize' => $asset['localize'] ?? [],
-                        ]
-                    );
+                    $this->m('asset.' . $type, array_merge(['type' => $af], $asset));
                 }
             }
         }
@@ -321,14 +308,26 @@ class Main
     }
 
     /**
+     * Add Gutenberg Block (requires ACF Pro)
+     *
+     * @param array $args
+     * @return Block
+     * @see acf_register_block_type
+     */
+    public function addBlock(array $args): Block
+    {
+        return $this->m('block', $args);
+    }
+
+    /**
      * Add Custom Post Type
      *
      * @param array $args
-     * @return PostType
+     * @return Cpt
      */
-    public function addCpt(array $args): PostType
+    public function addCpt(array $args): Cpt
     {
-        return $this->m('post_type', $args);
+        return $this->m('cpt', $args);
     }
 
     /**

@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 /**
  * singular*, plural, slug, labels, description, public, columns
  */
-class PostType extends Module
+class Cpt extends Module
 {
     /**
      * Init Module

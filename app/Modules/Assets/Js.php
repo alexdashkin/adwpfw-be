@@ -8,6 +8,16 @@ namespace AlexDashkin\Adwpfw\Modules\Assets;
 class Js extends Asset
 {
     /**
+     * Get file extension
+     *
+     * @return string
+     */
+    protected function getFileExt(): string
+    {
+        return 'js';
+    }
+
+    /**
      * Enqueue script
      */
     public function enqueue()
@@ -21,15 +31,7 @@ class Js extends Asset
 
         $prefix = $this->prefix;
 
-        $id = $this->getProp('id');
-
-        // Enqueue already registered script and exit
-/*        if (wp_script_is($id, 'registered')) {
-            wp_enqueue_script($id);
-            return;
-        }*/
-
-        $id = $prefix . '-' . $id;
+        $id = $prefix . '-' . $this->getProp('id');
 
         // Enqueue new script
         wp_enqueue_script($id, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
@@ -46,5 +48,20 @@ class Js extends Asset
         );
 
         wp_localize_script($id, $prefix, $localize);
+    }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        $defaults = [
+            'deps' => ['jquery'],
+            'localize' => [],
+        ];
+
+        return array_merge(parent::defaults(), $defaults);
     }
 }

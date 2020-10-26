@@ -50,6 +50,25 @@ class Metabox extends Module
             $this->getProp('context'),
             $this->getProp('priority')
         );
+
+        // Enqueue assets
+        foreach ($this->getProp('assets') as $asset) {
+
+            // Type here is CSS/JS
+            $type = $asset['type'] ?? 'css';
+
+            // Type for particular asset is admin/front
+            $asset['type'] = 'admin';
+
+            $args = [
+                'id' => $this->getProp('id'),
+                'callback' => function () {
+                    return in_array(get_current_screen()->id, $this->getProp('screen'));
+                },
+            ];
+
+            $this->m('asset.' . $type, array_merge($args, $asset));
+        }
     }
 
     /**
@@ -98,6 +117,7 @@ class Metabox extends Module
             },
             'screen' => ['post', 'page'],
             'context' => 'normal',
+            'assets' => [],
         ];
     }
 }

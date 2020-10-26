@@ -42,18 +42,7 @@ class Shortcode extends Module
 
         // Enqueue shortcode assets
         foreach ($assets as $asset) {
-            $this->m(
-                'asset.' . $asset['type'],
-                [
-                    'id' => $tag,
-                    'type' => 'front',
-                    'url' => $asset['url'] ?? $assets['url'] . $asset['file'],
-                    'ver' => empty($asset['url']) ? filemtime($assets['dir'] . $asset['file']) : null,
-                    'deps' => $asset['deps'] ?? [],
-                    'callback' => $asset['callback'] ?? [],
-                    'localize' => $asset['localize'] ?? [],
-                ]
-            );
+            $this->m('asset.' . $asset['type'], array_merge(['type' => 'front'], $asset));
         }
     }
 

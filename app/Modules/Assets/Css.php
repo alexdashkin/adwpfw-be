@@ -8,6 +8,16 @@ namespace AlexDashkin\Adwpfw\Modules\Assets;
 class Css extends Asset
 {
     /**
+     * Get file extension
+     *
+     * @return string
+     */
+    protected function getFileExt(): string
+    {
+        return 'css';
+    }
+
+    /**
      * Enqueue style
      */
     public function enqueue()
