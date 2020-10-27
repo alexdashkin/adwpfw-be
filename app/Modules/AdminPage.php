@@ -40,7 +40,7 @@ class AdminPage extends Module
         $slug = sprintf('%s-%s', $this->prefix, $this->getProp('slug'));
 
         if ($parent = $this->getProp('parent')) {
-            add_submenu_page(
+            $suffix = add_submenu_page(
                 $parent,
                 $this->getProp('title'),
                 $this->getProp('name'),
@@ -49,7 +49,7 @@ class AdminPage extends Module
                 [$this, 'render']
             );
         } else {
-            add_menu_page(
+            $suffix = add_menu_page(
                 $this->getProp('title'),
                 $this->getProp('name'),
                 $this->getProp('capability'),
@@ -58,6 +58,25 @@ class AdminPage extends Module
                 $this->getProp('icon'),
                 $this->getProp('position')
             );
+        }
+
+        // Enqueue assets
+        foreach ($this->getProp('assets') as $asset) {
+
+            // Type here is CSS/JS
+            $type = $asset['type'] ?? 'css';
+
+            // Type for particular asset is admin/front
+            $asset['type'] = 'admin';
+
+            $args = [
+                'id' => $this->getProp('slug'),
+                'callback' => function () use ($suffix) {
+                    return get_current_screen()->id === $suffix;
+                },
+            ];
+
+            $this->m('asset.' . $type, array_merge($args, $asset));
         }
     }
 
@@ -107,6 +126,7 @@ class AdminPage extends Module
             'icon' => 'dashicons-update',
             'position' => 100,
             'capability' => 'manage_options',
+            'assets' => [],
         ];
     }
 }
