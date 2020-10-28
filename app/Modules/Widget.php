@@ -38,7 +38,7 @@ class Widget extends Module
         $this->addHook('render_' . $id, [$this, 'render']);
 
         // If no associated assets or no widget on the page - return
-        if (!is_active_widget(false, false, $id) || !$assets = $this->getProp('assets')) {
+        if (!is_active_widget(false, false, $id) || !($assets = $this->getProp('assets'))) {
             return;
         }
 
