@@ -196,30 +196,6 @@ class Main
     }
 
     /**
-     * Add assets
-     *
-     * @param array $args
-     */
-    public function addAssets(array $args)
-    {
-        $args = $this->arrayMerge(
-            [
-                'admin' => ['css' => [], 'js' => []],
-                'front' => ['css' => [], 'js' => []],
-            ],
-            $args
-        );
-
-        foreach (['admin', 'front'] as $af) {
-            foreach (['css', 'js'] as $type) {
-                foreach ($args[$af][$type] as $asset) {
-                    $this->m('asset.' . $type, array_merge(['type' => $af], $asset));
-                }
-            }
-        }
-    }
-
-    /**
      * Add AdminAjax action
      *
      * @param array $args
