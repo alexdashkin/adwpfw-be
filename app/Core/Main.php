@@ -1036,7 +1036,7 @@ class Main
      */
     public function getPostMeta(string $name, int $postId = 0)
     {
-        return $this->getMeta($name, 'post', $postId);
+        return $this->getMeta($name, 'post', $postId ?: get_queried_object_id());
     }
 
     /**
@@ -1048,7 +1048,7 @@ class Main
      */
     public function getUserMeta(string $name, int $userId = 0)
     {
-        return $this->getMeta($name, 'user', $userId);
+        return $this->getMeta($name, 'user', $userId ?: get_current_user_id());
     }
 
     /**
@@ -1060,7 +1060,7 @@ class Main
      */
     public function getTermMeta(string $name, int $termId = 0)
     {
-        return $this->getMeta($name, 'term', $termId);
+        return $this->getMeta($name, 'term', $termId ?: get_queried_object_id());
     }
 
     /**
@@ -1183,7 +1183,9 @@ class Main
      */
     private function getMeta(string $name, string $type, int $objectId = 0)
     {
-        $objectId = $objectId ?: get_queried_object_id();
+        if (!$objectId) {
+            return null;
+        }
 
         $func = 'get_' . $type . '_meta';
 
