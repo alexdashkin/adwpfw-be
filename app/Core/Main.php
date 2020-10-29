@@ -389,12 +389,6 @@ class Main
         foreach ($args['fields'] as $fieldArgs) {
             $field = $this->getField($fieldArgs);
 
-            $field->setProps(
-                [
-                    'classes' => 'regular-text',
-                ]
-            );
-
             $section->addField($field);
         }
 

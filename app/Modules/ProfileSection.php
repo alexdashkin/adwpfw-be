@@ -48,7 +48,7 @@ class ProfileSection extends Module
             $args = [
                 'id' => sprintf('%s-%d', $this->getProp('id'), $index),
                 'callback' => function () {
-                    return get_current_screen()->id === 'user';
+                    return in_array(get_current_screen()->id, ['profile', 'user-edit']);
                 },
             ];
 
@@ -101,7 +101,6 @@ class ProfileSection extends Module
     protected function defaults(): array
     {
         return [
-            'title' => 'Custom',
             'id' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
             },
