@@ -1,37 +1,31 @@
 <div class="<?= $prefix ?> adwpfw adwpfw-profile-section">
 
-    <?php if ($title): ?>
-        <h2><?= $title ?></h2>
-    <?php endif; ?>
+    <?php foreach ($fields as $field): ?>
 
-    <table class="form-table">
+        <div class="adwpfw-field">
 
-        <?php foreach ($fields as $field): ?>
+            <?php if ($field['label']): ?>
 
-            <tr>
-
-                <?php if ($field['label']): ?>
-
-                    <th>
-                        <label for="<?= $field['id'] ?>"><?= $field['label'] ?></label>
-                    </th>
-
-                <?php endif; ?>
-
-                <td <?= $field['label'] ? 'colspan="2"' : '' ?>>
-
-                    <?= $field['content'] ?>
+                <div class="adwpfw-label">
+                    <label for="<?= $field['id'] ?>"><?= $field['label'] ?></label>
 
                     <?php if ($field['desc']): ?>
-                        <span class="description"><?= $field['desc'] ?></span>
+                        <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help">
+                            <div class="adwpfw-tooltip-wrapper">
+                                <span class="adwpfw-tooltip-text"><?= $field['desc'] ?></span>
+                            </div>
+                        </div>
                     <?php endif; ?>
+                </div>
 
-                </td>
+            <?php endif; ?>
 
-            </tr>
+            <div class="adwpfw-control">
+                <?= $field['content'] ?>
+            </div>
 
-        <?php endforeach; ?>
+        </div>
 
-    </table>
+    <?php endforeach; ?>
 
 </div>
