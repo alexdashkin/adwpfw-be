@@ -35,6 +35,25 @@ class ProfileSection extends Module
         $this->addHook('edit_user_profile', [$this, 'render']);
         $this->addHook('personal_options_update', [$this, 'save']);
         $this->addHook('edit_user_profile_update', [$this, 'save']);
+
+        // Enqueue assets
+        foreach ($this->getProp('assets') as $index => $asset) {
+
+            // Type here is CSS/JS
+            $type = $asset['type'] ?? 'css';
+
+            // Type for particular asset is admin/front
+            $asset['type'] = 'admin';
+
+            $args = [
+                'id' => sprintf('%s-%d', $this->getProp('id'), $index),
+                'callback' => function () {
+                    return get_current_screen()->id === 'user';
+                },
+            ];
+
+            $this->m('asset.' . $type, array_merge($args, $asset));
+        }
     }
 
     /**
@@ -86,6 +105,7 @@ class ProfileSection extends Module
             'id' => function () {
                 return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
             },
+            'assets' => [],
         ];
     }
 }

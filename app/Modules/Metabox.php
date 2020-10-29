@@ -51,9 +51,9 @@ class Metabox extends Module
             $this->getProp('priority')
         );
 
-        // Enqueue assets
-        foreach ($this->getProp('assets') as $asset) {
 
+        // Enqueue assets
+        foreach ($this->getProp('assets') as $index => $asset) {
             // Type here is CSS/JS
             $type = $asset['type'] ?? 'css';
 
@@ -61,7 +61,8 @@ class Metabox extends Module
             $asset['type'] = 'admin';
 
             $args = [
-                'id' => $this->getProp('id'),
+                'id' => sprintf('%s-%d', $this->getProp('id'), $index),
+                'type' => 'admin',
                 'callback' => function () {
                     return in_array(get_current_screen()->id, $this->getProp('screen'));
                 },

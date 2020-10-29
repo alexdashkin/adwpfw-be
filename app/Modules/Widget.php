@@ -37,25 +37,22 @@ class Widget extends Module
         $this->addHook('form_' . $id, [$this, 'form']);
         $this->addHook('render_' . $id, [$this, 'render']);
 
-        // If no associated assets or no widget on the page - return
-        if (!is_active_widget(false, false, $id) || !($assets = $this->getProp('assets'))) {
-            return;
-        }
-
         // Enqueue widget assets
-        foreach ($assets as $asset) {
-            $this->m(
-                'asset.' . $asset['type'],
-                [
-                    'id' => $id,
-                    'type' => 'front',
-                    'url' => $asset['url'] ?? $assets['url'] . $asset['file'],
-                    'ver' => empty($asset['url']) ? filemtime($assets['dir'] . $asset['file']) : null,
-                    'deps' => $asset['deps'] ?? [],
-                    'callback' => $asset['callback'] ?? [],
-                    'localize' => $asset['localize'] ?? [],
-                ]
-            );
+        foreach ($this->getProp('assets') as $index => $asset) {
+            // Type here is CSS/JS
+            $type = $asset['type'] ?? 'css';
+
+            // Type for particular asset is admin/front
+            $asset['type'] = 'front';
+
+            $args = [
+                'id' => sprintf('%s-%d', $id, $index),
+                'callback' => function () use ($id) {
+                    is_active_widget(false, false, $id);
+                },
+            ];
+
+            $this->m('asset.' . $type, array_merge($args, $asset));
         }
     }
 
@@ -106,6 +103,7 @@ class Widget extends Module
             'id' => function () {
                 return 'widget_' . sanitize_key(str_replace(' ', '_', $this->getProp('title')));
             },
+            'assets' => [],
         ];
     }
 }

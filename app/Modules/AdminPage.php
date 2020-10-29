@@ -61,8 +61,7 @@ class AdminPage extends Module
         }
 
         // Enqueue assets
-        foreach ($this->getProp('assets') as $asset) {
-
+        foreach ($this->getProp('assets') as $index => $asset) {
             // Type here is CSS/JS
             $type = $asset['type'] ?? 'css';
 
@@ -70,7 +69,8 @@ class AdminPage extends Module
             $asset['type'] = 'admin';
 
             $args = [
-                'id' => $this->getProp('slug'),
+                'id' => sprintf('%s-%d', $this->getProp('slug'), $index),
+                'type' => 'admin',
                 'callback' => function () use ($suffix) {
                     return get_current_screen()->id === $suffix;
                 },

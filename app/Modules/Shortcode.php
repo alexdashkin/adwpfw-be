@@ -29,20 +29,23 @@ class Shortcode extends Module
             return;
         }
 
-        // Get current post and ensure it's a post
-        $post = get_queried_object();
-        if (!$post instanceof \WP_Post) {
-            return;
-        }
-
-        // If our shortcode is not used - do nothing
-        if (!has_shortcode($post->post_content, $tag)) {
-            return;
-        }
-
         // Enqueue shortcode assets
-        foreach ($assets as $asset) {
-            $this->m('asset.' . $asset['type'], array_merge(['type' => 'front'], $asset));
+        foreach ($assets as $index => $asset) {
+            // Type here is CSS/JS
+            $type = $asset['type'] ?? 'css';
+
+            // Type for particular asset is admin/front
+            $asset['type'] = 'front';
+
+            $args = [
+                'id' => sprintf('%s-%d', $tag, $index),
+                'callback' => function () use ($tag) {
+                    $post = get_queried_object();
+                    return $post instanceof \WP_Post && has_shortcode($post->post_content, $tag);
+                },
+            ];
+
+            $this->m('asset.' . $type, array_merge($args, $asset));
         }
     }
 
@@ -59,5 +62,17 @@ class Shortcode extends Module
         $args = array_merge($this->getProp('atts') ?: [], $atts ?: []);
 
         return $this->getProp('callback')($args);
+    }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'assets' => [],
+        ];
     }
 }
