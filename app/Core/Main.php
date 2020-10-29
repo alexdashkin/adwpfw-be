@@ -346,8 +346,6 @@ class Main
             foreach ($tabArgs['fields'] as $fieldArgs) {
                 $field = $this->getField($fieldArgs);
 
-                $field->setProp('form', $tab->getProp('slug'));
-
                 $tab->addField($field);
             }
 
@@ -371,8 +369,6 @@ class Main
         foreach ($args['fields'] as $fieldArgs) {
             $field = $this->getField($fieldArgs);
 
-            $field->setProp('form', $metabox->getProp('id'));
-
             $metabox->addField($field);
         }
 
@@ -395,7 +391,6 @@ class Main
 
             $field->setProps(
                 [
-                    'form' => $section->getProp('id'),
                     'classes' => 'regular-text',
                 ]
             );
@@ -422,7 +417,6 @@ class Main
 
             $field->setProps(
                 [
-                    'form' => $section->getProp('id'),
                     'classes' => 'regular-text',
                 ]
             );
