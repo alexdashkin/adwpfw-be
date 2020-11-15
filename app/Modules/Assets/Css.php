@@ -18,18 +18,20 @@ class Css extends Asset
     }
 
     /**
-     * Enqueue style
+     * Get enqueue func name
+     *
+     * @return string
      */
-    public function enqueue()
+    protected function getEnqueueFuncName(): string
     {
-        $callback = $this->getProp('callback');
+        return 'wp_enqueue_style';
+    }
 
-        if ($callback && is_callable($callback) && !$callback()) {
-            return;
-        }
-
-        $id = $this->prefix . '-' . sanitize_title($this->getProp('id'));
-
-        wp_enqueue_style($id, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'));
+    /**
+     * Register style
+     */
+    public function register()
+    {
+        wp_register_style($this->getProp('handle'), $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'));
     }
 }

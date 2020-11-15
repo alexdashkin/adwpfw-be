@@ -18,36 +18,35 @@ class Js extends Asset
     }
 
     /**
-     * Enqueue script
+     * Get enqueue func name
+     *
+     * @return string
      */
-    public function enqueue()
+    protected function getEnqueueFuncName(): string
     {
-        $callback = $this->getProp('callback');
+        return 'wp_enqueue_script';
+    }
 
-        // Exit if callback returns false
-        if ($callback && is_callable($callback) && !$callback()) {
-            return;
-        }
-
-        $prefix = $this->prefix;
-
-        $id = $prefix . '-' . $this->getProp('id');
-
-        // Enqueue new script
-        wp_enqueue_script($id, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
+    /**
+     * Register script
+     */
+    public function register()
+    {
+        // Register script
+        wp_register_script($this->getProp('handle'), $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
 
         // Localize script
         $localize = array_merge(
             [
-                'prefix' => $prefix,
-                'nonce' => wp_create_nonce($prefix),
+                'prefix' => $this->prefix,
+                'nonce' => wp_create_nonce($this->prefix),
                 'rest_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
             ],
             $this->getProp('localize')
         );
 
-        wp_localize_script($id, $prefix, $localize);
+        wp_localize_script($this->getProp('handle'), $this->prefix, $localize);
     }
 
     /**
