@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- *
+ * Gutenberg Block
  */
 class Block extends Module
 {
@@ -13,7 +13,7 @@ class Block extends Module
     public function init()
     {
         // Register Block
-        $this->addHook('acf/init', [$this, 'register']);
+        $this->addHook('init', [$this, 'register']);
     }
 
     /**
@@ -21,43 +21,56 @@ class Block extends Module
      */
     public function register()
     {
-        // Check if function exists
-        if (!function_exists('acf_register_block_type')) {
-            return;
-        }
+        // Register Block Assets
+        $this->registerAssets();
 
-        // Prefix slug
-        $this->setProp('name', $this->prefix . '_' . $this->getProp('name'));
-
-        // Set Assets callback
-        $this->setProp('enqueue_assets', [$this, 'enqueueAssets']);
-
-        // Register with ACF
-        acf_register_block_type($this->getProps());
+        // Register block
+        register_block_type(
+            $this->prefix . '/' . $this->getProp('name'),
+            [
+                'editor_script' => $this->getProp('editor_script'),
+                'editor_style' => $this->getProp('editor_style'),
+                'style' => $this->getProp('style'),
+            ]
+        );
     }
 
-    public function enqueueAssets()
+    /**
+     * Register Block Assets
+     */
+    public function registerAssets()
     {
-        // If no associated assets - return
-        if (!$assets = $this->getProp('assets')) {
-            return;
-        }
-
-        // Enqueue block assets
+        // Register block assets
         foreach ($this->getProp('assets') as $asset) {
-            // Type here is CSS/JS
-            $type = $asset['type'] ?? 'css';
+            switch ($asset['type']) {
+                case 'editor_script':
+                    $type = 'js';
+                    $af = 'block';
+                    $suffix = 'editor-script';
+                    break;
 
-            // Enqueue both in Gutenberg and on front-end
-            foreach (['block', 'front'] as $af) {
-                $asset['type'] = $af;
+                case 'editor_style':
+                    $type = 'css';
+                    $af = 'block';
+                    $suffix = 'editor-style';
+                    break;
 
-                $args = [
-                    'id' => sprintf('%s-%s-%s', $this->prefix, $asset['type'], $this->getProp('name')),
-                ];
-
-                $this->m('asset.' . $type, array_merge($args, $asset));
+                case 'style':
+                    $type = 'css';
+                    $af = 'front';
+                    $suffix = 'front-style';
+                    break;
             }
+
+            $args = [
+                'id' => sprintf('%s-%s', $this->getProp('name'), $suffix),
+                'type' => $af,
+                'enqueue' => false,
+            ];
+
+            $asset = $this->m('asset.' . $type, array_merge($args, $asset));
+
+            $this->setProp($asset['type'], $asset->getProp('handle'));
         }
     }
 

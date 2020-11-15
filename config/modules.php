@@ -12,6 +12,7 @@ return [
     'admin_page_tab' => AdminPageTab::class,
     'admin_bar' => AdminBar::class,
     'block' => Block::class,
+    'acf_block' => Block::class,
     'dashboard_widget' => DbWidget::class,
     'cron' => CronJob::class,
     'metabox' => Metabox::class,

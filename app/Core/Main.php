@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Core;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\Block, Modules\Cpt, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Fields\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AcfBlock, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\Block, Modules\Cpt, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Fields\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
 
 /**
  * Main Facade
@@ -284,15 +284,26 @@ class Main
     }
 
     /**
-     * Add Gutenberg Block (requires ACF Pro)
+     * Add Gutenberg Block
      *
      * @param array $args
      * @return Block
-     * @see acf_register_block_type
      */
     public function addBlock(array $args): Block
     {
         return $this->m('block', $args);
+    }
+
+    /**
+     * Add ACF Gutenberg Block (requires ACF Pro)
+     *
+     * @param array $args
+     * @return AcfBlock
+     * @see acf_register_block_type
+     */
+    public function addAcfBlock(array $args): AcfBlock
+    {
+        return $this->m('acf_block', $args);
     }
 
     /**
