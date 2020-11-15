@@ -31,6 +31,7 @@ class Block extends Module
                 'editor_script' => $this->getProp('editor_script'),
                 'editor_style' => $this->getProp('editor_style'),
                 'style' => $this->getProp('style'),
+                'render_callback' => $this->getProp('render_callback'),
             ]
         );
     }
@@ -41,8 +42,8 @@ class Block extends Module
     public function registerAssets()
     {
         // Register block assets
-        foreach ($this->getProp('assets') as $asset) {
-            switch ($asset['type']) {
+        foreach ($this->getProp('assets') as $assetData) {
+            switch ($assetData['type']) {
                 case 'editor_script':
                     $type = 'js';
                     $af = 'block';
@@ -68,9 +69,9 @@ class Block extends Module
                 'enqueue' => false,
             ];
 
-            $asset = $this->m('asset.' . $type, array_merge($args, $asset));
+            $asset = $this->m('asset.' . $type, array_merge($assetData, $args));
 
-            $this->setProp($asset['type'], $asset->getProp('handle'));
+            $this->setProp($assetData['type'], $asset->getProp('handle'));
         }
     }
 
@@ -86,6 +87,7 @@ class Block extends Module
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
             },
             'assets' => [],
+            'render_callback' => null,
         ];
     }
 }
