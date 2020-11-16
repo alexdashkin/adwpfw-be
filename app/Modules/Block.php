@@ -42,8 +42,12 @@ class Block extends Module
     public function registerAssets()
     {
         // Register block assets
-        foreach ($this->getProp('assets') as $assetData) {
-            switch ($assetData['type']) {
+        foreach (['editor_script', 'editor_style', 'style'] as $assetType) {
+            if (!$this->getProp($assetType)) {
+                continue;
+            }
+
+            switch ($assetType) {
                 case 'editor_script':
                     $type = 'js';
                     $af = 'block';
@@ -69,9 +73,9 @@ class Block extends Module
                 'enqueue' => false,
             ];
 
-            $asset = $this->m('asset.' . $type, array_merge($assetData, $args));
+            $asset = $this->m('asset.' . $type, array_merge($this->getProp($assetType), $args));
 
-            $this->setProp($assetData['type'], $asset->getProp('handle'));
+            $this->setProp($assetType, $asset->getProp('handle'));
         }
     }
 
