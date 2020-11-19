@@ -31,6 +31,7 @@ class Block extends Module
                 'editor_script' => $this->getProp('editor_script'),
                 'editor_style' => $this->getProp('editor_style'),
                 'style' => $this->getProp('style'),
+                'script' => $this->getProp('script'),
                 'render_callback' => $this->getProp('render_callback'),
             ]
         );
@@ -41,8 +42,7 @@ class Block extends Module
      */
     public function registerAssets()
     {
-        // Register block assets
-        foreach (['editor_script', 'editor_style', 'style'] as $assetType) {
+        foreach (['editor_script', 'script', 'editor_style', 'style'] as $assetType) {
             if (!$this->getProp($assetType)) {
                 continue;
             }
@@ -52,6 +52,12 @@ class Block extends Module
                     $type = 'js';
                     $af = 'block';
                     $suffix = 'editor-script';
+                    break;
+
+                case 'script':
+                    $type = 'js';
+                    $af = 'front';
+                    $suffix = 'front-script';
                     break;
 
                 case 'editor_style':
@@ -90,7 +96,6 @@ class Block extends Module
             'name' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
             },
-            'assets' => [],
             'render_callback' => null,
         ];
     }
