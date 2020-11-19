@@ -46,7 +46,10 @@ class Js extends Asset
             $this->getProp('localize')
         );
 
-        wp_localize_script($this->getProp('handle'), $this->prefix, $localize);
+        $handle = $this->getProp('handle');
+        $objName = str_replace('-', '_', $handle) . '_config';
+
+        wp_localize_script($handle, $objName, $localize);
     }
 
     /**
