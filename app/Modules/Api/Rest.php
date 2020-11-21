@@ -45,7 +45,15 @@ class Rest extends Request
             return $this->error('Endpoint is for Admins only');
         }
 
-        return $this->execute(array_merge($request->get_query_params(), $request->get_body_params()));
+        $method = 'post' === strtolower($this->getProp('method')) ? 'get_body_params' : 'get_query_params';
+
+        $data = $request->$method();
+
+        if (!$data || empty($data['data'])) {
+            return $this->error('No "data" param found in request');
+        }
+
+        return $this->execute($data['data']);
     }
 
     /**
