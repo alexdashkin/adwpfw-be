@@ -2,7 +2,7 @@
 
 <select class="adwpfw-select2 <?= $classes ?>"
         id="<?= $id ?>"
-        name="<?= $name ?>"
+        name="<?= $multiple ? $name.'[]' : $name ?>"
     <?= $multiple ?> <?= $required ?>
     <?= !empty($ajax_action) ? 'data-ajax-action="' . $ajax_action . '"' : '' ?>
     <?= !empty($placeholder) ? 'data-placeholder="' . $placeholder . '"' : '' ?>

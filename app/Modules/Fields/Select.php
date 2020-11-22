@@ -20,9 +20,9 @@ class Select extends Field
         $multiple = !empty($args['multiple']);
         $args['multiple'] = $multiple ? 'multiple' : '';
 
-        if ($multiple) {
+/*        if ($multiple) {
             $args['name'] .= '[]';
-        }
+        }*/
 
         $options = [];
 
