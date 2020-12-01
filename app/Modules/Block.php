@@ -33,6 +33,7 @@ class Block extends Module
                 'style' => $this->getProp('style'),
                 'script' => $this->getProp('script'),
                 'render_callback' => $this->getProp('render_callback'),
+                'supports' => $this->getProp('supports'),
             ]
         );
     }
