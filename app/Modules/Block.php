@@ -31,8 +31,10 @@ class Block extends Module
                 'editor_script' => $this->getProp('editor_script'),
                 'editor_style' => $this->getProp('editor_style'),
                 'style' => $this->getProp('style'),
+                // Loads on every page no matter if block presents or not
+                // To load only if block presents - use "front_script"
                 'script' => $this->getProp('script'),
-                'render_callback' => $this->getProp('render_callback'),
+                'render_callback' => [$this, 'render'],
                 'supports' => $this->getProp('supports'),
             ]
         );
@@ -43,7 +45,7 @@ class Block extends Module
      */
     public function registerAssets()
     {
-        foreach (['editor_script', 'script', 'editor_style', 'style'] as $assetType) {
+        foreach (['editor_script', 'script', 'front_script', 'editor_style', 'style'] as $assetType) {
             if (!$this->getProp($assetType)) {
                 continue;
             }
@@ -55,7 +57,15 @@ class Block extends Module
                     $suffix = 'editor-script';
                     break;
 
+                // loads on every page no matter if block presents or not
                 case 'script':
+                    $type = 'js';
+                    $af = 'front';
+                    $suffix = 'common-script';
+                    break;
+
+                // loads on pages where block presents (in "render_callback")
+                case 'front_script':
                     $type = 'js';
                     $af = 'front';
                     $suffix = 'front-script';
@@ -84,6 +94,25 @@ class Block extends Module
 
             $this->setProp($assetType, $asset->getProp('handle'));
         }
+    }
+
+    /**
+     * Render wrapper to add front script
+     *
+     * @param array $atts
+     * @return string
+     */
+    public function render(array $atts, string $content): string
+    {
+        // First, add front script if set
+        if ($this->getProp('front_script')) {
+            wp_enqueue_script(sprintf('%s-%s-%s', $this->prefix, $this->getProp('name'), 'front-script'));
+        }
+
+        // Call the callback if set
+        $callback = $this->getProp('render_callback');
+
+        return $callback ? $callback($atts, $content) : '';
     }
 
     /**
