@@ -49,11 +49,7 @@ class Rest extends Request
 
         $data = $request->$method();
 
-        if (!$data || empty($data['data'])) {
-            return $this->error('No "data" param found in request');
-        }
-
-        return $this->execute($data['data']);
+        return $this->execute($data['data'] ?? []);
     }
 
     /**
