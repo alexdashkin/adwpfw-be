@@ -47,9 +47,7 @@ class Rest extends Request
 
         $method = 'post' === strtolower($this->getProp('method')) ? 'get_body_params' : 'get_query_params';
 
-        $data = $request->$method();
-
-        return $this->execute($data['data'] ?? []);
+        return $this->execute($request->$method());
     }
 
     /**

@@ -27,7 +27,7 @@ class AdminAjax extends Request
 
         $this->log('Ajax request: "%s_%s"', [$this->prefix, $this->getProp('action')]);
 
-        $result = $this->execute($_REQUEST['data'] ?? []);
+        $result = $this->execute($_REQUEST);
 
         wp_send_json($result);
     }
