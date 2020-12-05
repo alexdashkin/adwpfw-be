@@ -846,9 +846,9 @@ class Main
      * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
-    public function returnSuccess(string $message = 'Done', array $data = [], bool $echo = false): array
+    public function returnSuccess(string $message = 'Success', array $data = [], bool $echo = false): array
     {
-        $message = $message ?: 'Done';
+        $message = $message ?: 'Success';
 
         $this->log($message);
 
