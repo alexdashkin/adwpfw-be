@@ -112,6 +112,9 @@ class Cpt extends Module
             },
             'public' => true,
             'labels' => [],
+            'rewrite' => function () {
+                return ['slug' => sanitize_key(str_replace(' ', '_', $this->getProp('plural')))];
+            },
         ];
     }
 }
