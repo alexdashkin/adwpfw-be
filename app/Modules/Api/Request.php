@@ -90,18 +90,7 @@ abstract class Request extends Module
             return $this->error('Result malformed');
         }
 
-        return !empty($result['success']) ? $this->success($result['data'] ?? []) : $this->error($result['message'] ?? 'Unknown error');
-    }
-
-    /**
-     * Return Success array
-     *
-     * @param array $data Data to return as JSON.
-     * @return array
-     */
-    protected function success(array $data = []): array
-    {
-        return $this->main->returnSuccess('Done', $data);
+        return $result;
     }
 
     /**
