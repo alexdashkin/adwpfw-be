@@ -2,6 +2,6 @@
 
     <input type="hidden" name="<?= $name ?>" value="">
 
-    <input type="checkbox" id="<?= $id ?>" name="<?= $name ?>" <?= $checked ?>>Yes, please
+    <input type="checkbox" id="<?= $id ?>" name="<?= $name ?>" <?= $checked ?>>Yes
 
 </label>
