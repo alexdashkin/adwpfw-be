@@ -45,54 +45,76 @@ class Block extends Module
      */
     public function registerAssets()
     {
-        foreach (['editor_script', 'script', 'front_script', 'editor_style', 'style'] as $assetType) {
-            if (!$this->getProp($assetType)) {
+        foreach (['editor_script', 'script', 'front_script', 'editor_style', 'style', 'scripts'] as $assetType) {
+            if (!$assetData = $this->getProp($assetType)) {
                 continue;
             }
 
-            switch ($assetType) {
-                case 'editor_script':
-                    $type = 'js';
-                    $af = 'block';
-                    $suffix = 'editor-script';
-                    break;
+            // Front-end scripts that load if the block presents on the page
+            if ('scripts' === $assetType) {
+                $handles = [];
 
-                // loads on every page no matter if block presents or not
-                case 'script':
-                    $type = 'js';
-                    $af = 'front';
-                    $suffix = 'common-script';
-                    break;
+                foreach ($assetData as $index => $assetItem) {
+                    $args = [
+                        'id' => sprintf('%s-%s-%d', $this->getProp('name'), 'front-script', $index + 1),
+                        'type' => 'front',
+                        'enqueue' => false,
+                    ];
 
-                // loads on pages where block presents (in "render_callback")
-                case 'front_script':
-                    $type = 'js';
-                    $af = 'front';
-                    $suffix = 'front-script';
-                    break;
+                    $asset = $this->m('asset.js', array_merge($assetItem, $args));
 
-                case 'editor_style':
-                    $type = 'css';
-                    $af = 'block';
-                    $suffix = 'editor-style';
-                    break;
+                    $handles[] = $asset->getProp('handle');
+                }
 
-                case 'style':
-                    $type = 'css';
-                    $af = 'front';
-                    $suffix = 'front-style';
-                    break;
+                $this->setProp('scripts', $handles);
+            } else {
+                switch ($assetType) {
+                    // Loads only in Gutenberg
+                    case 'editor_script':
+                        $type = 'js';
+                        $af = 'block';
+                        $suffix = 'editor-script';
+                        break;
+
+                    // Loads only in Gutenberg
+                    case 'editor_style':
+                        $type = 'css';
+                        $af = 'block';
+                        $suffix = 'editor-style';
+                        break;
+
+                    // Loads on every page no matter if the block presents or not
+                    case 'script':
+                        $type = 'js';
+                        $af = 'front';
+                        $suffix = 'front-script-all';
+                        break;
+
+                    // Loads if the block presents on the page
+                    case 'front_script':
+                        $type = 'js';
+                        $af = 'front';
+                        $suffix = 'front-script';
+                        break;
+
+                    // Loads on every page no matter if the block presents or not
+                    case 'style':
+                        $type = 'css';
+                        $af = 'front';
+                        $suffix = 'front-style';
+                        break;
+                }
+
+                $args = [
+                    'id' => sprintf('%s-%s', $this->getProp('name'), $suffix),
+                    'type' => $af,
+                    'enqueue' => false,
+                ];
+
+                $asset = $this->m('asset.' . $type, array_merge($assetData, $args));
+
+                $this->setProp($assetType, $asset->getProp('handle'));
             }
-
-            $args = [
-                'id' => sprintf('%s-%s', $this->getProp('name'), $suffix),
-                'type' => $af,
-                'enqueue' => false,
-            ];
-
-            $asset = $this->m('asset.' . $type, array_merge($this->getProp($assetType), $args));
-
-            $this->setProp($assetType, $asset->getProp('handle'));
         }
     }
 
@@ -104,9 +126,14 @@ class Block extends Module
      */
     public function render(array $atts, string $content): string
     {
-        // First, add front script if set
+        // Add front script if set
         if ($this->getProp('front_script')) {
-            wp_enqueue_script(sprintf('%s-%s-%s', $this->prefix, $this->getProp('name'), 'front-script'));
+            wp_enqueue_script($this->getProp('front_script'));
+        }
+
+        // Add front scripts if set
+        foreach ($this->getProp('scripts') ?: [] as $handle) {
+            wp_enqueue_script($handle);
         }
 
         // Call the callback if set
