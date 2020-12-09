@@ -33,7 +33,9 @@ class Js extends Asset
     public function register()
     {
         // Register script
-        wp_register_script($this->getProp('handle'), $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
+        $handle = $this->getProp('handle');
+
+        wp_register_script($handle, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
 
         // Localize script
         $localize = array_merge(
@@ -46,7 +48,6 @@ class Js extends Asset
             $this->getProp('localize')
         );
 
-        $handle = $this->getProp('handle');
         $objName = str_replace('-', '_', $handle) . '_config';
 
         wp_localize_script($handle, $objName, $localize);
