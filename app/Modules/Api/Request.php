@@ -41,4 +41,16 @@ abstract class Request extends Module
     {
         return $this->main->returnError($message);
     }
+
+    /**
+     * Get Default prop values
+     *
+     * @return array
+     */
+    protected function defaults(): array
+    {
+        return [
+            'fields' => [],
+        ];
+    }
 }

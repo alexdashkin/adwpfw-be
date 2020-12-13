@@ -41,6 +41,10 @@ class Rest extends Request
     {
         $this->log('REST request: "%s%s"', [$this->getProp('namespace'), $this->getProp('route')]);
 
+        if ($this->getProp('check_nonce')) {
+            check_ajax_referer('wp_rest');
+        }
+
         if ($this->getProp('admin') && !current_user_can('administrator')) {
             return $this->error('Endpoint is for Admins only');
         }
@@ -57,10 +61,14 @@ class Rest extends Request
      */
     protected function defaults(): array
     {
-        return [
-            'namespace' => 'adwpfw/v1',
-            'route' => 'test',
-            'method' => 'post',
-        ];
+        return array_merge(
+            parent::defaults(),
+            [
+                'namespace' => 'adwpfw/v1',
+                'route' => 'test',
+                'method' => 'post',
+                'check_nonce' => false,
+            ]
+        );
     }
 }
