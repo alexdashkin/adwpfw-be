@@ -18,7 +18,7 @@ abstract class Request extends Module
     protected function execute(array $params): array
     {
         try {
-            $data = $this->main->validateFields($this->getProp('fields'), $params);
+            $data = $this->main->validateFields($params, $this->getProp('fields'));
             $result = $this->getProp('callback')($data);
         } catch (\Exception $e) {
             return $this->error('Exception: ' . $e->getMessage());
