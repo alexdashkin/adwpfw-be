@@ -32,6 +32,94 @@ class Main
     }
 
     /**
+     * Validate and sanitize fields as per provided defs
+     *
+     * @param array $data
+     * @param array $fieldDefs
+     * @return array
+     * @throws AppException
+     */
+    public function validateFields(array $data, array $fieldDefs): array
+    {
+        foreach ($fieldDefs as $name => $settings) {
+            if (!isset($data[$name]) && !empty($settings['required'])) {
+                throw new AppException('Missing required field: ' . $name);
+            }
+
+            if (isset($data[$name])) {
+                $value = $data[$name];
+                $type = $settings['type'] ?? 'raw';
+
+                if ('email' === $type && !is_email($value)) {
+                    throw new AppException('Invalid Email: ' . $value);
+                }
+
+                switch ($type) {
+                    case 'text':
+                        $sanitized = sanitize_text_field($value);
+                        break;
+
+                    case 'textarea':
+                        $sanitized = sanitize_textarea_field($value);
+                        break;
+
+                    case 'email':
+                        $sanitized = sanitize_email($value);
+                        break;
+
+                    case 'number':
+                        $sanitized = (int)$value;
+                        break;
+
+                    case 'url':
+                        $sanitized = esc_url_raw($value);
+                        break;
+
+                    case 'array':
+                        $sanitized = is_array($value) ? $value : [];
+                        break;
+
+                    case 'form':
+                        parse_str($value, $sanitized);
+                        $sanitized = array_map('stripslashes_deep', $sanitized);
+                        break;
+
+                    case 'raw':
+                    default:
+                        $sanitized = $value;
+                }
+
+                $data[$name] = $sanitized;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Send Email
+     *
+     * @param array $data
+     */
+    public function sendMail(array $data)
+    {
+        if (!is_email($data['to_email'])) {
+            throw new AppException('Invalid email');
+        }
+
+        $fromName = $data['from_name'];
+        $fromEmail = $data['from_email'];
+        $toEmail = $data['to_email'];
+        $subject = $data['subject'];
+        $body = $data['body'];
+        $headers = sprintf("From: %s <%s>", $fromName, $fromEmail);
+
+        if (!wp_mail($toEmail, $subject, $body, $headers)) {
+            throw new AppException('Unable to send email');
+        }
+    }
+
+    /**
      * Get Field instance by type
      *
      * @param array $args

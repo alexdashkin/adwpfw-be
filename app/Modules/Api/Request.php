@@ -2,7 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Api;
 
-use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
@@ -10,67 +9,6 @@ use AlexDashkin\Adwpfw\Modules\Module;
  */
 abstract class Request extends Module
 {
-    /**
-     * Validate and Sanitize values.
-     *
-     * @param array $request $_REQUEST params.
-     * @return array Sanitized key-value pairs.
-     * @throws AppException
-     */
-    protected function validateRequest(array $request): array
-    {
-        $fields = $request;
-
-        if ($fieldDefs = $this->getProp('fields')) {
-            foreach ($fieldDefs as $name => $settings) {
-                if (!isset($request[$name]) && $settings['required']) {
-                    throw new AppException('Missing required field: ' . $name);
-                }
-
-                $type = $settings['type'] ?? 'text';
-
-                if (isset($request[$name])) {
-                    $sanitized = $request[$name];
-
-                    switch ($type) {
-                        case 'text':
-                            $sanitized = sanitize_text_field($sanitized);
-                            break;
-
-                        case 'textarea':
-                            $sanitized = sanitize_textarea_field($sanitized);
-                            break;
-
-                        case 'email':
-                            $sanitized = sanitize_email($sanitized);
-                            break;
-
-                        case 'number':
-                            $sanitized = (int)$sanitized;
-                            break;
-
-                        case 'url':
-                            $sanitized = esc_url_raw($sanitized);
-                            break;
-
-                        case 'array':
-                            $sanitized = is_array($sanitized) ? $sanitized : [];
-                            break;
-
-                        case 'form':
-                            parse_str($sanitized, $sanitized);
-                            $sanitized = array_map('stripslashes_deep', $sanitized);
-                            break;
-                    }
-
-                    $fields[$name] = $sanitized;
-                }
-            }
-        }
-
-        return $fields;
-    }
-
     /**
      * Handle the Request
      *
@@ -80,7 +18,7 @@ abstract class Request extends Module
     protected function execute(array $params): array
     {
         try {
-            $data = $this->validateRequest($params);
+            $data = $this->main->validateFields($this->getProp('fields'), $params);
             $result = $this->getProp('callback')($data);
         } catch (\Exception $e) {
             return $this->error('Exception: ' . $e->getMessage());
