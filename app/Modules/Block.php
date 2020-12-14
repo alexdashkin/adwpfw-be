@@ -74,7 +74,7 @@ class Block extends Module
         // Call the callback
         $callback = $this->getProp('render_callback');
 
-        return is_callable($callback) ? $callback($atts, $content) : '';
+        return is_callable($callback) ? $callback($atts, $content) : $content;
     }
 
     /**
@@ -88,7 +88,6 @@ class Block extends Module
             'name' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
             },
-            'render_callback' => null,
         ];
     }
 }
