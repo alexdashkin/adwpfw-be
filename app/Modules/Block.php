@@ -67,8 +67,10 @@ class Block extends Module
     public function render(array $atts, string $content): string
     {
         // Enqueue front scripts
-        foreach ($this->frontHandles as $handle) {
-            wp_enqueue_script($handle);
+        if (!is_admin()) {
+            foreach ($this->frontHandles as $handle) {
+                wp_enqueue_script($handle);
+            }
         }
 
         // Call the callback
