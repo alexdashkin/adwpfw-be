@@ -41,7 +41,7 @@ class Rest extends Request
     {
         $this->log('REST request: "%s%s"', [$this->getProp('namespace'), $this->getProp('route')]);
 
-        if ($this->getProp('check_nonce')) {
+        if ($this->getProp('nonce')) {
             check_ajax_referer('wp_rest');
         }
 
@@ -61,14 +61,13 @@ class Rest extends Request
      */
     protected function defaults(): array
     {
-        return array_merge(
-            parent::defaults(),
-            [
-                'namespace' => 'adwpfw/v1',
-                'route' => 'test',
-                'method' => 'post',
-                'check_nonce' => false,
-            ]
-        );
+        $defaults = [
+            'namespace' => 'adwpfw/v1',
+            'route' => 'test',
+            'method' => 'post',
+            'nonce' => false,
+        ];
+
+        return array_merge(parent::defaults(), $defaults);
     }
 }
