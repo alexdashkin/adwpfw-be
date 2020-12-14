@@ -37,20 +37,18 @@ class Js extends Asset
 
         wp_register_script($handle, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
 
-        // Localize script
-        $localize = array_merge(
+        // Data for front-end var
+        $data = array_merge(
             [
                 'prefix' => $this->prefix,
                 'nonce' => wp_create_nonce($this->prefix),
                 'rest_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
             ],
-            $this->getProp('localize')
+            $this->getProp('data')
         );
 
-        $objName = str_replace('-', '_', $handle) . '_config';
-
-        wp_localize_script($handle, $objName, $localize);
+        wp_localize_script($handle, $this->getProp('var'), $data);
     }
 
     /**
@@ -62,7 +60,8 @@ class Js extends Asset
     {
         $defaults = [
             'deps' => ['jquery'],
-            'localize' => [],
+            'var' => sprintf('%s_%s_config', $this->prefix, str_replace('-', '_', $this->getProp('id'))),
+            'data' => [],
         ];
 
         return array_merge(parent::defaults(), $defaults);
