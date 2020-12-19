@@ -43,7 +43,8 @@ class AdminBar extends Module
             'title' => 'Admin Bar',
             'id' => function () {
                 return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            }
+            },
+            'capability' => 'administrator',
         ];
     }
 }
