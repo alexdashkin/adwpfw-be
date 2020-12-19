@@ -60,7 +60,9 @@ class Js extends Asset
     {
         $defaults = [
             'deps' => ['jquery'],
-            'var' => sprintf('%s_%s_config', $this->prefix, str_replace('-', '_', $this->getProp('id'))),
+            'var' => function () {
+                return sprintf('%s_%s_config', $this->prefix, str_replace('-', '_', $this->getProp('id')));
+            },
             'data' => [],
         ];
 
