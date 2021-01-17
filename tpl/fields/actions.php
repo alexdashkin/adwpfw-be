@@ -1,6 +1,6 @@
-<div class="adwpfw-actions-selector">
+<div id="<?= $id ?>" class="<?= $classes ?>">
 
-    <select id="<?= $id ?>" class="<?= $classes ?>">
+    <select>
 
         <?php foreach ($options as $option): ?>
 
