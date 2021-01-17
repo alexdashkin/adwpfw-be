@@ -91,15 +91,15 @@ class Notice extends Module
      */
     private function render(): string
     {
-        $args = $this->getProp('args');
-
-        $args['id'] = $this->getProp('id');
-
         $isDismissible = $this->getProp('dismissible') ? 'is-dismissible' : '';
 
-        $args['classes'] = sprintf('notice notice-%s %s adwpfw-notice %s-notice %s', $this->getProp('type'), $isDismissible, $this->prefix, $this->getProp('classes'));
+        $args = [
+            'id' => $this->getProp('id'),
+            'content' => $this->getProp('content'),
+            'classes' => sprintf('notice notice-%s %s adwpfw-notice %s-notice %s', $this->getProp('type'), $isDismissible, $this->prefix, $this->getProp('classes')),
+        ];
 
-        return $this->main->render(__DIR__ . '/../../tpl/notice.php', $args);
+        return $this->main->render('notice', $args);
     }
 
     /**
@@ -140,8 +140,10 @@ class Notice extends Module
     protected function defaults(): array
     {
         return [
+            'id' => 'notice',
             'type' => 'success',
-            'args' => [],
+            'classes' => '',
+            'content' => '',
         ];
     }
 }
