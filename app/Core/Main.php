@@ -197,6 +197,16 @@ class Main
     }
 
     /**
+     * Get Twig Module
+     *
+     * @return Twig
+     */
+    public function getTwig(): Twig
+    {
+        return $this->app->getTwig();
+    }
+
+    /**
      * Render Twig Template
      *
      * @param string $name Template file name without .twig.
