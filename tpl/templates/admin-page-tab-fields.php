@@ -11,7 +11,7 @@
                     <label for="<?= $field['id'] ?>"><?= $field['label'] ?></label>
 
                     <?php if ($field['desc']): ?>
-                        <div class="adwpfw-help-tip" aria-label="<?= $field['desc'] ?>" role="tooltip" data-microtip-position="top">
+                        <div class="adwpfw-help-tip" aria-label="<?= $field['desc'] ?>" role="tooltip" data-microtip-position="top" data-microtip-size="large">
                             <div class="dashicons dashicons-editor-help"></div>
                         </div>
                     <?php endif; ?>
