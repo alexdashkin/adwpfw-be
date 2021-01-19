@@ -111,6 +111,7 @@ class Cpt extends Module
                 return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
             },
             'public' => true,
+            'columns' => [],
             'labels' => [],
             'rewrite' => function () {
                 return ['slug' => sanitize_key(str_replace(' ', '_', $this->getProp('plural')))];
