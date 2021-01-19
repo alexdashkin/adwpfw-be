@@ -2,20 +2,20 @@
 
     <?php foreach ($fields as $field): ?>
 
-        <div class="adwpfw-field">
+        <div class="adwpfw-field <?= $field['fieldClasses'] ?>">
 
             <?php if ($field['label']): ?>
 
                 <div class="adwpfw-label">
+
                     <label for="<?= $field['id'] ?>"><?= $field['label'] ?></label>
 
                     <?php if ($field['desc']): ?>
-                        <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help">
-                            <div class="adwpfw-tooltip-wrapper">
-                                <span class="adwpfw-tooltip-text"><?= $field['desc'] ?></span>
-                            </div>
+                        <div class="adwpfw-help-tip" aria-label="<?= $field['desc'] ?>" role="tooltip" data-microtip-position="top">
+                            <div class="dashicons dashicons-editor-help"></div>
                         </div>
                     <?php endif; ?>
+
                 </div>
 
             <?php endif; ?>

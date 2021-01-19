@@ -1,1 +1,1 @@
-<input type="password" class="<?= $classes ?>" id="<?= $id ?>" name="<?= $name ?>" value="<?= $value ?>" <?= $required ?>>
+<input type="password" class="<?= $controlClasses ?>" id="<?= $id ?>" name="<?= $name ?>" value="<?= $value ?>" <?= $required ?>>

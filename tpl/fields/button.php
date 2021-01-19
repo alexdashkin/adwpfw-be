@@ -1,3 +1,3 @@
-<button id="<?= $id ?>" class="<?= $classes ?>">
+<button id="<?= $id ?>" class="<?= $controlClasses ?>">
     <?= $caption ?>
 </button>

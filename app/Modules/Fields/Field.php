@@ -172,7 +172,8 @@ class Field extends Module
             'label' => '',
             'placeholder' => '',
             'desc' => '',
-            'classes' => 'widefat',
+            'fieldClasses' => '',
+            'controlClasses' => '',
         ];
     }
 }

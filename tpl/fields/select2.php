@@ -1,6 +1,6 @@
 <input type="hidden" name="<?= $name ?>" value="">
 
-<select class="adwpfw-select2 <?= $classes ?>"
+<select class="adwpfw-select2 <?= $controlClasses ?>"
         id="<?= $id ?>"
         name="<?= $multiple ? $name.'[]' : $name ?>"
     <?= $multiple ?> <?= $required ?>
