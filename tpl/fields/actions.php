@@ -1,11 +1,11 @@
-<div id="<?= $id ?>" class="<?= $controlClasses ?>">
+<div id="<?= $id ?>" class="d-flex <?= $controlClasses ?>">
 
     <select>
 
-        <?php foreach ($options as $option): ?>
+        <?php foreach ($options as $optionValue => $label): ?>
 
-            <option value="<?= $option['value'] ?>" <?= $option['value'] == $value ? 'selected' : '' ?>>
-                <?= $option['label'] ?>
+            <option value="<?= $optionValue ?>" <?= $value == $optionValue ? 'selected' : '' ?>>
+                <?= $label ?>
             </option>
 
         <?php endforeach; ?>
