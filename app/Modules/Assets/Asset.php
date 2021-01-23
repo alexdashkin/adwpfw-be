@@ -44,9 +44,6 @@ abstract class Asset extends Module
             }
         }
 
-        // Register
-        $this->register();
-
         // Action name depends on assets type
         switch ($this->getProp('type')) {
             case 'admin':
@@ -61,7 +58,10 @@ abstract class Asset extends Module
                 $action = 'wp_enqueue_scripts';
         }
 
-        // Enqueue on the hook
+        // Register on hook
+        $this->addHook($action, [$this, 'register'], 0);
+
+        // Enqueue on hook
         $this->addHook($action, [$this, 'enqueue'], 99);
     }
 
