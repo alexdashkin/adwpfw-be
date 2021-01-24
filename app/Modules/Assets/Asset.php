@@ -58,8 +58,9 @@ abstract class Asset extends Module
                 $action = 'wp_enqueue_scripts';
         }
 
-        // Register on hook
-        $this->addHook($action, [$this, 'register'], 0);
+        // Cannot register on hook as GB Blocks renders before and assets do not get included
+//        $this->addHook($action, [$this, 'register'], 0);
+        $this->register();
 
         // Enqueue on hook
         $this->addHook($action, [$this, 'enqueue'], 99);
