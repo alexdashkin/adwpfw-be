@@ -52,8 +52,27 @@ class Twig
             throw new AppException('Twig not found');
         }
 
-        $paths = [$this->app->config('template_path') ?? null, __DIR__ . '/../../tpl'];
+        // Get tpl files paths
+        $paths = [];
 
+        // Single tpl path provided by the client app
+        $appPath = $this->app->config('template_path');
+
+        if ($appPath) {
+            $paths[] = $appPath;
+        }
+
+        // Array of tpl paths provided by the client app
+        $appPaths = $this->app->config('template_paths');
+
+        if (!empty($appPaths) && is_array($appPaths)) {
+            $paths = array_merge($paths, array_values($appPaths));
+        }
+
+        // FW tpls path
+        $paths[] = __DIR__ . '/../../tpl';
+
+        // Check paths existence
         foreach ($paths as $index => $path) {
             if (!file_exists($path)) {
                 $this->app->getLogger()->log('Path "%s" does not exist', [$path]);
@@ -61,6 +80,7 @@ class Twig
             }
         }
 
+        // Compose args
         $envArgs = [
             'debug' => 'dev' === $this->app->config('env'),
             'cache' => $this->app->getMain()->getUploadsDir($this->app->config('prefix') . '/twig'),

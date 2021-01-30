@@ -171,25 +171,42 @@ class Main
     public function render(string $name, array $args = []): string
     {
         $args['prefix'] = $this->prefix;
-        $appPath = $this->app->config('template_path', '');
-        $fwPath = __DIR__ . '/../../tpl';
-        $paths = $appPath ? [$appPath, $fwPath] : [$fwPath];
 
-        // Searching for PHP templates
-        foreach ($paths as $path) {
-            $file = trailingslashit($path) . $name . '.php';
-            if (file_exists($file)) {
-                ob_start();
-                extract($args);
-                include $file;
-                return ob_get_clean();
-            }
+
+        // Get tpl files paths
+        $paths = [];
+
+        // Single tpl path provided by the client app
+        $appPath = $this->app->config('template_path');
+
+        if ($appPath) {
+            $paths[] = $appPath;
         }
 
-        // Searching for Twig templates
-        $file = trailingslashit($appPath) . $name . '.twig';
-        if (file_exists($file)) {
-            return $this->twig($name, $args);
+        // Array of tpl paths provided by the client app
+        $appPaths = $this->app->config('template_paths');
+
+        if (!empty($appPaths) && is_array($appPaths)) {
+            $paths = array_merge($paths, array_values($appPaths));
+        }
+
+        // FW tpls path
+        $paths[] = __DIR__ . '/../../tpl';
+
+        foreach ($paths as $path) {
+            $filePath = trailingslashit($path) . $name;
+
+            // Searching for PHP template
+            if (file_exists($filePath . '.php')) {
+                ob_start();
+                extract($args);
+                include $filePath . '.php';
+                return ob_get_clean();
+
+            // Searching for Twig template
+            } elseif (file_exists($filePath . '.twig')) {
+                return $this->twig($name, $args);
+            }
         }
 
         // Not found
