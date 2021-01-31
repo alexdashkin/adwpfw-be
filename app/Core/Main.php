@@ -374,7 +374,7 @@ class Main
     {
         $widget = $this->m('widget', $args);
 
-        foreach ($args['fields'] as $fieldArgs) {
+        foreach ($args['fields'] ?? [] as $fieldArgs) {
             $field = $this->getField($fieldArgs);
 
             $widget->addField($field);
