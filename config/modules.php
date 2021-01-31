@@ -11,6 +11,7 @@ return [
     'admin_page' => AdminPage::class,
     'admin_page_tab' => AdminPageTab::class,
     'admin_bar' => AdminBar::class,
+    'sidebar' => Sidebar::class,
     'block' => Block::class,
     'acf_block' => Block::class,
     'dashboard_widget' => DbWidget::class,

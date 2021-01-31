@@ -67,15 +67,19 @@ class Field extends Module
      */
     public function getValue(int $objectId = 0)
     {
+        $name = $this->getProp('name');
+        $context = $this->getProp('context');
+
+        if ('widget' === $context) {
+            return $this->getProp('value');
+        }
+
         $contexts = [
             'option' => 'getOption',
             'post' => 'getPostMeta',
             'term' => 'getTermMeta',
             'user' => 'getUserMeta',
         ];
-
-        $name = $this->getProp('name');
-        $context = $this->getProp('context');
 
         $method = $contexts[$context];
 

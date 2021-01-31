@@ -202,8 +202,7 @@ class Main
                 extract($args);
                 include $filePath . '.php';
                 return ob_get_clean();
-
-            // Searching for Twig template
+                // Searching for Twig template
             } elseif (file_exists($filePath . '.twig')) {
                 return $this->twig($name, $args);
             }
@@ -373,7 +372,15 @@ class Main
      */
     public function addWidget(array $args): Widget
     {
-        return $this->m('widget', $args);
+        $widget = $this->m('widget', $args);
+
+        foreach ($args['fields'] as $fieldArgs) {
+            $field = $this->getField($fieldArgs);
+
+            $widget->addField($field);
+        }
+
+        return $widget;
     }
 
     /**

@@ -2,11 +2,30 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\Fields\Field;
+
 /**
  * title*, render*, form, id, assets[]
  */
 class Widget extends Module
 {
+    /**
+     * @var Field[]
+     */
+    protected $fields = [];
+
+    /**
+     * Add Field
+     *
+     * @param Field $field
+     */
+    public function addField(Field $field)
+    {
+        $field->setProp('context', 'widget');
+
+        $this->fields[] = $field;
+    }
+
     /**
      * Init Module
      */
@@ -86,9 +105,20 @@ class Widget extends Module
      */
     public function form(array $instance, \WP_Widget $widget)
     {
-        if ($this->getProp('form')) {
-            echo $this->getProp('form')($instance, $widget); // todo build form the same way as Metaboxes
+        $args = $this->getProps();
+
+        $fields = [];
+
+        foreach ($this->fields as $field) {
+            $field->setProp('value', $instance[$field->getProp('name')] ?? '');
+            $fieldArgs = $field->getProps();
+            $fieldArgs['content'] = $field->render(0);
+            $fields[] = $fieldArgs;
         }
+
+        $args['fields'] = $fields;
+
+        echo $this->main->render('templates/widget', $args);
     }
 
     /**
