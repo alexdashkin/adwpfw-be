@@ -2,6 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\Fields\Contexts\User;
 use AlexDashkin\Adwpfw\Modules\Fields\Field;
 
 /**
@@ -21,7 +22,7 @@ class ProfileSection extends Module
      */
     public function addField(Field $field)
     {
-        $field->setProp('context', 'user');
+        $field->setProp('context', new User($field, $this->main));
 
         $this->fields[] = $field;
     }

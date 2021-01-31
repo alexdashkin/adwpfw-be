@@ -14,6 +14,9 @@ class Widget extends Module
      */
     protected $fields = [];
 
+    /** @var Fields\Contexts\Widget */
+    protected $fieldsContext;
+
     /**
      * Add Field
      *
@@ -21,8 +24,6 @@ class Widget extends Module
      */
     public function addField(Field $field)
     {
-        $field->setProp('context', 'widget');
-
         $this->fields[] = $field;
     }
 
@@ -110,9 +111,14 @@ class Widget extends Module
         $fields = [];
 
         foreach ($this->fields as $field) {
-            $field->setProp('value', $instance[$field->getProp('name')] ?? '');
+            $context = new Fields\Contexts\Widget($field, $this->main);
+            $context->setWidget($widget);
+            $field->setProp('context', $context);
+
+            $name = $field->getProp('name');
+            $field->setProp('value', $instance[$name] ?? '');
             $fieldArgs = $field->getProps();
-            $fieldArgs['content'] = $field->render(0);
+            $fieldArgs['content'] = $field->render();
             $fields[] = $fieldArgs;
         }
 

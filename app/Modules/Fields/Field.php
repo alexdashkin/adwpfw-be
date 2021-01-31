@@ -2,10 +2,12 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Fields;
 
+use AlexDashkin\Adwpfw\Exceptions\AppException;
+use AlexDashkin\Adwpfw\Modules\Fields\Contexts\Context;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
- * name*, id, tpl, label, placeholder, desc, required, default, classes
+ * name*, id, tpl, context, label, placeholder, desc, required, default, classes
  */
 class Field extends Module
 {
@@ -16,30 +18,33 @@ class Field extends Module
      */
     protected $args = [];
 
+    protected $context;
+
+    public function getContext(): Context
+    {
+        if ($this->context) {
+            return $this->context;
+        }
+
+        $context = $this->getProp('context');
+
+        if (!$context instanceof Context) {
+            throw new AppException('Invalid Field Context');
+        }
+
+        $this->context = $context;
+
+        return $context;
+    }
+
     /**
      * Set Field value
      *
      * @param mixed $value
-     * @param int $objectId
      */
     public function setValue($value, int $objectId = 0)
     {
-        $contexts = [
-            'option' => 'updateOption',
-            'post' => 'updatePostMeta',
-            'term' => 'updateTermMeta',
-            'user' => 'updateUserMeta',
-        ];
-
-        $name = $this->getProp('name');
-        $context = $this->getProp('context');
-
-        $value = $this->sanitize($value);
-
-        if (array_key_exists($context, $contexts)) {
-            $method = $contexts[$context];
-            $this->main->$method($name, $value, $objectId);
-        }
+        $this->getContext()->set($this->sanitize($value), $objectId);
     }
 
     /**
@@ -67,23 +72,7 @@ class Field extends Module
      */
     public function getValue(int $objectId = 0)
     {
-        $name = $this->getProp('name');
-        $context = $this->getProp('context');
-
-        if ('widget' === $context) {
-            return $this->getProp('value');
-        }
-
-        $contexts = [
-            'option' => 'getOption',
-            'post' => 'getPostMeta',
-            'term' => 'getTermMeta',
-            'user' => 'getUserMeta',
-        ];
-
-        $method = $contexts[$context];
-
-        return array_key_exists($context, $contexts) ? $this->main->$method($name, $objectId) : null;
+        return $this->getContext()->get($objectId);
     }
 
     /**
@@ -92,7 +81,7 @@ class Field extends Module
      * @param int $objectId
      * @return string
      */
-    public function render(int $objectId): string
+    public function render(int $objectId = 0): string
     {
         // Get Value
         $value = $this->getValue($objectId);
@@ -141,7 +130,7 @@ class Field extends Module
             $this->getProps(),
             [
                 'prefix' => $prefix,
-                'name' => sprintf('%s[%s]', $prefix, $this->getProp('name')),
+                'name' => $this->getContext()->getFieldName(),
                 'required' => $this->getProp('required') ? 'required' : '',
             ]
         );

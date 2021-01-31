@@ -2,6 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\Fields\Contexts\Option;
 use AlexDashkin\Adwpfw\Modules\Fields\Field;
 
 /**
@@ -59,7 +60,7 @@ class AdminPageTab extends Module
      */
     public function addField(Field $field)
     {
-        $field->setProp('context', 'option');
+        $field->setProp('context', new Option($field, $this->main));
 
         $this->fields[] = $field;
     }

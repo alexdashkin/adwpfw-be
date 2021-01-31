@@ -1344,6 +1344,15 @@ class Main
     }
 
     /**
+     * Get Prefix
+     *
+     * @return string
+     */
+    public function getPrefix(): string {
+        return $this->prefix;
+    }
+
+    /**
      * Add a log entry
      *
      * @param mixed $message Text or any other type including WP_Error.

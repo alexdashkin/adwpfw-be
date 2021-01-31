@@ -2,6 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\Fields\Contexts\Term;
 use AlexDashkin\Adwpfw\Modules\Fields\Field;
 
 /**
@@ -21,7 +22,7 @@ class TermMeta extends Module
      */
     public function addField(Field $field)
     {
-        $field->setProp('context', 'term');
+        $field->setProp('context', new Term($field, $this->main));
 
         $this->fields[] = $field;
     }

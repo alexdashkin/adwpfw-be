@@ -2,6 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\Fields\Contexts\Post;
 use AlexDashkin\Adwpfw\Modules\Fields\Field;
 
 /**
@@ -21,7 +22,7 @@ class Metabox extends Module
      */
     public function addField(Field $field)
     {
-        $field->setProp('context', 'post');
+        $field->setProp('context', new Post($field, $this->main));
 
         $this->fields[] = $field;
     }
