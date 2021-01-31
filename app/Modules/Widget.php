@@ -63,14 +63,17 @@ class Widget extends Module
             $type = $asset['type'] ?? 'css';
 
             // Type for particular asset is admin/front
-            $asset['type'] = 'front';
+            $asset['type'] = $asset['af'] ?? 'front';
 
             $args = [
                 'id' => sprintf('%s-%d', $id, $index),
-                'callback' => function () use ($id) {
-                    is_active_widget(false, false, $id);
-                },
             ];
+
+            $args['callback'] = 'front' === $asset['type'] ? function () use ($id) {
+                return is_active_widget(false, false, $id);
+            } : function () {
+                return 'widgets' === get_current_screen()->id;
+            };
 
             $this->m('asset.' . $type, array_merge($args, $asset));
         }
@@ -85,17 +88,7 @@ class Widget extends Module
      */
     public function render(array $args, array $instance, \WP_Widget $widget)
     {
-        echo $args['before_widget'];
-
-        echo $args['before_title'];
-
-        echo $this->getProp('title');
-
-        echo $args['after_title'];
-
-        echo $this->getProp('render')($args, $instance, $widget);
-
-        echo $args['after_widget'];
+        echo sprintf('<div class="%s-widget">%s</div>', $this->prefix, $this->getProp('render')($args, $instance, $widget));
     }
 
     /**
