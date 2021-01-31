@@ -14,7 +14,7 @@ class Widget extends Context
 
     public function get(int $objectId = 0)
     {
-        return $this->widget; // todo
+        return null; // todo
     }
 
     public function set($value, int $objectId = 0)
