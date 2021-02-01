@@ -7,22 +7,22 @@ class Widget extends Context
     /** @var \WP_Widget */
     private $widget;
 
+    /**
+     * Set WP_Widget
+     *
+     * @param \WP_Widget $widget
+     */
     public function setWidget(\WP_Widget $widget)
     {
         $this->widget = $widget;
     }
 
-    public function get(int $objectId = 0)
-    {
-        return null; // todo
-    }
-
-    public function set($value, int $objectId = 0)
-    {
-        return null;
-    }
-
-    public function getFieldName()
+    /**
+     * Get field "name" attr for template
+     *
+     * @return string
+     */
+    public function getFieldName(): string
     {
         return $this->widget->get_field_name($this->fieldName);
     }

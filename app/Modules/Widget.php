@@ -14,9 +14,6 @@ class Widget extends Module
      */
     protected $fields = [];
 
-    /** @var Fields\Contexts\Widget */
-    protected $fieldsContext;
-
     /**
      * Add Field
      *

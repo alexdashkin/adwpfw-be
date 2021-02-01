@@ -18,8 +18,15 @@ class Field extends Module
      */
     protected $args = [];
 
+    /** @var Context */
     protected $context;
 
+    /**
+     * Get Context
+     *
+     * @return Context
+     * @throws AppException
+     */
     public function getContext(): Context
     {
         if ($this->context) {
@@ -41,6 +48,8 @@ class Field extends Module
      * Set Field value
      *
      * @param mixed $value
+     * @param int $objectId
+     * @throws AppException
      */
     public function setValue($value, int $objectId = 0)
     {

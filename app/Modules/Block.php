@@ -62,6 +62,7 @@ class Block extends Module
      * Render wrapper to add front script
      *
      * @param array $atts
+     * @param string $content
      * @return string
      */
     public function render(array $atts, string $content): string
