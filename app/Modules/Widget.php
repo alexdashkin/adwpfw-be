@@ -9,6 +9,8 @@ use AlexDashkin\Adwpfw\Modules\Fields\Field;
  */
 class Widget extends Module
 {
+    private $frontHandles = [];
+
     /**
      * @var Field[]
      */
@@ -60,19 +62,29 @@ class Widget extends Module
             $type = $asset['type'] ?? 'css';
 
             // Type for particular asset is admin/front
-            $asset['type'] = $asset['af'] ?? 'front';
+            $af = $asset['af'] ?: 'front';
+            $asset['type'] = $af;
 
             $args = [
-                'id' => sprintf('%s-%d', $id, $index),
+                'id' => sprintf('%s-%s-%s-%d', $id, $type, $af, $index),
+
+                // Do not enqueue front JS (to be done in render callback)
+                'enqueue' => !('js' === $type && 'front' === $af),
             ];
 
-            $args['callback'] = 'front' === $asset['type'] ? function () use ($id) {
-                return is_active_widget(false, false, $id);
-            } : function () {
-                return 'widgets' === get_current_screen()->id;
-            };
+            if ('admin' === $asset['type']) {
+                $args['callback'] = function () {
+                    return 'widgets' === get_current_screen()->id;
+                };
+            }
 
-            $this->m('asset.' . $type, array_merge($args, $asset));
+            // Add asset
+            $asset = $this->m('asset.' . $type, array_merge($args, $asset));
+
+            // Add handle to the list for front scripts to enqueue in render callback
+            if (!$args['enqueue']) {
+                $this->frontHandles[] = $asset->getProp('handle');
+            }
         }
     }
 
@@ -85,6 +97,13 @@ class Widget extends Module
      */
     public function render(array $args, array $instance, \WP_Widget $widget)
     {
+        // Enqueue front scripts
+        if (!is_admin()) {
+            foreach ($this->frontHandles as $handle) {
+                wp_enqueue_script($handle);
+            }
+        }
+
         echo sprintf('<div class="%s-widget">%s</div>', $this->prefix, $this->getProp('render')($args, $instance, $widget));
     }
 
