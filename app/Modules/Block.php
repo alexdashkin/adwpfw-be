@@ -42,7 +42,7 @@ class Block extends Module
             $asset['type'] = $af;
 
             $args = [
-                'id' => sprintf('%s-%d', $this->getProp('name'), $index),
+                'id' => sprintf('%s-%s-%s-%d', $this->getProp('name'), $type, $af, $index),
 
                 // Do not enqueue front JS (to be done in render_callback)
                 'enqueue' => !('js' === $type && 'front' === $af),
@@ -52,7 +52,7 @@ class Block extends Module
             $asset = $this->m('asset.' . $type, array_merge($args, $asset));
 
             // Add handle to the list for front scripts to enqueue in render_callback
-            if ('front' === $af) {
+            if (!$args['enqueue']) {
                 $this->frontHandles[] = $asset->getProp('handle');
             }
         }
