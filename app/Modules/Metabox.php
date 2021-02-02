@@ -115,7 +115,7 @@ class Metabox extends Module
         return [
             'title' => 'Metabox',
             'id' => function () {
-                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+                return sanitize_key(str_replace(' ', '-', sprintf('%s-%s', $this->getProp('title'), implode('-', $this->getProp('screen')))));
             },
             'screen' => ['post', 'page'],
             'context' => 'normal',
