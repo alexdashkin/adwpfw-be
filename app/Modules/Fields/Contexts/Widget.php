@@ -26,4 +26,14 @@ class Widget extends Context
     {
         return $this->widget->get_field_name($this->fieldName);
     }
+
+    public function get(int $objectId)
+    {
+        return null;
+    }
+
+    public function set($value, int $objectId)
+    {
+        return null;
+    }
 }

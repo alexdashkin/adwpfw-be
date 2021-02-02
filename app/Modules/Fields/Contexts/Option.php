@@ -9,7 +9,7 @@ class Option extends Context
      *
      * @return mixed
      */
-    public function get()
+    public function get(int $objectId)
     {
         return $this->main->getOption($this->fieldName);
     }
@@ -20,7 +20,7 @@ class Option extends Context
      * @param mixed $value
      * @return bool
      */
-    public function set($value): bool
+    public function set($value, int $objectId): bool
     {
         return $this->main->updateOption($this->fieldName, $value);
     }

@@ -41,4 +41,8 @@ abstract class Context
     {
         return sprintf('%s[%s]', $this->main->getPrefix(), $this->fieldName);
     }
+
+    abstract public function get(int $objectId);
+
+    abstract public function set($value, int $objectId);
 }
