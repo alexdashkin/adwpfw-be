@@ -1348,7 +1348,8 @@ class Main
      *
      * @return string
      */
-    public function getPrefix(): string {
+    public function getPrefix(): string
+    {
         return $this->prefix;
     }
 
@@ -1362,6 +1363,18 @@ class Main
     public function log($message, array $values = [], int $level = 4)
     {
         $this->app->getLogger()->log($message, $values, $level);
+    }
+
+    /**
+     * Prefix string
+     *
+     * @param string $string
+     * @param string $glue
+     * @return string
+     */
+    public function prefix(string $string, string $glue = '_'): string
+    {
+        return sprintf('%s%s%s', $this->prefix, $glue, $string);
     }
 
     /**
