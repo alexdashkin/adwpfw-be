@@ -77,7 +77,12 @@ class Block extends Module
         // Call the callback
         $callback = $this->getProp('render_callback');
 
-        return is_callable($callback) ? $callback($atts, $content) : $content;
+        try {
+            return is_callable($callback) ? $callback($atts, $content) : $content;
+        } catch (\Exception $e) {
+            $this->log('Exception in block "%s": %s', [$this->getProp('name'), $e->getMessage()]);
+            return '';
+        }
     }
 
     /**

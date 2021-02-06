@@ -2,12 +2,15 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Assets;
 
+use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 abstract class Asset extends Module
 {
     /**
      * Init Module
+     *
+     * @throws AppException
      */
     public function init()
     {
@@ -28,7 +31,7 @@ abstract class Asset extends Module
                     if (file_exists($noMinPath)) {
                         $path = $this->getProp('base_dir') . '/' . $file;
                     } else {
-                        return;
+                        throw new AppException(sprintf('Asset not found in "%s" and "%s"', $path, $noMinPath));
                     }
                 }
 
@@ -40,7 +43,7 @@ abstract class Asset extends Module
                     $this->setProp('ver', filemtime($path));
                 }
             } else {
-                return;
+                throw new AppException(sprintf('No file or URL specified for asset "%s"', $this->getProp('id')));
             }
         }
 

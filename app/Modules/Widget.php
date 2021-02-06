@@ -104,7 +104,11 @@ class Widget extends Module
             }
         }
 
-        echo sprintf('<div class="%s-widget">%s</div>', $this->prefix, $this->getProp('render')($args, $instance, $widget));
+        try {
+            echo sprintf('<div class="%s-widget">%s</div>', $this->prefix, $this->getProp('render')($args, $instance, $widget));
+        } catch (\Exception $e) {
+            $this->log('Exception in widget "%s": %s', [$this->getProp('id'), $e->getMessage()]);
+        }
     }
 
     /**

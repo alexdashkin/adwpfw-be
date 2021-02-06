@@ -61,7 +61,12 @@ class Shortcode extends Module
     {
         $args = array_merge($this->getProp('atts') ?: [], $atts ?: []);
 
-        return $this->getProp('callback')($args);
+        try {
+            return $this->getProp('callback')($args);
+        } catch (\Exception $e) {
+            $this->log('Exception in shortcode "%s": %s', [$this->getProp('tag'), $e->getMessage()]);
+            return '';
+        }
     }
 
     /**
