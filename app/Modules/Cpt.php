@@ -178,9 +178,10 @@ class Cpt extends Module
      */
     public function filterPosts(\WP_Query $query)
     {
-        // Skip if no custom views, not main query or not our cpt
+        // Skip if no custom views, filters, not in admin, not main query or not our cpt
         if (!($views = $this->getProp('views'))
             || !($filters = $this->getProp('filters'))
+            || !is_admin()
             || !$query->is_main_query()
             || $this->getPrefixedSlug() !== get_current_screen()->post_type) {
             return;
