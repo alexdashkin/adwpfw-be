@@ -114,6 +114,14 @@ class Main
         $body = $data['body'];
         $headers = sprintf("From: %s <%s>", $fromName, $fromEmail);
 
+        // Catch email errors
+        $this->addHook(
+            'wp_mail_failed',
+            function (\WP_Error $error) {
+                throw new AppException($error->get_error_message());
+            }
+        );
+
         if (!wp_mail($toEmail, $subject, $body, $headers)) {
             throw new AppException('Unable to send email');
         }
