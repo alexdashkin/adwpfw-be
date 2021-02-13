@@ -7,6 +7,7 @@ class Option extends Context
     /**
      * Get Value
      *
+     * @param int $objectId
      * @return mixed
      */
     public function get(int $objectId)
@@ -18,6 +19,7 @@ class Option extends Context
      * Set Value
      *
      * @param mixed $value
+     * @param int $objectId
      * @return bool
      */
     public function set($value, int $objectId): bool
