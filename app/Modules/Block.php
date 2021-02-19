@@ -8,6 +8,7 @@ namespace AlexDashkin\Adwpfw\Modules;
 class Block extends Module
 {
     private $frontHandles = [];
+    private $frontCss = [];
 
     /**
      * Init Module
@@ -44,8 +45,8 @@ class Block extends Module
             $args = [
                 'id' => sprintf('%s-%s-%s-%d', $this->getProp('name'), $type, $af, $index),
 
-                // Do not enqueue front JS (to be done in render_callback)
-                'enqueue' => !('js' === $type && 'front' === $af),
+                // Do not enqueue front assets (to be done in render_callback)
+                'enqueue' => 'front' !== $af,
             ];
 
             // Add asset
@@ -53,7 +54,7 @@ class Block extends Module
 
             // Add handle to the list for front scripts to enqueue in render_callback
             if (!$args['enqueue']) {
-                $this->frontHandles[] = $asset->getProp('handle');
+                $this->frontHandles[$type][] = $asset->getProp('handle');
             }
         }
     }
@@ -67,10 +68,18 @@ class Block extends Module
      */
     public function render(array $atts, string $content): string
     {
-        // Enqueue front scripts
+        // Enqueue front assets
         if (!is_admin()) {
-            foreach ($this->frontHandles as $handle) {
-                wp_enqueue_script($handle);
+            if (!empty($this->frontHandles['css'])) {
+                foreach ($this->frontHandles['css'] as $handle) {
+                    wp_enqueue_style($handle);
+                }
+            }
+
+            if (!empty($this->frontHandles['js'])) {
+                foreach ($this->frontHandles['js'] as $handle) {
+                    wp_enqueue_script($handle);
+                }
             }
         }
 

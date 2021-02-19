@@ -68,8 +68,8 @@ class Widget extends Module
             $args = [
                 'id' => sprintf('%s-%s-%s-%d', $id, $type, $af, $index),
 
-                // Do not enqueue front JS (to be done in render callback)
-                'enqueue' => !('js' === $type && 'front' === $af),
+                // Do not enqueue front assets (to be done in render_callback)
+                'enqueue' => 'front' !== $af,
             ];
 
             if ('admin' === $asset['type']) {
@@ -83,7 +83,7 @@ class Widget extends Module
 
             // Add handle to the list for front scripts to enqueue in render callback
             if (!$args['enqueue']) {
-                $this->frontHandles[] = $asset->getProp('handle');
+                $this->frontHandles[$type][] = $asset->getProp('handle');
             }
         }
     }
@@ -97,10 +97,18 @@ class Widget extends Module
      */
     public function render(array $args, array $instance, \WP_Widget $widget)
     {
-        // Enqueue front scripts
+        // Enqueue front assets
         if (!is_admin()) {
-            foreach ($this->frontHandles as $handle) {
-                wp_enqueue_script($handle);
+            if (!empty($this->frontHandles['css'])) {
+                foreach ($this->frontHandles['css'] as $handle) {
+                    wp_enqueue_style($handle);
+                }
+            }
+
+            if (!empty($this->frontHandles['js'])) {
+                foreach ($this->frontHandles['js'] as $handle) {
+                    wp_enqueue_script($handle);
+                }
             }
         }
 
