@@ -44,6 +44,7 @@ class Widget extends Module
         $args = [
             'id' => $id,
             'name' => $this->getProp('title'),
+            'description' => $this->getProp('description'),
         ];
 
         // Register the class
@@ -157,6 +158,7 @@ class Widget extends Module
     {
         return [
             'title' => 'Widget',
+            'description' => '',
             'id' => function () {
                 return 'widget_' . sanitize_key(str_replace(' ', '_', $this->getProp('title')));
             },

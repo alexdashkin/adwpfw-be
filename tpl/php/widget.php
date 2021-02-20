@@ -2,7 +2,7 @@ class <?= $id ?> extends WP_Widget
 {
     public function __construct()
     {
-        parent::__construct('<?= $id ?>', '<?= $name ?>');
+        parent::__construct('<?= $id ?>', '<?= $name ?>', ['description' => '<?= $description ?>']);
     }
 
     public function widget($args, $instance)
