@@ -179,11 +179,14 @@ class Cpt extends Module
     public function filterPosts(\WP_Query $query)
     {
         // Skip if no custom views, filters, not in admin, not main query or not our cpt
+        $currentScreen = $GLOBALS['current_screen'] ?? null;
+
         if (!($views = $this->getProp('views'))
             || !($filters = $this->getProp('filters'))
             || !is_admin()
             || !$query->is_main_query()
-            || $this->getPrefixedSlug() !== get_current_screen()->post_type) {
+            || !$currentScreen
+            || $this->getPrefixedSlug() !== $currentScreen->post_type) {
             return;
         }
 
