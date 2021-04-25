@@ -41,6 +41,13 @@ class Metabox extends Module
      */
     public function register()
     {
+        // Do not render if callback returns false
+        $callback = $this->getProp('callback');
+
+        if ($callback && is_callable($callback) && !$callback()) {
+            return;
+        }
+
         $id = $this->prefix . '_' . $this->getProp('id');
 
         add_meta_box(
@@ -51,7 +58,6 @@ class Metabox extends Module
             $this->getProp('context'),
             $this->getProp('priority')
         );
-
 
         // Enqueue assets
         foreach ($this->getProp('assets') as $index => $asset) {
