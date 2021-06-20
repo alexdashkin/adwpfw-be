@@ -20,6 +20,7 @@ return [
     'notice' => Notice::class,
     'post_state' => PostState::class,
     'cpt' => Cpt::class,
+    'taxonomy' => Taxonomy::class,
     'profile_section' => ProfileSection::class,
     'term_meta' => TermMeta::class,
     'shortcode' => Shortcode::class,
