@@ -74,7 +74,7 @@ trait Props
         $defaults = $this->defaults();
 
         if (array_key_exists($key, $defaults)) {
-            return is_callable($defaults[$key]) ? $defaults[$key]() : $defaults[$key];
+            return $defaults[$key] instanceof \Closure ? $defaults[$key]() : $defaults[$key];
         }
 
         return null;
