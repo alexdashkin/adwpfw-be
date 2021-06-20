@@ -105,7 +105,6 @@ class Cpt extends Module
         echo $column['callback']($postId);
     }
 
-
     /**
      * Custom Admin filters
      *
@@ -253,7 +252,7 @@ class Cpt extends Module
             'filters' => [],
             'labels' => [],
             'rewrite' => function () {
-                return ['slug' => sanitize_key(str_replace(' ', '_', $this->getProp('plural')))];
+                return ['slug' => sanitize_key(str_replace(' ', '-', $this->getProp('plural')))];
             },
         ];
     }
