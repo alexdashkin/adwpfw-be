@@ -78,7 +78,7 @@ class TermMeta extends Module
     protected function defaults(): array
     {
         return [
-            'title' => 'Custom',
+            'title' => '',
             'taxonomy' => 'category',
         ];
     }
