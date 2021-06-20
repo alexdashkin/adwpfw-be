@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Core;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AcfBlock, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\Block, Modules\Cpt, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Fields\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AcfBlock, Modules\AdminBar, Modules\AdminPage, Modules\AdminPageTab, Modules\Api\AdminAjax, Modules\Api\Rest, Modules\Assets\Css, Modules\Assets\Js, Modules\Block, Modules\Cpt, Modules\CronJob, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\DbWidget, Modules\Fields\Field, Modules\Hook, Modules\Metabox, Modules\Notice, Modules\PostState, Modules\ProfileSection, Modules\Shortcode, Modules\Sidebar, Modules\Taxonomy, Modules\TermMeta, Modules\Updater\Plugin, Modules\Updater\Theme, Modules\Widget};
 
 /**
  * Main Facade
@@ -445,6 +445,17 @@ class Main
     public function addCpt(array $args): Cpt
     {
         return $this->m('cpt', $args);
+    }
+
+    /**
+     * Add Taxonomy
+     *
+     * @param array $args
+     * @return Taxonomy
+     */
+    public function addTaxonomy(array $args): Taxonomy
+    {
+        return $this->m('taxonomy', $args);
     }
 
     /**
