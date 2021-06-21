@@ -100,9 +100,17 @@ class Main
      * Send Email
      *
      * @param array $data
+     * @throws AppException
      */
     public function sendMail(array $data)
     {
+        // Check required fields
+        foreach (['from_name', 'from_email', 'to_email', 'subject', 'body'] as $field) {
+            if (empty($data[$field])) {
+                throw new AppException(sprintf('Field "%s" is required', $field));
+            }
+        }
+
         if (!is_email($data['to_email'])) {
             throw new AppException('Invalid email');
         }
@@ -113,6 +121,15 @@ class Main
         $subject = $data['subject'];
         $body = $data['body'];
         $headers = sprintf("From: %s <%s>", $fromName, $fromEmail);
+
+        if (!empty($data['format']) && 'html' === $data['format']) {
+            $this->addHook(
+                'wp_mail_content_type',
+                function () {
+                    return 'text/html';
+                }
+            );
+        }
 
         // Catch email errors
         $this->addHook(
