@@ -12,6 +12,6 @@
 
     </select>
 
-    <button class="button">Do</button>
+    <button type="button" class="button">Do</button>
 
 </div>
