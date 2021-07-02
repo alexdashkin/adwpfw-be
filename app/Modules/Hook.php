@@ -30,6 +30,16 @@ class Hook extends Module
     }
 
     /**
+     * Remove hook
+     *
+     * @return bool Removed?
+     */
+    public function remove(): bool
+    {
+        return remove_filter($this->getProp('tag'), [$this, 'run'], $this->getProp('priority'));
+    }
+
+    /**
      * Get Default prop values
      *
      * @return array
