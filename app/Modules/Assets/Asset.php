@@ -65,8 +65,12 @@ abstract class Asset extends Module
 //        $this->addHook($action, [$this, 'register'], 0);
         $this->register();
 
-        // Enqueue on hook
-        $this->addHook($action, [$this, 'enqueue'], 99);
+        // If added too late - enqueue immediately, otherwise - use the respective hook
+        if (did_action($action)) {
+            $this->enqueue();
+        } else {
+            $this->addHook($action, [$this, 'enqueue'], 99);
+        }
     }
 
     /**
