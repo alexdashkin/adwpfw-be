@@ -110,11 +110,9 @@ class CronJob extends Module
      */
     private function getOption(string $name): array
     {
-        $optionName = $this->prefix . '_cron';
+        $option = $this->main->getOption('cron') ?: [];
 
-        $optionValue = get_option($optionName) ?: [];
-
-        return !empty($optionValue[$name]) && is_array($optionValue[$name]) ? $optionValue[$name] : [];
+        return !empty($option[$name]) && is_array($option[$name]) ? $option[$name] : [];
     }
 
     /**
@@ -125,13 +123,11 @@ class CronJob extends Module
      */
     private function updateOption(string $name, array $value)
     {
-        $optionName = $this->prefix . '_cron';
+        $option = $this->main->getOption('cron') ?: [];
 
-        $optionValue = get_option($optionName) ?: [];
+        $option[$name] = $value;
 
-        $optionValue[$name] = $value;
-
-        update_option($optionName, $optionValue);
+        $this->main->updateOption('cron', $option);
     }
 
     /**
