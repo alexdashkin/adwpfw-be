@@ -49,7 +49,8 @@ class CronJob extends Module
 
         // Remove old possible dead jobs from "running"
         foreach ($running as $index => $ts) {
-            if ($ts < ($startTime + 3600)) {
+            if (($ts + 3600) < $startTime) {
+                $this->log('Found dead entry started at %s, deleting', [date('Y-m-d H:i:s', $ts)]);
                 unset($running[$index]);
             }
         }
