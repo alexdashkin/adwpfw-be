@@ -305,7 +305,7 @@ class Query
      */
     private function buildWhereClause(): string
     {
-        if (!$this->where) {
+        if (!$this->where['conditions']) {
             return '';
         }
 
