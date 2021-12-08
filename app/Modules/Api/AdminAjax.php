@@ -23,7 +23,7 @@ class AdminAjax extends Request
      */
     public function handle()
     {
-        check_ajax_referer($this->prefix);
+        check_ajax_referer($this->prefix, 'nonce');
 
         $this->log('Ajax request: "%s_%s"', [$this->prefix, $this->getProp('action')]);
 
