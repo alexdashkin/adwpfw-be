@@ -1,6 +1,8 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Core;
+namespace AlexDashkin\Adwpfw;
+
+use AlexDashkin\Adwpfw\Exceptions\AppException;
 
 /**
  * Logger
@@ -8,9 +10,11 @@ namespace AlexDashkin\Adwpfw\Core;
 class Logger
 {
     /**
-     * @var App
+     * Class instance
+     *
+     * @var static
      */
-    private $app;
+    private static $instance;
 
     /**
      * @var int Start Timestamp
@@ -23,7 +27,7 @@ class Logger
     private $contents;
 
     /**
-     * @var array Paths tp log files
+     * @var array Paths to log files
      */
     private $paths = [];
 
@@ -33,30 +37,60 @@ class Logger
     private $immediatePath;
 
     /**
-     * Constructor
-     *
-     * @param App $app
+     * Protect instance constructor
      */
-    public function __construct(App $app)
+    private function __construct()
     {
-        $this->app = $app;
+    }
+
+    /**
+     * Add a log entry
+     *
+     * @param mixed $message Text or any other type including WP_Error.
+     * @param array $values If passed, vsprintf() func is applied. Default [].
+     */
+    public static function log($message, array $values = [])
+    {
+        if (empty(self::$instance)) {
+            throw new AppException('Logger is not configured');
+        }
+
+        self::$instance->addEntry($message, $values);
+    }
+
+    /**
+     * Set config and init
+     *
+     * @param array $args
+     */
+    public static function init(array $args)
+    {
+        foreach (['prefix', 'maxLogSize', 'basePath'] as $fieldName) {
+            if (empty($args[$fieldName])) {
+                throw new AppException(sprintf('Field "%s" is required', $fieldName));
+            }
+        }
+
+        self::$instance = new self();
+
+        // Set config
+        $prefix = $args['prefix'];
+        $maxLogSize = $args['maxLogSize'];
+        $basePath = $args['basePath'];
 
         // Prepare vars
-        $prefix = $this->app->config('prefix');
-        $maxLogSize = $this->app->config('log')['size'] ?? 1000000;
-        $this->start = date('d.m.y H:i:s');
+        self::$instance->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
-        $basePath = $this->app->getMain()->getUploadsDir($prefix . '/logs');
-        $filename = $this->getLogFilename($basePath, $prefix, $suffix, $maxLogSize);
+        $filename = self::$instance->getLogFilename($basePath, $prefix, $suffix, $maxLogSize);
         $immediateName = uniqid() . '-' . $suffix . '.log';
 
         // Add paths
-        $this->paths[] = $basePath . $filename;
-        $this->immediatePath = $basePath . $immediateName;
+        self::$instance->paths[] = $basePath . $filename;
+        self::$instance->immediatePath = $basePath . $immediateName;
 
         // Add WC Log path
         if (defined('WC_LOG_DIR') && file_exists(WC_LOG_DIR)) {
-            $this->paths[] = WC_LOG_DIR . $filename;
+            self::$instance->paths[] = WC_LOG_DIR . $filename;
         }
     }
 
@@ -72,8 +106,8 @@ class Logger
      */
     private function getLogFilename(string $basePath, string $prefix, string $suffix, int $maxSize, int $counter = 1): string
     {
-        $filename = $prefix . '-' . date('Y-m-d') . '-' . $suffix . '-' . $counter . '.log';
-        $filePath = $basePath . $filename;
+        $filename = sprintf('%s-%s-%s-%s.log', $prefix, date('Y-m-d'), $counter, $suffix);
+        $filePath = trailingslashit($basePath) . $filename;
 
         if (file_exists($filePath) && filesize($filePath) > $maxSize) {
             return $this->getLogFilename($basePath, $prefix, $suffix, $maxSize, ++$counter);
@@ -87,13 +121,12 @@ class Logger
      *
      * @param mixed $message Text or any other type including WP_Error.
      * @param array $values If passed, vsprintf() func is applied. Default [].
-     * @param int $level 1 = Error, 2 = Warning, 4 = Notice. Default 4.
      */
-    public function log($message, array $values = [], int $level = 4)
+    private function addEntry($message, array $values = [])
     {
-        // Skip if message level is lower than defined in config
-        if (!($level & $this->app->config('log')['level'] ?? 7)) {
-            return;
+        // Error if not configured
+        if (empty($this->start)) {
+            throw new AppException('Logger is not configured');
         }
 
         // WP_Error to string

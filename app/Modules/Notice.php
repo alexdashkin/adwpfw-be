@@ -2,8 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\{Helpers, Modules\RestApi\AdminAjax};
+
 /**
- * id*, content*, type, dismissible, days, classes, args, show_callback
+ * WP Admin Notice
  */
 class Notice extends Module
 {
@@ -16,10 +18,8 @@ class Notice extends Module
 
         // Add Ajax action to dismiss notice
         if ($this->getProp('dismissible')) {
-            $this->m(
-                'api.ajax',
+            new AdminAjax(
                 [
-                    'prefix' => $this->prefix,
                     'action' => 'dismiss_notice_' . $this->getProp('id'),
                     'callback' => [$this, 'ajaxDismiss'],
                 ]
@@ -55,33 +55,9 @@ class Notice extends Module
      */
     public function ajaxDismiss(): array
     {
-        $this->dismiss();
+        $this->setDismissed();
 
         return ['success' => true];
-    }
-
-    /**
-     * Show the Notice (clear dismiss date)
-     */
-    public function show()
-    {
-        $this->setDismissed(0);
-    }
-
-    /**
-     * Stop Showing the Notice (dismiss in future)
-     */
-    public function stop()
-    {
-        $this->setDismissed(PHP_INT_MAX);
-    }
-
-    /**
-     * Dismiss now
-     */
-    public function dismiss()
-    {
-        $this->setDismissed(time());
     }
 
     /**
@@ -96,54 +72,87 @@ class Notice extends Module
         $args = [
             'id' => $this->getProp('id'),
             'content' => $this->getProp('content'),
-            'classes' => sprintf('notice notice-%s %s adwpfw-notice %s-notice %s', $this->getProp('type'), $isDismissible, $this->prefix, $this->getProp('classes')),
+            'classes' => sprintf('notice notice-%s %s adwpfw-notice %s', $this->getProp('type'), $isDismissible, $this->getProp('classes')),
         ];
 
-        return $this->main->render('notice', $args);
+        return Helpers::render('notice', $args);
     }
 
     /**
-     * Get Notices option
+     * Get dismissed timestamp
      *
      * @return int Dismissed timestamp
      */
     private function getDismissed(): int
     {
-        $optionName = $this->prefix . '_notices';
-
-        $option = get_option($optionName) ?: [];
-
-        return $option[$this->getProp('id')] ?? 0;
+        return (int)get_transient($this->getProp('optionName'));
     }
 
     /**
-     * Update Notices option
+     * Set dismissed timestamp
      *
-     * @param int $timestamp Dismissed timestamp
+     * @return bool
      */
-    private function setDismissed(int $timestamp)
+    private function setDismissed(): bool
     {
-        $optionName = $this->prefix . '_notices';
-
-        $optionValue = get_option($optionName) ?: [];
-
-        $optionValue[$this->getProp('id')] = $timestamp;
-
-        update_option($optionName, $optionValue);
+        return set_transient($this->getProp('optionName'), time(), $this->getProp('days') * DAY_IN_SECONDS);
     }
 
     /**
-     * Get Default prop values
+     * Delete dismissed timestamp
+     *
+     * @return bool
+     */
+    private function deleteDismissed(): bool
+    {
+        return delete_transient($this->getProp('optionName'));
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'id' => 'notice',
-            'type' => 'success',
-            'classes' => '',
-            'content' => '',
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'id' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'type' => [
+                'type' => 'string',
+                'default' => 'success',
+            ],
+            'content' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'classes' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'dismissible' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'days' => [
+                'type' => 'int',
+                'default' => 0,
+            ],
+            'callback' => [
+                'type' => 'callable',
+            ],
+            'optionName' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sprintf('adwpfw_notice_%s', sanitize_title($this->getProp('name')));
+                },
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

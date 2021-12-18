@@ -2,30 +2,17 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Modules\Fields\Contexts\Term;
-use AlexDashkin\Adwpfw\Modules\Fields\Field;
+use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset};
 
 /**
- * taxonomy*, title
+ * Taxonomy Custom Meta Box
  */
-class TermMeta extends Module
+class TermMeta extends FieldHolder
 {
     /**
-     * @var Field[]
+     * @var Asset[]
      */
-    protected $fields = [];
-
-    /**
-     * Add Field
-     *
-     * @param Field $field
-     */
-    public function addField(Field $field)
-    {
-        $field->setProp('context', new Term($field, $this->main));
-
-        $this->fields[] = $field;
-    }
+    protected $assets = [];
 
     /**
      * Init Module
@@ -39,17 +26,35 @@ class TermMeta extends Module
     }
 
     /**
+     * Add Asset
+     *
+     * @param Asset $asset
+     */
+    public function addAsset(Asset $asset)
+    {
+        $this->assets[] = $asset;
+    }
+
+    /**
      * Render Section
      *
      * @param \WP_Term $term
      */
     public function render(\WP_Term $term)
     {
-        $args = $this->getProps();
+        // Enqueue assets
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
+        }
 
-        $args['fields'] = Field::renderMany($this->fields, $term->term_id);
+        // Prepare args
+        $args = [
+            'title' => $this->getProp('title'),
+            'fields' => $this->getFieldsArgs($term->term_id),
+        ];
 
-        echo $this->main->render('templates/term-meta', $args);
+        // Render template
+        return Helpers::render('layouts/term-meta', $args);
     }
 
     /**
@@ -59,27 +64,50 @@ class TermMeta extends Module
      */
     public function save(int $termId)
     {
-        if (empty($_POST[$this->prefix])) {
-            return;
-        }
-
-        $values = $_POST[$this->prefix];
-
-        Field::setMany($this->fields, $values, $termId);
-
-        do_action('adwpfw_term_saved', $this, $values);
+        Field::setMany($this->fields, $_POST, $termId);
     }
 
     /**
-     * Get Default prop values
+     * Get field value
+     *
+     * @param Field $field
+     * @param int $objectId
+     * @return mixed
+     */
+    public function getFieldValue(Field $field, int $objectId = 0)
+    {
+        return get_term_meta($objectId, $field->getProp('name'), true);
+    }
+
+    /**
+     * Set field value
+     *
+     * @param Field $field
+     * @param $value
+     * @param int $objectId
+     * @return bool
+     */
+    public function setFieldValue(Field $field, $value, int $objectId = 0): bool
+    {
+        return update_term_meta($objectId, $field->getProp('name'), $value);
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
         return [
-            'title' => '',
-            'taxonomy' => 'category',
+            'taxonomy' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'title' => [
+                'type' => 'string',
+                'default' => '',
+            ],
         ];
     }
 }

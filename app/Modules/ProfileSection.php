@@ -2,59 +2,39 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Modules\Fields\Contexts\User;
-use AlexDashkin\Adwpfw\Modules\Fields\Field;
+use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset};
 
 /**
- * id*, title
+ * User Profile Custom Fields
  */
-class ProfileSection extends Module
+class ProfileSection extends FieldHolder
 {
     /**
-     * @var Field[]
+     * @var Asset[]
      */
-    protected $fields = [];
+    protected $assets = [];
 
     /**
-     * Add Field
+     * Add Asset
      *
-     * @param Field $field
+     * @param Asset $asset
      */
-    public function addField(Field $field)
+    public function addAsset(Asset $asset)
     {
-        $field->setProp('context', new User($field, $this->main));
-
-        $this->fields[] = $field;
+        $this->assets[] = $asset;
     }
 
     /**
-     * Init Module
+     * Constructor
      */
-    public function init()
+    public function __construct(array $props)
     {
+        parent::__construct($props);
+
         $this->addHook('show_user_profile', [$this, 'render']);
         $this->addHook('edit_user_profile', [$this, 'render']);
         $this->addHook('personal_options_update', [$this, 'save']);
         $this->addHook('edit_user_profile_update', [$this, 'save']);
-
-        // Enqueue assets
-        foreach ($this->getProp('assets') as $index => $asset) {
-
-            // Type here is CSS/JS
-            $type = $asset['type'] ?? 'css';
-
-            // Type for particular asset is admin/front
-            $asset['type'] = 'admin';
-
-            $args = [
-                'id' => sprintf('%s-%d', $this->getProp('id'), $index),
-                'callback' => function () {
-                    return in_array(get_current_screen()->id, ['profile', 'user-edit']);
-                },
-            ];
-
-            $this->m('asset.' . $type, array_merge($args, $asset));
-        }
     }
 
     /**
@@ -64,11 +44,18 @@ class ProfileSection extends Module
      */
     public function render(\WP_User $user)
     {
-        $args = $this->getProps();
+        // Enqueue assets
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
+        }
 
-        $args['fields'] = Field::renderMany($this->fields, $user->ID);
+        // Prepare args
+        $args = [
+            'fields' => $this->getFieldsArgs($user->ID),
+        ];
 
-        echo $this->main->render('templates/profile-section', $args);
+        // Output template
+        echo Helpers::render('layouts/profile-section', $args);
     }
 
     /**
@@ -83,29 +70,52 @@ class ProfileSection extends Module
             return;
         }
 
-        if (empty($_POST[$this->prefix])) {
-            return;
-        }
-
-        $values = $_POST[$this->prefix];
-
-        Field::setMany($this->fields, $values, $userId);
-
-        do_action('adwpfw_profile_saved', $this, $values);
+        Field::setMany($this->fields, $_POST, $userId);
     }
 
     /**
-     * Get Default prop values
+     * Get field value
+     *
+     * @param Field $field
+     * @param int $objectId
+     * @return mixed
+     */
+    public function getFieldValue(Field $field, int $objectId = 0)
+    {
+        return get_user_meta($objectId, $field->getProp('name'), true);
+    }
+
+    /**
+     * Set field value
+     *
+     * @param Field $field
+     * @param $value
+     * @param int $objectId
+     * @return bool
+     */
+    public function setFieldValue(Field $field, $value, int $objectId = 0): bool
+    {
+        return update_user_meta($objectId, $field->getProp('name'), $value);
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
         return [
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
-            },
-            'assets' => [],
+            'id' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
+                },
+            ],
+            'assets' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
     }
 }

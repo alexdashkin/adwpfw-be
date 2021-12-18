@@ -1,28 +1,26 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules\Fields;
+namespace AlexDashkin\Adwpfw\Fields;
 
 /**
- * multiple, options
+ * Select field
  */
 class Select extends Field
 {
     /**
      * Prepare Template Args
+     *
+     * @param int $objectId
      */
-    protected function prepareArgs()
+    protected function prepareArgs(int $objectId = 0)
     {
-        parent::prepareArgs();
+        parent::prepareArgs($objectId);
 
         $args = $this->args;
 
         $value = $args['value'];
         $multiple = !empty($args['multiple']);
         $args['multiple'] = $multiple ? 'multiple' : '';
-
-/*        if ($multiple) {
-            $args['name'] .= '[]';
-        }*/
 
         $options = [];
 
@@ -52,18 +50,33 @@ class Select extends Field
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        $defaults = [
-            'placeholder' => '--- Select ---',
-            'multiple' => false,
-            'options' => [],
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'options' => [
+                'type' => 'array',
+                'required' => true,
+            ],
+            'placeholder' => [
+                'type' => 'string',
+                'default' => '--- Select ---',
+            ],
+            'multiple' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'template' => [
+                'type' => 'string',
+                'default' => 'fields/select',
+            ],
         ];
 
-        return array_merge(parent::defaults(), $defaults);
+        return array_merge($baseProps, $fieldProps);
     }
 }

@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules\Assets;
 
 /**
- * type*, url*, id, ver, deps, callback, localize
+ * JS
  */
 class Js extends Asset
 {
@@ -33,17 +33,16 @@ class Js extends Asset
     public function register()
     {
         // Register script
-        $handle = $this->getProp('handle');
+        $handle = $this->getHandle();
 
-        wp_register_script($handle, $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'), true);
+        wp_register_script($this->getHandle(), $this->getUrl(), $this->getProp('deps'), $this->getVer());
 
         // Data for front-end var
         $data = array_merge(
             [
-                'prefix' => $this->prefix,
-                'nonce' => wp_create_nonce($this->prefix),
-                'rest_nonce' => wp_create_nonce('wp_rest'),
-                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('adwpfw'),
+                'restNonce' => wp_create_nonce('wp_rest'),
+                'ajaxUrl' => admin_url('admin-ajax.php'),
             ],
             $this->getProp('data')
         );
@@ -52,20 +51,27 @@ class Js extends Asset
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        $defaults = [
-            'deps' => ['jquery'],
-            'var' => function () {
-                return sprintf('%s_%s_config', $this->prefix, str_replace('-', '_', $this->getProp('id')));
-            },
-            'data' => [],
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'var' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sprintf('%s_config', str_replace('-', '_', $this->getHandle()));
+                },
+            ],
+            'data' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
 
-        return array_merge(parent::defaults(), $defaults);
+        return array_merge($baseProps, $fieldProps);
     }
 }

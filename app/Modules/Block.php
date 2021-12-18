@@ -2,13 +2,14 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\{Assets\Css, Assets\Js};
+
 /**
  * Gutenberg Block
  */
 class Block extends Module
 {
     private $frontHandles = [];
-    private $frontCss = [];
 
     /**
      * Init Module
@@ -25,13 +26,7 @@ class Block extends Module
     public function register()
     {
         // Register block
-        register_block_type(
-            $this->prefix . '/' . $this->getProp('name'),
-            [
-                'render_callback' => [$this, 'render'],
-                'supports' => $this->getProp('supports'),
-            ]
-        );
+        register_block_type($this->getProp('name'), $this->getProps());
 
         // Enqueue assets
         foreach ($this->getProp('assets') as $index => $asset) {
@@ -40,21 +35,31 @@ class Block extends Module
 
             // Type for particular asset is block/front
             $af = $asset['af'] ?: 'block';
+            $handle = sprintf('%s-%s-%s-%d', $this->getProp('name'), $type, $af, $index);
             $asset['type'] = $af;
 
             $args = [
-                'id' => sprintf('%s-%s-%s-%d', $this->getProp('name'), $type, $af, $index),
+                'handle' => $handle,
 
                 // Do not enqueue front assets (to be done in render_callback)
                 'enqueue' => 'front' !== $af,
             ];
 
             // Add asset
-            $asset = $this->m('asset.' . $type, array_merge($args, $asset));
+            $assetProps = array_merge($args, $asset);
+
+            switch ($type) {
+                case 'css':
+                    new Css($assetProps);
+                    break;
+                case 'js':
+                    new Js($assetProps);
+                    break;
+            }
 
             // Add handle to the list for front scripts to enqueue in render_callback
             if (!$args['enqueue']) {
-                $this->frontHandles[$type][] = $asset->getProp('handle');
+                $this->frontHandles[$type][] = $handle;
             }
         }
     }
@@ -95,16 +100,36 @@ class Block extends Module
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'name' => function () {
-                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            },
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'name' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'supports' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'assets' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'render_callback' => [
+                'type' => 'callable',
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

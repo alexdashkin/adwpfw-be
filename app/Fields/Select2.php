@@ -1,28 +1,30 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules\Fields;
+namespace AlexDashkin\Adwpfw\Fields;
+
+use AlexDashkin\Adwpfw\{Helpers, Modules\RestApi\AdminAjax};
 
 /**
- * label_cb, ajax_data_cb
+ * Select2 field
  */
 class Select2 extends Select
 {
     /**
-     * Init Module
+     * Constructor
      */
-    public function init()
+    public function __construct(array $props)
     {
-        $ajaxDataCb = $this->getProp('ajax_data_cb');
+        parent::__construct($props);
+
+        $ajaxDataCb = $this->getProp('ajaxDataCallback');
 
         if ($ajaxDataCb && is_callable($ajaxDataCb)) {
             $action = sprintf('s2_%s', $this->getProp('name')); // todo 2 fields with the same name => race condition
 
             $this->args['ajax_action'] = $action;
 
-            $this->m(
-                'api.ajax',
+            new AdminAjax(
                 [
-                    'prefix' => $this->prefix,
                     'action' => $action,
                     'fields' => [
                         'q' => [
@@ -44,16 +46,16 @@ class Select2 extends Select
     public function ajaxDataCb(array $data): array
     {
         if (empty($data['q'])) {
-            return $this->main->returnError('Empty query');
+            return Helpers::returnError('Empty query');
         }
 
         $minChars = (int)$this->getProp('min_chars');
 
         if (strlen($data['q']) < $minChars) {
-            return $this->main->returnError('Minimum chars for search - ' . $minChars);
+            return Helpers::returnError('Minimum chars for search - ' . $minChars);
         }
 
-        $results = $this->getProp('ajax_data_cb')(trim($data['q']));
+        $results = $this->getProp('ajaxDataCallback')(trim($data['q']));
 
         $return = [];
 
@@ -64,15 +66,17 @@ class Select2 extends Select
             ];
         }
 
-        return $this->main->returnSuccess('Done', $return);
+        return Helpers::returnSuccess('Done', $return);
     }
 
     /**
      * Prepare Template Args
+     *
+     * @param int $objectId
      */
-    protected function prepareArgs()
+    protected function prepareArgs(int $objectId = 0)
     {
-        parent::prepareArgs();
+        parent::prepareArgs($objectId);
 
         $args = $this->args;
 
@@ -84,8 +88,8 @@ class Select2 extends Select
         $valueArr = $multiple ? (array)$value : [$value];
 
         foreach ($valueArr as $item) {
-            if ($item && !$this->main->arraySearch($args['options'], ['value' => $item], true)) {
-                $labelCb = $this->getProp('label_cb');
+            if ($item && !Helpers::arraySearch($args['options'], ['value' => $item], true)) {
+                $labelCb = $this->getProp('labelCallback');
 
                 $args['options'][] = [
                     'label' => ($labelCb && is_callable($labelCb)) ? $labelCb($item) : $item,
@@ -114,18 +118,30 @@ class Select2 extends Select
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        $defaults = [
-            'label_cb' => function () {
-                return [$this, 's2PostLabel'];
-            },
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'ajaxDataCallback' => [
+                'type' => 'callable',
+            ],
+            'labelCallback' => [
+                'type' => 'callable',
+                'default' => function () {
+                    return [$this, 's2PostLabel'];
+                },
+            ],
+            'template' => [
+                'type' => 'string',
+                'default' => 'fields/select2',
+            ],
         ];
 
-        return array_merge(parent::defaults(), $defaults);
+        return array_merge($baseProps, $fieldProps);
     }
 }

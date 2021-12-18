@@ -2,8 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Helpers;
+
 /**
- * name*, title, header, capability, slug, icon, position, parent
+ * Admin Page with settings
  */
 class AdminPage extends Module
 {
@@ -11,6 +13,14 @@ class AdminPage extends Module
      * @var AdminPageTab[]
      */
     protected $tabs = [];
+
+    /**
+     * Init Module
+     */
+    public function init()
+    {
+        $this->addHook('admin_menu', [$this, 'register']);
+    }
 
     /**
      * Add Tab
@@ -25,27 +35,17 @@ class AdminPage extends Module
     }
 
     /**
-     * Init Module
-     */
-    public function init()
-    {
-        $this->addHook('admin_menu', [$this, 'register']);
-    }
-
-    /**
      * Register the Page
      */
     public function register()
     {
-        $slug = sprintf('%s-%s', $this->prefix, $this->getProp('slug'));
-
         if ($parent = $this->getProp('parent')) {
             $suffix = add_submenu_page(
                 $parent,
                 $this->getProp('title'),
                 $this->getProp('name'),
                 $this->getProp('capability'),
-                $slug,
+                $this->getProp('slug'),
                 [$this, 'render']
             );
         } else {
@@ -53,31 +53,14 @@ class AdminPage extends Module
                 $this->getProp('title'),
                 $this->getProp('name'),
                 $this->getProp('capability'),
-                $slug,
+                $this->getProp('slug'),
                 [$this, 'render'],
                 $this->getProp('icon'),
                 $this->getProp('position')
             );
         }
 
-        // Enqueue assets
-        foreach ($this->getProp('assets') as $index => $asset) {
-            // Type here is CSS/JS
-            $type = $asset['type'] ?? 'css';
-
-            // Type for particular asset is admin/front
-            $asset['type'] = 'admin';
-
-            $args = [
-                'id' => sprintf('%s-%d', $this->getProp('slug'), $index),
-                'type' => 'admin',
-                'callback' => function () use ($suffix) {
-                    return get_current_screen()->id === $suffix;
-                },
-            ];
-
-            $this->m('asset.' . $type, array_merge($args, $asset));
-        }
+        $this->setProp('suffix', $suffix);
     }
 
     /**
@@ -91,42 +74,88 @@ class AdminPage extends Module
 
         $tabs = [];
 
+        $currentTab = $this->getCurrentTab();
+
         foreach ($this->tabs as $tab) {
             $tabs[] = [
                 'title' => $tab->getProp('title'),
-                'content' => $tab->render(),
+                'link' => add_query_arg('tab', $tab->getProp('slug')),
+                'current' => $tab === $currentTab,
             ];
         }
 
         $args = [
-            'prefix' => $this->prefix,
             'title' => $this->getProp('title'),
             'tabs' => $tabs,
+            'content' => $currentTab->render(),
         ];
 
-        echo $this->main->render('templates/admin-page', $args);
+        echo Helpers::render('layouts/admin-page', $args);
     }
 
     /**
-     * Get Default prop values
+     * Get Current Tab
+     *
+     * @return AdminPageTab
+     */
+    private function getCurrentTab(): AdminPageTab
+    {
+        if (!empty($_GET['tab'])) {
+            $tabName = sanitize_key($_GET['tab']);
+            foreach ($this->tabs as $tab) {
+                if ($tab->getProp('slug') === $tabName) {
+                    return $tab;
+                }
+            }
+        }
+
+        return $this->tabs[0];
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        $name = $this->getProp('name');
-
         return [
-            'name' => 'Admin Page',
-            'title' => $name,
-            'header' => $name,
-            'slug' => function () {
-                return sanitize_key(str_replace(' ', '-', $this->getProp('name')));
-            },
-            'icon' => 'dashicons-update',
-            'position' => 100,
-            'capability' => 'manage_options',
-            'assets' => [],
+            'name' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'baseFile' => [
+                'type' => 'string',
+//                'required' => true,
+            ],
+            'title' => [
+                'type' => 'string',
+                'default' => function () {
+                    return $this->getProp('name');
+                },
+            ],
+            'slug' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '-', $this->getProp('name')));
+                },
+            ],
+            'icon' => [
+                'type' => 'string',
+                'default' => 'dashicons-update',
+            ],
+            'position' => [
+                'type' => 'int',
+                'default' => 100,
+            ],
+            'capability' => [
+                'type' => 'string',
+                'default' => 'administrator',
+            ],
+            'parent' => [
+                'type' => 'string',
+                'default' => '',
+            ],
         ];
     }
 }

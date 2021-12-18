@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules\Assets;
 
 /**
- * type*, url*, id, ver, deps, callback
+ * CSS
  */
 class Css extends Asset
 {
@@ -32,6 +32,6 @@ class Css extends Asset
      */
     public function register()
     {
-        wp_register_style($this->getProp('handle'), $this->getProp('url'), $this->getProp('deps'), $this->getProp('ver'));
+        wp_register_style($this->getHandle(), $this->getUrl(), $this->getProp('deps'), $this->getVer());
     }
 }

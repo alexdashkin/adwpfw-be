@@ -1,4 +1,4 @@
-<div class="<?= $prefix ?> adwpfw adwpfw-profile-section">
+<div class="adwpfw adwpfw-profile-section">
 
     <?php foreach ($fields as $field): ?>
 
@@ -9,10 +9,10 @@
                 <div class="adwpfw-label">
                     <label for="<?= $field['id'] ?>"><?= $field['label'] ?></label>
 
-                    <?php if ($field['desc']): ?>
+                    <?php if ($field['description']): ?>
                         <div class="adwpfw-help-tip adwpfw-tooltip dashicons dashicons-editor-help">
                             <div class="adwpfw-tooltip-wrapper">
-                                <span class="adwpfw-tooltip-text"><?= $field['desc'] ?></span>
+                                <span class="adwpfw-tooltip-text"><?= $field['description'] ?></span>
                             </div>
                         </div>
                     <?php endif; ?>

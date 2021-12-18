@@ -2,11 +2,18 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Modules\Assets\Asset;
+
 /**
- * tag*, callback*, atts, assets[]
+ * Shortcode
  */
 class Shortcode extends Module
 {
+    /**
+     * @var Asset[]
+     */
+    protected $assets = [];
+
     /**
      * Init Module
      */
@@ -16,37 +23,21 @@ class Shortcode extends Module
     }
 
     /**
+     * Add Asset
+     *
+     * @param Asset $asset
+     */
+    public function addAsset(Asset $asset)
+    {
+        $this->assets[] = $asset;
+    }
+
+    /**
      * Register the Shortcode
      */
     public function register()
     {
-        // Add shortcode
-        $tag = $this->prefix . '_' . $this->getProp('tag');
-        add_shortcode($tag, [$this, 'render']);
-
-        // If no associated assets - return
-        if (!$assets = $this->getProp('assets')) {
-            return;
-        }
-
-        // Enqueue shortcode assets
-        foreach ($assets as $index => $asset) {
-            // Type here is CSS/JS
-            $type = $asset['type'] ?? 'css';
-
-            // Type for particular asset is admin/front
-            $asset['type'] = 'front';
-
-            $args = [
-                'id' => sprintf('%s-%d', $tag, $index),
-                'callback' => function () use ($tag) {
-                    $post = get_queried_object();
-                    return $post instanceof \WP_Post && has_shortcode($post->post_content, $tag);
-                },
-            ];
-
-            $this->m('asset.' . $type, array_merge($args, $asset));
-        }
+        add_shortcode($this->getProp('tag'), [$this, 'render']);
     }
 
     /**
@@ -59,6 +50,11 @@ class Shortcode extends Module
      */
     public function render($atts, string $content, string $tag): string
     {
+        // Enqueue assets
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
+        }
+
         $args = array_merge($this->getProp('atts') ?: [], $atts ?: []);
 
         try {
@@ -70,14 +66,29 @@ class Shortcode extends Module
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'assets' => [],
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'tag' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'callback' => [
+                'type' => 'callable',
+                'required' => true,
+            ],
+            'atts' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

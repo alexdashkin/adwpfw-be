@@ -5,126 +5,191 @@ namespace AlexDashkin\Adwpfw\Modules\Assets;
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Modules\Module;
 
+/**
+ * CSS/JS
+ */
 abstract class Asset extends Module
 {
     /**
      * Init Module
-     *
-     * @throws AppException
      */
     public function init()
     {
-        // If URL is not provided
-        if (!$this->getProp('url')) {
-            // Check if file is provided
-            if ($this->getProp('file')) {
-                // Get path
-                $file = $this->getProp('file') . $this->getProp('min') . '.' . $this->getFileExt();
-                $path = $this->getProp('base_dir') . '/' . $file;
+        // Register
+        $this->runAfterHook([$this, 'register']);
 
-                // If file does not exist - try without .min
-                if (!file_exists($path)) {
-                    $file = $this->getProp('file') . '.' . $this->getFileExt();
-                    $noMinPath = $this->getProp('base_dir') . '/' . $file;
-
-                    // If exists - use it, otherwise - do not register
-                    if (file_exists($noMinPath)) {
-                        $path = $this->getProp('base_dir') . '/' . $file;
-                    } else {
-                        throw new AppException(sprintf('Asset not found in "%s" and "%s"', $path, $noMinPath));
-                    }
-                }
-
-                // Set URL
-                $this->setProp('url', $this->getProp('base_url') . '/' . $file);
-
-                // Set Version
-                if (!$this->getProp('ver')) {
-                    $this->setProp('ver', filemtime($path));
-                }
-            } else {
-                throw new AppException(sprintf('No file or URL specified for asset "%s"', $this->getProp('id')));
-            }
-        }
-
-        // Action name depends on assets type
-        switch ($this->getProp('type')) {
-            case 'admin':
-                $action = 'admin_enqueue_scripts';
-                break;
-
-            case 'block':
-                $action = 'enqueue_block_editor_assets';
-                break;
-
-            default:
-                $action = 'wp_enqueue_scripts';
-        }
-
-        // Cannot register on hook as GB Blocks renders before and assets do not get included
-//        $this->addHook($action, [$this, 'register'], 0);
-        $this->register();
-
-        // If added too late - enqueue immediately, otherwise - use the respective hook
-        if (did_action($action)) {
+        // Enqueue if required
+        if ($this->getProp('enqueue')) {
             $this->enqueue();
-        } else {
-            $this->addHook($action, [$this, 'enqueue'], 99);
         }
     }
 
     /**
-     * Enqueue style
+     * Enqueue
      */
     public function enqueue()
     {
-        // Do not enqueue if not required
-        if (!$this->getProp('enqueue')) {
-            return;
-        }
+        $this->runAfterHook([$this, 'enqueueAsset']);
+    }
 
-        // Do not enqueue if callback returns false
-        $callback = $this->getProp('callback');
-
-        if ($callback && is_callable($callback) && !$callback()) {
-            return;
-        }
-
-        // Enqueue asset
+    /**
+     * Enqueue asset
+     */
+    public function enqueueAsset()
+    {
         $func = $this->getEnqueueFuncName();
 
-        $func($this->getProp('handle'));
+        $func($this->getHandle());
     }
 
     /**
-     * Get Default prop values
-     *
-     * @return array
-     */
-    protected function defaults(): array
-    {
-        $baseFile = $this->config('base_file');
-
-        return [
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '_', $this->getProp('type')));
-            },
-            'handle' => function () {
-                return $this->prefix . '-' . sanitize_title($this->getProp('id'));
-            },
-            'base_dir' => dirname($baseFile),
-            'base_url' => 'theme' === $this->config('type') ? get_stylesheet_directory_uri() : plugin_dir_url($baseFile),
-            'min' => defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min',
-            'enqueue' => true,
-        ];
-    }
-
-    /**
-     * Get file extension
+     * Hook name depends on scope
      *
      * @return string
      */
-    abstract protected function getFileExt(): string;
+    protected function getHookName(): string
+    {
+        switch ($this->getProp('scope')) {
+            case 'admin':
+                $hookName = 'admin_enqueue_scripts';
+                break;
+
+            case 'block':
+                $hookName = 'enqueue_block_editor_assets';
+                break;
+
+            default:
+                $hookName = 'wp_enqueue_scripts';
+        }
+
+        return $hookName;
+    }
+
+    /**
+     * Run either on hook or immediately if hook has been fired
+     *
+     * @param callable $callback
+     */
+    protected function runAfterHook(callable $callback)
+    {
+        $hookName = $this->getHookName();
+
+        if (did_action($hookName)) {
+            $callback();
+        } else {
+            $this->addHook($hookName, $callback);
+        }
+    }
+
+    /**
+     * Get or generate Handle
+     *
+     * @return string
+     */
+    protected function getHandle(): string
+    {
+        if ($handle = $this->getProp('handle')) {
+            return $handle;
+        }
+
+        $handle = sprintf('adwpfw-%s-%s-%s', $this->getProp('scope'), strpos(strtolower(get_called_class()), 'css') ? 'css' : 'js', mt_rand(1, 100));
+
+        $this->setProp('handle', $handle);
+
+        return $handle;
+    }
+
+    /**
+     * Get or generate URL
+     *
+     * @return string
+     * @throws AppException
+     */
+    protected function getUrl(): string
+    {
+        if ($url = $this->getProp('url')) {
+            return $url;
+        }
+
+        if ((!$baseFile = $this->getProp('baseFile')) || (!$path = $this->getProp('path'))) {
+            throw new AppException('Either URL or baseFile/path must be defined');
+        }
+
+        $path = trim($path, '/');
+
+        $baseUrl = 'plugin' === $this->getProp('env') ? plugin_dir_url($baseFile) : get_stylesheet_directory_uri();
+
+        return trailingslashit($baseUrl) . $path;
+    }
+
+    /**
+     * Get or generate Version
+     *
+     * @return string
+     */
+    protected function getVer(): string
+    {
+        $ver = $this->getProp('ver');
+
+        if ((!$baseFile = $this->getProp('baseFile')) || (!$path = $this->getProp('path'))) {
+            return $ver;
+        }
+
+        $fullPath = dirname($baseFile) . '/' . trim($path, '/');
+
+        return file_exists($fullPath) ? filemtime($fullPath) : $ver;
+    }
+
+    /**
+     * Get prop definitions
+     *
+     * @return array
+     */
+    protected function getPropDefs(): array
+    {
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'handle' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'scope' => [
+                'type' => 'string',
+                'default' => 'front',
+            ],
+            'env' => [
+                'type' => 'string',
+                'default' => 'plugin',
+            ],
+            'baseFile' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'path' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'url' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'deps' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'ver' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'enqueue' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+        ];
+
+        return array_merge($baseProps, $fieldProps);
+    }
 
     /**
      * Get enqueue func name

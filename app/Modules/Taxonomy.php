@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * singular*, post_types, plural, slug, labels, description, public, columns
+ * Custom Taxonomy
  */
 class Taxonomy extends Module
 {
@@ -18,7 +18,7 @@ class Taxonomy extends Module
         // Register
         $this->addHook('init', [$this, 'register'], 20);
 
-        $slug = $this->getPrefixedSlug();
+        $slug = $this->getProp('slug');
 
         // Columns
         $this->addHook(sprintf('manage_edit-%s_columns', $slug), [$this, 'colNames']);
@@ -30,17 +30,7 @@ class Taxonomy extends Module
      */
     public function register()
     {
-        register_taxonomy($this->prefix . '_' . $this->getProp('slug'), $this->getProp('post_types'), $this->getProps());
-    }
-
-    /**
-     * Get prefixed slug
-     *
-     * @return string
-     */
-    protected function getPrefixedSlug(): string
-    {
-        return $this->main->prefix($this->getProp('slug'));
+        register_taxonomy($this->getProp('slug'), $this->getProp('postTypes'), $this->getProps());
     }
 
     /**
@@ -101,7 +91,7 @@ class Taxonomy extends Module
     {
         $columns = $this->getProp('columns');
 
-        if (!$column = $this->main->arraySearch($columns, ['name' => $colName], true)) {
+        if (!$column = Helpers::arraySearch($columns, ['name' => $colName], true)) {
             return;
         }
 
@@ -128,5 +118,62 @@ class Taxonomy extends Module
                 return ['slug' => sanitize_key(str_replace(' ', '_', $this->getProp('plural')))];
             },
         ];
+    }
+
+    /**
+     * Get prop definitions
+     *
+     * @return array
+     */
+    protected function getPropDefs(): array
+    {
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'singular' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'plural' => [
+                'type' => 'string',
+                'default' => function () {
+                    return $this->getProp('singular') . 's';
+                },
+            ],
+            'description' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'public' => [
+                'type' => 'bool',
+                'default' => true,
+            ],
+            'slug' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
+                },
+            ],
+            'rewrite' => [
+                'type' => 'string',
+                'default' => function () {
+                    return ['slug' => sanitize_key(str_replace(' ', '-', $this->getProp('plural')))];
+                },
+            ],
+            'labels' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'postTypes' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'columns' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+        ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

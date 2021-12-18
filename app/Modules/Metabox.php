@@ -2,30 +2,17 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Modules\Fields\Contexts\Post;
-use AlexDashkin\Adwpfw\Modules\Fields\Field;
+use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset};
 
 /**
- * title*, id, screen, context, priority
+ * Post Meta Box
  */
-class Metabox extends Module
+class Metabox extends FieldHolder
 {
     /**
-     * @var Field[]
+     * @var Asset[]
      */
-    protected $fields = [];
-
-    /**
-     * Add Field
-     *
-     * @param Field $field
-     */
-    public function addField(Field $field)
-    {
-        $field->setProp('context', new Post($field, $this->main));
-
-        $this->fields[] = $field;
-    }
+    protected $assets = [];
 
     /**
      * Init Module
@@ -34,6 +21,16 @@ class Metabox extends Module
     {
         $this->addHook('add_meta_boxes', [$this, 'register'], 20);
         $this->addHook('save_post', [$this, 'save']);
+    }
+
+    /**
+     * Add Asset
+     *
+     * @param Asset $asset
+     */
+    public function addAsset(Asset $asset)
+    {
+        $this->assets[] = $asset;
     }
 
     /**
@@ -48,35 +45,14 @@ class Metabox extends Module
             return;
         }
 
-        $id = $this->prefix . '_' . $this->getProp('id');
-
         add_meta_box(
-            $id,
+            $this->getProp('id'),
             $this->getProp('title'),
             [$this, 'render'],
             $this->getProp('screen'),
             $this->getProp('context'),
             $this->getProp('priority')
         );
-
-        // Enqueue assets
-        foreach ($this->getProp('assets') as $index => $asset) {
-            // Type here is CSS/JS
-            $type = $asset['type'] ?? 'css';
-
-            // Type for particular asset is admin/front
-            $asset['type'] = 'admin';
-
-            $args = [
-                'id' => sprintf('%s-%d', $this->getProp('id'), $index),
-                'type' => 'admin',
-                'callback' => function () {
-                    return in_array(get_current_screen()->id, $this->getProp('screen'));
-                },
-            ];
-
-            $this->m('asset.' . $type, array_merge($args, $asset));
-        }
     }
 
     /**
@@ -86,11 +62,19 @@ class Metabox extends Module
      */
     public function render(\WP_Post $post)
     {
-        $args = $this->getProps();
+        // Enqueue assets
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
+        }
 
-        $args['fields'] = Field::renderMany($this->fields, $post->ID);
+        // Prepare args
+        $args = [
+            'context' => $this->getProp('context'),
+            'fields' => $this->getFieldsArgs($post->ID),
+        ];
 
-        echo $this->main->render('templates/metabox', $args);
+        // Output template
+        echo Helpers::render('layouts/metabox', $args);
     }
 
     /**
@@ -100,32 +84,64 @@ class Metabox extends Module
      */
     public function save(int $postId)
     {
-        if (empty($_POST[$this->prefix])) {
-            return;
-        }
-
-        $values = $_POST[$this->prefix];
-
-        Field::setMany($this->fields, $values, $postId);
-
-        do_action('adwpfw_metabox_saved', $this, $postId, $values);
+        Field::setMany($this->fields, $_POST, $postId);
     }
 
     /**
-     * Get Default prop values
+     * Get field value
+     *
+     * @param Field $field
+     * @param int $objectId
+     * @return mixed
+     */
+    public function getFieldValue(Field $field, int $objectId = 0)
+    {
+        return get_post_meta($objectId, $field->getProp('name'), true);
+    }
+
+    /**
+     * Set field value
+     *
+     * @param Field $field
+     * @param $value
+     * @param int $objectId
+     * @return bool
+     */
+    public function setFieldValue(Field $field, $value, int $objectId = 0): bool
+    {
+        return update_post_meta($objectId, $field->getProp('name'), $value);
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
         return [
-            'title' => 'Metabox',
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '-', sprintf('%s-%s', $this->getProp('title'), implode('-', $this->getProp('screen')))));
-            },
-            'screen' => ['post', 'page'],
-            'context' => 'normal',
-            'assets' => [],
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'id' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '-', sprintf('%s-%s', $this->getProp('title'), implode('-', $this->getProp('screen')))));
+                },
+            ],
+            'screen' => [
+                'type' => 'array',
+                'default' => ['post'],
+            ],
+            'assets' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'context' => [
+                'type' => 'string',
+                'default' => 'normal',
+            ],
         ];
     }
 }

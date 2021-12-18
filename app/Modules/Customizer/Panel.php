@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules\Customizer;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
- * title*, id, description, priority
+ * Customizer panel
  */
 class Panel extends Module
 {
@@ -13,18 +13,6 @@ class Panel extends Module
      * @var Section[]
      */
     private $sections;
-
-    /**
-     * Add Section
-     *
-     * @param Section $section
-     */
-    public function addSection(Section $section)
-    {
-        $section->setProp('panel', $this->prefix . '_' . $this->getProp('id'));
-
-        $this->sections[] = $section;
-    }
 
     /**
      * Init Module
@@ -35,13 +23,25 @@ class Panel extends Module
     }
 
     /**
-     * Register Panel.
+     * Add Section
+     *
+     * @param Section $section
+     */
+    public function addSection(Section $section)
+    {
+        $section->setPanel($this);
+
+        $this->sections[] = $section;
+    }
+
+    /**
+     * Register Panel
      *
      * @param \WP_Customize_Manager $customizer
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_panel($this->prefix . '_' . $this->getProp('id'), $this->getProps());
+        $customizer->add_panel($this->getProp('id'), $this->getProps());
 
         foreach ($this->sections as $section) {
             $section->register($customizer);
@@ -49,16 +49,33 @@ class Panel extends Module
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
-            },
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'id' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'description' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'priority' => [
+                'type' => 'int',
+                'default' => 160,
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

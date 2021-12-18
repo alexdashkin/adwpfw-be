@@ -1,4 +1,4 @@
-<div class="adwpfw-metabox adwpfw-context-<?= $context ?> adwpfw <?= $prefix ?>">
+<div class="adwpfw-widget adwpfw">
 
     <div class="adwpfw-fields">
 
@@ -18,10 +18,10 @@
                     <?= $field['content'] ?>
                 </div>
 
-                <?php if ($field['desc']): ?>
+                <?php if ($field['description']): ?>
 
-                    <div class="adwpfw-desc">
-                        <?= $field['desc'] ?>
+                    <div class="adwpfw-description">
+                        <?= $field['description'] ?>
                     </div>
 
                 <?php endif; ?>

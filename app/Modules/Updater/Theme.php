@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules\Updater;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
- * slug*, package*, callback
+ * Theme auto updater
  */
 class Theme extends Module
 {
@@ -72,24 +72,27 @@ class Theme extends Module
         if ($this->getProp('callback')) {
             $this->getProp('callback')();
         }
-
-        // Clear Twig cache
-        $twigPath = $this->main->getUploadsDir($this->prefix . '/twig');
-
-        if (file_exists($twigPath)) {
-            $this->main->rmDir($twigPath);
-        }
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
         return [
-            'slug' => get_stylesheet(),
+            'package' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'slug' => [
+                'type' => 'string',
+                'default' => get_stylesheet(),
+            ],
+            'callback' => [
+                'type' => 'callable',
+            ],
         ];
     }
 }

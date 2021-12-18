@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * name*, callback*, interval, parallel
+ * WP Cron Job
  */
 class CronJob extends Module
 {
@@ -30,12 +30,9 @@ class CronJob extends Module
         // Current Job Name
         $jobName = $this->getProp('name');
 
-        // Cron option value for current job
-        $option = $this->getOption($jobName);
-
         // Get currently running and last run params
-        $running = $option['running'] ?? [];
-        $lastRun = $option['last'] ?? 0;
+        $running = $this->getRunning();
+        $lastRun = $this->getLastRun();
 
         // If interval is not expired - exit
         if ($lastRun && (time() - $this->getProp('interval')) < $lastRun) {
@@ -45,33 +42,15 @@ class CronJob extends Module
         // Run the Job
         $this->log("Launching cron job $jobName");
 
-        $startTime = time();
-
-        // Remove old possible dead jobs from "running"
-        foreach ($running as $index => $ts) {
-            if (($ts + 3600) < $startTime) {
-                $this->log('Found dead entry started at %s, deleting', [date('Y-m-d H:i:s', $ts)]);
-                unset($running[$index]);
-            }
-        }
-
         // If another process is running and parallel is disabled - abort
         if ($running && !$this->getProp('parallel')) {
             $this->log('Another instance is running, aborting');
             return;
         }
 
-        // Add current process to "running" array
-        $running[] = $startTime;
-
-        // Update Cron Option before launching the job
-        $this->updateOption(
-            $jobName,
-            [
-                'last' => $startTime,
-                'running' => $running
-            ]
-        );
+        // Set Running and Last Run
+        $this->setRunning();
+        $this->setLastRun();
 
         // Try to run the job
         try {
@@ -80,67 +59,92 @@ class CronJob extends Module
             $msg = 'Exception: ' . $e->getMessage() . '. Execution aborted.';
             $this->log($msg);
         } finally {
-            $option = $this->getOption($jobName);
-            $running = $option['running'] ?? [];
-
-            // Remove the current process from "running"
-            foreach ($running as $index => $time) {
-                if ($time === $startTime) {
-                    unset($running[$index]);
-                }
-            }
-
-            // Update Cron Option
-            $this->updateOption(
-                $jobName,
-                [
-                    'last' => $startTime,
-                    'running' => $running
-                ]
-            );
+            $this->deleteRunning();
         }
 
         $this->log('Done');
     }
 
     /**
-     * Get Cron option
+     * Get job last run timestamp
      *
-     * @param string $name Param name
-     * @return array
+     * @return int
      */
-    private function getOption(string $name): array
+    private function getLastRun(): int
     {
-        $option = $this->main->getOption('cron') ?: [];
-
-        return !empty($option[$name]) && is_array($option[$name]) ? $option[$name] : [];
+        return (int)get_option($this->getProp('optionName'));
     }
 
     /**
-     * Update Cron option
+     * Set job last run timestamp
      *
-     * @param string $name Param name
-     * @param array $value Value
+     * @return bool
      */
-    private function updateOption(string $name, array $value)
+    private function setLastRun(): bool
     {
-        $option = $this->main->getOption('cron') ?: [];
-
-        $option[$name] = $value;
-
-        $this->main->updateOption('cron', $option);
+        return update_option($this->getProp('optionName'), time());
     }
 
     /**
-     * Get Default prop values
+     * Get running job start timestamp
+     *
+     * @return int
+     */
+    private function getRunning(): int
+    {
+        return (int)get_transient($this->getProp('optionName'));
+    }
+
+    /**
+     * Set running job start timestamp
+     *
+     * @return int
+     */
+    private function setRunning(): bool
+    {
+        return set_transient($this->getProp('optionName'), time(), 180);
+    }
+
+    /**
+     * Delete running job timestamp
+     *
+     * @return bool
+     */
+    private function deleteRunning(): bool
+    {
+        return delete_transient($this->getProp('optionName'));
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'name' => 'cron_job',
-            'interval' => 0,
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'name' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'callback' => [
+                'type' => 'callable',
+                'required' => true,
+            ],
+            'interval' => [
+                'type' => 'int',
+                'required' => true,
+            ],
+            'optionName' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sprintf('adwpfw_cron_job_%s', sanitize_title($this->getProp('name')));
+                },
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

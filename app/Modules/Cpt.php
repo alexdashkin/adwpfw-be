@@ -2,8 +2,10 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
+use AlexDashkin\Adwpfw\Helpers;
+
 /**
- * singular*, plural, slug, labels, description, public, columns
+ * Custom Post Type
  */
 class Cpt extends Module
 {
@@ -18,7 +20,7 @@ class Cpt extends Module
         // Register CPT
         $this->addHook('init', [$this, 'register'], 20);
 
-        $slug = $this->getPrefixedSlug();
+        $slug = $this->getProp('slug');
 
         // Columns
         $this->addHook(sprintf('manage_%s_posts_columns', $slug), [$this, 'colNames']);
@@ -35,9 +37,9 @@ class Cpt extends Module
     /**
      * Register CPT
      */
-    public function register()
+    public function register() // todo list all params
     {
-        register_post_type($this->prefix . '_' . $this->getProp('slug'), $this->getProps());
+        register_post_type($this->getProp('slug'), $this->getProps());
     }
 
     /**
@@ -98,7 +100,7 @@ class Cpt extends Module
     {
         $columns = $this->getProp('columns');
 
-        if (!$column = $this->main->arraySearch($columns, ['name' => $colName], true)) {
+        if (!$column = Helpers::arraySearch($columns, ['name' => $colName], true)) {
             return;
         }
 
@@ -114,14 +116,14 @@ class Cpt extends Module
     public function filters(string $postType, string $location)
     {
         // If no filters or not our CPT - return
-        if (!($filters = $this->getProp('filters')) || $this->getPrefixedSlug() !== $postType) {
+        if (!($filters = $this->getProp('filters')) || $this->getProp('slug') !== $postType) {
             return;
         }
 
         // Iterate over filters
         foreach ($filters as $filter) {
-            $name = $this->main->prefix($filter['name']);
-            $arg = $this->main->prefix($filter['arg']);
+            $name = $filter['name'];
+            $arg = $filter['arg'];
 
             $options = [];
 
@@ -139,7 +141,7 @@ class Cpt extends Module
                 'options' => $options,
             ];
 
-            echo $this->main->render('templates/post-actions', $args);
+            echo Helpers::render('layouts/post-actions', $args);
         }
     }
 
@@ -155,11 +157,11 @@ class Cpt extends Module
             return $views;
         }
 
-        $slug = $this->getPrefixedSlug();
+        $slug = $this->getProp('slug');
 
         foreach ($extraViews as $view) {
-            $name = $this->main->prefix($view['name']);
-            $arg = $this->main->prefix($view['arg']);
+            $name = $view['name'];
+            $arg = $view['arg'];
             $class = array_key_exists($arg, $_REQUEST) && $_REQUEST[$arg] === $view['value'] ? 'current' : '';
 
             $url = add_query_arg(['post_type' => $slug, $arg => $view['value']], 'edit.php');
@@ -185,13 +187,13 @@ class Cpt extends Module
             || !is_admin()
             || !$query->is_main_query()
             || !$currentScreen
-            || $this->getPrefixedSlug() !== $currentScreen->post_type) {
+            || $this->getProp('slug') !== $currentScreen->post_type) {
             return;
         }
 
         // Iterate over views
         foreach ($views as $view) {
-            $arg = $this->main->prefix($view['arg']);
+            $arg = $view['arg'];
 
             // If view arg not set - skip
             if (!array_key_exists($arg, $_REQUEST) || $_REQUEST[$arg] !== $view['value']) {
@@ -208,7 +210,7 @@ class Cpt extends Module
 
         // Iterate over filters
         foreach ($filters as $filter) {
-            $arg = $this->main->prefix($filter['arg']);
+            $arg = $filter['arg'];
 
             // If view arg not set - skip
             if (!array_key_exists($arg, $_REQUEST)) {
@@ -225,35 +227,63 @@ class Cpt extends Module
     }
 
     /**
-     * Get prefixed slug
-     *
-     * @return string
-     */
-    protected function getPrefixedSlug(): string
-    {
-        return $this->main->prefix($this->getProp('slug'));
-    }
-
-    /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'plural' => $this->getProp('singular') . 's',
-            'slug' => function () {
-                return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
-            },
-            'public' => true,
-            'columns' => [],
-            'views' => [],
-            'filters' => [],
-            'labels' => [],
-            'rewrite' => function () {
-                return ['slug' => sanitize_key(str_replace(' ', '-', $this->getProp('plural')))];
-            },
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'singular' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'plural' => [
+                'type' => 'string',
+                'default' => function () {
+                    return $this->getProp('singular') . 's';
+                },
+            ],
+            'description' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'public' => [
+                'type' => 'bool',
+                'default' => true,
+            ],
+            'slug' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '_', $this->getProp('singular')));
+                },
+            ],
+            'rewrite' => [
+                'type' => 'string',
+                'default' => function () {
+                    return ['slug' => sanitize_key(str_replace(' ', '-', $this->getProp('plural')))];
+                },
+            ],
+            'labels' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'columns' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'views' => [
+                'type' => 'array',
+                'default' => [],
+            ],
+            'filters' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

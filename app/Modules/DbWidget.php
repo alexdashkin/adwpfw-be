@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * title*, callback*, id, capability
+ * WP Dashboard Widget
  */
 class DbWidget extends Module
 {
@@ -20,26 +20,35 @@ class DbWidget extends Module
      */
     public function register()
     {
-        if (!current_user_can($this->getProp('capability'))) {
-            return;
-        }
-
         wp_add_dashboard_widget($this->getProp('id'), $this->getProp('title'), $this->getProp('callback'));
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'title' => 'Dashboard Widget',
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            },
-            'capability' => 'read',
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'callback' => [
+                'type' => 'callable',
+                'required' => true,
+            ],
+            'id' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+                },
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

@@ -1,4 +1,4 @@
-<div class="<?= $prefix ?> adwpfw adwpfw-term-meta">
+<div class="adwpfw adwpfw-term-meta">
 
     <?php if ($title): ?>
         <h2><?= $title ?></h2>
@@ -22,8 +22,8 @@
 
                     <?= $field['content'] ?>
 
-                    <?php if ($field['desc']): ?>
-                        <p class="description"><?= $field['desc'] ?></p>
+                    <?php if ($field['description']): ?>
+                        <p class="description"><?= $field['description'] ?></p>
                     <?php endif; ?>
 
                 </td>

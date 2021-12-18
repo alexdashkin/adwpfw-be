@@ -20,23 +20,31 @@ class Sidebar extends Module
      */
     public function register()
     {
-        $this->setProp('id', $this->prefix . '_' . $this->getProp('id'));
-
         register_sidebar($this->getProps());
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'name' => 'Sidebar',
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '_', $this->getProp('name')));
-            },
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'name' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'id' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '_', $this->getProp('name')));
+                },
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

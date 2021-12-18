@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * tag*, callback*, priority
+ * Action/Filter
  */
 class Hook extends Module
 {
@@ -40,14 +40,29 @@ class Hook extends Module
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'priority' => 10,
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'tag' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'callback' => [
+                'type' => 'callable',
+                'required' => true,
+            ],
+            'priority' => [
+                'type' => 'int',
+                'default' => 10,
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

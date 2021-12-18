@@ -1,8 +1,8 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Core;
+namespace AlexDashkin\Adwpfw;
 
-class Query
+class Db
 {
     /**
      * @var \wpdb
@@ -108,15 +108,11 @@ class Query
      * Add a basic where clause to the query.
      *
      * @param array $conditions
-     * @param string $compare
      * @return $this
      */
-    public function where(array $conditions, string $compare = 'and'): self
+    public function where(array $conditions): self
     {
-        $this->where = [
-            'conditions' => $conditions,
-            'compare' => $compare,
-        ];
+        $this->where = $conditions;
 
         return $this;
     }
@@ -249,7 +245,7 @@ class Query
      */
     public function update(array $values)
     {
-        return $this->wpdb->update($this->table, $values, $this->where['conditions']);
+        return $this->wpdb->update($this->table, $values, $this->where);
     }
 
     /**
@@ -259,7 +255,7 @@ class Query
      */
     public function delete()
     {
-        return $this->wpdb->delete($this->table, $this->where['conditions']);
+        return $this->wpdb->delete($this->table, $this->where);
     }
 
     /**
@@ -305,17 +301,17 @@ class Query
      */
     private function buildWhereClause(): string
     {
-        if (!$this->where['conditions']) {
+        if (!$this->where) {
             return '';
         }
 
         $whereArr = [];
 
-        foreach ($this->where['conditions'] as $field => $value) {
+        foreach ($this->where as $field => $value) {
             $whereArr[] = sprintf('`%s`="%s"', $field, $value);
         }
 
-        $whereClause = implode(" {$this->where['compare']} ", $whereArr);
+        $whereClause = implode(' AND ', $whereArr);
 
         return ' WHERE ' . $whereClause;
     }

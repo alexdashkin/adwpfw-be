@@ -2,29 +2,29 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Modules\Fields\Field;
+use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset};
 
 /**
- * title*, render*, form, id, assets[]
+ * Custom Front-End Widget
  */
-class Widget extends Module
+class Widget extends FieldHolder
 {
-    private $frontHandles = [];
-
     /**
-     * @var Field[]
+     * @var Asset[]
      */
-    protected $fields = [];
+    protected $assets = [];
 
     /**
-     * Add Field
+     * @var \WP_Widget
+     */
+    private $widget;
+
+    /**
+     * Admin Form values
      *
-     * @param Field $field
+     * @var array
      */
-    public function addField(Field $field)
-    {
-        $this->fields[] = $field;
-    }
+    private $instance;
 
     /**
      * Init Module
@@ -35,11 +35,21 @@ class Widget extends Module
     }
 
     /**
+     * Add Asset
+     *
+     * @param Asset $asset
+     */
+    public function addAsset(Asset $asset)
+    {
+        $this->assets[] = $asset;
+    }
+
+    /**
      * Register the Widget
      */
     public function register()
     {
-        $id = $this->prefix . '_' . $this->getProp('id');
+        $id = $this->getProp('id');
 
         $args = [
             'id' => $id,
@@ -48,7 +58,7 @@ class Widget extends Module
         ];
 
         // Register the class
-        eval($this->main->render('php/widget', $args));
+        eval(Helpers::render('php/widget', $args));
 
         // Register widget
         register_widget($id);
@@ -56,37 +66,6 @@ class Widget extends Module
         // Add render hooks
         $this->addHook('form_' . $id, [$this, 'form']);
         $this->addHook('render_' . $id, [$this, 'render']);
-
-        // Enqueue widget assets
-        foreach ($this->getProp('assets') as $index => $asset) {
-            // Type here is CSS/JS
-            $type = $asset['type'] ?? 'css';
-
-            // Type for particular asset is admin/front
-            $af = $asset['af'] ?: 'front';
-            $asset['type'] = $af;
-
-            $args = [
-                'id' => sprintf('%s-%s-%s-%d', $id, $type, $af, $index),
-
-                // Do not enqueue front assets (to be done in render_callback)
-                'enqueue' => 'front' !== $af,
-            ];
-
-            if ('admin' === $asset['type']) {
-                $args['callback'] = function () {
-                    return 'widgets' === get_current_screen()->id;
-                };
-            }
-
-            // Add asset
-            $asset = $this->m('asset.' . $type, array_merge($args, $asset));
-
-            // Add handle to the list for front scripts to enqueue in render callback
-            if (!$args['enqueue']) {
-                $this->frontHandles[$type][] = $asset->getProp('handle');
-            }
-        }
     }
 
     /**
@@ -98,23 +77,15 @@ class Widget extends Module
      */
     public function render(array $args, array $instance, \WP_Widget $widget)
     {
-        // Enqueue front assets
-        if (!is_admin()) {
-            if (!empty($this->frontHandles['css'])) {
-                foreach ($this->frontHandles['css'] as $handle) {
-                    wp_enqueue_style($handle);
-                }
-            }
-
-            if (!empty($this->frontHandles['js'])) {
-                foreach ($this->frontHandles['js'] as $handle) {
-                    wp_enqueue_script($handle);
-                }
-            }
+        // Enqueue assets
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
         }
 
+        // Call render function and output the result
         try {
-            echo sprintf('<div class="%s-widget">%s</div>', $this->prefix, $this->getProp('render')($args, $instance, $widget));
+            $feHtml = $this->getProp('render')($args, $instance, $widget);
+            echo sprintf('<div class="adwpfw-widget">%s</div>', $feHtml);
         } catch (\Exception $e) {
             $this->log('Exception in widget "%s": %s', [$this->getProp('id'), $e->getMessage()]);
         }
@@ -128,41 +99,78 @@ class Widget extends Module
      */
     public function form(array $instance, \WP_Widget $widget)
     {
-        $args = $this->getProps();
+        $this->instance = $instance;
+        $this->widget = $widget;
 
-        $fields = [];
+        $args = [
+            'fields' => $this->getFieldsArgs(),
+        ];
 
-        foreach ($this->fields as $field) {
-            $context = new Fields\Contexts\Widget($field, $this->main);
-            $context->setWidget($widget);
-            $field->setProp('context', $context);
-
-            $name = $field->getProp('name');
-            $field->setProp('value', $instance[$name] ?? '');
-            $fieldArgs = $field->getProps();
-            $fieldArgs['content'] = $field->render();
-            $fields[] = $fieldArgs;
-        }
-
-        $args['fields'] = $fields;
-
-        echo $this->main->render('templates/widget', $args);
+        echo Helpers::render('layouts/widget', $args);
     }
 
     /**
-     * Get Default prop values
+     * Get field "name" attr for template
+     *
+     * @param Field $field
+     * @return string
+     */
+    public function getFieldName(Field $field): string
+    {
+        return $this->widget->get_field_name($field->getProp('name'));
+    }
+
+    /**
+     * Get field value
+     *
+     * @param Field $field
+     * @param int $objectId
+     * @return mixed
+     */
+    public function getFieldValue(Field $field, int $objectId = 0)
+    {
+        return $this->instance[$field->getProp('name')] ?? '';
+    }
+
+    /**
+     * Set field value
+     *
+     * @param Field $field
+     * @param $value
+     * @param int $objectId
+     * @return bool
+     */
+    public function setFieldValue(Field $field, $value, int $objectId = 0): bool
+    {
+        return false;
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
         return [
-            'title' => 'Widget',
-            'description' => '',
-            'id' => function () {
-                return 'widget_' . sanitize_key(str_replace(' ', '_', $this->getProp('title')));
-            },
-            'assets' => [],
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'description' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'id' => [
+                'type' => 'string',
+                'default' => function () {
+                    return 'widget_' . sanitize_key(str_replace(' ', '_', $this->getProp('title')));
+                },
+            ],
+            'assets' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
     }
 }

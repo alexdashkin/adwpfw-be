@@ -2,13 +2,12 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Modules\Fields\Contexts\Option;
-use AlexDashkin\Adwpfw\Modules\Fields\Field;
+use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset, Modules\RestApi\AdminAjax};
 
 /**
- * title*, slug, form, option
+ * Admin Page Tab
  */
-class AdminPageTab extends Module
+class AdminPageTab extends FieldHolder
 {
     /**
      * @var AdminPage
@@ -16,9 +15,9 @@ class AdminPageTab extends Module
     protected $parent;
 
     /**
-     * @var Field[]
+     * @var Asset[]
      */
-    protected $fields = [];
+    protected $assets = [];
 
     /**
      * Init Module
@@ -26,11 +25,9 @@ class AdminPageTab extends Module
     public function init()
     {
         if ($this->getProp('form')) {
-            $this->m(
-                'api.ajax',
+            new AdminAjax(
                 [
-                    'prefix' => $this->prefix,
-                    'action' => sprintf('save_%s', $this->getProp('slug')),
+                    'action' => $this->getProp('action'),
                     'fields' => [
                         'form' => [
                             'type' => 'form',
@@ -54,15 +51,13 @@ class AdminPageTab extends Module
     }
 
     /**
-     * Add Field
+     * Add Asset
      *
-     * @param Field $field
+     * @param Asset $asset
      */
-    public function addField(Field $field)
+    public function addAsset(Asset $asset)
     {
-        $field->setProp('context', new Option($field, $this->main));
-
-        $this->fields[] = $field;
+        $this->assets[] = $asset;
     }
 
     /**
@@ -72,13 +67,21 @@ class AdminPageTab extends Module
      */
     public function render(): string
     {
-        $args = $this->getProps();
+        // Enqueue assets
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
+        }
 
-        $fields = Field::renderMany($this->fields);
+        // Prepare args
+        $args = [
+            'title' => $this->getProp('title'),
+            'action' => $this->getProp('action'),
+            'form' => $this->getProp('form'),
+            'fields' => $this->getFieldsArgs(),
+        ];
 
-        $args['fields'] = $this->main->render('templates/admin-page-tab-fields', ['fields' => $fields]);
-
-        return $this->main->render('templates/admin-page-tab', $args);
+        // Render template
+        return Helpers::render('layouts/admin-page-tab', $args);
     }
 
     /**
@@ -89,35 +92,72 @@ class AdminPageTab extends Module
      */
     public function save(array $request): array
     {
-        $form = $request['form'];
+        Field::setMany($this->fields, $request['form']);
 
-        if (empty($form[$this->prefix])) {
-            return $this->main->returnError('Form is empty');
-        }
+        do_action('adwpfw_settings_saved', $this, $request['form']);
 
-        $values = $form[$this->prefix];
-
-        Field::setMany($this->fields, $values);
-
-        do_action('adwpfw_settings_saved', $this, $values);
-
-        return $this->main->returnSuccess('Saved');
+        return Helpers::returnSuccess('Saved');
     }
 
     /**
-     * Get Default prop values
+     * Get field value
+     *
+     * @param Field $field
+     * @param int $objectId
+     * @return mixed
+     */
+    public function getFieldValue(Field $field, int $objectId = 0)
+    {
+        return get_option($field->getProp('name'));
+    }
+
+    /**
+     * Set field value
+     *
+     * @param Field $field
+     * @param $value
+     * @param int $objectId
+     * @return bool
+     */
+    public function setFieldValue(Field $field, $value, int $objectId = 0): bool
+    {
+        return update_option($field->getProp('name'), $value);
+    }
+
+    /**
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
         return [
-            'title' => 'Tab',
-            'slug' => function () {
-                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            },
-            'form' => false,
-            'option' => 'settings',
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'slug' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+                },
+            ],
+            'action' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sprintf('save_%s', $this->getProp('slug'));
+                },
+            ],
+            'form' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'option' => [
+                'type' => 'string',
+                'default' => function () {
+                    return $this->getProp('form');
+                },
+            ],
         ];
     }
 }

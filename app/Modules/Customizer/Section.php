@@ -10,9 +10,24 @@ use AlexDashkin\Adwpfw\Modules\Module;
 class Section extends Module
 {
     /**
+     * @var Panel
+     */
+    private $panel;
+
+    /**
      * @var Setting[]
      */
     private $settings;
+
+    /**
+     * Set parent panel
+     *
+     * @param Panel $panel
+     */
+    public function setPanel(Panel $panel)
+    {
+        $this->panel = $panel;
+    }
 
     /**
      * Add Setting
@@ -21,7 +36,7 @@ class Section extends Module
      */
     public function addSetting(Setting $setting)
     {
-        $setting->setProp('section', $this->prefix . '_' . $this->getProp('id'));
+        $setting->setSection($this);
 
         $this->settings[] = $setting;
     }
@@ -33,7 +48,9 @@ class Section extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_section($this->prefix . '_' . $this->getProp('id'), $this->getProps());
+        $this->setProp('panel', $this->panel->getProp('id'));
+
+        $customizer->add_section($this->getProp('id'), $this->getProps());
 
         foreach ($this->settings as $setting) {
             $setting->register($customizer);
@@ -41,16 +58,33 @@ class Section extends Module
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '_', $this->getProp('title')));
-            },
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'id' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'description' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'priority' => [
+                'type' => 'int',
+                'default' => 160,
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

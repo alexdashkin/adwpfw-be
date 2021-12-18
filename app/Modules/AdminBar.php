@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * title*, id, parent, href, group, meta, capability
+ * Top Admin Bar Item
  */
 class AdminBar extends Module
 {
@@ -16,7 +16,7 @@ class AdminBar extends Module
     }
 
     /**
-     * Register Admin Bars in WP
+     * Register Admin Bar in WP
      * Hooked to "admin_bar_menu" action
      *
      * @param \WP_Admin_Bar $wpAdminBar
@@ -27,24 +27,31 @@ class AdminBar extends Module
             return;
         }
 
-        $this->setProp('id', $this->prefix . '-' . $this->getProp('id'));
-
         $wpAdminBar->add_node($this->getProps());
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
         return [
-            'title' => 'Admin Bar',
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
-            },
-            'capability' => 'administrator',
+            'title' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'id' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '-', $this->getProp('title')));
+                },
+            ],
+            'capability' => [
+                'type' => 'string',
+                'default' => 'administrator',
+            ],
         ];
     }
 }

@@ -5,7 +5,7 @@ namespace AlexDashkin\Adwpfw\Modules\Updater;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
- * file*, package*, callback
+ * Plugin auto-updater
  */
 class Plugin extends Module
 {
@@ -82,12 +82,27 @@ class Plugin extends Module
         if ($this->getProp('callback')) {
             $this->getProp('callback')();
         }
+    }
 
-        // Clear Twig cache
-        $twigPath = $this->main->getUploadsDir($this->prefix . '/twig');
-
-        if (file_exists($twigPath)) {
-            $this->main->rmDir($twigPath);
-        }
+    /**
+     * Get prop definitions
+     *
+     * @return array
+     */
+    protected function getPropDefs(): array
+    {
+        return [
+            'package' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'file' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'callback' => [
+                'type' => 'callable',
+            ],
+        ];
     }
 }

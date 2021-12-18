@@ -2,12 +2,27 @@
 
 namespace AlexDashkin\Adwpfw\Traits;
 
+use AlexDashkin\Adwpfw\Exceptions\AppException;
+
 trait Props
 {
     /**
      * @var array Item Props
      */
     protected $props = [];
+
+    /**
+     * Set Single Prop
+     *
+     * @param string $name
+     * @param mixed $value
+     */
+    public function setProp(string $name, $value)
+    {
+        $this->validateProp($name, $value);
+
+        $this->props[$name] = $value;
+    }
 
     /**
      * Get Single Prop
@@ -17,76 +32,114 @@ trait Props
      */
     public function getProp(string $key)
     {
-        return array_key_exists($key, $this->props) ? $this->props[$key] : $this->getDefault($key);
-    }
-
-    /**
-     * Get All Props
-     *
-     * @return array
-     */
-    public function getProps(): array
-    {
-        $set = $default = [];
-
-        foreach ($this->defaults() as $key => $value) {
-            $default[$key] = $this->getDefault($key);
+        if (isset($this->props[$key])) {
+            return $this->props[$key];
         }
 
-        foreach ($this->props as $key => $value) {
-            $set[$key] = $this->getProp($key);
+        $defs = $this->getPropDefs();
+
+        if (!isset($defs[$key])) {
+            return null;
         }
 
-        return array_merge($default, $set);
-    }
-
-    /**
-     * Set Single Prop
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    public function setProp(string $key, $value)
-    {
-        $this->props[$key] = $value;
-    }
-
-    /**
-     * Set Many Props
-     *
-     * @param array $data
-     */
-    public function setProps(array $data)
-    {
-        foreach ($data as $key => $value) {
-            $this->setProp($key, $value);
+        if (isset($defs[$key]['default'])) {
+            if ($defs[$key]['default'] instanceof \Closure) {
+                return $defs[$key]['default']();
+            } else {
+                return $defs[$key]['default'];
+            }
         }
-    }
 
-    /**
-     * Get Default Prop value
-     *
-     * @param string $key
-     * @return mixed
-     */
-    protected function getDefault(string $key)
-    {
-        $defaults = $this->defaults();
-
-        if (array_key_exists($key, $defaults)) {
-            return $defaults[$key] instanceof \Closure ? $defaults[$key]() : $defaults[$key];
+        if (isset($defs[$key]['type'])) {
+            switch ($defs[$key]['type']) {
+                case 'string':
+                    return '';
+                case 'int':
+                    return 0;
+                case 'array':
+                    return [];
+                case 'bool':
+                    return false;
+                default:
+                    return null;
+            }
         }
 
         return null;
     }
 
     /**
-     * Get Default prop values, to be overridden
+     * Get all props
      *
      * @return array
      */
-    protected function defaults(): array
+    public function getProps(): array
     {
-        return [];
+        return array_merge($this->getDefaults(), $this->props);
+    }
+
+    /**
+     * Validate prop
+     *
+     * @throws AppException
+     */
+    protected function validateProp($name, $value)
+    {
+        $defs = $this->getPropDefs();
+
+        $validators = [
+            'string' => 'is_string',
+            'int' => 'is_int',
+            'array' => 'is_array',
+            'callable' => 'is_callable',
+            'bool' => 'is_bool',
+        ];
+
+        // Skip props without defs
+        if (empty($defs[$name])) {
+            return;
+        }
+
+        $type = $defs[$name]['type'];
+
+        if (!$validators[$type]($value)) {
+            throw new AppException(sprintf('%s: "%s" must be %s, %s given', get_called_class(), $name, $type, gettype($value)));
+        }
+    }
+
+    /**
+     * Get all default values
+     *
+     * @return array
+     */
+    protected function getDefaults(): array
+    {
+        $defaults = [];
+
+        foreach ($this->getPropDefs() as $name => $def) {
+            if (isset($def['default'])) {
+                if ($def['default'] instanceof \Closure) {
+                    $defaults[$name] = $def['default']();
+                } else {
+                    $defaults[$name] = $def['default'];
+                }
+            }
+        }
+
+        return $defaults;
+    }
+
+    /**
+     * Check if all required props provided
+     *
+     * @throws AppException
+     */
+    protected function checkRequiredProps()
+    {
+        foreach ($this->getPropDefs() as $name => $def) {
+            if (!empty($def['required']) && !isset($this->props[$name])) {
+                throw new AppException(sprintf('%s: "%s" is required', get_called_class(), $name));
+            }
+        }
     }
 }

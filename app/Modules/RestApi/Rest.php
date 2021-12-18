@@ -1,9 +1,9 @@
 <?php
 
-namespace AlexDashkin\Adwpfw\Modules\Api;
+namespace AlexDashkin\Adwpfw\Modules\RestApi;
 
 /**
- * namespace*, route*, callback*, method, admin, fields
+ * WP REST endpoint
  */
 class Rest extends Request
 {
@@ -41,8 +41,8 @@ class Rest extends Request
     {
         $this->log('REST request: "%s%s"', [$this->getProp('namespace'), $this->getProp('route')]);
 
-        if ($this->getProp('nonce')) {
-            check_ajax_referer('wp_rest');
+        if ($this->getProp('nonce') && !check_ajax_referer('wp_rest', '_wpnonce', false)) {
+            return $this->error('Invalid nonce');
         }
 
         if ($this->getProp('admin') && !current_user_can('administrator')) {
@@ -55,19 +55,41 @@ class Rest extends Request
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        $defaults = [
-            'namespace' => 'adwpfw/v1',
-            'route' => 'test',
-            'method' => 'post',
-            'nonce' => false,
+        return [
+            'namespace' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'route' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'method' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'nonce' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'admin' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
+            'callback' => [
+                'type' => 'callable',
+                'required' => true,
+            ],
+            'fields' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
-
-        return array_merge(parent::defaults(), $defaults);
     }
 }

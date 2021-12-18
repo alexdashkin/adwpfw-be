@@ -10,29 +10,39 @@ use AlexDashkin\Adwpfw\Modules\Module;
 class Setting extends Module
 {
     /**
+     * @var Section
+     */
+    private $section;
+
+    /**
+     * Set parent section
+     *
+     * @param Section $section
+     */
+    public function setSection(Section $section)
+    {
+        $this->section = $section;
+    }
+
+    /**
      * Register Setting
      *
      * @param \WP_Customize_Manager $customizer
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $id = $this->prefix . '_' . $this->getProp('id');
-
-        $setting = [
-            'default' => $this->getProp('default'),
-            'sanitize_callback' => $this->getProp('sanitize_callback'),
-        ];
+        $id = $this->getProp('id');
 
         $control = [
+            'section' => $this->section->getProp('id'),
+            'type' => $this->getProp('type'),
             'label' => $this->getProp('label'),
             'description' => $this->getProp('description'),
-            'section' => $this->getProp('section'),
             'priority' => $this->getProp('priority'),
-            'type' => $this->getProp('type'),
             'input_attrs' => $this->getProp('input_attrs'),
         ];
 
-        $customizer->add_setting($id, $setting);
+        $customizer->add_setting($id, $this->getProps());
 
         switch ($control['type']) {
             case 'image':
@@ -51,17 +61,41 @@ class Setting extends Module
     }
 
     /**
-     * Get Default prop values
+     * Get prop definitions
      *
      * @return array
      */
-    protected function defaults(): array
+    protected function getPropDefs(): array
     {
-        return [
-            'type' => 'text',
-            'id' => function () {
-                return sanitize_key(str_replace(' ', '_', $this->getProp('label')));
-            },
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'id' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'type' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'label' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'description' => [
+                'type' => 'string',
+                'default' => '',
+            ],
+            'priority' => [
+                'type' => 'int',
+                'default' => 160,
+            ],
+            'input_attrs' => [
+                'type' => 'array',
+                'default' => [],
+            ],
         ];
+
+        return array_merge($baseProps, $fieldProps);
     }
 }

@@ -3,7 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 /**
- * post_id*, state*
+ * Post State
  */
 class PostState extends Module
 {
@@ -24,11 +24,41 @@ class PostState extends Module
      */
     public function register(array $states, \WP_Post $post): array
     {
-        if ($post->ID === $this->getProp('post_id')) {
+        if ($post->ID === $this->getProp('postId')) {
             $state = $this->getProp('state');
-            $states[sanitize_key(str_replace(' ', '_', $this->prefix . '_' . $state))] = $state;
+            $states[$this->getProp('slug')] = $state;
         }
 
         return $states;
     }
+
+    /**
+     * Get prop definitions
+     *
+     * @return array
+     */
+    protected function getPropDefs(): array
+    {
+        $baseProps = parent::getPropDefs();
+
+        $fieldProps = [
+            'postId' => [
+                'type' => 'int',
+                'required' => true,
+            ],
+            'state' => [
+                'type' => 'string',
+                'required' => true,
+            ],
+            'slug' => [
+                'type' => 'string',
+                'default' => function () {
+                    return sanitize_key(str_replace(' ', '-', $this->getProp('state')));
+                },
+            ],
+        ];
+
+        return array_merge($baseProps, $fieldProps);
+    }
+
 }
