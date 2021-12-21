@@ -157,6 +157,10 @@ class Widget extends FieldHolder
                 'type' => 'string',
                 'required' => true,
             ],
+            'render' => [
+                'type' => 'callable',
+                'required' => true,
+            ],
             'description' => [
                 'type' => 'string',
                 'default' => '',
