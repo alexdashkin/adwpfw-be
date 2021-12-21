@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminPage, Modules\AdminPageTab, Modules\Assets\Css, Modules\Assets\Js, Modules\Hook, Modules\Metabox, Modules\Shortcode};
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminPage, Modules\AdminPageTab, Modules\Assets\Css, Modules\Assets\Js, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\Hook, Modules\Metabox, Modules\Shortcode, Modules\Widget};
 
 /**
  * Helper functions
@@ -69,7 +69,7 @@ class Helpers
     }
 
     /**
-     * Render Template (PHP/Twig)
+     * Render PHP Template
      *
      * @param string $name Template file name with/without path
      * @param array $args Args to be passed to the Template. Default [].
@@ -92,6 +92,24 @@ class Helpers
 
         // Not found
         return sprintf('Template "%s" not found', $name);
+    }
+
+    /**
+     * Render Twig Template
+     *
+     * @param string $name Template file name with/without path
+     * @param array $args Args to be passed to the Template. Default [].
+     * @return string Rendered Template
+     */
+    public static function renderTwig(string $name, array $args = []): string
+    {
+        try {
+            return Twig::renderFile($name . '.twig', $args);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            Logger::log($message);
+            return 'Unable to render Template: ' . $message;
+        }
     }
 
     /**
@@ -680,11 +698,14 @@ class Helpers
         foreach ($args['tabs'] as $tabArgs) {
             $tab = new AdminPageTab($tabArgs);
 
-            self::addFields($tab, $tabArgs);
+            if (!empty($tabArgs['fields'])) {
+                self::addFields($tab, $tabArgs);
+            }
 
-            $tabArgs['baseFile'] = $args['baseFile'];
-
-            self::addAssets($tab, $tabArgs);
+            if (!empty($tabArgs['assets'])) {
+                $tabArgs['baseFile'] = $args['baseFile'];
+                self::addAssets($tab, $tabArgs);
+            }
 
             $adminPage->addTab($tab);
         }
@@ -702,11 +723,36 @@ class Helpers
     {
         $metabox = new Metabox($args);
 
-        self::addFields($metabox, $args);
+        if (!empty($args['fields'])) {
+            self::addFields($metabox, $args);
+        }
 
-        self::addAssets($metabox, $args);
+        if (!empty($args['assets'])) {
+            self::addAssets($metabox, $args);
+        }
 
         return $metabox;
+    }
+
+    /**
+     * Add Widget
+     *
+     * @param array $args
+     * @return Widget
+     */
+    public static function addWidget(array $args): Widget
+    {
+        $widget = new Widget($args);
+
+        if (!empty($args['fields'])) {
+            self::addFields($widget, $args);
+        }
+
+        if (!empty($args['assets'])) {
+            self::addAssets($widget, $args);
+        }
+
+        return $widget;
     }
 
     /**
@@ -728,7 +774,9 @@ class Helpers
             }
         }
 
-        self::addAssets($shortcode, $args);
+        if (!empty($args['assets'])) {
+            self::addAssets($shortcode, $args);
+        }
 
         return $shortcode;
     }
@@ -776,6 +824,35 @@ class Helpers
                 $object->addAsset(new Js(array_merge($assetsBaseProps, $jsArgs)));
             }
         }
+    }
+
+    /**
+     * Add Customizer Panel
+     *
+     * @param array $args
+     * @return Panel
+     */
+    public static function addCustomizerPanel(array $args): Panel
+    {
+        $panel = new Panel($args);
+
+        foreach ($args['sections'] as $sectionArgs) {
+            $section = new Section($sectionArgs);
+
+            $section->setProp('panel', $panel->getProp('id'));
+
+            foreach ($sectionArgs['settings'] as $settingArgs) {
+                $setting = new Setting($settingArgs);
+
+                $setting->setProp('section', $section->getProp('id'));
+
+                $section->addSetting($setting);
+            }
+
+            $panel->addSection($section);
+        }
+
+        return $panel;
     }
 
     /**
