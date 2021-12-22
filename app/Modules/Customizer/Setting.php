@@ -33,6 +33,8 @@ class Setting extends Module
     {
         $id = $this->getProp('id');
 
+        $customizer->add_setting($id);
+
         $control = [
             'section' => $this->section->getProp('id'),
             'type' => $this->getProp('type'),
@@ -41,8 +43,6 @@ class Setting extends Module
             'priority' => $this->getProp('priority'),
             'input_attrs' => $this->getProp('input_attrs'),
         ];
-
-        $customizer->add_setting($id, $this->getProps());
 
         switch ($control['type']) {
             case 'image':
