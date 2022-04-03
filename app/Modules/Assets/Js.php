@@ -35,7 +35,7 @@ class Js extends Asset
         // Register script
         $handle = $this->getHandle();
 
-        wp_register_script($this->getHandle(), $this->getUrl(), $this->getProp('deps'), $this->getVer());
+        wp_register_script($this->getHandle(), $this->getUrl(), $this->getProp('deps'), $this->getVer(), true);
 
         // Data for front-end var
         $data = array_merge(
