@@ -13,7 +13,7 @@
             </div>
 
             <div class="adwpfw-actions-bar">
-                <button type="submit" class="button button-primary adwpfw-save">Save changes</button>
+                <button type="submit" class="button button-primary adwpfw-save">Save Changes</button>
             </div>
 
         </form>
