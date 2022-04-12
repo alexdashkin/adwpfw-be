@@ -202,6 +202,10 @@ class Db
      */
     public function insertRows(array $data)
     {
+        if (!$data) {
+            return false;
+        }
+
         $data = array_values($data);
         $values = [];
         $counter = 0;
