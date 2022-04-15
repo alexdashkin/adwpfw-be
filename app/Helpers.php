@@ -798,6 +798,7 @@ class Helpers
         $assetsBaseProps = [
             'scope' => 'admin',
             'baseFile' => $args['baseFile'],
+            'env' => !empty($args['env']) ? $args['env'] : 'plugin',
         ];
 
         if (!empty($args['css'])) {
