@@ -754,6 +754,10 @@ class Helpers
     {
         $shortcode = new Shortcode($args);
 
+        if (empty($args['css']) && empty($args['js'])) {
+            return $shortcode;
+        }
+
         // Set scope front for assets
         foreach (['css', 'js'] as $type) {
             if (!empty($args[$type])) {
