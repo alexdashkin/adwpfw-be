@@ -37,12 +37,13 @@ class Block extends Module
             $af = $asset['af'] ?: 'block';
             $handle = sprintf('%s-%s-%s-%d', $this->getProp('name'), $type, $af, $index);
             $asset['type'] = $af;
+            $enqueue = 'front' !== $af;
 
             $args = [
                 'handle' => $handle,
 
                 // Do not enqueue front assets (to be done in render_callback)
-                'enqueue' => 'front' !== $af,
+                'enqueue' => $enqueue ? '__return_true' : '__return_false',
             ];
 
             // Add asset
@@ -58,7 +59,7 @@ class Block extends Module
             }
 
             // Add handle to the list for front scripts to enqueue in render_callback
-            if (!$args['enqueue']) {
+            if (!$enqueue) {
                 $this->frontHandles[$type][] = $handle;
             }
         }

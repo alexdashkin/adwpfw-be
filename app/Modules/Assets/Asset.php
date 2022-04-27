@@ -2,7 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules\Assets;
 
-use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Modules\Module;
 
 /**
@@ -16,10 +15,14 @@ abstract class Asset extends Module
     public function init()
     {
         // Register
-        $this->runAfterHook([$this, 'register']);
+        $this->runAfterHook([$this, 'process']);
+    }
 
-        // Enqueue if required
-        if ($this->getProp('enqueue')) {
+    public function process()
+    {
+        $this->register();
+
+        if ($this->getProp('enqueue')($this)) {
             $this->enqueue();
         }
     }
@@ -100,29 +103,6 @@ abstract class Asset extends Module
     }
 
     /**
-     * Get or generate URL
-     *
-     * @return string
-     * @throws AppException
-     */
-    protected function getUrl(): string
-    {
-        if ($url = $this->getProp('url')) {
-            return $url;
-        }
-
-        if ((!$baseFile = $this->getProp('baseFile')) || (!$path = $this->getProp('path'))) {
-            throw new AppException('Either URL or baseFile/path must be defined');
-        }
-
-        $path = trim($path, '/');
-
-        $baseUrl = 'plugin' === $this->getProp('env') ? plugin_dir_url($baseFile) : get_stylesheet_directory_uri();
-
-        return trailingslashit($baseUrl) . $path;
-    }
-
-    /**
      * Get or generate Version
      *
      * @return string
@@ -131,13 +111,11 @@ abstract class Asset extends Module
     {
         $ver = $this->getProp('ver');
 
-        if ((!$baseFile = $this->getProp('baseFile')) || (!$path = $this->getProp('path'))) {
+        if (!$path = $this->getProp('path')) {
             return $ver;
         }
 
-        $fullPath = dirname($baseFile) . '/' . trim($path, '/');
-
-        return file_exists($fullPath) ? filemtime($fullPath) : $ver;
+        return file_exists($path) ? filemtime($path) : $ver;
     }
 
     /**
@@ -158,21 +136,13 @@ abstract class Asset extends Module
                 'type' => 'string',
                 'default' => 'front',
             ],
-            'env' => [
-                'type' => 'string',
-                'default' => 'plugin',
-            ],
-            'baseFile' => [
-                'type' => 'string',
-                'default' => '',
-            ],
             'path' => [
                 'type' => 'string',
                 'default' => '',
             ],
             'url' => [
                 'type' => 'string',
-                'default' => '',
+                'required' => true,
             ],
             'deps' => [
                 'type' => 'array',
@@ -183,8 +153,8 @@ abstract class Asset extends Module
                 'default' => '',
             ],
             'enqueue' => [
-                'type' => 'bool',
-                'default' => false,
+                'type' => 'callable',
+                'default' => '__return_true',
             ],
         ];
 

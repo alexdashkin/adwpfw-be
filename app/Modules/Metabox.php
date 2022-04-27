@@ -30,6 +30,12 @@ class Metabox extends FieldHolder
      */
     public function addAsset(Asset $asset)
     {
+        $enqueue = function () {
+            return in_array(get_current_screen()->id, $this->getProp('screen'));
+        };
+
+        $asset->setProp('enqueue', $enqueue);
+
         $this->assets[] = $asset;
     }
 
@@ -62,11 +68,6 @@ class Metabox extends FieldHolder
      */
     public function render(\WP_Post $post)
     {
-        // Enqueue assets
-        foreach ($this->assets as $asset) {
-            $asset->enqueue();
-        }
-
         // Prepare args
         $args = [
             'context' => $this->getProp('context'),

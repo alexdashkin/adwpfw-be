@@ -59,6 +59,8 @@ class AdminPageTab extends FieldHolder
      */
     public function addAsset(Asset $asset)
     {
+        $asset->setProp('enqueue', '__return_false');
+
         $this->assets[] = $asset;
     }
 
@@ -69,7 +71,7 @@ class AdminPageTab extends FieldHolder
     {
         $menuSuffix = $this->parent->getProp('suffix');
 
-        $this->addHook('load-'.$menuSuffix, function() {
+        $this->addHook('load-' . $menuSuffix, function () {
             foreach ($this->assets as $asset) {
                 $asset->enqueue();
             }

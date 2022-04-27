@@ -795,14 +795,8 @@ class Helpers
      */
     private static function addAssets($object, array $args)
     {
-        if (empty($args['baseFile'])) {
-            throw new AppException('Missing "baseFile" param');
-        }
-
         $assetsBaseProps = [
             'scope' => 'admin',
-            'baseFile' => $args['baseFile'],
-            'env' => !empty($args['env']) ? $args['env'] : 'plugin',
         ];
 
         if (!empty($args['css'])) {
