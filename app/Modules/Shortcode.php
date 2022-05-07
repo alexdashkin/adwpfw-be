@@ -29,6 +29,8 @@ class Shortcode extends Module
      */
     public function addAsset(Asset $asset)
     {
+        $asset->setProp('enqueue', '__return_false');
+
         $this->assets[] = $asset;
     }
 
