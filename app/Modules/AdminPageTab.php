@@ -38,8 +38,6 @@ class AdminPageTab extends FieldHolder
                 ]
             );
         }
-
-        $this->addHook('admin_menu', [$this, 'enqueueAssets'], 11);
     }
 
     /**
@@ -65,26 +63,17 @@ class AdminPageTab extends FieldHolder
     }
 
     /**
-     * Enqueue assets
-     */
-    public function enqueueAssets()
-    {
-        $menuSuffix = $this->parent->getProp('suffix');
-
-        $this->addHook('load-' . $menuSuffix, function () {
-            foreach ($this->assets as $asset) {
-                $asset->enqueue();
-            }
-        });
-    }
-
-    /**
      * Render Tab
      *
      * @return string
      */
     public function render(): string
     {
+        // Enqueue assets
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
+        }
+
         // Prepare args
         $args = [
             'title' => $this->getProp('title'),
