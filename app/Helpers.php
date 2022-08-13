@@ -700,8 +700,6 @@ class Helpers
 
             self::addFields($tab, $tabArgs);
 
-            $tabArgs['baseFile'] = $args['baseFile'];
-
             self::addAssets($tab, $tabArgs);
 
             $adminPage->addTab($tab);
