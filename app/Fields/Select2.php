@@ -127,6 +127,10 @@ class Select2 extends Select
         $baseProps = parent::getPropDefs();
 
         $fieldProps = [
+            'options' => [
+                'type' => 'array',
+                'default' => [],
+            ],
             'ajaxDataCallback' => [
                 'type' => 'callable',
             ],
