@@ -125,7 +125,7 @@ class Field
             'required' => $this->getProp('required') ? 'required' : '',
         ];
 
-        $this->args = array_merge($this->getProps(), $args);
+        $this->args = array_merge($this->args, $this->getProps(), $args);
     }
 
     /**
