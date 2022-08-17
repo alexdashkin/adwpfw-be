@@ -111,6 +111,21 @@ class Twig
     }
 
     /**
+     * Add Array Template
+     *
+     * @param string $name
+     * @param string $template
+     */
+    public static function addTemplate(string $name, string $template)
+    {
+        if (empty(self::$instance)) {
+            throw new AppException('Twig is not configured');
+        }
+
+        self::$instance->arrayLoader->setTemplate($name, $template);
+    }
+
+    /**
      * Render Array Template.
      *
      * @param string $name Template name.
@@ -120,7 +135,7 @@ class Twig
     public static function renderArray(string $name, array $args = []): string
     {
         if (empty(self::$instance)) {
-            throw new AppException('Logger is not configured');
+            throw new AppException('Twig is not configured');
         }
 
         return self::$instance->render(self::$instance->twigArray, $name, $args);
