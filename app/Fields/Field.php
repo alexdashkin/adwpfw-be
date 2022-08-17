@@ -179,9 +179,7 @@ class Field
             ],
             'template' => [
                 'type' => 'string',
-                'default' => function () {
-                    return 'fields/' . $this->getProp('type');
-                },
+                'default' => '',
             ],
         ];
     }
