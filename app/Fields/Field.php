@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\FieldHolder, Modules\Module};
+use AlexDashkin\Adwpfw\{App, Exceptions\AppException, Modules\FieldHolder, Modules\Module};
 
 /**
  * Form Field
@@ -25,6 +25,38 @@ class Field extends Module
      * @var FieldHolder
      */
     protected $parent;
+
+    /**
+     * Get Field object by type
+     *
+     * @param array $args
+     * @param App $app
+     * @return Field
+     * @throws AppException
+     */
+    public static function getField(array $args, App $app)
+    {
+        if (empty($args['type'])) {
+            throw new AppException('Type is required for fields');
+        }
+
+        switch ($args['type']) {
+            case 'checkbox':
+                return new Checkbox($args, $app);
+            case 'number':
+                return new Number($args, $app);
+            case 'select':
+                return new Select($args, $app);
+            case 'select2':
+                return new Select2($args, $app);
+            case 'text':
+                return new Text($args, $app);
+            case 'textarea':
+                return new Textarea($args, $app);
+            default:
+                return new Field($args, $app);
+        }
+    }
 
     /**
      * Set Parent Page

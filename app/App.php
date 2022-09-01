@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw;
 
 use AlexDashkin\Adwpfw\Exceptions\AppException;
+use AlexDashkin\Adwpfw\Fields\Field;
 use AlexDashkin\Adwpfw\Modules\AdminPage;
 use AlexDashkin\Adwpfw\Modules\AdminPageTab;
 use AlexDashkin\Adwpfw\Modules\Assets\Css;
@@ -872,6 +873,30 @@ class App
     }
 
     /**
+     * Register global CSS
+     *
+     * @param array $args
+     * @return Css
+     * @throws AppException
+     */
+    public function addCss(array $args): Css
+    {
+        return new Css($args, $this);
+    }
+
+    /**
+     * Register global JS
+     *
+     * @param array $args
+     * @return Js
+     * @throws AppException
+     */
+    public function addJs(array $args): Js
+    {
+        return new Js($args, $this);
+    }
+
+    /**
      * Add fields to admin page/metabox
      *
      * @param $object
@@ -880,7 +905,8 @@ class App
     private function addFields($object, array $args)
     {
         if (!empty($args['fields'])) {
-            foreach ($args['fields'] as $field) {
+            foreach ($args['fields'] as $fieldArgs) {
+                $field = Field::getField($fieldArgs, $this);
                 $object->addField($field);
             }
         }
