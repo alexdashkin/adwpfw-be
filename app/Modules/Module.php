@@ -2,12 +2,15 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Logger};
+use AlexDashkin\Adwpfw\{App, Exceptions\AppException};
 use AlexDashkin\Adwpfw\Traits\Props;
 
 abstract class Module
 {
     use Props;
+
+    /** @var App */
+    private $app;
 
     /**
      * Module constructor
@@ -15,9 +18,10 @@ abstract class Module
      * @param array $props
      * @throws AppException
      */
-    public function __construct(array $props)
+    public function __construct(array $props, App $app)
     {
         $this->props = $props;
+        $this->app = $app;
 
         foreach ($props as $name => $value) {
             $this->setProp($name, $value);
@@ -40,13 +44,7 @@ abstract class Module
      */
     public function addHook(string $tag, callable $callback, int $priority = 10): Hook
     {
-        return new Hook(
-            [
-                'tag' => $tag,
-                'callback' => $callback,
-                'priority' => $priority,
-            ]
-        );
+        return $this->app->addHook($tag, $callback, $priority);
     }
 
     /**
@@ -57,7 +55,7 @@ abstract class Module
      */
     protected function log($message, array $values = [])
     {
-        Logger::log($message, $values);
+        $this->app->log($message, $values);
     }
 
     /**

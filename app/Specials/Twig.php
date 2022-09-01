@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw;
+namespace AlexDashkin\Adwpfw\Specials;
 
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use Twig\Environment;
@@ -12,13 +12,6 @@ use Twig\Loader\FilesystemLoader;
  */
 class Twig
 {
-    /**
-     * Class instance
-     *
-     * @var static
-     */
-    private static $instance;
-
     /**
      * @var FilesystemLoader
      */
@@ -44,34 +37,22 @@ class Twig
      *
      * @throws AppException
      */
-    private function __construct()
-    {
-    }
-
-    /**
-     * Init
-     *
-     * @param array $args
-     * @throws AppException
-     */
-    public static function init(array $args)
+    public function __construct(array $config)
     {
         if (!class_exists('\Twig\Environment')) {
             throw new AppException('Twig not found');
         }
 
         foreach (['env', 'paths', 'cachePath'] as $fieldName) {
-            if (empty($args[$fieldName])) {
+            if (empty($config[$fieldName])) {
                 throw new AppException(sprintf('Field "%s" is required', $fieldName));
             }
         }
 
-        self::$instance = new self();
-
         // Set config
-        $env = $args['env'];
-        $paths = $args['paths'];
-        $cachePath = $args['cachePath'];
+        $env = $config['env'];
+        $paths = $config['paths'];
+        $cachePath = $config['cachePath'];
 
         // Check paths existence
         foreach (array_merge($paths, [$cachePath]) as $path) {
@@ -88,10 +69,10 @@ class Twig
         ];
 
         // Init Twig
-        self::$instance->fsLoader = new FilesystemLoader($paths);
-        self::$instance->twigFs = new Environment(self::$instance->fsLoader, $envArgs);
-        self::$instance->arrayLoader = new ArrayLoader();
-        self::$instance->twigArray = new Environment(self::$instance->arrayLoader, $envArgs);
+        $this->fsLoader = new FilesystemLoader($paths);
+        $this->twigFs = new Environment($this->fsLoader, $envArgs);
+        $this->arrayLoader = new ArrayLoader();
+        $this->twigArray = new Environment($this->arrayLoader, $envArgs);
     }
 
     /**
@@ -101,13 +82,9 @@ class Twig
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
-    public static function renderFile(string $name, array $args = []): string
+    public function renderFile(string $name, array $args = []): string
     {
-        if (empty(self::$instance)) {
-            throw new AppException('Twig is not configured');
-        }
-
-        return self::$instance->render(self::$instance->twigFs, $name, $args);
+        return $this->render($this->twigFs, $name, $args);
     }
 
     /**
@@ -116,13 +93,9 @@ class Twig
      * @param string $name
      * @param string $template
      */
-    public static function addTemplate(string $name, string $template)
+    public function addTemplate(string $name, string $template)
     {
-        if (empty(self::$instance)) {
-            throw new AppException('Twig is not configured');
-        }
-
-        self::$instance->arrayLoader->setTemplate($name, $template);
+        $this->arrayLoader->setTemplate($name, $template);
     }
 
     /**
@@ -132,13 +105,9 @@ class Twig
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template.
      */
-    public static function renderArray(string $name, array $args = []): string
+    public function renderArray(string $name, array $args = []): string
     {
-        if (empty(self::$instance)) {
-            throw new AppException('Twig is not configured');
-        }
-
-        return self::$instance->render(self::$instance->twigArray, $name, $args);
+        return $this->render($this->twigArray, $name, $args);
     }
 
     /**

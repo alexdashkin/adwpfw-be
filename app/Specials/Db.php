@@ -1,6 +1,6 @@
 <?php
 
-namespace AlexDashkin\Adwpfw;
+namespace AlexDashkin\Adwpfw\Specials;
 
 class Db
 {

@@ -2,20 +2,107 @@
 
 namespace AlexDashkin\Adwpfw;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\AdminPage, Modules\AdminPageTab, Modules\Assets\Css, Modules\Assets\Js, Modules\Customizer\Panel, Modules\Customizer\Section, Modules\Customizer\Setting, Modules\Hook, Modules\Metabox, Modules\Shortcode, Modules\Widget};
+use AlexDashkin\Adwpfw\Exceptions\AppException;
+use AlexDashkin\Adwpfw\Modules\AdminPage;
+use AlexDashkin\Adwpfw\Modules\AdminPageTab;
+use AlexDashkin\Adwpfw\Modules\Assets\Css;
+use AlexDashkin\Adwpfw\Modules\Assets\Js;
+use AlexDashkin\Adwpfw\Modules\Customizer\Panel;
+use AlexDashkin\Adwpfw\Modules\Customizer\Section;
+use AlexDashkin\Adwpfw\Modules\Customizer\Setting;
+use AlexDashkin\Adwpfw\Modules\Hook;
+use AlexDashkin\Adwpfw\Modules\Metabox;
+use AlexDashkin\Adwpfw\Modules\Shortcode;
+use AlexDashkin\Adwpfw\Modules\Updater\Plugin;
+use AlexDashkin\Adwpfw\Modules\Updater\Theme;
+use AlexDashkin\Adwpfw\Modules\Widget;
+use AlexDashkin\Adwpfw\Specials\Logger;
+use AlexDashkin\Adwpfw\Specials\Twig;
 
-/**
- * Helper functions
- */
-class Helpers
+class App
 {
+    /** @var array */
+    private $config;
+
+    /** @var Logger */
+    private $logger;
+
+    /** @var Twig */
+    private $twig;
+
+    /**
+     * App constructor
+     */
+    public function __construct(array $config)
+    {
+        foreach (['prefix', 'env', 'type', 'baseFile'] as $fieldName) {
+            if (empty($config[$fieldName])) {
+                throw new AppException(sprintf('ADWPFW: field "%s" is required', $fieldName));
+            }
+        }
+
+        $this->config = $config;
+        $prefix = $this->getConfig('prefix');
+        $uploadsDir = $this->getUploadsDir($prefix);
+
+        // Init Logger
+        $this->logger = new Logger([
+            'prefix' => $prefix,
+            'maxLogSize' => $this->getConfig('maxLogSize') ?: 1000000,
+            'path' => $uploadsDir . '/logs',
+        ]);
+
+        // Init Twig
+        if ($twigPaths = $this->getConfig('twigPaths')) {
+            $this->twig = new Twig([
+                'env' => $this->getConfig('env'),
+                'paths' => $twigPaths,
+                'cachePath' => $uploadsDir,
+            ]);
+        }
+
+        // Updater
+        if ($package = $this->getConfig('package')) {
+            switch ($this->getConfig('type')) {
+                case 'plugin':
+                    new Plugin([
+                        'file' => $this->getConfig('baseFile'),
+                        'package' => $package,
+                    ], $this);
+
+                    break;
+                case 'theme':
+                    new Theme([
+                        'package' => $package,
+                    ], $this);
+
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Get Config
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getConfig(string $key = '')
+    {
+        if (!$key) {
+            return $this->config;
+        }
+
+        return array_key_exists($key, $this->config) ? $this->config[$key] : null;
+    }
+
     /**
      * Send Email
      *
      * @param array $data
      * @throws AppException
      */
-    public static function sendMail(array $data)
+    public function sendMail(array $data)
     {
         // Check required fields
         foreach (['from_name', 'from_email', 'to_email', 'subject', 'body'] as $field) {
@@ -63,7 +150,7 @@ class Helpers
      * @param string $name
      * @return string
      */
-    public static function getTableName(string $name): string
+    public function getTableName(string $name): string
     {
         return $GLOBALS['wpdb']->prefix . $name;
     }
@@ -75,7 +162,7 @@ class Helpers
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
      */
-    public static function render(string $name, array $args = []): string
+    public function render(string $name, array $args = []): string
     {
         $fileName = $name . '.php';
 
@@ -101,13 +188,17 @@ class Helpers
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
      */
-    public static function renderTwig(string $name, array $args = []): string
+    public function renderTwig(string $name, array $args = []): string
     {
+        if (!$this->twig) {
+            return 'Twig is not initialized';
+        }
+
         try {
-            return Twig::renderFile($name . '.twig', $args);
+            return $this->twig->renderFile($name . '.twig', $args);
         } catch (\Exception $e) {
             $message = $e->getMessage();
-            Logger::log($message);
+            $this->log($message);
             return 'Unable to render Template: ' . $message;
         }
     }
@@ -120,15 +211,13 @@ class Helpers
      * @param int $priority
      * @return Hook
      */
-    public static function addHook(string $tag, callable $callback, int $priority = 10): Hook
+    public function addHook(string $tag, callable $callback, int $priority = 10): Hook
     {
-        return new Hook(
-            [
-                'tag' => $tag,
-                'callback' => $callback,
-                'priority' => $priority,
-            ]
-        );
+        return new Hook([
+            'tag' => $tag,
+            'callback' => $callback,
+            'priority' => $priority,
+        ], $this);
     }
 
     /**
@@ -139,7 +228,7 @@ class Helpers
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
-    public static function arraySearch(array $array, array $conditions, bool $single = false)
+    public function arraySearch(array $array, array $conditions, bool $single = false)
     {
         $found = [];
         $searchValue = end($conditions);
@@ -157,7 +246,7 @@ class Helpers
         }
 
         if (0 !== count($conditions)) {
-            $found = self::arraySearch($found, $conditions);
+            $found = $this->arraySearch($found, $conditions);
         }
 
         return $single ? reset($found) : $found;
@@ -171,7 +260,7 @@ class Helpers
      * @param bool $single Whether to return a single item.
      * @return mixed
      */
-    public static function arrayFilter(array $array, array $conditions, bool $single = false)
+    public function arrayFilter(array $array, array $conditions, bool $single = false)
     {
         $new = [];
         foreach ($array as $item) {
@@ -195,7 +284,7 @@ class Helpers
      * @param string $key Key to search duplicates by.
      * @return array Filtered array.
      */
-    public static function arrayUniqueByKey(array $array, string $key): array
+    public function arrayUniqueByKey(array $array, string $key): array
     {
         $existing = [];
 
@@ -219,7 +308,7 @@ class Helpers
      * @param string $sort Key to sort by.
      * @return array
      */
-    public static function arrayParse(array $array, array $keys = [], string $index = '', string $sort = ''): array
+    public function arrayParse(array $array, array $keys = [], string $index = '', string $sort = ''): array
     {
         $new = [];
 
@@ -269,7 +358,7 @@ class Helpers
      * @param bool $keepKeys Keep key=>value assigment when sorting
      * @return array Resulting array.
      */
-    public static function arraySortByKey(array $array, string $key, bool $keepKeys = false): array
+    public function arraySortByKey(array $array, string $key, bool $keepKeys = false): array
     {
         $func = $keepKeys ? 'uasort' : 'usort';
         $func(
@@ -289,7 +378,7 @@ class Helpers
      * @param array $arr2
      * @return array
      */
-    public static function arrayMerge(array $arr1, array $arr2): array
+    public function arrayMerge(array $arr1, array $arr2): array
     {
         foreach ($arr2 as $key => $value) {
             if (!array_key_exists($key, $arr1)) {
@@ -298,7 +387,7 @@ class Helpers
             }
 
             if (is_array($arr1[$key]) && is_array($value)) {
-                $arr1[$key] = self::arrayMerge($arr1[$key], $value);
+                $arr1[$key] = $this->arrayMerge($arr1[$key], $value);
             } else {
                 $arr1[$key] = $value;
             }
@@ -314,13 +403,13 @@ class Helpers
      * @param array $what Array to be added.
      * @return array
      */
-    public static function arrayAddNonExistent(array $where, array $what): array
+    public function arrayAddNonExistent(array $where, array $what): array
     {
         foreach ($what as $name => $value) {
             if (!isset($where[$name])) {
                 $where[$name] = $value;
             } elseif (is_array($value)) {
-                $where[$name] = self::arrayAddNonExistent($where[$name], $value);
+                $where[$name] = $this->arrayAddNonExistent($where[$name], $value);
             }
         }
 
@@ -334,12 +423,12 @@ class Helpers
      * @param string $glue
      * @return string
      */
-    public static function deepImplode(array $array, string $glue = ''): string
+    public function deepImplode(array $array, string $glue = ''): string
     {
         $imploded = '';
 
         foreach ($array as $item) {
-            $imploded = is_array($item) ? $imploded . self::deepImplode($item) : $imploded . $glue . $item;
+            $imploded = is_array($item) ? $imploded . $this->deepImplode($item) : $imploded . $glue . $item;
         }
 
         return $imploded;
@@ -356,7 +445,7 @@ class Helpers
      * }
      * @return array Not found items.
      */
-    public static function checkDeps(array $items): array
+    public function checkDeps(array $items): array
     {
         $notFound = [];
 
@@ -376,9 +465,9 @@ class Helpers
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
-    public static function getUploadsDir(string $path = ''): string
+    public function getUploadsDir(string $path = ''): string
     {
-        return self::getUploads($path);
+        return $this->getUploads($path);
     }
 
     /**
@@ -387,9 +476,9 @@ class Helpers
      * @param string $path Path inside the uploads dir (will be created if not exists).
      * @return string
      */
-    public static function getUploadsUrl(string $path = ''): string
+    public function getUploadsUrl(string $path = ''): string
     {
-        return self::getUploads($path, true);
+        return $this->getUploads($path, true);
     }
 
     /**
@@ -399,7 +488,7 @@ class Helpers
      * @param bool $getUrl Whether to get URL.
      * @return string
      */
-    public static function getUploads(string $path = '', bool $getUrl = false): string
+    public function getUploads(string $path = '', bool $getUrl = false): string
     {
         $uploadDir = wp_upload_dir();
 
@@ -429,7 +518,7 @@ class Helpers
      *
      * @return mixed Response body or false on failure
      */
-    public static function apiRequest(array $args)
+    public function apiRequest(array $args)
     {
         $args = array_merge(
             [
@@ -459,22 +548,22 @@ class Helpers
             }
         }
 
-        self::log('Performing api request...');
+        $this->log('Performing api request...');
         $remoteResponse = wp_remote_request($url, $requestArgs);
-        self::log('Response received');
+        $this->log('Response received');
 
         if (is_wp_error($remoteResponse)) {
-            self::log(implode(' | ', $remoteResponse->get_error_messages()));
+            $this->log(implode(' | ', $remoteResponse->get_error_messages()));
             return false;
         }
 
         if (200 !== ($code = wp_remote_retrieve_response_code($remoteResponse))) {
-            self::log("Response code: $code");
+            $this->log("Response code: $code");
             return false;
         }
 
         if (empty($remoteResponse['body'])) {
-            self::log('Wrong response format');
+            $this->log('Wrong response format');
             return false;
         }
 
@@ -489,11 +578,11 @@ class Helpers
      * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
-    public static function returnSuccess(string $message = 'Success', array $data = [], bool $echo = false): array
+    public function returnSuccess(string $message = 'Success', array $data = [], bool $echo = false): array
     {
         $message = $message ?: 'Success';
 
-        self::log($message);
+        $this->log($message);
 
         $return = [
             'success' => true,
@@ -515,11 +604,11 @@ class Helpers
      * @param bool $echo Whether to echo Response right away without returning. Default false.
      * @return array
      */
-    public static function returnError(string $message = 'Unknown Error', bool $echo = false)
+    public function returnError(string $message = 'Unknown Error', bool $echo = false): array
     {
         $message = $message ?: 'Unknown Error';
 
-        self::log($message);
+        $this->log($message);
 
         $return = [
             'success' => false,
@@ -539,10 +628,10 @@ class Helpers
      * @param mixed $result Result of a function call
      * @return mixed|bool Function return or false on WP_Error
      */
-    public static function pr($result)
+    public function pr($result)
     {
         if ($result instanceof \WP_Error) {
-            self::log($result->get_error_message());
+            $this->log($result->get_error_message());
 
             return false;
         }
@@ -556,7 +645,7 @@ class Helpers
      * @param array|string $var
      * @return array|string
      */
-    public static function trim($var)
+    public function trim($var)
     {
         if (is_string($var)) {
             return trim($var);
@@ -582,7 +671,7 @@ class Helpers
      * @param array $args Function args. Default [].
      * @return string Output
      */
-    public static function getOutput(callable $func, array $args = []): string
+    public function getOutput(callable $func, array $args = []): string
     {
         ob_start();
         call_user_func_array($func, $args);
@@ -595,7 +684,7 @@ class Helpers
      * @param string $hex
      * @return string
      */
-    public static function colorToRgb(string $hex): string
+    public function colorToRgb(string $hex): string
     {
         $pattern = strlen($hex) === 4 ? '#%1x%1x%1x' : '#%2x%2x%2x';
         return sscanf($hex, $pattern);
@@ -606,7 +695,7 @@ class Helpers
      *
      * @param string $path
      */
-    public static function rmDir(string $path)
+    public function rmDir(string $path)
     {
         if (!is_dir($path)) {
             return;
@@ -619,7 +708,7 @@ class Helpers
         $files = glob($path . '*', GLOB_MARK);
 
         foreach ($files as $file) {
-            is_dir($file) ? self::rmDir($file) : unlink($file);
+            is_dir($file) ? $this->rmDir($file) : unlink($file);
         }
 
         rmdir($path);
@@ -628,7 +717,7 @@ class Helpers
     /**
      * Remove WP emojis.
      */
-    public static function removeEmojis()
+    public function removeEmojis()
     {
         remove_action('wp_head', 'print_emoji_detection_script', 7);
         remove_action('admin_print_scripts', 'print_emoji_detection_script');
@@ -650,7 +739,7 @@ class Helpers
      *
      * @param array $sizes
      */
-    public static function addImageSizes(array $sizes)
+    public function addImageSizes(array $sizes)
     {
         $filter = [];
         foreach ($sizes as $size) {
@@ -670,7 +759,7 @@ class Helpers
      *
      * @param array $features
      */
-    public static function addThemeSupport(array $features)
+    public function addThemeSupport(array $features)
     {
         foreach ($features as $feature => $args) {
             if (is_numeric($feature) && is_string($args)) {
@@ -687,20 +776,20 @@ class Helpers
      * @param array $args
      * @return AdminPage
      */
-    public static function addAdminPage(array $args): AdminPage
+    public function addAdminPage(array $args): AdminPage
     {
-        $adminPage = new AdminPage($args);
+        $adminPage = new AdminPage($args, $this);
 
         if (empty($args['tabs'])) {
             return $adminPage;
         }
 
         foreach ($args['tabs'] as $tabArgs) {
-            $tab = new AdminPageTab($tabArgs);
+            $tab = new AdminPageTab($tabArgs, $this);
 
-            self::addFields($tab, $tabArgs);
+            $this->addFields($tab, $tabArgs);
 
-            self::addAssets($tab, $tabArgs);
+            $this->addAssets($tab, $tabArgs);
 
             $adminPage->addTab($tab);
         }
@@ -714,13 +803,13 @@ class Helpers
      * @param array $args
      * @return Metabox
      */
-    public static function addMetaBox(array $args): Metabox
+    public function addMetaBox(array $args): Metabox
     {
-        $metabox = new Metabox($args);
+        $metabox = new Metabox($args, $this);
 
-        self::addFields($metabox, $args);
+        $this->addFields($metabox, $args);
 
-        self::addAssets($metabox, $args);
+        $this->addAssets($metabox, $args);
 
         return $metabox;
     }
@@ -731,13 +820,13 @@ class Helpers
      * @param array $args
      * @return Widget
      */
-    public static function addWidget(array $args): Widget
+    public function addWidget(array $args): Widget
     {
-        $widget = new Widget($args);
+        $widget = new Widget($args, $this);
 
-        self::addFields($widget, $args);
+        $this->addFields($widget, $args);
 
-        self::addAssets($widget, $args);
+        $this->addAssets($widget, $args);
 
         return $widget;
     }
@@ -748,9 +837,9 @@ class Helpers
      * @param array $args
      * @return Shortcode
      */
-    public static function addShortcode(array $args): Shortcode
+    public function addShortcode(array $args): Shortcode
     {
-        $shortcode = new Shortcode($args);
+        $shortcode = new Shortcode($args, $this);
 
         if (empty($args['css']) && empty($args['js'])) {
             return $shortcode;
@@ -765,7 +854,7 @@ class Helpers
             }
         }
 
-        self::addAssets($shortcode, $args);
+        $this->addAssets($shortcode, $args);
 
         return $shortcode;
     }
@@ -776,7 +865,7 @@ class Helpers
      * @param $object
      * @param array $args
      */
-    private static function addFields($object, array $args)
+    private function addFields($object, array $args)
     {
         if (!empty($args['fields'])) {
             foreach ($args['fields'] as $field) {
@@ -791,7 +880,7 @@ class Helpers
      * @param $object
      * @param array $args
      */
-    private static function addAssets($object, array $args)
+    private function addAssets($object, array $args)
     {
         $assetsBaseProps = [
             'scope' => 'admin',
@@ -799,13 +888,13 @@ class Helpers
 
         if (!empty($args['css'])) {
             foreach ($args['css'] as $cssArgs) {
-                $object->addAsset(new Css(array_merge($assetsBaseProps, $cssArgs)));
+                $object->addAsset(new Css(array_merge($assetsBaseProps, $cssArgs), $this));
             }
         }
 
         if (!empty($args['js'])) {
             foreach ($args['js'] as $jsArgs) {
-                $object->addAsset(new Js(array_merge($assetsBaseProps, $jsArgs)));
+                $object->addAsset(new Js(array_merge($assetsBaseProps, $jsArgs), $this));
             }
         }
     }
@@ -816,17 +905,17 @@ class Helpers
      * @param array $args
      * @return Panel
      */
-    public static function addCustomizerPanel(array $args): Panel
+    public function addCustomizerPanel(array $args): Panel
     {
-        $panel = new Panel($args);
+        $panel = new Panel($args, $this);
 
         foreach ($args['sections'] as $sectionArgs) {
-            $section = new Section($sectionArgs);
+            $section = new Section($sectionArgs, $this);
 
             $section->setProp('panel', $panel->getProp('id'));
 
             foreach ($sectionArgs['settings'] as $settingArgs) {
-                $setting = new Setting($settingArgs);
+                $setting = new Setting($settingArgs, $this);
 
                 $setting->setProp('section', $section->getProp('id'));
 
@@ -845,8 +934,8 @@ class Helpers
      * @param mixed $message Text or any other type including WP_Error.
      * @param array $values If passed, vsprintf() func is applied. Default [].
      */
-    private static function log($message, array $values = [])
+    public function log($message, array $values = [])
     {
-        Logger::log($message, $values);
+        $this->logger->log($message, $values);
     }
 }
