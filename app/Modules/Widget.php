@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset};
+use AlexDashkin\Adwpfw\{Fields\Field, Modules\Assets\Asset};
 
 /**
  * Custom Front-End Widget
@@ -49,7 +49,7 @@ class Widget extends FieldHolder
      */
     public function register()
     {
-        $id = $this->getProp('id');
+        $id = $this->prefixIt($this->getProp('id'));
 
         $args = [
             'id' => $id,
@@ -58,7 +58,7 @@ class Widget extends FieldHolder
         ];
 
         // Register the class
-        eval(Helpers::render('php/widget', $args));
+        eval($this->app->render('php/widget', $args));
 
         // Register widget
         register_widget($id);
@@ -106,7 +106,7 @@ class Widget extends FieldHolder
             'fields' => $this->getFieldsArgs(),
         ];
 
-        echo Helpers::render('layouts/widget', $args);
+        echo $this->app->render('layouts/widget', $args);
     }
 
     /**

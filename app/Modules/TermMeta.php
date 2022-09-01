@@ -54,7 +54,7 @@ class TermMeta extends FieldHolder
         ];
 
         // Render template
-        return Helpers::render('layouts/term-meta', $args);
+        return $this->app->render('layouts/term-meta', $args);
     }
 
     /**
@@ -76,7 +76,7 @@ class TermMeta extends FieldHolder
      */
     public function getFieldValue(Field $field, int $objectId = 0)
     {
-        return get_term_meta($objectId, $field->getProp('name'), true);
+        return $this->getTermMeta($objectId, $field->getProp('name'));
     }
 
     /**
@@ -89,7 +89,7 @@ class TermMeta extends FieldHolder
      */
     public function setFieldValue(Field $field, $value, int $objectId = 0): bool
     {
-        return update_term_meta($objectId, $field->getProp('name'), $value);
+        return $this->updateTermMeta($objectId, $field->getProp('name'), $value);
     }
 
     /**

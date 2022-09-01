@@ -2,16 +2,13 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Helpers, Modules\FieldHolder};
-use AlexDashkin\Adwpfw\Traits\Props;
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\FieldHolder, Modules\Module};
 
 /**
  * Form Field
  */
-class Field
+class Field extends Module
 {
-    use Props;
-
     /**
      * Template Args
      *
@@ -28,24 +25,6 @@ class Field
      * @var FieldHolder
      */
     protected $parent;
-
-    /**
-     * Module constructor
-     *
-     * @param array $props
-     * @param FieldHolder $parent
-     * @throws AppException
-     */
-    public function __construct(array $props)
-    {
-        $this->props = $props;
-
-        foreach ($props as $name => $value) {
-            $this->setProp($name, $value);
-        }
-
-        $this->checkRequiredProps();
-    }
 
     /**
      * Set Parent Page
@@ -109,7 +88,7 @@ class Field
         $this->prepareArgs($objectId);
 
         // Render template
-        return Helpers::render($this->getProp('template'), $this->args);
+        return $this->app->render('fields/' . $this->getProp('template'), $this->args);
     }
 
     /**
@@ -155,6 +134,10 @@ class Field
             ],
             'name' => [
                 'type' => 'string',
+                'default' => '',
+            ],
+            'type' => [
+                'type' => 'string',
                 'required' => true,
             ],
             'label' => [
@@ -179,7 +162,9 @@ class Field
             ],
             'template' => [
                 'type' => 'string',
-                'default' => '',
+                'default' => function () {
+                    return $this->getProp('type');
+                },
             ],
         ];
     }

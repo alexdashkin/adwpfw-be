@@ -32,6 +32,6 @@ class Css extends Asset
      */
     public function register()
     {
-        wp_register_style($this->getHandle(), $this->getProp('url'), $this->getProp('deps'), $this->getVer());
+        wp_register_style($this->getHandle(), $this->getUrl(), $this->getProp('deps'), $this->getVer());
     }
 }

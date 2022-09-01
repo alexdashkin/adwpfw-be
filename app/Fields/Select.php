@@ -73,7 +73,7 @@ class Select extends Field
             ],
             'template' => [
                 'type' => 'string',
-                'default' => 'fields/select',
+                'default' => 'select',
             ],
         ];
 

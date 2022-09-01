@@ -20,7 +20,7 @@ class DbWidget extends Module
      */
     public function register()
     {
-        wp_add_dashboard_widget($this->getProp('id'), $this->getProp('title'), $this->getProp('callback'));
+        wp_add_dashboard_widget($this->prefixIt($this->getProp('id')), $this->getProp('title'), $this->getProp('callback'));
     }
 
     /**

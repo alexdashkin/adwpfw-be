@@ -34,7 +34,7 @@ class Text extends Field
             ],
             'template' => [
                 'type' => 'string',
-                'default' => 'fields/text',
+                'default' => 'text',
             ],
         ];
 

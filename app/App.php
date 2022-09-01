@@ -42,31 +42,31 @@ class App
         }
 
         $this->config = $config;
-        $prefix = $this->getConfig('prefix');
+        $prefix = $this->config('prefix');
         $uploadsDir = $this->getUploadsDir($prefix);
 
         // Init Logger
         $this->logger = new Logger([
             'prefix' => $prefix,
-            'maxLogSize' => $this->getConfig('maxLogSize') ?: 1000000,
+            'maxLogSize' => $this->config('maxLogSize') ?: 1000000,
             'path' => $uploadsDir . '/logs',
         ]);
 
         // Init Twig
-        if ($twigPaths = $this->getConfig('twigPaths')) {
+        if ($twigPaths = $this->config('twigPaths')) {
             $this->twig = new Twig([
-                'env' => $this->getConfig('env'),
+                'env' => $this->config('env'),
                 'paths' => $twigPaths,
                 'cachePath' => $uploadsDir,
             ]);
         }
 
         // Updater
-        if ($package = $this->getConfig('package')) {
-            switch ($this->getConfig('type')) {
+        if ($package = $this->config('package')) {
+            switch ($this->config('type')) {
                 case 'plugin':
                     new Plugin([
-                        'file' => $this->getConfig('baseFile'),
+                        'file' => $this->config('baseFile'),
                         'package' => $package,
                     ], $this);
 
@@ -87,13 +87,26 @@ class App
      * @param string $key
      * @return mixed
      */
-    public function getConfig(string $key = '')
+    public function config(string $key = '')
     {
         if (!$key) {
             return $this->config;
         }
 
         return array_key_exists($key, $this->config) ? $this->config[$key] : null;
+    }
+
+    /**
+     * Prefix a string
+     *
+     * @param string $string
+     * @param string $separator
+     * @param bool $leadingUnderscore
+     * @return string
+     */
+    public function prefixIt(string $string, string $separator = '_', bool $leadingUnderscore = false): string
+    {
+        return sprintf('%s%s%s%s', $leadingUnderscore ? '_' : '', $separator, $this->config('prefix'), $string);
     }
 
     /**
@@ -164,15 +177,14 @@ class App
      */
     public function render(string $name, array $args = []): string
     {
+        $paths = $this->config('templatePaths') ?: [];
         $fileName = $name . '.php';
 
-        $paths = [$fileName, __DIR__ . '/../templates/' . $fileName];
-
         foreach ($paths as $path) {
-            if (file_exists($path)) {
+            if (file_exists($path . $fileName)) {
                 ob_start();
                 extract($args);
-                include $path;
+                include $path . $fileName;
                 return ob_get_clean();
             }
         }
@@ -926,6 +938,139 @@ class App
         }
 
         return $panel;
+    }
+
+    /**
+     * Get prefixed option
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getOption(string $name)
+    {
+        return get_option($this->prefixIt($name));
+    }
+
+    /**
+     * Update prefixed option
+     *
+     * @param string $name
+     * @param $value
+     * @return bool
+     */
+    public function updateOption(string $name, $value): bool
+    {
+        return update_option($this->prefixIt($name), $value);
+    }
+
+    /**
+     * Get prefixed transient
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getTransient(string $name)
+    {
+        return get_transient($this->prefixIt($name));
+    }
+
+    /**
+     * Set prefixed transient
+     *
+     * @param string $name
+     * @param $value
+     * @param int $expiration
+     * @return bool
+     */
+    public function setTransient(string $name, $value, int $expiration = 0): bool
+    {
+        return set_transient($this->prefixIt($name), $value, $expiration);
+    }
+
+    /**
+     * Delete prefixed transient
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function deleteTransient(string $name): bool
+    {
+        return delete_transient($this->prefixIt($name));
+    }
+
+    /**
+     * Get prefixed post meta
+     *
+     * @param int $postId
+     * @param string $name
+     * @return mixed
+     */
+    public function getPostMeta(int $postId, string $name)
+    {
+        return get_post_meta($postId, $this->prefixIt($name, '_', true), true);
+    }
+
+    /**
+     * Update prefixed post meta
+     *
+     * @param int $postId
+     * @param string $name
+     * @param $value
+     * @return bool|int
+     */
+    public function updatePostMeta(int $postId, string $name, $value)
+    {
+        return update_post_meta($postId, $this->prefixIt($name, '_', true), $value);
+    }
+
+    /**
+     * Get prefixed term meta
+     *
+     * @param int $termId
+     * @param string $name
+     * @return mixed
+     */
+    public function getTermMeta(int $termId, string $name)
+    {
+        return get_term_meta($termId, $this->prefixIt($name, '_', true), true);
+    }
+
+    /**
+     * Update prefixed term meta
+     *
+     * @param int $termId
+     * @param string $name
+     * @param $value
+     * @return bool|int
+     */
+    public function updateTermMeta(int $termId, string $name, $value)
+    {
+        return update_term_meta($termId, $this->prefixIt($name, '_', true), $value);
+    }
+
+    /**
+     * Get prefixed user meta
+     *
+     * @param int $userId
+     * @param string $name
+     * @return mixed
+     */
+    public function getUserMeta(int $userId, string $name)
+    {
+        return get_user_meta($userId, $this->prefixIt($name, '_', true), true);
+    }
+
+    /**
+     * Update prefixed user meta
+     *
+     * @param int $userId
+     * @param string $name
+     * @param $value
+     * @return bool|int
+     */
+    public function updateUserMeta(int $userId, string $name, $value)
+    {
+        return update_user_meta($userId, $this->prefixIt($name, '_', true), $value);
     }
 
     /**

@@ -72,7 +72,7 @@ class CronJob extends Module
      */
     private function getLastRun(): int
     {
-        return (int)get_option($this->getProp('optionName'));
+        return (int)$this->getOption($this->getProp('optionName'));
     }
 
     /**
@@ -82,7 +82,7 @@ class CronJob extends Module
      */
     private function setLastRun(): bool
     {
-        return update_option($this->getProp('optionName'), time());
+        return $this->updateOption($this->getProp('optionName'), time());
     }
 
     /**
@@ -92,17 +92,17 @@ class CronJob extends Module
      */
     private function getRunning(): int
     {
-        return (int)get_transient($this->getProp('optionName'));
+        return (int)$this->getTransient($this->getProp('optionName'));
     }
 
     /**
      * Set running job start timestamp
      *
-     * @return int
+     * @return bool
      */
     private function setRunning(): bool
     {
-        return set_transient($this->getProp('optionName'), time(), 180);
+        return $this->setTransient($this->getProp('optionName'), time(), 180);
     }
 
     /**
@@ -112,7 +112,7 @@ class CronJob extends Module
      */
     private function deleteRunning(): bool
     {
-        return delete_transient($this->getProp('optionName'));
+        return $this->deleteTransient($this->getProp('optionName'));
     }
 
     /**

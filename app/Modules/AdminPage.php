@@ -90,7 +90,7 @@ class AdminPage extends Module
             'content' => $currentTab->render(),
         ];
 
-        echo Helpers::render('layouts/admin-page', $args);
+        echo $this->app->render('layouts/admin-page', $args);
     }
 
     /**
@@ -137,7 +137,7 @@ class AdminPage extends Module
             'slug' => [
                 'type' => 'string',
                 'default' => function () {
-                    return sanitize_key(str_replace(' ', '-', $this->getProp('name')));
+                    return sanitize_key(str_replace(' ', '-', $this->prefixIt($this->getProp('name'))));
                 },
             ],
             'icon' => [

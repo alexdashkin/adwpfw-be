@@ -31,7 +31,7 @@ class Setting extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $id = $this->getProp('id');
+        $id = $this->prefixIt($this->getProp('id'));
 
         $customizer->add_setting($id);
 

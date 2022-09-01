@@ -52,7 +52,7 @@ class Metabox extends FieldHolder
         }
 
         add_meta_box(
-            $this->getProp('id'),
+            $this->prefixIt($this->getProp('id')),
             $this->getProp('title'),
             [$this, 'render'],
             $this->getProp('screen'),
@@ -75,7 +75,7 @@ class Metabox extends FieldHolder
         ];
 
         // Output template
-        echo Helpers::render('layouts/metabox', $args);
+        echo $this->app->render('layouts/metabox', $args);
     }
 
     /**
@@ -97,7 +97,7 @@ class Metabox extends FieldHolder
      */
     public function getFieldValue(Field $field, int $objectId = 0)
     {
-        return get_post_meta($objectId, $field->getProp('name'), true);
+        return $this->getPostMeta($objectId, $field->getProp('name'));
     }
 
     /**
@@ -110,7 +110,7 @@ class Metabox extends FieldHolder
      */
     public function setFieldValue(Field $field, $value, int $objectId = 0): bool
     {
-        return update_post_meta($objectId, $field->getProp('name'), $value);
+        return $this->updatePostMeta($objectId, $field->getProp('name'), $value);
     }
 
     /**

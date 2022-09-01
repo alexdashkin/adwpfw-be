@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules\RestApi;
 
-use AlexDashkin\Adwpfw\{Exceptions\AppException, Helpers, Modules\Module};
+use AlexDashkin\Adwpfw\{Exceptions\AppException, Modules\Module};
 
 /**
  * Abstract Ajax Endpoint. To be extended.
@@ -104,6 +104,6 @@ abstract class Request extends Module
      */
     protected function error(string $message = ''): array
     {
-        return Helpers::returnError($message);
+        return $this->app->returnError($message);
     }
 }

@@ -18,12 +18,10 @@ class Notice extends Module
 
         // Add Ajax action to dismiss notice
         if ($this->getProp('dismissible')) {
-            new AdminAjax(
-                [
-                    'action' => 'dismiss_notice_' . $this->getProp('id'),
-                    'callback' => [$this, 'ajaxDismiss'],
-                ]
-            );
+            new AdminAjax([
+                'action' => 'dismiss_notice_' . $this->getProp('id'),
+                'callback' => [$this, 'ajaxDismiss'],
+            ], $this->app);
         }
     }
 
@@ -75,7 +73,7 @@ class Notice extends Module
             'classes' => sprintf('notice notice-%s %s adwpfw-notice %s', $this->getProp('type'), $isDismissible, $this->getProp('classes')),
         ];
 
-        return Helpers::render('notice', $args);
+        return $this->app->render('notice', $args);
     }
 
     /**
@@ -85,7 +83,7 @@ class Notice extends Module
      */
     private function getDismissed(): int
     {
-        return (int)get_transient($this->getProp('optionName'));
+        return (int)$this->getTransient($this->getProp('optionName'));
     }
 
     /**
@@ -95,7 +93,7 @@ class Notice extends Module
      */
     private function setDismissed(): bool
     {
-        return set_transient($this->getProp('optionName'), time(), $this->getProp('days') * DAY_IN_SECONDS);
+        return $this->setTransient($this->getProp('optionName'), time(), $this->getProp('days') * DAY_IN_SECONDS);
     }
 
     /**
@@ -105,7 +103,7 @@ class Notice extends Module
      */
     private function deleteDismissed(): bool
     {
-        return delete_transient($this->getProp('optionName'));
+        return $this->deleteTransient($this->getProp('optionName'));
     }
 
     /**
@@ -148,7 +146,7 @@ class Notice extends Module
             'optionName' => [
                 'type' => 'string',
                 'default' => function () {
-                    return sprintf('adwpfw_notice_%s', sanitize_title($this->getProp('name')));
+                    return sprintf('notice_%s', sanitize_title($this->getProp('name')));
                 },
             ],
         ];

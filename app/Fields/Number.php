@@ -40,7 +40,7 @@ class Number extends Field
             ],
             'template' => [
                 'type' => 'string',
-                'default' => 'fields/number',
+                'default' => 'number',
             ],
         ];
 

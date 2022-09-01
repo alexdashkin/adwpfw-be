@@ -50,7 +50,7 @@ class Section extends Module
     {
         $this->setProp('panel', $this->panel->getProp('id'));
 
-        $customizer->add_section($this->getProp('id'), $this->getProps());
+        $customizer->add_section($this->prefixIt($this->getProp('id')), $this->getProps());
 
         foreach ($this->settings as $setting) {
             $setting->register($customizer);

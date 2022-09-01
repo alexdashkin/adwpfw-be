@@ -12,10 +12,8 @@ class Select2 extends Select
     /**
      * Constructor
      */
-    public function __construct(array $props)
+    public function init()
     {
-        parent::__construct($props);
-
         $ajaxDataCb = $this->getProp('ajaxDataCallback');
 
         if ($ajaxDataCb && is_callable($ajaxDataCb)) {
@@ -23,17 +21,15 @@ class Select2 extends Select
 
             $this->args['ajax_action'] = $action;
 
-            new AdminAjax(
-                [
-                    'action' => $action,
-                    'fields' => [
-                        'q' => [
-                            'required' => true,
-                        ]
-                    ],
-                    'callback' => [$this, 'ajaxDataCb'],
-                ]
-            );
+            new AdminAjax([
+                'action' => $action,
+                'fields' => [
+                    'q' => [
+                        'required' => true,
+                    ]
+                ],
+                'callback' => [$this, 'ajaxDataCb'],
+            ], $this->app);
         }
     }
 
@@ -46,13 +42,13 @@ class Select2 extends Select
     public function ajaxDataCb(array $data): array
     {
         if (empty($data['q'])) {
-            return Helpers::returnError('Empty query');
+            return $this->app->returnError('Empty query');
         }
 
         $minChars = (int)$this->getProp('min_chars');
 
         if (strlen($data['q']) < $minChars) {
-            return Helpers::returnError('Minimum chars for search - ' . $minChars);
+            return $this->app->returnError('Minimum chars for search - ' . $minChars);
         }
 
         $results = $this->getProp('ajaxDataCallback')(trim($data['q']));
@@ -66,7 +62,7 @@ class Select2 extends Select
             ];
         }
 
-        return Helpers::returnSuccess('Done', $return);
+        return $this->app->returnSuccess('Done', $return);
     }
 
     /**
@@ -88,7 +84,7 @@ class Select2 extends Select
         $valueArr = $multiple ? (array)$value : [$value];
 
         foreach ($valueArr as $item) {
-            if ($item && !Helpers::arraySearch($args['options'], ['value' => $item], true)) {
+            if ($item && !$this->app->arraySearch($args['options'], ['value' => $item], true)) {
                 $labelCb = $this->getProp('labelCallback');
 
                 $args['options'][] = [
@@ -142,7 +138,7 @@ class Select2 extends Select
             ],
             'template' => [
                 'type' => 'string',
-                'default' => 'fields/select2',
+                'default' => 'select2',
             ],
         ];
 

@@ -11,9 +11,9 @@ class Textarea extends Field
      * Sanitize field value on save
      *
      * @param mixed $value
-     * @return mixed
+     * @return string
      */
-    protected function sanitize($value)
+    protected function sanitize($value): string
     {
         return sanitize_textarea_field($value);
     }
@@ -30,7 +30,7 @@ class Textarea extends Field
         $fieldProps = [
             'template' => [
                 'type' => 'string',
-                'default' => 'fields/textarea',
+                'default' => 'textarea',
             ],
         ];
 

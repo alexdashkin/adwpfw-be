@@ -35,7 +35,7 @@ class Checkbox extends Field
             ],
             'template' => [
                 'type' => 'string',
-                'default' => 'fields/checkbox',
+                'default' => 'checkbox',
             ],
         ];
 

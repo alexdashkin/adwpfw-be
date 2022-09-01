@@ -55,7 +55,7 @@ class ProfileSection extends FieldHolder
         ];
 
         // Output template
-        echo Helpers::render('layouts/profile-section', $args);
+        echo $this->app->render('layouts/profile-section', $args);
     }
 
     /**
@@ -82,7 +82,7 @@ class ProfileSection extends FieldHolder
      */
     public function getFieldValue(Field $field, int $objectId = 0)
     {
-        return get_user_meta($objectId, $field->getProp('name'), true);
+        return $this->getUserMeta($objectId, $field->getProp('name'));
     }
 
     /**
@@ -95,7 +95,7 @@ class ProfileSection extends FieldHolder
      */
     public function setFieldValue(Field $field, $value, int $objectId = 0): bool
     {
-        return update_user_meta($objectId, $field->getProp('name'), $value);
+        return $this->updateUserMeta($objectId, $field->getProp('name'), $value);
     }
 
     /**

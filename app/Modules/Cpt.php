@@ -100,7 +100,7 @@ class Cpt extends Module
     {
         $columns = $this->getProp('columns');
 
-        if (!$column = Helpers::arraySearch($columns, ['name' => $colName], true)) {
+        if (!$column = $this->app->arraySearch($columns, ['name' => $colName], true)) {
             return;
         }
 
@@ -141,7 +141,7 @@ class Cpt extends Module
                 'options' => $options,
             ];
 
-            echo Helpers::render('layouts/post-actions', $args);
+            echo $this->app->render('layouts/post-actions', $args);
         }
     }
 

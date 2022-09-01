@@ -95,11 +95,25 @@ abstract class Asset extends Module
             return $handle;
         }
 
-        $handle = sprintf('adwpfw-%s-%s-%s', $this->getProp('scope'), strpos(strtolower(get_called_class()), 'css') ? 'css' : 'js', mt_rand(1, 100));
+        $handle = sprintf('%s-%s-%s-%s', $this->config('prefix'), $this->getProp('scope'), strpos(strtolower(get_called_class()), 'css') ? 'css' : 'js', mt_rand(1, 100));
 
         $this->setProp('handle', $handle);
 
         return $handle;
+    }
+
+    /**
+     * Get URL
+     *
+     * @return string
+     */
+    protected function getUrl(): string
+    {
+        if ($url = $this->getProp('url')) {
+            return $url;
+        }
+
+        return sprintf('%s%s', 'theme' === $this->config('type') ? get_stylesheet_directory_uri() : plugin_dir_url($this->config('baseFile')), $this->getProp('file'));
     }
 
     /**
@@ -109,11 +123,11 @@ abstract class Asset extends Module
      */
     protected function getVer(): string
     {
-        $ver = $this->getProp('ver');
-
-        if (!$path = $this->getProp('path')) {
+        if ($ver = $this->getProp('ver')) {
             return $ver;
         }
+
+        $path = dirname($this->config('baseFile')) . $this->getProp('file');
 
         return file_exists($path) ? filemtime($path) : $ver;
     }
@@ -136,13 +150,13 @@ abstract class Asset extends Module
                 'type' => 'string',
                 'default' => 'front',
             ],
-            'path' => [
+            'file' => [
                 'type' => 'string',
                 'default' => '',
             ],
             'url' => [
                 'type' => 'string',
-                'required' => true,
+                'default' => '',
             ],
             'deps' => [
                 'type' => 'array',

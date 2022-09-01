@@ -12,10 +12,9 @@ class AdminAjax extends Request
      */
     public function init()
     {
-        $actionName = $this->getProp('action');
+        $actionName = $this->prefixIt($this->getProp('action'));
 
         $this->addHook('wp_ajax_' . $actionName, [$this, 'handle']);
-//        $this->addHook('wp_ajax_nopriv_' . $actionName, [$this, 'handle']); // Use admin-ajax.php for admin calls only
     }
 
     /**

@@ -25,18 +25,16 @@ class AdminPageTab extends FieldHolder
     public function init()
     {
         if ($this->getProp('form')) {
-            new AdminAjax(
-                [
-                    'action' => $this->getProp('action'),
-                    'fields' => [
-                        'form' => [
-                            'type' => 'form',
-                            'required' => true,
-                        ],
+            new AdminAjax([
+                'action' => $this->getProp('action'),
+                'fields' => [
+                    'form' => [
+                        'type' => 'form',
+                        'required' => true,
                     ],
-                    'callback' => [$this, 'save'],
-                ]
-            );
+                ],
+                'callback' => [$this, 'save'],
+            ], $this->app);
         }
     }
 
@@ -83,7 +81,7 @@ class AdminPageTab extends FieldHolder
         ];
 
         // Render template
-        return Helpers::render('layouts/admin-page-tab', $args);
+        return $this->app->render('layouts/admin-page-tab', $args);
     }
 
     /**
@@ -98,7 +96,7 @@ class AdminPageTab extends FieldHolder
 
         do_action('adwpfw_settings_saved', $this, $request['form']);
 
-        return Helpers::returnSuccess('Saved');
+        return $this->app->returnSuccess('Saved');
     }
 
     /**
@@ -110,7 +108,7 @@ class AdminPageTab extends FieldHolder
      */
     public function getFieldValue(Field $field, int $objectId = 0)
     {
-        return get_option($field->getProp('name'));
+        return $this->getOption($field->getProp('name'));
     }
 
     /**
@@ -123,7 +121,7 @@ class AdminPageTab extends FieldHolder
      */
     public function setFieldValue(Field $field, $value, int $objectId = 0): bool
     {
-        return update_option($field->getProp('name'), $value);
+        return $this->updateOption($field->getProp('name'), $value);
     }
 
     /**

@@ -91,7 +91,7 @@ class Taxonomy extends Module
     {
         $columns = $this->getProp('columns');
 
-        if (!$column = Helpers::arraySearch($columns, ['name' => $colName], true)) {
+        if (!$column = $this->app->arraySearch($columns, ['name' => $colName], true)) {
             return;
         }
 

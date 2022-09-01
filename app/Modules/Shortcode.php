@@ -39,7 +39,7 @@ class Shortcode extends Module
      */
     public function register()
     {
-        add_shortcode($this->getProp('tag'), [$this, 'render']);
+        add_shortcode($this->prefixIt($this->getProp('tag')), [$this, 'render']);
     }
 
     /**

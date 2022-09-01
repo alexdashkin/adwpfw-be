@@ -41,7 +41,7 @@ class Panel extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $customizer->add_panel($this->getProp('id'), $this->getProps());
+        $customizer->add_panel($this->prefixIt($this->getProp('id')), $this->getProps());
 
         foreach ($this->sections as $section) {
             $section->register($customizer);
