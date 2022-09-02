@@ -4,8 +4,6 @@ namespace AlexDashkin\Adwpfw\Specials;
 
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 
-use const WC_LOG_DIR;
-
 /**
  * Logger
  */

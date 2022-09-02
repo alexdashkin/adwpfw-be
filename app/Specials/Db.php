@@ -220,7 +220,7 @@ class Db
 
         $columns = trim($columns, ', ');
         $placeholders = '(' . trim($placeholders, ', ') . '), ';
-        $query = sprintf('INSERT INTO `%s` (%s) VALUES %s', $this->table, $columns, trim(str_repeat($placeholders, $counter), ', '));
+        $query = sprintf('INSERT INTO `%s` (%s) VALUES %s', $this->table, $columns, trim(str_repeat($placeholders, count($data)), ', '));
 
         return $this->query($query, $values);
     }
