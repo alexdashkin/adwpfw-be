@@ -4,7 +4,7 @@ namespace AlexDashkin\Adwpfw;
 
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Modules\{AdminPage, AdminPageTab, Assets\Css, Assets\Js, Customizer\Panel, Customizer\Section, Customizer\Setting, Hook, Metabox, RestApi\AdminAjax, RestApi\Rest, Shortcode, Sidebar, Updater\Plugin, Updater\Theme, Widget};
+use AlexDashkin\Adwpfw\Modules\{AdminBar, AdminPage, AdminPageTab, Assets\Css, Assets\Js, CronJob, Customizer\Panel, Customizer\Section, Customizer\Setting, DbWidget, Hook, Metabox, Notice, RestApi\AdminAjax, RestApi\Rest, Shortcode, Sidebar, Updater\Plugin, Updater\Theme, Widget};
 use AlexDashkin\Adwpfw\Specials\{Db, Logger, Twig};
 
 class App
@@ -168,6 +168,7 @@ class App
         $paths = $this->config('templatePaths') ?: [];
         $paths[] = __DIR__ . '/../templates/';
         $fileName = $name . '.php';
+        $args['prefix'] = $this->config('prefix');
 
         foreach ($paths as $path) {
             if (file_exists($path . $fileName)) {
@@ -1123,6 +1124,8 @@ class App
     }
 
     /**
+     * Add theme sidebar
+     *
      * @param array $args
      * @return Sidebar
      * @throws AppException
@@ -1130,6 +1133,54 @@ class App
     public function addSidebar(array $args): Sidebar
     {
         return new Sidebar($args, $this);
+    }
+
+    /**
+     * Add Dashboard Widget
+     *
+     * @param array $args
+     * @return DbWidget
+     * @throws AppException
+     */
+    public function addDbWidget(array $args): DbWidget
+    {
+        return new DbWidget($args, $this);
+    }
+
+    /**
+     * Add Cron Job
+     *
+     * @param array $args
+     * @return CronJob
+     * @throws AppException
+     */
+    public function addCronJob(array $args): CronJob
+    {
+        return new CronJob($args, $this);
+    }
+
+    /**
+     * Add Admin Notice
+     *
+     * @param array $args
+     * @return Notice
+     * @throws AppException
+     */
+    public function addNotice(array $args): Notice
+    {
+        return new Notice($args, $this);
+    }
+
+    /**
+     * Add Admin Bar Entry
+     *
+     * @param array $args
+     * @return AdminBar
+     * @throws AppException
+     */
+    public function addAdminBarEntry(array $args): AdminBar
+    {
+        return new AdminBar($args, $this);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset, Modules\RestApi\AdminAjax};
+use AlexDashkin\Adwpfw\{Fields\Field, Modules\Assets\Asset, Modules\RestApi\AdminAjax};
 
 /**
  * Admin Page Tab
@@ -75,7 +75,7 @@ class AdminPageTab extends FieldHolder
         // Prepare args
         $args = [
             'title' => $this->getProp('title'),
-            'action' => $this->getProp('action'),
+            'action' => $this->prefixIt($this->getProp('action')),
             'form' => $this->getProp('form'),
             'fields' => $this->getFieldsArgs(),
         ];

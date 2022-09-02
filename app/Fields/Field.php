@@ -160,7 +160,7 @@ class Field extends Module
             'id' => [
                 'type' => 'string',
                 'default' => function () {
-                    return $this->prefixIt($this->getProp('name'));
+                    return $this->prefixIt(sprintf('%s-%s', $this->getProp('type'), $this->getProp('name')), '-');
                 },
             ],
             'name' => [
