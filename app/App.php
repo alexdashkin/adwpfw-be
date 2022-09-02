@@ -37,7 +37,7 @@ class App
         $this->logger = new Logger([
             'prefix' => $prefix,
             'maxLogSize' => $this->config('maxLogSize') ?: 1000000,
-            'path' => $uploadsDir . '/logs',
+            'path' => $uploadsDir . 'logs/',
         ]);
 
         // Init Twig

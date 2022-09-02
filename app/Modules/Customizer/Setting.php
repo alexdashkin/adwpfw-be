@@ -36,7 +36,7 @@ class Setting extends Module
         $customizer->add_setting($id);
 
         $control = [
-            'section' => $this->section->getProp('id'),
+            'section' => $this->prefixIt($this->section->getProp('id')),
             'type' => $this->getProp('type'),
             'label' => $this->getProp('label'),
             'description' => $this->getProp('description'),

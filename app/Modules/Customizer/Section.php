@@ -48,7 +48,7 @@ class Section extends Module
      */
     public function register(\WP_Customize_Manager $customizer)
     {
-        $this->setProp('panel', $this->panel->getProp('id'));
+        $this->setProp('panel', $this->prefixIt($this->panel->getProp('id')));
 
         $customizer->add_section($this->prefixIt($this->getProp('id')), $this->getProps());
 
