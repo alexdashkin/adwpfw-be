@@ -39,8 +39,9 @@ class TermMeta extends FieldHolder
      * Render Section
      *
      * @param \WP_Term $term
+     * @return string
      */
-    public function render(\WP_Term $term)
+    public function render(\WP_Term $term): string
     {
         // Enqueue assets
         foreach ($this->assets as $asset) {

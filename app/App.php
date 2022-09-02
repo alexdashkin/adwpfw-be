@@ -4,21 +4,8 @@ namespace AlexDashkin\Adwpfw;
 
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Modules\AdminPage;
-use AlexDashkin\Adwpfw\Modules\AdminPageTab;
-use AlexDashkin\Adwpfw\Modules\Assets\Css;
-use AlexDashkin\Adwpfw\Modules\Assets\Js;
-use AlexDashkin\Adwpfw\Modules\Customizer\Panel;
-use AlexDashkin\Adwpfw\Modules\Customizer\Section;
-use AlexDashkin\Adwpfw\Modules\Customizer\Setting;
-use AlexDashkin\Adwpfw\Modules\Hook;
-use AlexDashkin\Adwpfw\Modules\Metabox;
-use AlexDashkin\Adwpfw\Modules\Shortcode;
-use AlexDashkin\Adwpfw\Modules\Updater\Plugin;
-use AlexDashkin\Adwpfw\Modules\Updater\Theme;
-use AlexDashkin\Adwpfw\Modules\Widget;
-use AlexDashkin\Adwpfw\Specials\Logger;
-use AlexDashkin\Adwpfw\Specials\Twig;
+use AlexDashkin\Adwpfw\Modules\{AdminPage, AdminPageTab, Assets\Css, Assets\Js, Customizer\Panel, Customizer\Section, Customizer\Setting, Hook, Metabox, RestApi\AdminAjax, RestApi\Rest, Shortcode, Sidebar, Updater\Plugin, Updater\Theme, Widget};
+use AlexDashkin\Adwpfw\Specials\{Db, Logger, Twig};
 
 class App
 {
@@ -107,7 +94,7 @@ class App
      */
     public function prefixIt(string $string, string $separator = '_', bool $leadingUnderscore = false): string
     {
-        return sprintf('%s%s%s%s', $leadingUnderscore ? '_' : '', $separator, $this->config('prefix'), $string);
+        return sprintf('%s%s%s%s', $leadingUnderscore ? '_' : '', $this->config('prefix'), $separator, $string);
     }
 
     /**
@@ -179,6 +166,7 @@ class App
     public function render(string $name, array $args = []): string
     {
         $paths = $this->config('templatePaths') ?: [];
+        $paths[] = __DIR__ . '/../templates/';
         $fileName = $name . '.php';
 
         foreach ($paths as $path) {
@@ -1097,6 +1085,51 @@ class App
     public function updateUserMeta(int $userId, string $name, $value)
     {
         return update_user_meta($userId, $this->prefixIt($name, '_', true), $value);
+    }
+
+    /**
+     * Add REST API Endpoint
+     *
+     * @param array $args
+     * @return Rest
+     * @throws AppException
+     */
+    public function addRestEndpoint(array $args): Rest
+    {
+        return new Rest($args, $this);
+    }
+
+    /**
+     * add Admin Ajax action
+     *
+     * @param array $args
+     * @return AdminAjax
+     * @throws AppException
+     */
+    public function addAjaxAction(array $args): AdminAjax
+    {
+        return new AdminAjax($args, $this);
+    }
+
+    /**
+     * DB query
+     *
+     * @param string $table
+     * @return Db
+     */
+    public function db(string $table = ''): Db
+    {
+        return new Db($table);
+    }
+
+    /**
+     * @param array $args
+     * @return Sidebar
+     * @throws AppException
+     */
+    public function addSidebar(array $args): Sidebar
+    {
+        return new Sidebar($args, $this);
     }
 
     /**

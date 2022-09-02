@@ -11,9 +11,9 @@ class Text extends Field
      * Sanitize field value on save
      *
      * @param mixed $value
-     * @return mixed
+     * @return string
      */
-    protected function sanitize($value)
+    protected function sanitize($value): string
     {
         return sanitize_text_field($value);
     }

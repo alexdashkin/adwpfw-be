@@ -73,7 +73,6 @@ class Field extends Module
      *
      * @param mixed $value
      * @param int $objectId
-     * @throws AppException
      */
     public function setValue($value, int $objectId = 0)
     {
@@ -161,7 +160,7 @@ class Field extends Module
             'id' => [
                 'type' => 'string',
                 'default' => function () {
-                    return $this->getProp('name');
+                    return $this->prefixIt($this->getProp('name'));
                 },
             ],
             'name' => [

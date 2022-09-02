@@ -17,6 +17,8 @@ class Hook extends Module
 
     /**
      * Fire callback
+     *
+     * @return mixed
      */
     public function run()
     {

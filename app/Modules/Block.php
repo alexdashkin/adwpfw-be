@@ -51,10 +51,10 @@ class Block extends Module
 
             switch ($type) {
                 case 'css':
-                    new Css($assetProps);
+                    new Css($assetProps, $this->app);
                     break;
                 case 'js':
-                    new Js($assetProps);
+                    new Js($assetProps, $this->app);
                     break;
             }
 

@@ -24,7 +24,7 @@ class Theme extends Module
         $slug = $this->getProp('slug');
 
         if ($themeData = wp_get_theme($slug)) {
-            $oldVer = $themeData->version;
+            $oldVer = $themeData->get('Version');
             $last = (int)substr($oldVer, -1);
             $newVer = substr($oldVer, 0, strlen($oldVer) - 1) . ++$last;
         }

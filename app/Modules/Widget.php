@@ -117,7 +117,7 @@ class Widget extends FieldHolder
      */
     public function getFieldName(Field $field): string
     {
-        return $this->widget->get_field_name($field->getProp('name'));
+        return $this->widget->get_field_name($this->prefixIt($field->getProp('name')));
     }
 
     /**

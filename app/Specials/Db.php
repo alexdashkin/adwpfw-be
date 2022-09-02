@@ -208,20 +208,14 @@ class Db
 
         $data = array_values($data);
         $values = [];
-        $counter = 0;
 
         $firstRow = reset($data);
         $cols = array_keys($firstRow);
         $columns = '`' . implode('`, `', $cols) . '`';
         $placeholders = str_repeat('%s, ', count($firstRow));
 
-        foreach ($data as $index => $row) {
+        foreach ($data as $row) {
             $values = array_merge($values, array_values($row));
-            $counter++;
-        }
-
-        if (!$counter) {
-            return 0;
         }
 
         $columns = trim($columns, ', ');
@@ -236,16 +230,16 @@ class Db
      *
      * @return int
      */
-    public function getLastInsertId()
+    public function getLastInsertId(): int
     {
-        return (int)$this->wpdb->insert_id;
+        return $this->wpdb->insert_id;
     }
 
     /**
      * Update a record in the database.
      *
      * @param array $values
-     * @return int
+     * @return int|false
      */
     public function update(array $values)
     {
@@ -255,7 +249,7 @@ class Db
     /**
      * Delete a record from the database.
      *
-     * @return int
+     * @return int|false
      */
     public function delete()
     {
@@ -353,6 +347,6 @@ class Db
             return '';
         }
 
-        return sprintf(' LIMIT %d %d ', (int)$this->offset, (int)$this->limit);
+        return sprintf(' LIMIT %d %d ', $this->offset, $this->limit);
     }
 }

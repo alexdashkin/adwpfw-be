@@ -84,6 +84,7 @@ class Taxonomy extends Module
     /**
      * Output custom column
      *
+     * @param string $empty
      * @param string $colName
      * @param int $termId
      */

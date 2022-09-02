@@ -13,6 +13,7 @@ abstract class Module
      * Module constructor
      *
      * @param array $props
+     * @param App $app
      * @throws AppException
      */
     public function __construct(array $props, App $app)

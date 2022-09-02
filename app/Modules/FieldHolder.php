@@ -31,12 +31,13 @@ abstract class FieldHolder extends Module
      */
     public function getFieldName(Field $field): string
     {
-        return sprintf("%s_%s", $this->app->config('prefix'), $field->getProp('name'));
+        return $this->prefixIt($field->getProp('name'));
     }
 
     /**
      * Get Fields Template Args
      *
+     * @param int $objectId
      * @return array
      */
     protected function getFieldsArgs(int $objectId = 0): array

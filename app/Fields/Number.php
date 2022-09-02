@@ -11,9 +11,9 @@ class Number extends Field
      * Sanitize field value on save
      *
      * @param mixed $value
-     * @return mixed
+     * @return int
      */
-    protected function sanitize($value)
+    protected function sanitize($value): int
     {
         return (int)$value;
     }

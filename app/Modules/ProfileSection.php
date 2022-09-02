@@ -27,10 +27,8 @@ class ProfileSection extends FieldHolder
     /**
      * Constructor
      */
-    public function __construct(array $props)
+    public function init()
     {
-        parent::__construct($props);
-
         $this->addHook('show_user_profile', [$this, 'render']);
         $this->addHook('edit_user_profile', [$this, 'render']);
         $this->addHook('personal_options_update', [$this, 'save']);
