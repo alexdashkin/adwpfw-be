@@ -89,9 +89,9 @@ class Field extends Module
     public static function setMany(array $fields, array $values, int $objectId = 0)
     {
         foreach ($fields as $field) {
-            $name = $field->getProp('name');
-            if (array_key_exists($name, $values)) {
-                $field->setValue($values[$name], $objectId);
+            $prefixedName = $field->prefixIt($field->getProp('name'));
+            if (array_key_exists($prefixedName, $values)) {
+                $field->setValue($values[$prefixedName], $objectId);
             }
         }
     }

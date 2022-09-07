@@ -19,7 +19,7 @@ class Select2 extends Select
         if ($ajaxDataCb && is_callable($ajaxDataCb)) {
             $action = sprintf('s2_%s', $this->getProp('name')); // todo 2 fields with the same name => race condition
 
-            $this->args['ajax_action'] = $action;
+            $this->args['ajax_action'] = $this->prefixIt($action);
 
             new AdminAjax([
                 'action' => $action,

@@ -179,7 +179,6 @@ class App
             }
         }
 
-        // Not found
         return sprintf('Template "%s" not found', $name);
     }
 

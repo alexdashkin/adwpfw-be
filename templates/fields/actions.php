@@ -4,7 +4,7 @@
 
         <?php foreach ($options as $optionValue => $label): ?>
 
-            <option value="<?= $optionValue ?>" <?= $value == $optionValue ? 'selected' : '' ?>>
+            <option value="<?= $prefix . '_' . $optionValue ?>">
                 <?= $label ?>
             </option>
 
