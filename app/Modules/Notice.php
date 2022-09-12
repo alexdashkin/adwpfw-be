@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\{Helpers, Modules\RestApi\AdminAjax};
+use AlexDashkin\Adwpfw\Modules\RestApi\AdminAjax;
 
 /**
  * WP Admin Notice

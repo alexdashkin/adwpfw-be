@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Fields;
 
-use AlexDashkin\Adwpfw\{Helpers, Modules\RestApi\AdminAjax};
+use AlexDashkin\Adwpfw\Modules\RestApi\AdminAjax;
 
 /**
  * Select2 field

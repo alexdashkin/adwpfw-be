@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Helpers;
-
 /**
  * Custom Post Type
  */

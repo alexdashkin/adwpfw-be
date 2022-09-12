@@ -2,7 +2,7 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\{Fields\Field, Helpers, Modules\Assets\Asset};
+use AlexDashkin\Adwpfw\{Fields\Field, Modules\Assets\Asset};
 
 /**
  * User Profile Custom Fields
