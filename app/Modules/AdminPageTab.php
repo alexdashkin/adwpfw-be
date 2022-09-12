@@ -39,6 +39,16 @@ class AdminPageTab extends FieldHolder
     }
 
     /**
+     * Enqueue tab assets
+     */
+    public function enqueueAssets()
+    {
+        foreach ($this->assets as $asset) {
+            $asset->enqueue();
+        }
+    }
+
+    /**
      * Set Parent Page
      *
      * @param AdminPage $parent
@@ -68,9 +78,9 @@ class AdminPageTab extends FieldHolder
     public function render(): string
     {
         // Enqueue assets
-        foreach ($this->assets as $asset) {
-            $asset->enqueue();
-        }
+        /*        foreach ($this->assets as $asset) {
+                    $asset->enqueue();
+                }*/
 
         // Prepare args
         $args = [

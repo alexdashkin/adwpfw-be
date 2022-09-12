@@ -2,8 +2,6 @@
 
 namespace AlexDashkin\Adwpfw\Modules;
 
-use AlexDashkin\Adwpfw\Helpers;
-
 /**
  * Admin Page with settings
  */
@@ -61,6 +59,12 @@ class AdminPage extends Module
         }
 
         $this->setProp('suffix', $suffix);
+
+        // Load assets only on the requested tab
+        $this->addHook('load-' . $suffix, function () {
+            $currentTab = $this->getCurrentTab();
+            $currentTab->enqueueAssets();
+        });
     }
 
     /**
