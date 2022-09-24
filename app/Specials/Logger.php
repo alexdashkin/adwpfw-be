@@ -98,7 +98,7 @@ class Logger
 
         // Populate args if any
         if (is_string($message)) {
-            $message = vsprintf($message, $values);
+            $message = $values ? vsprintf($message, $values) : $message;
         }
 
         // Build log entry
