@@ -19,7 +19,7 @@ class Shortcode extends Module
      */
     public function init()
     {
-        $this->addHook('template_redirect', [$this, 'register']);
+        $this->addHook('wp_loaded', [$this, 'register']);
     }
 
     /**
