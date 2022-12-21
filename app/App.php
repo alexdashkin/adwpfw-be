@@ -4,7 +4,27 @@ namespace AlexDashkin\Adwpfw;
 
 use AlexDashkin\Adwpfw\Exceptions\AppException;
 use AlexDashkin\Adwpfw\Fields\Field;
-use AlexDashkin\Adwpfw\Modules\{AdminBar, AdminPage, AdminPageTab, Assets\Css, Assets\Js, CronJob, Customizer\Panel, Customizer\Section, Customizer\Setting, DbWidget, Hook, Metabox, Notice, RestApi\AdminAjax, RestApi\Rest, Shortcode, Sidebar, Updater\Plugin, Updater\Theme, Widget};
+use AlexDashkin\Adwpfw\Modules\{AdminBar,
+    AdminPage,
+    AdminPageTab,
+    Assets\Css,
+    Assets\Js,
+    Cpt,
+    CronJob,
+    Customizer\Panel,
+    Customizer\Section,
+    Customizer\Setting,
+    DbWidget,
+    Hook,
+    Metabox,
+    Notice,
+    RestApi\AdminAjax,
+    RestApi\Rest,
+    Shortcode,
+    Sidebar,
+    Updater\Plugin,
+    Updater\Theme,
+    Widget};
 use AlexDashkin\Adwpfw\Specials\{Db, Logger, Twig};
 
 class App
@@ -185,6 +205,22 @@ class App
     /**
      * Render Twig Template
      *
+     * @param string $name Template file name
+     * @param string $template Template contents
+     * @throws AppException
+     */
+    public function addTwigTemplate(string $name, string $template)
+    {
+        if (!$this->twig) {
+            throw new AppException('Twig is not initialized');
+        }
+
+        $this->twig->addTemplate($name, $template);
+    }
+
+    /**
+     * Render Twig Template
+     *
      * @param string $name Template file name with/without path
      * @param array $args Args to be passed to the Template. Default [].
      * @return string Rendered Template
@@ -197,6 +233,28 @@ class App
 
         try {
             return $this->twig->renderFile($name . '.twig', $args);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            $this->log($message);
+            return 'Unable to render Template: ' . $message;
+        }
+    }
+
+    /**
+     * Render Twig Array Template
+     *
+     * @param string $name Template key in template array
+     * @param array $args Args to be passed to the Template. Default [].
+     * @return string Rendered Template
+     */
+    public function renderTwigArray(string $name, array $args = []): string
+    {
+        if (!$this->twig) {
+            return 'Twig is not initialized';
+        }
+
+        try {
+            return $this->twig->renderArray($name, $args);
         } catch (\Exception $e) {
             $message = $e->getMessage();
             $this->log($message);
@@ -858,6 +916,18 @@ class App
         $this->addAssets($shortcode, $args);
 
         return $shortcode;
+    }
+
+    /**
+     * Add custom post type
+     *
+     * @param array $args
+     * @return Cpt
+     * @throws AppException
+     */
+    public function addCpt(array $args): Cpt
+    {
+        return new Cpt($args, $this);
     }
 
     /**
