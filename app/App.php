@@ -741,9 +741,9 @@ class App
      * Convert HEX color to RGB.
      *
      * @param string $hex
-     * @return string
+     * @return array
      */
-    public function colorToRgb(string $hex): string
+    public function colorToRgb(string $hex): array
     {
         $pattern = strlen($hex) === 4 ? '#%1x%1x%1x' : '#%2x%2x%2x';
         return sscanf($hex, $pattern);
