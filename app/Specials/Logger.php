@@ -125,7 +125,14 @@ class Logger
 
         // Write to each path
         foreach ($this->paths as $path) {
-            $logFile = fopen($path, 'a');
+            if (!file_exists($path)) {
+                continue;
+            }
+
+            if (!$logFile = fopen($path, 'a')) {
+                continue;
+            }
+
             fwrite($logFile, $log);
             fclose($logFile);
         }
