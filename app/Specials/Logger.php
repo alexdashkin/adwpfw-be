@@ -105,7 +105,7 @@ class Logger
         $this->contents .= '[' . date('d.m.y H:i:s') . '] ' . print_r($message, true) . "\n";
 
         // Write to immediate log
-        if ($this->tmpPath && file_exists($this->tmpPath)) {
+        if ($this->tmpPath) {
             file_put_contents($this->tmpPath, $this->contents);
         }
     }
