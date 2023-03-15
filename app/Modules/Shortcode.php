@@ -39,7 +39,10 @@ class Shortcode extends Module
      */
     public function register()
     {
-        add_shortcode($this->prefixIt($this->getProp('tag')), [$this, 'render']);
+        $tag = $this->getProp('tag');
+        $prefix = $this->getProp('prefix');
+        
+        add_shortcode('default' === $prefix ? $this->prefixIt($tag) : $prefix . '_' . $tag, [$this, 'render']);
     }
 
     /**
@@ -88,6 +91,10 @@ class Shortcode extends Module
             'atts' => [
                 'type' => 'array',
                 'default' => [],
+            ],
+            'prefix' => [
+                'type' => 'string',
+                'default' => 'default',
             ],
         ];
 
