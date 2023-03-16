@@ -1106,6 +1106,18 @@ class App
     {
         return update_post_meta($postId, $this->prefixIt($name, '_', true), $value);
     }
+    
+    /**
+     * Delete prefixed post meta
+     *
+     * @param int $postId
+     * @param string $name
+     * @return bool
+     */
+    public function deletePostMeta(int $postId, string $name): bool
+    {
+        return delete_post_meta($postId, $this->prefixIt($name, '_', true));
+    }
 
     /**
      * Get prefixed term meta
