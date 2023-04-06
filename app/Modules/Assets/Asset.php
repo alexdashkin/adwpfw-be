@@ -113,7 +113,7 @@ abstract class Asset extends Module
             return $url;
         }
 
-        return sprintf('%s%s', 'theme' === $this->config('type') ? get_stylesheet_directory_uri() : plugin_dir_url($this->config('baseFile')), $this->getProp('file'));
+        return sprintf('%s%s', 'theme' === $this->config('type') ? get_stylesheet_directory_uri() . '/' : plugin_dir_url($this->config('baseFile')), $this->getProp('file'));
     }
 
     /**
@@ -127,7 +127,7 @@ abstract class Asset extends Module
             return $ver;
         }
 
-        $path = dirname($this->config('baseFile')) . $this->getProp('file');
+        $path = dirname($this->config('baseFile')) . '/' . $this->getProp('file');
 
         return file_exists($path) ? filemtime($path) : $ver;
     }
