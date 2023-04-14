@@ -41,8 +41,8 @@ class Shortcode extends Module
     {
         $tag = $this->getProp('tag');
         $prefix = $this->getProp('prefix');
-        
-        add_shortcode('default' === $prefix ? $this->prefixIt($tag) : $prefix . '_' . $tag, [$this, 'render']);
+
+        add_shortcode($prefix ? $this->prefixIt($tag) : $tag, [$this, 'render']);
     }
 
     /**
@@ -93,8 +93,8 @@ class Shortcode extends Module
                 'default' => [],
             ],
             'prefix' => [
-                'type' => 'string',
-                'default' => 'default',
+                'type' => 'bool',
+                'default' => true,
             ],
         ];
 
