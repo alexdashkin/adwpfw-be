@@ -3,6 +3,7 @@
 namespace AlexDashkin\Adwpfw\Modules;
 
 use AlexDashkin\Adwpfw\Modules\Assets\Asset;
+use AlexDashkin\Adwpfw\Modules\Assets\Js;
 
 /**
  * Shortcode
@@ -29,7 +30,10 @@ class Shortcode extends Module
      */
     public function addAsset(Asset $asset)
     {
-        $asset->setProp('enqueue', '__return_false');
+        // Enqueue JS in render function (CSS enqueues on all pages)
+        if ($asset instanceof Js) {
+            $asset->setProp('enqueue', '__return_false');
+        }
 
         $this->assets[] = $asset;
     }
@@ -55,9 +59,11 @@ class Shortcode extends Module
      */
     public function render($atts, string $content, string $tag): string
     {
-        // Enqueue assets
+        // Enqueue JS
         foreach ($this->assets as $asset) {
-            $asset->enqueue();
+            if ($asset instanceof Js) {
+                $asset->enqueue();
+            }
         }
 
         $args = array_merge($this->getProp('atts') ?: [], $atts ?: []);
