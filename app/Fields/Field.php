@@ -53,6 +53,14 @@ class Field extends Module
                 return new Text($args, $app);
             case 'textarea':
                 return new Textarea($args, $app);
+            case 'date':
+                return new Date($args, $app);
+            case 'datetime':
+                return new Datetime($args, $app);
+            case 'media':
+                return new Media($args, $app);
+            case 'list':
+                return new HTMLList($args, $app);
             default:
                 return new Field($args, $app);
         }

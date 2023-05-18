@@ -1,1 +1,1 @@
-<textarea class="<?= $controlClasses ?>" id="<?= $id ?>" name="<?= $name ?>" <?= $required ?>><?= $value ?></textarea>
+<textarea class="<?= $controlClasses ?>" id="<?= $id ?>" name="<?= $name ?>" placeholder="<?= $placeholder ?>" <?= $required ?>><?= $value ?></textarea>
