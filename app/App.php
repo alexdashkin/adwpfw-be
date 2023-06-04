@@ -17,6 +17,7 @@ use AlexDashkin\Adwpfw\Modules\{AdminBar,
     DbWidget,
     Hook,
     Metabox,
+    ProfileSection,
     Notice,
     RestApi\AdminAjax,
     RestApi\Rest,
@@ -872,7 +873,24 @@ class App
 
         return $metabox;
     }
-
+    
+    /**
+     * Add Section with fields to user profile
+     *
+     * @param array $args
+     * @return ProfileSection
+     */
+    public function addProfileSection(array $args): ProfileSection
+    {
+        $profileSection = new ProfileSection($args, $this);
+        
+        $this->addFields($profileSection, $args);
+        
+        $this->addAssets($profileSection, $args);
+        
+        return $profileSection;
+    }
+    
     /**
      * Add Widget
      *

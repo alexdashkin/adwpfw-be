@@ -13,7 +13,7 @@ class ProfileSection extends FieldHolder
      * @var Asset[]
      */
     protected $assets = [];
-
+    
     /**
      * Add Asset
      *
@@ -23,7 +23,7 @@ class ProfileSection extends FieldHolder
     {
         $this->assets[] = $asset;
     }
-
+    
     /**
      * Constructor
      */
@@ -34,7 +34,7 @@ class ProfileSection extends FieldHolder
         $this->addHook('personal_options_update', [$this, 'save']);
         $this->addHook('edit_user_profile_update', [$this, 'save']);
     }
-
+    
     /**
      * Render Section
      *
@@ -46,16 +46,18 @@ class ProfileSection extends FieldHolder
         foreach ($this->assets as $asset) {
             $asset->enqueue();
         }
-
+        
         // Prepare args
         $args = [
+            'title' => $this->getProp('title'),
+            'description' => $this->getProp('description'),
             'fields' => $this->getFieldsArgs($user->ID),
         ];
-
+        
         // Output template
         echo $this->app->render('layouts/profile-section', $args);
     }
-
+    
     /**
      * Save Section fields
      *
@@ -67,10 +69,10 @@ class ProfileSection extends FieldHolder
             $this->log('Current user has no permissions to edit users');
             return;
         }
-
+        
         Field::setMany($this->fields, $_POST, $userId);
     }
-
+    
     /**
      * Get field value
      *
@@ -82,7 +84,7 @@ class ProfileSection extends FieldHolder
     {
         return $this->getUserMeta($objectId, $field->getProp('name'));
     }
-
+    
     /**
      * Set field value
      *
@@ -95,7 +97,7 @@ class ProfileSection extends FieldHolder
     {
         return $this->updateUserMeta($objectId, $field->getProp('name'), $value);
     }
-
+    
     /**
      * Get prop definitions
      *
