@@ -137,6 +137,10 @@ class CronJob extends Module
                 'type' => 'int',
                 'required' => true,
             ],
+            'parallel' => [
+                'type' => 'bool',
+                'default' => false,
+            ],
             'optionName' => [
                 'type' => 'string',
                 'default' => function () {
