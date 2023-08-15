@@ -49,7 +49,7 @@ class Logger
         $this->start = date('d.m.y H:i:s');
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $filename = $this->getLogFilename($path, $prefix, $suffix, $maxLogSize);
-        $tmpName = sprintf("%s-%s.log", uniqid(), $suffix);
+        $tmpName = sprintf('%s-temp-%s.log', $prefix, date('Y-m-d-H:i:s'));
 
         // Add paths
         $this->paths[] = $path . $filename;
