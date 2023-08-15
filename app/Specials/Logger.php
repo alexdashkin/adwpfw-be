@@ -125,12 +125,7 @@ class Logger
 
         // Write to each path
         foreach ($this->paths as $path) {
-            if (!$logFile = fopen($path, 'a')) {
-                continue;
-            }
-
-            fwrite($logFile, $log);
-            fclose($logFile);
+            file_put_contents($path, $log, FILE_APPEND);
         }
 
         // Delete immediate log file
