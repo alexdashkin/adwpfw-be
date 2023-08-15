@@ -102,7 +102,7 @@ class CronJob extends Module
      */
     private function setRunning(): bool
     {
-        return $this->setTransient($this->getProp('optionName'), time(), 180);
+        return $this->setTransient($this->getProp('optionName'), time(), $this->getProp('timeout'));
     }
 
     /**
@@ -140,6 +140,10 @@ class CronJob extends Module
             'parallel' => [
                 'type' => 'bool',
                 'default' => false,
+            ],
+            'timeout' => [
+                'type' => 'int',
+                'default' => 180,
             ],
             'optionName' => [
                 'type' => 'string',
