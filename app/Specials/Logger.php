@@ -10,9 +10,19 @@ use AlexDashkin\Adwpfw\Exceptions\AppException;
 class Logger
 {
     /**
-     * @var int Start Timestamp
+     * @var \DateTime Start
      */
     private $start;
+
+    /**
+     * @var \DateTime Our first entry
+     */
+    private $first;
+
+    /**
+     * @var \DateTime Previous entry
+     */
+    private $prev;
 
     /**
      * @var string Log contents
@@ -46,10 +56,10 @@ class Logger
         $path = $config['path'];
 
         // Prepare vars
-        $this->start = date('d.m.y H:i:s');
+        $this->start = $this->prev = \DateTime::createFromFormat('U.u', microtime(true));
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $filename = $this->getLogFilename($path, $prefix, $suffix, $maxLogSize);
-        $tmpName = sprintf('%s-temp-%s.log', $prefix, date('Y-m-d-H:i:s'));
+        $tmpName = sprintf('%s-temp-%s.log', $prefix, date('Y-m-d-H-i-s'));
 
         // Add paths
         $this->paths[] = $path . $filename;
@@ -93,7 +103,7 @@ class Logger
     {
         // WP_Error to string
         if (is_wp_error($message)) {
-            $message = 'WP_Error: ' . implode(' | ', $message->get_error_messages());
+            $message = sprintf("WP_Error: %s", implode(' | ', $message->get_error_messages()));
         }
 
         // Populate args if any
@@ -102,7 +112,15 @@ class Logger
         }
 
         // Build log entry
-        $this->contents .= '[' . date('d.m.y H:i:s') . '] ' . print_r($message, true) . "\n";
+        $time = \DateTime::createFromFormat('U.u', microtime(true));
+
+        if (!$this->first) {
+            $this->first = $time;
+        }
+
+        $diff = $this->prev->diff($time)->format('%s.%F');
+        $this->contents .= sprintf("[%s +%s] %s\n", $time->format('H:i:s.u'), $diff, print_r($message, true));
+        $this->prev = $time;
 
         // Write to immediate log
         if ($this->tmpPath) {
@@ -120,8 +138,13 @@ class Logger
             return;
         }
 
-        // Starting line
-        $log = 'Started: ' . $this->start . "\n" . $this->contents . "\n";
+        // Wrap with start/finish time
+        $finish = \DateTime::createFromFormat('U.u', microtime(true));
+        $started = $this->start->format('Y-m-d H:i:s.u');
+        $finished = $finish->format('Y-m-d H:i:s.u');
+        $our = round($this->first->diff($finish)->format('%s.%F'), 3);
+        $total = round($this->start->diff($finish)->format('%s.%F'), 3);
+        $log = sprintf("Started: %s\n%sFinished: %s, Our Time: %ss, Total Time: %ss\n\n", $started, $this->contents, $finished, $our, $total);
 
         // Write to each path
         foreach ($this->paths as $path) {
