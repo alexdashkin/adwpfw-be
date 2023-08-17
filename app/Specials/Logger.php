@@ -142,7 +142,7 @@ class Logger
         $finish = \DateTime::createFromFormat('U.u', microtime(true));
         $started = $this->start->format('Y-m-d H:i:s.u');
         $finished = $finish->format('Y-m-d H:i:s.u');
-        $our = round($this->first->diff($finish)->format('%s.%F'), 3);
+        $our = round($this->first->diff($this->prev)->format('%s.%F'), 3);
         $total = round($this->start->diff($finish)->format('%s.%F'), 3);
         $log = sprintf("Started: %s\n%sFinished: %s, Our Time: %ss, Total Time: %ss\n\n", $started, $this->contents, $finished, $our, $total);
 
