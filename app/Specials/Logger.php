@@ -56,7 +56,7 @@ class Logger
         $path = $config['path'];
 
         // Prepare vars
-        $this->start = $this->prev = \DateTime::createFromFormat('U.u', microtime(true));
+        $this->start = $this->prev = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
         $filename = $this->getLogFilename($path, $prefix, $suffix, $maxLogSize);
         $tmpName = sprintf('%s-temp-%s.log', $prefix, date('Y-m-d-H-i-s'));
@@ -112,14 +112,15 @@ class Logger
         }
 
         // Build log entry
-        $time = \DateTime::createFromFormat('U.u', microtime(true));
+        $time = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
 
         if (!$this->first) {
             $this->first = $time;
         }
 
-        $diff = $this->prev->diff($time)->format('%s.%F');
-        $this->contents .= sprintf("[%s +%s] %s\n", $time->format('H:i:s.u'), $diff, print_r($message, true));
+        $diff = $this->prev->diff($time);
+        $total = $this->first->diff($time);
+        $this->contents .= sprintf("[%s +%s %s] %s\n", $time->format('H:i:s.u'), $this->getDiffInSeconds($diff), $this->getDiffInSeconds($total), print_r($message, true));
         $this->prev = $time;
 
         // Write to immediate log
@@ -139,12 +140,12 @@ class Logger
         }
 
         // Wrap with start/finish time
-        $finish = \DateTime::createFromFormat('U.u', microtime(true));
+        $finish = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
         $started = $this->start->format('Y-m-d H:i:s.u');
         $finished = $finish->format('Y-m-d H:i:s.u');
-        $our = round($this->first->diff($this->prev)->format('%s.%F'), 3);
-        $total = round($this->start->diff($finish)->format('%s.%F'), 3);
-        $log = sprintf("Started: %s\n%sFinished: %s, Our Time: %ss, Total Time: %ss\n\n", $started, $this->contents, $finished, $our, $total);
+        $our = $this->first->diff($this->prev);
+        $total = $this->start->diff($finish);
+        $log = sprintf("Started: %s\n%sFinished: %s, Our Time: %ss, Total Time: %ss\n\n", $started, $this->contents, $finished, $this->getDiffInSeconds($our), $this->getDiffInSeconds($total));
 
         // Write to each path
         foreach ($this->paths as $path) {
@@ -155,5 +156,16 @@ class Logger
         if (file_exists($this->tmpPath)) {
             unlink($this->tmpPath);
         }
+    }
+
+    /**
+     * Get diff in seconds.ms
+     *
+     * @param \DateInterval $interval
+     * @return string
+     */
+    private function getDiffInSeconds(\DateInterval $interval): string
+    {
+        return sprintf('%05.3f', $interval->s + $interval->i * 60 + $interval->h * 3600 + $interval->days * 86400 + $interval->format('%F') / 1000000);
     }
 }
