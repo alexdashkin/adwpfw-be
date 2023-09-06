@@ -95,7 +95,7 @@ abstract class Asset extends Module
             return $handle;
         }
 
-        $handle = sprintf('%s-%s-%s-%s', $this->config('prefix'), $this->getProp('scope'), strpos(strtolower(get_called_class()), 'css') ? 'css' : 'js', mt_rand(1, 100));
+        $handle = sprintf('%s-%s-%s-%s', $this->config('prefix'), $this->getProp('scope'), strpos(strtolower(get_called_class()), 'css') ? 'css' : 'js', wp_generate_password(6, false));
 
         $this->setProp('handle', $handle);
 
