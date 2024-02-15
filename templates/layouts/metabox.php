@@ -10,7 +10,7 @@
 
 					<div class="adwpfw-label">
 						<label for="<?= $field['id'] ?>"><?= $field['label'] ?></label>
-                        <?php if ($field['required']) : ?>
+                        <?php if (isset($field['required']) && $field['required']) : ?>
 							<span class="adwpfw-required">*</span>
                         <?php endif ?>
 					</div>
