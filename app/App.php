@@ -1064,6 +1064,17 @@ class App
     {
         return update_option($this->prefixIt($name), $value);
     }
+    
+    /**
+     * Delete prefixed option
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function deleteOption(string $name): bool
+    {
+        return delete_option($this->prefixIt($name));
+    }
 
     /**
      * Get prefixed transient
@@ -1185,6 +1196,18 @@ class App
     public function updateUserMeta(int $userId, string $name, $value)
     {
         return update_user_meta($userId, $this->prefixIt($name, '_', true), $value);
+    }
+    
+    /**
+     * Delete prefixed user meta
+     *
+     * @param int $userId
+     * @param string $name
+     * @return bool
+     */
+    public function deleteUserMeta(int $userId, string $name): bool
+    {
+        return delete_user_meta($userId, $this->prefixIt($name, '_', true));
     }
 
     /**

@@ -259,7 +259,7 @@ class Cpt extends Module
                 },
             ],
             'rewrite' => [
-                'type' => 'string',
+                'type' => 'array',
                 'default' => function () {
                     return ['slug' => sanitize_key(str_replace(' ', '-', $this->getProp('plural')))];
                 },

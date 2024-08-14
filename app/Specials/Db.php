@@ -291,6 +291,48 @@ class Db
 
         return $this->wpdb->get_results($sql, 'ARRAY_A');
     }
+    
+    /**
+     * Perform get_row query
+     *
+     * @param string $query SQL Query.
+     * @param array $values If passed, $wpdb->prepare() will be called first. Default [].
+     * @return array
+     */
+    public function getRow(string $query, array $values = []): array
+    {
+        $sql = $values ? $this->wpdb->prepare($query, $values) : $query;
+        
+        return $this->wpdb->get_row($sql, 'ARRAY_A');
+    }
+    
+    /**
+     * Perform get_col query
+     *
+     * @param string $query SQL Query.
+     * @param array $values If passed, $wpdb->prepare() will be called first. Default [].
+     * @return array
+     */
+    public function getCol(string $query, array $values = []): array
+    {
+        $sql = $values ? $this->wpdb->prepare($query, $values) : $query;
+        
+        return $this->wpdb->get_col($sql);
+    }
+    
+    /**
+     * Perform get_var query
+     *
+     * @param string $query SQL Query.
+     * @param array $values If passed, $wpdb->prepare() will be called first. Default [].
+     * @return mixed
+     */
+    public function getVar(string $query, array $values = [])
+    {
+        $sql = $values ? $this->wpdb->prepare($query, $values) : $query;
+        
+        return $this->wpdb->get_var($sql);
+    }
 
     /**
      * Build where clause
