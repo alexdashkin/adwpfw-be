@@ -55,6 +55,10 @@ class Logger
         $maxLogSize = $config['maxLogSize'];
         $path = $config['path'];
 
+        if (!file_exists($path)) {
+            wp_mkdir_p($path);
+        }
+
         // Prepare vars
         $this->start = $this->prev = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)));
         $suffix = function_exists('wp_hash') ? wp_hash($prefix) : md5($prefix);
